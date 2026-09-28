@@ -17,6 +17,7 @@
       <button class="nav-button is-active" data-view="office" type="button">Office</button>
       <button class="nav-button" data-view="people" type="button">People</button>
       <button class="nav-button" data-view="missions" type="button">Missions</button>
+      <button class="nav-button" data-view="approvals" type="button">Approvals</button>
       <button class="nav-button" data-view="activity" type="button">Activity</button>
       <button class="nav-button" data-view="systems" type="button">Systems</button>
       <button class="nav-button" data-view="architecture" type="button">Architecture</button>
@@ -62,6 +63,11 @@
       <div class="toolbar"><label>Search <input id="task-search" type="search" placeholder="Title atau detail"></label><label>Owner <select id="task-owner"><option value="">All</option></select></label><label>Provenance <select id="task-provenance"><option value="">All</option><option>DEMO</option><option>LOCAL_CLAIM</option><option>AUTHORITATIVE_RUNTIME</option></select></label><button id="export-registry" type="button">Export + backup</button><button id="import-registry" type="button">Import JSON</button></div>
       <div id="quarantine-notice" class="quarantine-notice" hidden></div>
       <div id="mission-board" class="mission-board"></div>
+    </section>
+
+    <section id="view-approvals" class="view" hidden aria-labelledby="approvals-title">
+      <div class="page-heading"><div><p class="eyebrow">HUMAN AUTHORITY QUEUE</p><h1 id="approvals-title">Approvals</h1><p>High-impact local work is collected here. PENDING means execution is blocked until the owner decides. Approval is permission, not proof of execution.</p></div><div class="heading-badges"><span id="approval-pending-count">0 PENDING</span><span>OWNER DECISION ONLY</span></div></div>
+      <div id="approval-grid" class="approval-grid"></div>
     </section>
 
     <section id="view-activity" class="view" hidden aria-labelledby="activity-title">

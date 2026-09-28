@@ -13,6 +13,11 @@ test("public office exposes risk selection and owner approval controls", async (
   assert.match(app, /data-approval="APPROVED"/);
   assert.match(app, /data-approval="REJECTED"/);
   assert.match(app, /Human approval gate/);
+  assert.match(html, /data-view="approvals"/);
+  assert.match(html, /id="view-approvals"/);
+  assert.match(app, /function renderApprovals/);
+  assert.match(app, /data-queue-decision/);
+  assert.match(app, /approval-pending-count/);
 });
 
 test("capability endpoint declares the human approval boundary", async () => {

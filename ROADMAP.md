@@ -23,7 +23,7 @@
 - [ ] normalized execution and cost receipts
 
 ## v0.3 — Human-governed orchestration
-- [ ] dedicated approval-queue view with filters and decision history
+- [x] dedicated approval-queue view with pending count and owner decisions
 - [ ] signed/verifiable execution receipts
 - [ ] capability negotiation and policy packs per role
 - [ ] pluggable storage with export/import

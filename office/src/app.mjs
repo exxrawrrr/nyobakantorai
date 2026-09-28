@@ -103,6 +103,34 @@ function renderMissions() {
   const notice=$("#quarantine-notice");notice.hidden=!quarantined.length;notice.innerHTML=quarantined.length?`<strong>${quarantined.length} claim(s) quarantined.</strong> ${quarantined.map((task)=>`<button type="button" data-task="${escapeHtml(task.id)}">${escapeHtml(task.runtime_ref||task.id)} · ${escapeHtml(task.reconcile_reason||"UNCONFIRMED")}</button>`).join(" ")}`:"";
   $$('[data-task]').forEach((button)=>button.addEventListener("click",()=>openTask(button.dataset.task)));
 }
+
+function renderApprovals() {
+  const tasks=registry.tasks
+    .filter((task)=>task.approval_required)
+    .sort((a,b)=>{
+      const rank=(task)=>task.approval_status==="PENDING"?0:task.approval_status==="REJECTED"?1:2;
+      return rank(a)-rank(b)||String(b.updated_at).localeCompare(String(a.updated_at));
+    });
+  const pending=tasks.filter((task)=>task.approval_status==="PENDING").length;
+  $("#approval-pending-count").textContent=`${pending} PENDING`;
+  const grid=$("#approval-grid");
+  grid.innerHTML=tasks.length?tasks.map((task)=>{
+    const person=employee(task.assignee_id);
+    const readOnly=task.execution_mode==="HERMES";
+    const mayDecide=!readOnly&&["PLANNED","REQUESTED","WAITING_FOR_USER","BLOCKED"].includes(task.lifecycle_status);
+    const controls=mayDecide?`<div class="form-actions"><button type="button" data-queue-decision="REJECTED" data-task-id="${escapeHtml(task.id)}">Reject</button><button type="button" class="primary" data-queue-decision="APPROVED" data-task-id="${escapeHtml(task.id)}">Approve</button></div>`:"";
+    return `<article class="approval-card"><div class="task-meta"><span>${escapeHtml(task.risk_class)}</span><span>${escapeHtml(task.approval_status)}</span><span>${escapeHtml(task.lifecycle_status)}</span></div><h2>${escapeHtml(task.title)}</h2><p>${escapeHtml(task.detail||"No detail")}</p><p><strong>${escapeHtml(person.name)}</strong> · ${escapeHtml(task.provenance)}</p>${readOnly?'<p class="readonly-warning">Runtime claim is read-only and cannot be approved from this local queue.</p>':controls}<button type="button" data-approval-open="${escapeHtml(task.id)}">Open mission</button></article>`;
+  }).join(""):'<div class="empty">No high-impact tasks require human approval.</div>';
+
+  $$("[data-queue-decision]",grid).forEach((button)=>button.addEventListener("click",()=>{
+    try {
+      registry=recordApproval(registry,button.dataset.taskId,{status:button.dataset.queueDecision,actor:"owner",source:"approval queue UI"});
+      persist();
+      toast(`Approval recorded: ${button.dataset.queueDecision}.`);
+    } catch(error) { toast(error.message,true); }
+  }));
+  $$("[data-approval-open]",grid).forEach((button)=>button.addEventListener("click",()=>openTask(button.dataset.approvalOpen)));
+}
 function openTask(id) {
   const task=registry.tasks.find((item)=>item.id===id);if(!task)return;
   const person=employee(task.assignee_id),readOnly=task.execution_mode==="HERMES";
@@ -129,7 +157,7 @@ function renderSystems() {
   $("#runtime-evidence").textContent=runtime?JSON.stringify(runtime,null,2):"No runtime snapshot yet.";
 }
 function renderKnowledge() { $("#knowledge-grid").innerHTML=knowledge.map(([title,note,path])=>`<article class="knowledge-card"><p class="eyebrow">READ ON DEMAND</p><h2>${escapeHtml(title)}</h2><p>${escapeHtml(note)}</p><code>${escapeHtml(path)}</code></article>`).join(""); }
-function renderAll(){renderSelected();renderPeople();renderMissions();renderActivity();renderSystems();renderKnowledge();}
+function renderAll(){renderSelected();renderPeople();renderMissions();renderApprovals();renderActivity();renderSystems();renderKnowledge();}
 
 async function refreshRuntime({ quiet=false }={}) {
   try {

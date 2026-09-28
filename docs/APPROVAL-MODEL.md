@@ -33,6 +33,8 @@ Only the human owner may record:
 
 An approval creates an append-only event and stores a bounded evidence reference. A rejected task may later be approved through a new owner event; the history remains visible.
 
+The office also exposes a dedicated **Approvals** view that collects approval-required local tasks, surfaces pending count, and records owner decisions through the same registry primitive. The queue does not bypass lifecycle or evidence rules.
+
 ## What approval does not mean
 
 Approval does **not** prove that:

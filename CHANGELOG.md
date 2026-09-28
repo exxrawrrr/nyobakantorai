@@ -16,6 +16,7 @@ All notable public changes to nyobakantorai are documented here.
 - Original MIT-licensed SVG character assets with provenance manifest.
 - Deterministic synthetic multi-agent demo flow.
 - Explicit owner approval gate for external writes, paid actions, account changes, and destructive work.
+- Dedicated approval queue with pending count, owner decisions, and mission drill-through.
 - Dependency-free Runtime Adapter SDK v1 with bounded fail-closed snapshots.
 - Public-safe office and approval-flow screenshots with SHA-256 provenance.
 

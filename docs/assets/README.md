@@ -5,7 +5,7 @@ These screenshots were captured from the public-safe local build of nyobakantora
 | File | Purpose | SHA-256 |
 | --- | --- | --- |
 | `office-overview.png` | Visual overview of the local-first office | `9BD001D8AD182411761D910562094B096A636FCE08BF5CA5D00D5389F4D92D7B` |
-| `approval-flow.png` | High-impact mission showing explicit owner approval state | `958B74FD7610A9B2539DB3A6A1DFFA650254C65D57C6D3074D260185234652EF` |
+| `approval-flow.png` | High-impact mission showing explicit owner approval state | `6B894CDEF9D117615AF705C31320708F4CF57C8578BF32B63B07CFBEB9D02BF2` |
 
 Provenance:
 - generated from this repository's local UI;
