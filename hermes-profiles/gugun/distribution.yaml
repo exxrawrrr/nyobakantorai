@@ -1,0 +1,11 @@
+name: gugun
+version: 0.3.0
+description: "Google Ads Operator — nyobakantorai"
+author: "exxrawrrr / nyobakantorai contributors"
+license: "MIT"
+distribution_owned:
+  - SOUL.md
+  - profile.yaml
+  - config.yaml
+  - skills
+  - distribution.yaml

@@ -74,7 +74,7 @@ echo "Running runtime preflight..."
 "$NODE" "$INSTALL_DIR/scripts/preflight.mjs" --runtime
 
 if command -v hermes >/dev/null 2>&1; then
-  args=("$INSTALL_DIR/scripts/hermes-bootstrap.mjs")
+  args=("$INSTALL_DIR/scripts/hermes-bootstrap.mjs" "--upgrade")
   [[ -n "$HERMES_HOME_OVERRIDE" ]] && args+=("--home=$HERMES_HOME_OVERRIDE")
   "$NODE" "${args[@]}"
 elif (( WITH_HERMES )); then

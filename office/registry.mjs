@@ -1,16 +1,21 @@
-export const EMPLOYEES = Object.freeze([
-  { id: "praroro", name: "Praroro", role: "COO / Chief of Staff", color: "#697d45" },
-  { id: "paijo", name: "Paijo", role: "Data & Finance", color: "#71845a" },
-  { id: "subagjo", name: "Subagjo", role: "Engineering Lead", color: "#426d78" },
-  { id: "alex", name: "Alex", role: "Strategy & Research", color: "#596c76" },
-  { id: "sumiati", name: "Sumiati", role: "Creative & Communication", color: "#8b654d" },
-  { id: "siti", name: "Siti", role: "QA & Verification", color: "#6e7d55" },
-]);
+import { WORKFORCE } from "./workforce.mjs";
+
+export const EMPLOYEES = Object.freeze(WORKFORCE.map(({ id, name, role, department, visual, external_capabilities, preferred_toolsets }) => Object.freeze({
+  id, name, role, department, color: visual.color, asset_status: visual.asset_status,
+  initials: visual.initials, external_capabilities, preferred_toolsets,
+})));
 export const RISK_CLASSES = Object.freeze(["READ_ONLY", "LOCAL_WRITE", "EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
 export const APPROVAL_STATUSES = Object.freeze(["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED"]);
 const AUTO_APPROVAL_RISKS = new Set(["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
 export const STATUSES = Object.freeze(["PLANNED", "IN_PROGRESS", "BLOCKED", "COMPLETED", "VERIFIED"]);
 const EMPLOYEE_IDS = new Set(EMPLOYEES.map(({ id }) => id));
+const EMPLOYEE_POLICY = new Map(WORKFORCE.map((person) => [person.id, person]));
+function mayVerify(assigneeId, actorId) {
+  if (!EMPLOYEE_IDS.has(actorId) || actorId === assigneeId) return false;
+  const policy = EMPLOYEE_POLICY.get(assigneeId)?.verification_policy;
+  return policy?.independent_required === true && policy?.self_verify === false
+    && Array.isArray(policy.reviewer_candidates) && policy.reviewer_candidates.includes(actorId);
+}
 const transitions = {
   PLANNED: new Set(["IN_PROGRESS", "BLOCKED"]),
   IN_PROGRESS: new Set(["BLOCKED", "COMPLETED"]),
@@ -76,7 +81,8 @@ export function updateTask(registry, taskId, patch, clock = now) {
   const actor = clean(patch.actor || "owner", 40).toLowerCase();
   const evidence = clean(patch.evidence_ref, 1000);
   if (status === "VERIFIED") {
-    if (actor !== "siti") throw new Error("Only Siti may set VERIFIED.");
+    if (actor === task.assignee_id) throw new Error("A worker cannot independently verify its own work.");
+    if (!mayVerify(task.assignee_id, actor)) throw new Error("VERIFIED requires an independent registry-approved reviewer.");
     if (!evidence && !task.evidence_refs.length) throw new Error("VERIFIED requires evidence.");
   }
   if (task.lifecycle_status === "VERIFIED" && status === "IN_PROGRESS" && actor !== "owner") throw new Error("Only the owner may reopen VERIFIED work.");
@@ -160,8 +166,9 @@ export function validateRegistry(registry) {
     if (AUTO_APPROVAL_RISKS.has(task.risk_class) && task.approval_required !== true) throw new Error("High-impact task requires approval.");
     if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(task.lifecycle_status) && task.approval_status !== "APPROVED") throw new Error("High-impact task cannot execute without approval.");
     if (task.lifecycle_status === "VERIFIED") {
-      const verified = registry.events.find((entry) => entry.task_id === task.id && entry.action === "STATUS_CHANGED" && entry.actor === "siti" && entry.new_status === "VERIFIED" && entry.evidence_ref);
-      if (!verified) throw new Error("VERIFIED requires a Siti evidence event.");
+      const verified = registry.events.find((entry) => entry.task_id === task.id && entry.action === "STATUS_CHANGED"
+        && entry.new_status === "VERIFIED" && entry.evidence_ref && mayVerify(task.assignee_id, entry.actor));
+      if (!verified) throw new Error("VERIFIED requires an independent reviewer evidence event.");
     }
     if (task.execution_mode === "HERMES" && task.provenance === "AUTHORITATIVE_RUNTIME" && (!task.runtime_evidence?.id || task.runtime_evidence.id !== task.runtime_ref)) throw new Error("Runtime provenance is incomplete.");
   }

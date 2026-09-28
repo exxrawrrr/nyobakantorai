@@ -9,6 +9,7 @@ import { promisify } from "node:util";
 import { randomBytes } from "node:crypto";
 import { sanitizeRuntimeTask } from "./reconcile.mjs";
 import { createRuntimeSnapshotCache } from "./runtime-cache.mjs";
+import { WORKFORCE, EMPLOYEE_IDS, WORKFORCE_VERSION, CAPABILITY_STATES, AUTONOMY_MODES, DEFAULT_AUTONOMY, CAPABILITY_CATALOG } from "./workforce.mjs";
 
 const projectRoot = fileURLToPath(new URL(".", import.meta.url));
 const root = join(projectRoot, "dist");
@@ -19,7 +20,6 @@ const hermesDisabled = /^(1|true|yes)$/i.test(process.env.NYOBAKANTORAI_DISABLE_
 const hermesHome = hermesDisabled ? "" : resolveHermesHome();
 const hermesEnabled = !hermesDisabled && Boolean(hermesHome);
 const board = process.env.NYOBAKANTORAI_BOARD || "nyobakantorai";
-const employeeIds = ["praroro", "paijo", "subagjo", "alex", "sumiati", "siti"];
 const execFileAsync = promisify(execFile);
 const requestedWorkerPort = Number.parseInt(process.env.NYOBAKANTORAI_WORKER_PORT || "4333", 10);
 const workerPort = Number.isInteger(requestedWorkerPort) && requestedWorkerPort > 1023 && requestedWorkerPort < 65536 ? requestedWorkerPort : 4333;
@@ -67,13 +67,21 @@ async function runHermes(args) {
 function parseProfile(id, output) {
   const model = output.match(/^Model:\s+(.+)$/m)?.[1]?.trim() || "";
   const gateway = output.match(/^Gateway:\s+(.+)$/m)?.[1]?.trim().toLowerCase() || "unknown";
-  return { id, profile_exists: true, model_configured: Boolean(model), gateway, presence: !model ? "NOT CONNECTED" : gateway === "running" ? "UNKNOWN" : "OFFLINE" };
+  const person = WORKFORCE.find((employee) => employee.id === id);
+  return {
+    id, profile_exists: true, model_configured: Boolean(model), gateway,
+    presence: !model ? "NOT CONNECTED" : gateway === "running" ? "UNKNOWN" : "OFFLINE",
+    external_capabilities: Object.fromEntries((person?.external_capabilities || []).map((capability) => [capability, "NOT_CONNECTED"])),
+  };
 }
 async function employeeSnapshot() {
-  if (!hermesEnabled) return { profiles: employeeIds.map((id) => ({ id, profile_exists: false, model_configured: false, gateway: "unknown", presence: "NOT CONNECTED" })), version: "not-configured", checked_at: new Date().toISOString() };
-  const profiles = await Promise.all(employeeIds.map(async (id) => {
+  if (!hermesEnabled) return { profiles: EMPLOYEE_IDS.map((id) => ({ id, profile_exists: false, model_configured: false, gateway: "unknown", presence: "NOT CONNECTED", external_capabilities: Object.fromEntries((WORKFORCE.find((employee) => employee.id === id)?.external_capabilities || []).map((capability) => [capability, "NOT_CONNECTED"])) })), version: "not-configured", checked_at: new Date().toISOString() };
+  const profiles = await Promise.all(EMPLOYEE_IDS.map(async (id) => {
     try { return parseProfile(id, await runHermes(["-p", id, "profile", "show", id])); }
-    catch { return { id, profile_exists: false, model_configured: false, gateway: "unknown", presence: "NOT CONNECTED" }; }
+    catch { return {
+      id, profile_exists: false, model_configured: false, gateway: "unknown", presence: "NOT CONNECTED",
+      external_capabilities: Object.fromEntries((WORKFORCE.find((employee) => employee.id === id)?.external_capabilities || []).map((capability) => [capability, "NOT_CONNECTED"])),
+    }; }
   }));
   let version = "unknown";
   try { version = (await runHermes(["--version"])).split(/\r?\n/, 1)[0]; } catch { /* keep UNKNOWN */ }
@@ -84,7 +92,7 @@ const EMPLOYEE_CACHE_TTL_MS = 8000;
 const readEmployees = createRuntimeSnapshotCache(employeeSnapshot, {
   ttlMs: EMPLOYEE_CACHE_TTL_MS,
   cacheable: (value) => value?.version !== "unknown"
-    && employeeIds.every((id) => value?.profiles?.some((p) => p.id === id && p.profile_exists === true)),
+    && EMPLOYEE_IDS.every((id) => value?.profiles?.some((p) => p.id === id && p.profile_exists === true)),
 });
 
 async function runtimeSnapshot() {
@@ -114,7 +122,7 @@ const readRuntimeSnapshot = createRuntimeSnapshotCache(runtimeSnapshot, {
   cacheable: (value) => value?.hermes?.board_connected === true
     && Array.isArray(value?.tasks)
     && value.employee_snapshot_cache?.stale === false
-    && employeeIds.every((id) => value.employees?.[id]?.profile_exists === true),
+    && EMPLOYEE_IDS.every((id) => value.employees?.[id]?.profile_exists === true),
 });
 
 const server = createServer(async (request, response) => {
@@ -126,9 +134,24 @@ const server = createServer(async (request, response) => {
     }
     if (pathname === "/api/capabilities" && request.method === "GET") {
       assertLocal(request);
-      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: hermesEnabled ? "hermes-readonly" : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], employees: employeeIds, endpoints: ["/api/health", "/api/capabilities", "/api/runtime", "/api/worker/tasks"] }); return;
+      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: hermesEnabled ? "hermes-readonly" : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, autonomy_default: DEFAULT_AUTONOMY, autonomy_modes: AUTONOMY_MODES, capability_states: CAPABILITY_STATES, external_capability_catalog: CAPABILITY_CATALOG, employees: EMPLOYEE_IDS, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks"] }); return;
     }
     if (pathname === "/api/capabilities") throw new PublicError(405, "Method not allowed");
+    if (pathname === "/api/workforce" && request.method === "GET") {
+      assertLocal(request);
+      json(response, 200, {
+        schema: 1, version: WORKFORCE_VERSION, default_autonomy: "GUARDED",
+        employees: WORKFORCE.map((person) => ({
+          id: person.id, name: person.name, role: person.role, department: person.department,
+          summary: person.summary, aliases: person.aliases, personality: person.personality,
+          habits: person.habits, expertise: person.expertise, preferred_toolsets: person.preferred_toolsets,
+          capability_state: Object.fromEntries(person.external_capabilities.map((capability) => [capability, "NOT_CONNECTED"])),
+          approval_policy: person.approval_policy, verification_policy: person.verification_policy,
+          asset_status: person.visual.asset_status, initials: person.visual.initials,
+        })),
+      }); return;
+    }
+    if (pathname === "/api/workforce") throw new PublicError(405, "Method not allowed");
     if (pathname === "/api/worker/tasks" && request.method === "GET") {
       assertLocal(request);
       try {
@@ -138,7 +161,7 @@ const server = createServer(async (request, response) => {
         if (!upstream.ok) throw new Error("Local worker unavailable");
         const data = await upstream.json();
         if (!Array.isArray(data.tasks) || data.mode !== "PUBLIC_ONLY_LOCAL_PILOT") throw new Error("Unexpected pilot response");
-        const tasks = data.tasks.filter((t) => employeeIds.includes(t.employee) && typeof t.id === "string")
+        const tasks = data.tasks.filter((t) => EMPLOYEE_IDS.includes(t.employee) && typeof t.id === "string")
           .slice(-30).map((t) => ({
             id: t.id.slice(0, 32), employee: t.employee,
             state: ["QUEUED","RUNNING","RESULT_READY","FAILED","INTERRUPTED"].includes(t.state) ? t.state : "UNKNOWN",

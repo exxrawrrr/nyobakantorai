@@ -1,0 +1,8 @@
+# Fresh-install role defaults. Hermes profile updates preserve an existing user config.yaml.
+toolsets:
+  - skills
+  - memory
+  - session_search
+  - delegation
+  - kanban
+  - clarify

@@ -26,10 +26,20 @@
 - [ ] add CLI-agent adapter
 - [ ] normalized execution and cost receipts
 
-## v0.3 — Human-governed orchestration
+## v0.3 — Real AI Workforce
 - [x] dedicated approval-queue view with pending count and owner decisions
+- [x] canonical workforce registry with 16 specialized employees
+- [x] native Hermes profile distributions and dynamic bootstrap
+- [x] deterministic role routing and workforce doctor
+- [x] provider-neutral Meta/Google Ads capability contracts
+- [x] OBSERVE / GUARDED / DELEGATED autonomy model
+- [x] v0.2 → v0.3 state-preserving upgrade path
+- [x] Telegram / multi-profile gateway path documented
+- [x] safe custom employee generator
+- [x] 16-person office with provenance-honest placeholder visuals
 - [ ] signed/verifiable execution receipts
-- [ ] capability negotiation and policy packs per role
+- [ ] live provider adapters for ads capabilities
+- [ ] original character art for the ten v0.3 workers
 - [ ] pluggable storage with export/import
 - [ ] adapter sandboxing and permission-policy extensions
 

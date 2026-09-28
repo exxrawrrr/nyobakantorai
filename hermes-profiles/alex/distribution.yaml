@@ -1,10 +1,11 @@
 name: alex
-version: 0.2.0
-description: "nyobakantorai strategy agent: Research synthesis, hypotheses, low-risk experiments, and decision framing."
+version: 0.3.0
+description: "Strategy / Research — nyobakantorai"
 author: "exxrawrrr / nyobakantorai contributors"
 license: "MIT"
 distribution_owned:
   - SOUL.md
   - profile.yaml
+  - config.yaml
   - skills
   - distribution.yaml
