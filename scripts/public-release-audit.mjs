@@ -57,6 +57,7 @@ for (const relative of tracked) {
   try { text = readFileSync(resolve(root, relative), "utf8"); } catch { continue; }
   const lower = text.toLowerCase();
   const markerAuditExempt = new Set([
+    ".gitignore", // defensive deny-list intentionally names private/legacy paths
     "scripts/public-release-audit.mjs",
     "scripts/repo-audit.mjs",
     "office/tests/architecture-sync.test.mjs",

@@ -20,7 +20,8 @@
 - [x] end-to-end boot smoke test with security-header and clean-shutdown assertions
 - [x] dependency-free read-only Runtime Adapter SDK with fail-closed snapshots
 - [ ] migrate Hermes implementation onto the generic adapter interface
-- [ ] add CLI-agent and HTTP-worker adapters
+- [x] add strict loopback HTTP read-only adapter
+- [ ] add CLI-agent adapter
 - [ ] normalized execution and cost receipts
 
 ## v0.3 — Human-governed orchestration

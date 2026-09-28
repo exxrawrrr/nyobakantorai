@@ -3,8 +3,10 @@
 A release is not ready because the UI looks good. It is ready only when the public tree, history, CI, provenance, and repository settings agree.
 
 ## Code and tests
+- [ ] `npm run doctor` passes on the release machine.
+- [ ] `npm run ready` passes from the canonical worktree.
 - [ ] `npm run verify` passes from the canonical worktree.
-- [ ] A fresh clone passes `npm run verify`.
+- [ ] A fresh clone passes `npm run ready`.
 - [ ] Linux and Windows CI are green.
 - [ ] `npm run demo` completes using synthetic data only.
 

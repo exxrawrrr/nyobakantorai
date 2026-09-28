@@ -344,7 +344,7 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 - **16 reusable skills** covering task truth, tool safety, approval gates, provenance, research, growth, engineering, creative work, and QA.
 - **Evidence-gated task state** where VERIFIED requires independent evidence.
 - **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
-- **Read-only runtime adapter** that treats Hermes as optional and fails closed when runtime state is unavailable or stale.
+- **Read-only runtime adapter SDK** with a strict loopback HTTP adapter for plugging in other local runtimes without granting write or dispatch authority.
 - **Manual handoff + receipt protocol** for provenance-aware work across surfaces.
 - **Portable diagnostics** that check expected safety boundaries without printing secrets.
 - **Machine-readable capabilities** through `GET /api/capabilities`.
@@ -364,8 +364,9 @@ git clone https://github.com/exxrawrrr/nyobakantorai.git
 cd nyobakantorai
 
 python -m pip install -r requirements-dev.txt
+npm run doctor
 npm run smoke
-npm run verify
+npm run ready
 npm start
 ```
 
@@ -381,7 +382,7 @@ Windows users can also run:
 office/START-NYOBAKANTORAI.bat
 ```
 
-Hermes is optional. Without it, the UI remains usable in fast offline mode. `npm run smoke` performs a real local boot test against health/capability/runtime endpoints, security headers, the UI, an original character sprite, and clean shutdown.
+Hermes is optional. Without it, the UI remains usable in fast offline mode. `npm run doctor` checks the local prerequisites, expected project files, character manifest, and office port without reading credentials. `npm run smoke` performs a real local boot test against health/capability/runtime endpoints, security headers, the UI, an original character sprite, and clean shutdown. `npm run ready` runs the complete pre-publication gate.
 
 The root package keeps `"private": true` intentionally to prevent accidental publication to npm; it does **not** prevent making the GitHub repository public.
 
@@ -446,15 +447,16 @@ Skills are procedures, not permissions. A configured provider is not proof that 
 
 The office server binds to localhost and rejects cross-site mutation attempts. Credentials, runtime databases, logs, private paths, and personal workspace artifacts are excluded from the public release.
 
-Run the full release gate before every push:
+Run the full release gate before every release candidate:
 
 ```bash
-npm run verify
+npm run ready
 ```
 
 ## Development
 
 ```bash
+npm run doctor
 npm run audit
 npm test
 npm run demo

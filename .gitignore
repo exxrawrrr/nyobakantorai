@@ -58,3 +58,11 @@ operations/handoff/source-evidence/
 
 # Generated release provenance artifact
 release/
+
+# Local legacy/private mirrors (never part of the public repository)
+/Office-Next/
+/Office-Preview/
+/AI-OFFICE-OPERATIONS/
+/_CHECKPOINTS/
+/Codex/
+/Hermes/

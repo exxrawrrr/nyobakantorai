@@ -36,6 +36,7 @@ In GitHub repository settings, protect `main` with:
 - required checks:
   - `test (ubuntu-latest)`
   - `test (windows-latest)`
+  - `minimum-versions`
 - require conversation resolution;
 - require linear history;
 - disable force pushes;

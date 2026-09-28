@@ -53,3 +53,9 @@ GET /api/capabilities
 ```
 
 It is localhost-only and reports the active adapter label, Runtime Adapter API version, human-approval boundary, and other public safety capabilities. Discovery metadata is not authorization.
+
+## Loopback HTTP adapter
+
+`packages/runtime-adapter/http-readonly.mjs` provides a strict local HTTP bridge for runtimes that expose a health endpoint and a task-list endpoint. It accepts only loopback HTTP origins, performs GET requests only, refuses embedded credentials and redirects, and returns data through the same bounded v1 snapshot normalization.
+
+The bridge does not make a runtime trusted. Runtime-specific provenance and identity reconciliation still apply before any claim can be treated as authoritative.
