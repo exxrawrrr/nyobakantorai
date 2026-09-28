@@ -3,7 +3,7 @@ import { reconcileClaims } from "./reconcile.mjs";
 import { createOfficeScene } from "./scene.mjs";
 import { EMPLOYEE_PLAYBOOK, PERSONA_SNAPSHOT } from "./persona-ops.mjs";
 import { attachWorkerBubbles } from "./worker-bubbles.mjs";
-import { WORKFORCE, EMPLOYEE_BY_ID } from "./workforce.mjs";
+import { WORKFORCE, EMPLOYEE_BY_ID } from "../workforce.mjs";
 
 const STORAGE_KEY = "nyobakantorai-registry-v1";
 const SETTINGS_KEY = "nyobakantorai-settings-v1";
