@@ -24,6 +24,19 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 
 ![nyobakantorai office overview](docs/assets/office-overview.png)
 
+## Meet the Office
+
+The six public example employees are part of the actual visual office state machine — not decorative names. Each one has role-specific SOUL guidance, six reusable skills, and animated visual states such as `idle`, `walk`, `think`, `work`, `role`, and `seated`.
+
+![Meet the nyobakantorai office](docs/assets/meet-the-office.gif)
+
+| | | |
+| --- | --- | --- |
+| <img src="office/src/assets/generated/characters/praroro/idle.svg" width="82" alt="Praroro"><br>**Praroro**<br><sub>COO / Chief of Staff</sub> | <img src="office/src/assets/generated/characters/paijo/idle.svg" width="82" alt="Paijo"><br>**Paijo**<br><sub>Quant / Growth / Finance</sub> | <img src="office/src/assets/generated/characters/subagjo/idle.svg" width="82" alt="Subagjo"><br>**Subagjo**<br><sub>Engineering / Operations</sub> |
+| <img src="office/src/assets/generated/characters/alex/idle.svg" width="82" alt="Alex"><br>**Alex**<br><sub>Strategy / Research</sub> | <img src="office/src/assets/generated/characters/sumiati/idle.svg" width="82" alt="Sumiati"><br>**Sumiati**<br><sub>Creative / Communications</sub> | <img src="office/src/assets/generated/characters/siti/idle.svg" width="82" alt="Siti"><br>**Siti**<br><sub>QA / Compliance / Knowledge</sub> |
+
+The README animation is generated only from the public-safe original SVG character set. The private reference PNG pipeline is intentionally not distributed.
+
 ## Highlights
 
 - **6 example agent personas** — coordination, metrics, engineering, strategy, creative, and independent QA.

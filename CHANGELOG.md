@@ -19,6 +19,7 @@ All notable public changes to nyobakantorai are documented here.
 - Dedicated approval queue with pending count, owner decisions, and mission drill-through.
 - Dependency-free Runtime Adapter SDK v1 with bounded fail-closed snapshots.
 - Public-safe office and approval-flow screenshots with SHA-256 provenance.
+- Animated `Meet the Office` README showcase for Praroro, Paijo, Subagjo, Alex, Sumiati, and Siti using only public-safe SVG assets.
 
 ### Changed
 - Runtime staging now supports all six public roles.

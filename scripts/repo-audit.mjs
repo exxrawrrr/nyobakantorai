@@ -10,7 +10,7 @@ const required = [
   "packages/runtime-adapter/index.mjs", "packages/runtime-adapter/index.test.mjs", "packages/runtime-adapter/README.md",
   "docs/THREAT-MODEL.md", "docs/PRIVACY.md", "docs/RUNTIME-ADAPTER-SPEC.md", "docs/APPROVAL-MODEL.md",
   "docs/DEMO.md", "docs/RELEASE-CHECKLIST.md", "docs/PUBLICATION-RUNBOOK.md", "CHANGELOG.md", "SUPPORT.md", "CODE_OF_CONDUCT.md",
-  "docs/assets/README.md", "docs/assets/office-overview.png", "docs/assets/approval-flow.png",
+  "docs/assets/README.md", "docs/assets/office-overview.png", "docs/assets/approval-flow.png", "docs/assets/meet-the-office.gif", "docs/assets/employee-showcase.html",
 ];
 for (const file of required) {
   if (!existsSync(resolve(root, file))) throw new Error(`Missing required public project file: ${file}`);
@@ -49,6 +49,7 @@ for (const asset of manifest.assets ?? []) {
 const expectedScreenshots = new Map([
   ["docs/assets/office-overview.png", "9BD001D8AD182411761D910562094B096A636FCE08BF5CA5D00D5389F4D92D7B"],
   ["docs/assets/approval-flow.png", "6B894CDEF9D117615AF705C31320708F4CF57C8578BF32B63B07CFBEB9D02BF2"],
+  ["docs/assets/meet-the-office.gif", "08E3E5A04F92550FF13CB7DFA038BAD1D030A42CB5E6574915DCA6A3983C6228"],
 ]);
 for (const [file, expected] of expectedScreenshots) {
   const digest = createHash("sha256").update(readFileSync(resolve(root, file))).digest("hex").toUpperCase();

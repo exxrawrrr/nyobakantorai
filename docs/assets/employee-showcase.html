@@ -1,0 +1,36 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>nyobakantorai — Meet the Office</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#efe6d1;color:#30372d;font-family:ui-monospace,Consolas,monospace}
+  .stage{width:960px;height:420px;padding:28px;background:linear-gradient(#e3d5b7 0 92px,#efe6d1 92px);position:relative;overflow:hidden}
+  .head{display:flex;justify-content:space-between;align-items:flex-start}.kicker{font-weight:900;letter-spacing:.12em;font-size:12px}.title{font:900 34px/1 Georgia,serif;margin-top:7px}.pill{border:2px solid #30372d;padding:8px 12px;background:#fff9eb;font-size:11px;font-weight:900}
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;position:absolute;left:28px;right:28px;bottom:28px}
+  .card{height:252px;border:2px solid #30372d;background:#fff9eb;box-shadow:5px 5px 0 #c9a778;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:12px;position:relative;overflow:hidden}
+  .card:before{content:"";position:absolute;left:0;right:0;bottom:62px;height:2px;background:#d7c6a4}.avatar{width:118px;height:118px;image-rendering:pixelated;transform-origin:50% 100%}.name{font-weight:1000;font-size:13px;margin-top:6px}.role{font-size:9px;text-align:center;opacity:.68;height:24px}.state{font-size:9px;font-weight:900;letter-spacing:.08em;margin-top:3px}
+  [data-state="walk"] .avatar{animation:bob .34s ease-in-out infinite alternate}[data-state="think"] .avatar{animation:think .9s ease-in-out infinite alternate}[data-state="work"] .avatar{animation:work .28s ease-in-out infinite alternate}[data-state="role"] .avatar{animation:role .7s ease-in-out infinite alternate}
+  @keyframes bob{to{transform:translateY(-8px) rotate(1deg)}}@keyframes think{to{transform:rotate(-3deg) translateY(-3px)}}@keyframes work{to{transform:translateX(3px)}}@keyframes role{to{transform:scale(1.045)}}
+</style>
+<div class="stage">
+  <div class="head"><div><div class="kicker">NYOBAKANTORAI · SIX AGENT OFFICE</div><div class="title">Meet the Office</div></div><div class="pill">LOCAL-FIRST · HUMAN-GOVERNED</div></div>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+const people=[
+ ["praroro","COO / CHIEF OF STAFF"],["paijo","QUANT / GROWTH / FINANCE"],["subagjo","ENGINEERING / OPERATIONS"],
+ ["alex","STRATEGY / RESEARCH"],["sumiati","CREATIVE / COMMS"],["siti","QA / COMPLIANCE"]
+];
+const states=["idle","walk","think","work","role","seated"];
+const grid=document.querySelector("#grid");
+grid.innerHTML=people.map(([id,role],i)=>`<div class="card" data-state="idle"><img class="avatar" src="../../office/src/assets/generated/characters/${id}/idle.svg"><div class="name">${id.toUpperCase()}</div><div class="role">${role}</div><div class="state">IDLE</div></div>`).join("");
+window.setFrame=(frame)=>{
+ [...grid.children].forEach((card,i)=>{
+   const state=states[(frame+i)%states.length];
+   card.dataset.state=state;
+   card.querySelector(".avatar").src=`../../office/src/assets/generated/characters/${people[i][0]}/${state}.svg?f=${frame}`;
+   card.querySelector(".state").textContent=state.toUpperCase();
+ });
+ return frame;
+};
+window.setFrame(0);
+</script>
