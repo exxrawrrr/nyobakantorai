@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const required = [
-  "README.md", "SECURITY.md", "CONTRIBUTING.md", "LICENSE", "ACKNOWLEDGEMENTS.md", "install.ps1", "install.sh", "scripts/preflight.mjs", "scripts/hermes-bootstrap.mjs", "scripts/hermes-profile-distribution.test.mjs",
+  "README.md", "SECURITY.md", "CONTRIBUTING.md", "LICENSE", "ACKNOWLEDGEMENTS.md", "config/employees.json", "config/capabilities.json", "scripts/generate-workforce.mjs", "office/workforce.mjs", "install.ps1", "install.sh", "scripts/preflight.mjs", "scripts/hermes-bootstrap.mjs", "scripts/hermes-profile-distribution.test.mjs",
   ".gitignore", ".env.example", "package.json",
   "office/package.json", "office/server.mjs", "office/src/asset-manifest.json",
   "packages/runtime-adapter/index.mjs", "packages/runtime-adapter/index.test.mjs", "packages/runtime-adapter/http-readonly.mjs", "packages/runtime-adapter/http-readonly.test.mjs", "packages/runtime-adapter/README.md",
@@ -17,8 +17,12 @@ for (const file of required) {
   if (!existsSync(resolve(root, file))) throw new Error(`Missing required public project file: ${file}`);
 }
 
-for (const id of ["praroro","paijo","subagjo","alex","sumiati","siti"]) {
-  const manifest = `hermes-profiles/${id}/distribution.yaml`;
+const workforceRegistry = JSON.parse(readFileSync(resolve(root, "config/employees.json"), "utf8"));
+if (!Array.isArray(workforceRegistry.employees) || workforceRegistry.employees.length !== workforceRegistry.employee_count || workforceRegistry.employees.length < 16) {
+  throw new Error("Canonical employee registry is incomplete.");
+}
+for (const employee of workforceRegistry.employees) {
+  const manifest = `hermes-profiles/${employee.id}/distribution.yaml`;
   if (!existsSync(resolve(root, manifest))) throw new Error(`Missing Hermes profile distribution: ${manifest}`);
 }
 
@@ -66,7 +70,7 @@ for (const [file, expected] of expectedScreenshots) {
 }
 
 const server = readFileSync(resolve(root, "office/server.mjs"), "utf8");
-if (!/runtime_adapter_api:\s*1/.test(server) || !/human_approval_gate:\s*true/.test(server)) {
+if (!/runtime_adapter_api:\s*1/.test(server) || !/human_approval_gate:\s*true/.test(server) || !server.includes("/api/workforce")) {
   throw new Error("Capability contract is missing adapter API or human approval gate.");
 }
 

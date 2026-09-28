@@ -2,11 +2,13 @@ import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { EMPLOYEE_IDS } from "../office/workforce.mjs";
+import { planProfileAction } from "./hermes-bootstrap-plan.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const profileIds = ["praroro","paijo","subagjo","alex","sumiati","siti"];
+const profileIds = EMPLOYEE_IDS;
 const argv = process.argv.slice(2);
-const mode = argv.includes("--update") ? "update" : argv.includes("--check") ? "check" : "install";
+const mode = argv.includes("--upgrade") ? "upgrade" : argv.includes("--update") ? "update" : argv.includes("--check") ? "check" : "install";
 const force = argv.includes("--force");
 const json = argv.includes("--json");
 const boardArg = argv.find((arg) => arg.startsWith("--board="));
@@ -39,23 +41,20 @@ for (const id of profileIds) {
   const source = resolve(root, "hermes-profiles", id);
   if (!existsSync(resolve(source, "distribution.yaml"))) throw new Error(`Missing Hermes distribution for ${id}`);
   const show = run(["profile","show",id], true);
-  if (mode === "check") {
-    results.push({ profile:id, action:"check", ok:show.ok });
+  const action = planProfileAction({ mode, exists: show.ok, force });
+  if (action === "check" || action === "skip-existing") {
+    results.push({ profile:id, action, ok: action === "check" ? show.ok : true });
     continue;
   }
-  if (show.ok && mode === "install" && !force) {
-    results.push({ profile:id, action:"skip-existing", ok:true });
-    continue;
-  }
-  if (show.ok && mode === "update" && !force) {
-    const update = run(["profile","update",id], true);
-    results.push({ profile:id, action:"update", ok:update.ok, detail:update.ok ? update.stdout : (update.stderr || update.stdout) });
+  if (action === "native-update") {
+    const update = run(["profile","update",id,"--yes"], true);
+    results.push({ profile:id, action, ok:update.ok, detail:update.ok ? update.stdout : (update.stderr || update.stdout) });
     continue;
   }
   const args = ["profile","install",source,"-y"];
-  if (force) args.push("--force");
+  if (action === "force-install" || action === "upgrade-distribution") args.push("--force");
   const install = run(args, true);
-  results.push({ profile:id, action:force ? "force-install" : "install", ok:install.ok, detail:install.ok ? install.stdout : (install.stderr || install.stdout) });
+  results.push({ profile:id, action, ok:install.ok, detail:install.ok ? install.stdout : (install.stderr || install.stdout) });
 }
 
 if (mode !== "check") {
@@ -65,11 +64,12 @@ if (mode !== "check") {
 const currentBoard = run(["kanban","boards","show"], true);
 const verify = profileIds.map((id) => ({ id, ok: run(["profile","show",id], true).ok }));
 const ok = verify.every((x) => x.ok) && (mode === "check" ? true : currentBoard.ok);
-const summary = { ok, hermes_version:version.stdout || version.stderr, hermes_home:env.HERMES_HOME || "(Hermes default)", board:currentBoard.ok ? currentBoard.stdout : board, mode, results, profiles:verify };
+const summary = { ok, employee_count:profileIds.length, hermes_version:version.stdout || version.stderr, hermes_home:env.HERMES_HOME || "(Hermes default)", board:currentBoard.ok ? currentBoard.stdout : board, mode, results, profiles:verify };
 if (json) console.log(JSON.stringify(summary,null,2));
 else {
   console.log(`Hermes: ${summary.hermes_version}`);
   console.log(`Home: ${summary.hermes_home}`);
+  console.log(`Workforce: ${profileIds.length} profiles`);
   for (const item of results) console.log(`${item.ok ? "PASS" : "FAIL"}  ${item.profile} — ${item.action}`);
   console.log(`Board: ${summary.board}`);
   console.log(ok ? "Hermes bootstrap ready." : "Hermes bootstrap incomplete.");

@@ -8,7 +8,7 @@ const capabilities=JSON.parse(await readFile(resolve(root,"config/capabilities.j
 const ids=new Set(), capabilityIds=new Set(capabilities.capabilities.map(x=>x.id));
 const required=["id","name","role","department","summary","aliases","personality","habits","work_style","expertise","skills","preferred_toolsets","external_capabilities","approval_policy","verification_policy","memory_boundary","routing","visual","profile"];
 const findings=[];
-if(registry.schema!==1||registry.version!=="0.3.0"||!Array.isArray(registry.employees)||registry.employees.length!==16)findings.push("registry must contain exactly 16 v0.3 employees");
+if(registry.schema!==1||registry.version!=="0.3.0"||!Array.isArray(registry.employees)||registry.employees.length<16)findings.push("registry must contain at least 16 v0.3 employees");
 for(const e of registry.employees){
  for(const k of required)if(e[k]===undefined)findings.push(`${e.id||"?"}: missing ${k}`);
  if(!/^[a-z][a-z0-9-]{1,39}$/.test(e.id||""))findings.push(`${e.id}: invalid id`);

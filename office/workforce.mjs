@@ -786,8 +786,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        250,
-        360
+        1035,
+        355
       ],
       "desk_slot": 6,
       "initials": "MA"
@@ -912,8 +912,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        455,
-        360
+        1145,
+        355
       ],
       "desk_slot": 7,
       "initials": "GU"
@@ -1031,8 +1031,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        665,
-        360
+        1035,
+        430
       ],
       "desk_slot": 8,
       "initials": "RA"
@@ -1145,8 +1145,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        305,
-        525
+        1145,
+        430
       ],
       "desk_slot": 9,
       "initials": "BI"
@@ -1259,8 +1259,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        525,
-        515
+        1035,
+        505
       ],
       "desk_slot": 10,
       "initials": "NA"
@@ -1370,8 +1370,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        745,
-        525
+        1145,
+        505
       ],
       "desk_slot": 11,
       "initials": "DI"
@@ -1484,8 +1484,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        245,
-        525
+        1035,
+        580
       ],
       "desk_slot": 12,
       "initials": "BA"
@@ -1596,8 +1596,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        455,
-        525
+        1145,
+        580
       ],
       "desk_slot": 13,
       "initials": "FI"
@@ -1706,8 +1706,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        665,
-        525
+        160,
+        420
       ],
       "desk_slot": 14,
       "initials": "TA"
@@ -1820,8 +1820,8 @@ export const WORKFORCE = Object.freeze([
       "asset_status": "pending-original-art",
       "asset_id": null,
       "scene_position": [
-        745,
-        525
+        160,
+        570
       ],
       "desk_slot": 15,
       "initials": "CA"

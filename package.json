@@ -1,6 +1,6 @@
 {
   "name": "nyobakantorai",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Local-first, human-governed multi-agent office with evidence-gated task orchestration.",
   "type": "module",
@@ -17,7 +17,7 @@
     "doctor:json": "node scripts/preflight.mjs --json",
     "security:scan": "node scripts/security-scan.mjs",
     "audit": "node scripts/repo-audit.mjs && npm run security:scan && npm run public:scan",
-    "verify": "npm run doctor && npm run audit && npm test && npm run build && npm run test:smoke",
+    "verify": "npm run doctor && npm run workforce:check && npm run audit && npm test && npm run build && npm run test:smoke",
     "public:scan": "node scripts/public-release-audit.mjs",
     "demo": "node examples/demo-workflow.mjs",
     "test:demo": "node --test examples/demo-workflow.test.mjs examples/runtime-adapter.test.mjs",
@@ -30,6 +30,8 @@
     "doctor:runtime": "node scripts/preflight.mjs --runtime",
     "hermes:bootstrap": "node scripts/hermes-bootstrap.mjs",
     "hermes:check": "node scripts/hermes-bootstrap.mjs --check",
-    "test:hermes": "node --test scripts/hermes-profile-distribution.test.mjs"
+    "test:hermes": "node --test scripts/hermes-profile-distribution.test.mjs scripts/hermes-bootstrap-plan.test.mjs",
+    "workforce:generate": "node scripts/generate-workforce.mjs",
+    "workforce:check": "node scripts/generate-workforce.mjs --check"
   }
 }
