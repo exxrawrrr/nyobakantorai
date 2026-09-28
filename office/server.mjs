@@ -126,7 +126,7 @@ const server = createServer(async (request, response) => {
     }
     if (pathname === "/api/capabilities" && request.method === "GET") {
       assertLocal(request);
-      json(response, 200, { app: "nyobakantorai", api: 1, local_only: true, dispatch: false, runtime_adapter: hermesEnabled ? "hermes-readonly" : "none", evidence_gated_verification: true, employees: employeeIds, endpoints: ["/api/health", "/api/capabilities", "/api/runtime", "/api/worker/tasks"] }); return;
+      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: hermesEnabled ? "hermes-readonly" : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], employees: employeeIds, endpoints: ["/api/health", "/api/capabilities", "/api/runtime", "/api/worker/tasks"] }); return;
     }
     if (pathname === "/api/capabilities") throw new PublicError(405, "Method not allowed");
     if (pathname === "/api/worker/tasks" && request.method === "GET") {

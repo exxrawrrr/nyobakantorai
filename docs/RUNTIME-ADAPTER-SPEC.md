@@ -2,17 +2,49 @@
 
 A runtime adapter connects nyobakantorai to an external agent runtime without granting the UI implicit authority.
 
-Minimum contract:
+The canonical v1 implementation lives in `packages/runtime-adapter/` and exports:
+
+- `defineRuntimeAdapter(spec)`
+- `createNullAdapter(id)`
+- `snapshotRuntime(adapter, options)`
+- `RUNTIME_ADAPTER_API = 1`
+
+## v1 safety contract
 
 - `health()` reports availability without mutating state.
-- `capabilities()` declares read/write abilities explicitly.
-- `listTasks()` returns bounded, sanitized task metadata.
-- Every external task must carry stable provenance.
-- Write/dispatch capability must default to disabled.
+- `listTasks()` returns bounded task metadata.
+- Task snapshots are normalized to a small public schema.
+- Raw adapter exceptions are never copied into the public snapshot.
+- Timeout/error conditions fail closed as disconnected/error state.
 - Secrets remain runtime-scoped and never enter task text or repository state.
-- Failed verification must degrade to UNKNOWN/NOT CONNECTED, never optimistic success.
+- The SDK rejects adapters that declare write, dispatch, external-write, paid-action, account-change, or destructive capability.
+- Runtime state never grants human permission.
+- Human approval never proves execution.
+- VERIFIED still requires independent evidence.
 
-The current Hermes integration implements only the read-only subset. Future adapters should preserve the same fail-closed behavior and map their output into the existing task/evidence model.
+## Minimal adapter
+
+```js
+import { defineRuntimeAdapter, snapshotRuntime } from "../packages/runtime-adapter/index.mjs";
+
+const adapter = defineRuntimeAdapter({
+  id: "example",
+  async health() {
+    return { ok: true, state: "CONNECTED" };
+  },
+  async listTasks() {
+    return [
+      { id: "t_1", assignee: "siti", state: "BLOCKED", title: "Review artifact" },
+    ];
+  },
+});
+
+console.log(await snapshotRuntime(adapter));
+```
+
+## Current runtime integration
+
+The existing Hermes integration predates the generic SDK and remains read-only/fail-closed. Migrating it onto this adapter interface is tracked separately so the public release does not silently change the working Hermes behavior.
 
 The discovery endpoint is:
 
@@ -20,4 +52,4 @@ The discovery endpoint is:
 GET /api/capabilities
 ```
 
-It is localhost-only and reports the currently active runtime adapter and safety boundaries.
+It is localhost-only and reports the active adapter label, Runtime Adapter API version, human-approval boundary, and other public safety capabilities. Discovery metadata is not authorization.

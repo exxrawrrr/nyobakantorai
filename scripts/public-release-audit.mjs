@@ -31,6 +31,7 @@ const privateMarkers = [
   ["legacy namespace", "rafdi_manual"],
   ["legacy namespace", "rafdi_owner"],
   ["legacy namespace", "rafdi_office"],
+  ["legacy owner literal", "value=\"rafdi\""],
   ["legacy skill namespace", "rafdi-task"],
   ["legacy skill namespace", "rafdi-manual"],
   ["legacy skill namespace", "rafdi-approval"],

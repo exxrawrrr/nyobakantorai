@@ -55,3 +55,6 @@ operations/handoff/qa-packets/
 operations/handoff/owner-submissions/
 operations/handoff/original-artifacts/
 operations/handoff/source-evidence/
+
+# Generated release provenance artifact
+release/

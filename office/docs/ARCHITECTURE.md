@@ -8,7 +8,8 @@ nyobakantorai is a local-first visual office for human-governed multi-agent work
 - The browser task registry is local state, not proof of external execution.
 - Runtime adapters are read-only unless an explicit future capability says otherwise.
 - Skills define procedures; they do not grant accounts, tools, filesystem access, or model access.
-- External writes, publishing, messaging, paid actions, deployments, or account changes require scoped human approval.
+- External writes, publishing, messaging, paid actions, deployments, account changes, or destructive work require scoped human approval.
+- High-impact tasks remain PENDING and cannot enter execution until the owner records APPROVED.
 - VERIFIED state requires independent evidence.
 
 ## Main components

@@ -20,6 +20,7 @@ test("read-only runtime snapshot includes all six example employees", async () =
   assert.match(server, /dispatch: \{ enabled: false/);
   assert.match(server, /\/api\/capabilities/);
   assert.match(server, /\/api\/runtime/);
+  assert.match(server, /human_approval_gate: true/);
 });
 
 test("public UI does not depend on private machine paths or removed legacy docs", async () => {

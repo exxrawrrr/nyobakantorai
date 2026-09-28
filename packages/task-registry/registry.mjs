@@ -7,6 +7,10 @@ export const EMPLOYEES = Object.freeze([
   { id: "siti", name: "Siti", role: "QA, Compliance & Knowledge", focus: "QA independen, bukti, dan konsistensi", accent: "blue" },
 ]);
 
+export const RISK_CLASSES = Object.freeze(["READ_ONLY", "LOCAL_WRITE", "EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
+export const APPROVAL_STATUSES = Object.freeze(["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED"]);
+const AUTO_APPROVAL_RISKS = new Set(["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
+
 export const STATUSES = Object.freeze([
   "PLANNED",
   "REQUESTED",
@@ -106,12 +110,19 @@ export function createTask(registry, input, clock = defaultClock, idFactory = de
     source: clean(input.source, 240) || "manual dashboard",
     output_ref: "",
     evidence_ref: "",
-    approval_required: Boolean(input.approval_required),
+    risk_class: RISK_CLASSES.includes(input.risk_class) ? input.risk_class : "READ_ONLY",
+    approval_required: false,
+    approval_status: "NOT_REQUIRED",
+    approval_actor: "",
+    approval_at: "",
+    approval_evidence_ref: "",
     handoff_to: employeeIds.has(input.handoff_to) ? input.handoff_to : "",
     execution_mode: "DEMO",
     runtime_ref: "",
     runtime_state: "NOT CONNECTED",
   };
+  task.approval_required = AUTO_APPROVAL_RISKS.has(task.risk_class) || Boolean(input.approval_required);
+  task.approval_status = task.approval_required ? "PENDING" : "NOT_REQUIRED";
   next.tasks.push(task);
   next.events.push(makeEvent(id, "TASK_CREATED", {
     actor: input.actor,
@@ -129,7 +140,6 @@ export function attachRuntimeTask(registry, taskId, runtime, clock = defaultCloc
   assert(task, "Tugas tidak ditemukan.");
   const runtimeId = clean(runtime.task_id, 160);
   assert(/^t_[a-z0-9]+$/i.test(runtimeId), "Hermes task ID tidak valid.");
-  assert(phaseOneEmployee(task.assignee_id), "Phase 1 hanya mendukung Praroro, Subagjo, dan Siti.");
   assert(task.execution_mode !== "HERMES", "Tugas sudah terhubung ke Hermes.");
   assert(runtime.assignee === task.assignee_id, "Assignee Hermes tidak cocok.");
   assert(runtime.state === "BLOCKED", "Task Hermes wajib di-stage sebagai BLOCKED.");
@@ -151,9 +161,6 @@ export function attachRuntimeTask(registry, taskId, runtime, clock = defaultCloc
   return next;
 }
 
-function phaseOneEmployee(id) {
-  return ["praroro", "subagjo", "siti"].includes(id);
-}
 
 export function updateTask(registry, taskId, patch, clock = defaultClock, idFactory = defaultId) {
   validateRegistry(registry);
@@ -167,6 +174,9 @@ export function updateTask(registry, taskId, patch, clock = defaultClock, idFact
   assert(STATUSES.includes(newStatus), "Status tidak dikenal.");
   if (newStatus !== oldStatus) {
     assert(ALLOWED_TRANSITIONS[oldStatus].includes(newStatus), `Transisi ${oldStatus} → ${newStatus} tidak diizinkan.`);
+  }
+  if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(newStatus)) {
+    assert(task.approval_status === "APPROVED", "Owner approval required before this task may execute.");
   }
 
   const actor = clean(patch.actor, 80) || "manual:owner";
@@ -183,7 +193,6 @@ export function updateTask(registry, taskId, patch, clock = defaultClock, idFact
   task.output_ref = clean(patch.output_ref ?? task.output_ref, 1000);
   task.evidence_ref = evidence;
   task.handoff_to = employeeIds.has(patch.handoff_to) ? patch.handoff_to : (patch.handoff_to === "" ? "" : task.handoff_to);
-  task.approval_required = patch.approval_required ?? task.approval_required;
   task.updated_at = clock();
 
   next.events.push(makeEvent(task.id, newStatus === oldStatus ? "TASK_DETAILS_UPDATED" : "STATUS_CHANGED", {
@@ -197,6 +206,35 @@ export function updateTask(registry, taskId, patch, clock = defaultClock, idFact
   return next;
 }
 
+export function recordApproval(registry, taskId, decision, clock = defaultClock, idFactory = defaultId) {
+  validateRegistry(registry);
+  const next = clone(registry);
+  const task = next.tasks.find(({ id }) => id === taskId);
+  assert(task, "Tugas tidak ditemukan.");
+  assert(task.execution_mode !== "HERMES", "Approval lokal tidak boleh mengubah klaim runtime Hermes.");
+  const actor = clean(decision.actor, 80).toLowerCase();
+  assert(actor === "owner" || actor === "manual:owner", "Only the owner may approve high-impact work.");
+  const status = clean(decision.status, 20).toUpperCase();
+  assert(["APPROVED", "REJECTED"].includes(status), "Approval decision must be APPROVED or REJECTED.");
+  assert(task.approval_required, "Task does not require approval.");
+  const at = clock();
+  task.approval_status = status;
+  task.approval_actor = "owner";
+  task.approval_at = at;
+  task.approval_evidence_ref = clean(decision.evidence_ref, 1000) || `local-approval:${task.id}:${at}`;
+  task.updated_at = at;
+  next.events.push(makeEvent(task.id, "APPROVAL_RECORDED", {
+    actor: "owner",
+    oldStatus: task.lifecycle_status,
+    newStatus: task.lifecycle_status,
+    source: clean(decision.source, 240) || "local approval",
+    evidenceRef: task.approval_evidence_ref,
+  }, clock, idFactory));
+  next.updated_at = at;
+  validateRegistry(next);
+  return next;
+}
+
 export function validateRegistry(registry) {
   assert(registry && typeof registry === "object", "Registry harus berupa object.");
   assert(registry.version === 1, "Versi registry tidak didukung.");
@@ -206,9 +244,15 @@ export function validateRegistry(registry) {
     assert(clean(task.title), "Judul task kosong.");
     assert(employeeIds.has(task.assignee_id), "Task memiliki assignee tidak dikenal.");
     assert(STATUSES.includes(task.lifecycle_status), "Task memiliki status tidak dikenal.");
+    assert(RISK_CLASSES.includes(task.risk_class || "READ_ONLY"), "Task memiliki risk class tidak dikenal.");
+    assert(APPROVAL_STATUSES.includes(task.approval_status || "NOT_REQUIRED"), "Task memiliki approval status tidak dikenal.");
+    if (AUTO_APPROVAL_RISKS.has(task.risk_class)) assert(task.approval_required === true, "High-impact task wajib membutuhkan approval.");
+    if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(task.lifecycle_status)) {
+      assert(task.approval_status === "APPROVED", "Task berisiko tinggi tidak boleh berjalan tanpa approval.");
+    }
     if (task.execution_mode === "HERMES") {
       assert(clean(task.runtime_ref, 200).startsWith("hermes-kanban:"), "Task Hermes tidak memiliki runtime reference valid.");
-      assert(task.runtime_state === "BLOCKED" && task.lifecycle_status === "BLOCKED", "Task Hermes Phase 1 harus tetap BLOCKED.");
+      assert(task.runtime_state === "BLOCKED" && task.lifecycle_status === "BLOCKED", "Task Hermes yang di-stage harus tetap BLOCKED sampai runtime tervalidasi.");
       const staged = registry.events.find((event) => event.task_id === task.id && event.action === "HERMES_TASK_STAGED" && event.actor === "adapter:hermes" && event.evidence_ref === task.runtime_ref);
       assert(staged, "Task Hermes tidak memiliki event staging yang valid.");
     }

@@ -6,6 +6,9 @@ export const EMPLOYEES = Object.freeze([
   { id: "sumiati", name: "Sumiati", role: "Creative & Communication", color: "#8b654d" },
   { id: "siti", name: "Siti", role: "QA & Verification", color: "#6e7d55" },
 ]);
+export const RISK_CLASSES = Object.freeze(["READ_ONLY", "LOCAL_WRITE", "EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
+export const APPROVAL_STATUSES = Object.freeze(["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED"]);
+const AUTO_APPROVAL_RISKS = new Set(["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
 export const STATUSES = Object.freeze(["PLANNED", "IN_PROGRESS", "BLOCKED", "COMPLETED", "VERIFIED"]);
 const EMPLOYEE_IDS = new Set(EMPLOYEES.map(({ id }) => id));
 const transitions = {
@@ -47,9 +50,13 @@ export function createTask(registry, input, idFactory = () => id("task"), clock 
     priority: ["LOW", "MEDIUM", "HIGH", "CRITICAL"].includes(input.priority) ? input.priority : "MEDIUM",
     due_date: /^\d{4}-\d{2}-\d{2}$/.test(input.due_date || "") ? input.due_date : "",
     lifecycle_status: "PLANNED", execution_mode: "DEMO", provenance: "DEMO", quarantined: false,
+    risk_class: RISK_CLASSES.includes(input.risk_class) ? input.risk_class : "READ_ONLY",
+    approval_required: false, approval_status: "NOT_REQUIRED", approval_actor: "", approval_at: "", approval_evidence_ref: "",
     runtime_ref: "", runtime_state: "", comments: [], attachments: [], evidence_refs: [],
     created_at: at, updated_at: at,
   };
+  task.approval_required = AUTO_APPROVAL_RISKS.has(task.risk_class) || Boolean(input.approval_required);
+  task.approval_status = task.approval_required ? "PENDING" : "NOT_REQUIRED";
   next.tasks.push(task);
   next.events.push(eventFor(task, "TASK_CREATED", "owner", at, "LOCAL_MANUAL"));
   next.updated_at = at;
@@ -65,6 +72,7 @@ export function updateTask(registry, taskId, patch, clock = now) {
   const status = clean(patch.lifecycle_status || task.lifecycle_status, 30).toUpperCase();
   if (!STATUSES.includes(status)) throw new Error("Unknown status.");
   if (status !== task.lifecycle_status && !transitions[task.lifecycle_status]?.has(status)) throw new Error(`Invalid transition ${task.lifecycle_status} → ${status}.`);
+  if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(status) && task.approval_status !== "APPROVED") throw new Error("Owner approval required before this task may execute.");
   const actor = clean(patch.actor || "owner", 40).toLowerCase();
   const evidence = clean(patch.evidence_ref, 1000);
   if (status === "VERIFIED") {
@@ -89,6 +97,32 @@ export function updateTask(registry, taskId, patch, clock = now) {
   return next;
 }
 
+export function recordApproval(registry, taskId, decision, clock = now) {
+  const next = clone(registry);
+  const task = next.tasks.find(({ id: current }) => current === taskId);
+  if (!task) throw new Error("Task not found.");
+  if (task.execution_mode === "HERMES") throw new Error("Hermes claims are read-only in the office.");
+  if (!task.approval_required) throw new Error("Task does not require approval.");
+  const actor = clean(decision.actor || "owner", 40).toLowerCase();
+  if (actor !== "owner") throw new Error("Only the owner may approve high-impact work.");
+  const status = clean(decision.status, 20).toUpperCase();
+  if (!["APPROVED", "REJECTED"].includes(status)) throw new Error("Approval decision must be APPROVED or REJECTED.");
+  const at = clock();
+  task.approval_status = status;
+  task.approval_actor = "owner";
+  task.approval_at = at;
+  task.approval_evidence_ref = clean(decision.evidence_ref, 1000) || `local-approval:${task.id}:${at}`;
+  task.updated_at = at;
+  next.events.push(eventFor(task, "APPROVAL_RECORDED", "owner", at, "LOCAL_APPROVAL", {
+    decision: status,
+    evidence_ref: task.approval_evidence_ref,
+    risk_class: task.risk_class,
+  }));
+  next.updated_at = at;
+  validateRegistry(next);
+  return next;
+}
+
 export function importRegistry(text) {
   let parsed;
   try { parsed = JSON.parse(text); } catch { throw new Error("Valid JSON required."); }
@@ -98,6 +132,12 @@ export function importRegistry(text) {
     id: clean(task.id, 120), title: clean(task.title, 160), detail: clean(task.detail, 4000),
     assignee_id: clean(task.assignee_id, 40).toLowerCase(),
     execution_mode: task.execution_mode === "HERMES" ? "HERMES" : "DEMO",
+    risk_class: RISK_CLASSES.includes(task.risk_class) ? task.risk_class : "READ_ONLY",
+    approval_required: AUTO_APPROVAL_RISKS.has(task.risk_class) || Boolean(task.approval_required),
+    approval_status: APPROVAL_STATUSES.includes(task.approval_status) ? task.approval_status : (AUTO_APPROVAL_RISKS.has(task.risk_class) || task.approval_required ? "PENDING" : "NOT_REQUIRED"),
+    approval_actor: clean(task.approval_actor, 40),
+    approval_at: clean(task.approval_at, 80),
+    approval_evidence_ref: clean(task.approval_evidence_ref, 1000),
     provenance: task.execution_mode === "HERMES" ? "LOCAL_CLAIM" : "DEMO",
     quarantined: task.execution_mode === "HERMES",
     reconcile_reason: task.execution_mode === "HERMES" ? "NOT_RECONCILED" : "",
@@ -116,6 +156,9 @@ export function validateRegistry(registry) {
     if (!task.id || seen.has(task.id)) throw new Error("Task IDs must be unique.");
     seen.add(task.id);
     if (!task.title || !EMPLOYEE_IDS.has(task.assignee_id) || !STATUSES.includes(task.lifecycle_status)) throw new Error("Invalid task.");
+    if (!RISK_CLASSES.includes(task.risk_class || "READ_ONLY") || !APPROVAL_STATUSES.includes(task.approval_status || "NOT_REQUIRED")) throw new Error("Invalid approval policy.");
+    if (AUTO_APPROVAL_RISKS.has(task.risk_class) && task.approval_required !== true) throw new Error("High-impact task requires approval.");
+    if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(task.lifecycle_status) && task.approval_status !== "APPROVED") throw new Error("High-impact task cannot execute without approval.");
     if (task.lifecycle_status === "VERIFIED") {
       const verified = registry.events.find((entry) => entry.task_id === task.id && entry.action === "STATUS_CHANGED" && entry.actor === "siti" && entry.new_status === "VERIFIED" && entry.evidence_ref);
       if (!verified) throw new Error("VERIFIED requires a Siti evidence event.");
