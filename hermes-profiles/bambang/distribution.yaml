@@ -1,0 +1,10 @@
+name: bambang
+version: 0.3.0
+description: "Automation / Queue Optimizer — nyobakantorai"
+author: "exxrawrrr / nyobakantorai contributors"
+license: "MIT"
+distribution_owned:
+  - SOUL.md
+  - profile.yaml
+  - skills
+  - distribution.yaml

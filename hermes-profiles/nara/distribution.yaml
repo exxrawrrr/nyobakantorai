@@ -1,0 +1,10 @@
+name: nara
+version: 0.3.0
+description: "Data / BI / Experimentation — nyobakantorai"
+author: "exxrawrrr / nyobakantorai contributors"
+license: "MIT"
+distribution_owned:
+  - SOUL.md
+  - profile.yaml
+  - skills
+  - distribution.yaml

@@ -1,6 +1,6 @@
 name: praroro
-version: 0.2.0
-description: "nyobakantorai coordination agent: Coordination, prioritization, scoped delegation, and concise executive briefs."
+version: 0.3.0
+description: "COO / Chief of Staff — nyobakantorai"
 author: "exxrawrrr / nyobakantorai contributors"
 license: "MIT"
 distribution_owned:

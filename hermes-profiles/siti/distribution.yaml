@@ -1,6 +1,6 @@
 name: siti
-version: 0.2.0
-description: "nyobakantorai quality agent: Independent verification, source provenance, acceptance criteria, and evidence review."
+version: 0.3.0
+description: "QA / Compliance / Knowledge — nyobakantorai"
 author: "exxrawrrr / nyobakantorai contributors"
 license: "MIT"
 distribution_owned:
