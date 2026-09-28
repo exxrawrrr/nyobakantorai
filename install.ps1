@@ -2,6 +2,7 @@ param(
   [string]$InstallDir = (Join-Path $HOME "nyobakantorai"),
   [switch]$WithHermes,
   [switch]$Start,
+  [switch]$Upgrade,
   [int]$Port = 4322,
   [string]$HermesHome = "",
   [string]$Ref = "main"
@@ -110,9 +111,10 @@ Write-Host "Running runtime preflight..."
 if ($LASTEXITCODE -ne 0) { throw "Runtime preflight failed." }
 
 if ($hermesExe) {
-  Write-Host "Installing/verifying six Hermes employee profiles..."
+  Write-Host "Installing/verifying the canonical Hermes workforce..."
   $bootstrap = @((Join-Path $InstallDir "scripts\hermes-bootstrap.mjs"))
   if ($HermesHome) { $bootstrap += "--home=$env:NYOBAKANTORAI_HERMES_HOME" }
+  if ($Upgrade) { $bootstrap += "--upgrade" }
   & $node @bootstrap
   if ($LASTEXITCODE -ne 0) { throw "Hermes profile bootstrap failed." }
 } elseif ($WithHermes) {

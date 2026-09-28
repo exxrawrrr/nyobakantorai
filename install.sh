@@ -4,6 +4,7 @@ set -euo pipefail
 INSTALL_DIR="${HOME}/nyobakantorai"
 WITH_HERMES=0
 START=0
+UPGRADE=0
 PORT=4322
 HERMES_HOME_OVERRIDE=""
 REF="main"
@@ -14,6 +15,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --with-hermes) WITH_HERMES=1; shift ;;
     --start) START=1; shift ;;
+    --upgrade) UPGRADE=1; shift ;;
     --dir) INSTALL_DIR="$2"; shift 2 ;;
     --port) PORT="$2"; shift 2 ;;
     --hermes-home) HERMES_HOME_OVERRIDE="$2"; shift 2 ;;
@@ -75,6 +77,7 @@ echo "Running runtime preflight..."
 
 if command -v hermes >/dev/null 2>&1; then
   args=("$INSTALL_DIR/scripts/hermes-bootstrap.mjs")
+  (( UPGRADE )) && args+=("--upgrade")
   [[ -n "$HERMES_HOME_OVERRIDE" ]] && args+=("--home=$HERMES_HOME_OVERRIDE")
   "$NODE" "${args[@]}"
 elif (( WITH_HERMES )); then

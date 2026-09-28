@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const required = [
-  "README.md", "SECURITY.md", "CONTRIBUTING.md", "LICENSE", "ACKNOWLEDGEMENTS.md", "config/employees.json", "config/capabilities.json", "scripts/generate-workforce.mjs", "office/workforce.mjs", "install.ps1", "install.sh", "scripts/preflight.mjs", "scripts/hermes-bootstrap.mjs", "scripts/hermes-profile-distribution.test.mjs",
+  "README.md", "SECURITY.md", "CONTRIBUTING.md", "LICENSE", "ACKNOWLEDGEMENTS.md", "config/employees.json", "config/capabilities.json", "scripts/generate-workforce.mjs", "office/workforce.mjs", "lib/workforce.mjs", "lib/routing.mjs", "lib/capability-policy.mjs", "scripts/workforce-doctor.mjs", "scripts/new-employee.mjs", "install.ps1", "install.sh", "scripts/preflight.mjs", "scripts/hermes-bootstrap.mjs", "scripts/hermes-profile-distribution.test.mjs",
   ".gitignore", ".env.example", "package.json",
   "office/package.json", "office/server.mjs", "office/src/asset-manifest.json",
   "packages/runtime-adapter/index.mjs", "packages/runtime-adapter/index.test.mjs", "packages/runtime-adapter/http-readonly.mjs", "packages/runtime-adapter/http-readonly.test.mjs", "packages/runtime-adapter/README.md",

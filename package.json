@@ -10,7 +10,7 @@
   "scripts": {
     "start": "npm --prefix office run dev",
     "build": "npm --prefix office run build",
-    "test": "npm run test:core && npm run test:python && npm run test:demo && npm run test:hermes",
+    "test": "npm run test:core && npm run test:python && npm run test:demo && npm run test:hermes && npm run test:workforce",
     "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs",
     "test:python": "python scripts/run-python-tests.py",
     "doctor": "node scripts/preflight.mjs",
@@ -32,6 +32,10 @@
     "hermes:check": "node scripts/hermes-bootstrap.mjs --check",
     "test:hermes": "node --test scripts/hermes-profile-distribution.test.mjs scripts/hermes-bootstrap-plan.test.mjs",
     "workforce:generate": "node scripts/generate-workforce.mjs",
-    "workforce:check": "node scripts/generate-workforce.mjs --check"
+    "workforce:check": "node scripts/generate-workforce.mjs --check",
+    "test:workforce": "node --test lib/workforce.test.mjs lib/routing.test.mjs lib/capability-policy.test.mjs",
+    "workforce:doctor": "node scripts/workforce-doctor.mjs",
+    "workforce:doctor:json": "node scripts/workforce-doctor.mjs --json",
+    "employee:new": "node scripts/new-employee.mjs"
   }
 }
