@@ -21,6 +21,10 @@ All notable public changes to nyobakantorai are documented here.
 - Public-safe office and approval-flow screenshots with SHA-256 provenance.
 - Animated `Meet the Office` README showcase for Praroro, Paijo, Subagjo, Alex, Sumiati, and Siti using the original owner-authored PNG sprites.
 - End-to-end boot smoke test covering health, capabilities, runtime fail-closed mode, UI delivery, security headers, canonical character assets, method guards, and clean shutdown.
+- Native Hermes profile distributions for all six employees with role-scoped skills.
+- Idempotent Hermes bootstrap that installs missing profiles and creates/switches the `nyobakantorai` Kanban board without copying credentials.
+- One-command Windows and POSIX installers with explicit opt-in for the official Hermes upstream installer.
+- Upstream acknowledgements for Hermes Agent and Pixel Agents.
 
 ### Changed
 - Restored the canonical owner-authored PNG character sprites for all six employees and removed the temporary generic SVG stand-ins.
@@ -32,6 +36,8 @@ All notable public changes to nyobakantorai are documented here.
 - Local legacy/private workspace mirrors are explicitly ignored in addition to being blocked by the public-release scanner.
 - Hermes auto-discovery can now be explicitly disabled with `NYOBAKANTORAI_DISABLE_HERMES=1`, making standalone/offline behavior deterministic.
 - Direct admin shutdown now removes its ephemeral stop token instead of relying on the CLI wrapper for cleanup.
+- Windows Hermes auto-discovery now follows the upstream `%LOCALAPPDATA%\hermes` location before the legacy `~/.hermes` fallback.
+- Runtime-only preflight no longer requires Python/PyYAML; those remain release/developer requirements.
 
 ### Security
 - Public release excludes credentials, auth state, runtime databases, logs, receipts, client/user records, and private workstation paths.

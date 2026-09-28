@@ -10,7 +10,7 @@
   "scripts": {
     "start": "npm --prefix office run dev",
     "build": "npm --prefix office run build",
-    "test": "npm run test:core && npm run test:python && npm run test:demo",
+    "test": "npm run test:core && npm run test:python && npm run test:demo && npm run test:hermes",
     "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs",
     "test:python": "python scripts/run-python-tests.py",
     "doctor": "node scripts/preflight.mjs",
@@ -26,6 +26,10 @@
     "release:manifest": "node scripts/release-manifest.mjs",
     "release:check": "npm run verify && npm run release:manifest",
     "ready": "npm run release:check",
-    "demo:adapter": "node examples/runtime-adapter.mjs"
+    "demo:adapter": "node examples/runtime-adapter.mjs",
+    "doctor:runtime": "node scripts/preflight.mjs --runtime",
+    "hermes:bootstrap": "node scripts/hermes-bootstrap.mjs",
+    "hermes:check": "node scripts/hermes-bootstrap.mjs --check",
+    "test:hermes": "node --test scripts/hermes-profile-distribution.test.mjs"
   }
 }

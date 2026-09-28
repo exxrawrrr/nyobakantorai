@@ -1,0 +1,10 @@
+name: paijo
+version: 0.2.0
+description: "nyobakantorai metrics agent: Source-backed metrics, scenario analysis, growth modeling, and financial reasoning."
+author: "exxrawrrr / nyobakantorai contributors"
+license: "MIT"
+distribution_owned:
+  - SOUL.md
+  - profile.yaml
+  - skills
+  - distribution.yaml

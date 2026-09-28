@@ -344,6 +344,7 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 - **16 reusable skills** covering task truth, tool safety, approval gates, provenance, research, growth, engineering, creative work, and QA.
 - **Evidence-gated task state** where VERIFIED requires independent evidence.
 - **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
+- **Hermes-first reference runtime** with six installable Hermes profile distributions and an idempotent bootstrap.
 - **Read-only runtime adapter SDK** with a strict loopback HTTP adapter for plugging in other local runtimes without granting write or dispatch authority.
 - **Manual handoff + receipt protocol** for provenance-aware work across surfaces.
 - **Portable diagnostics** that check expected safety boundaries without printing secrets.
@@ -351,51 +352,83 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 - **Public-release guardrails** for tests, builds, private-path leakage, sensitive filenames, and credential-shaped strings.
 - **Zero npm runtime dependencies** for the main office server.
 
-## Quick start
+## Install
 
-Requirements:
+### Hermes-first — recommended
 
-- Node.js 20+
-- Python 3.10+
-- PyYAML for Python utilities/tests
+This is the path closest to the author's real setup. Hermes is the reference runtime; nyobakantorai adds the visual office, six role profiles, role skills, human approval, evidence rules, and a conservative runtime view around it.
+
+**Windows PowerShell**
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Start
+```
+
+**Linux / macOS / WSL2**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --start
+```
+
+The installer reuses Hermes when it already exists. Otherwise the explicit `WithHermes` flag invokes the official Nous Research Hermes installer, then installs six native Hermes profile distributions and creates/switches the `nyobakantorai` Kanban board.
+
+It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
+
+```bash
+hermes setup --portal
+```
+
+Then verify:
+
+```bash
+hermes profile list
+hermes kanban boards show
+```
+
+You should see Praroro, Paijo, Subagjo, Alex, Sumiati, and Siti as Hermes profile distributions.
+
+Full walkthrough: [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md).
+
+### Core-only / contributor path
+
+The office can also run without Hermes. This is useful for reviewing the UI, state machine, approval model, or developing adapters.
+
+Runtime requires **Node.js 20+**. Python 3.10+ and PyYAML are needed only for contributor/release utilities.
 
 ```bash
 git clone https://github.com/exxrawrrr/nyobakantorai.git
 cd nyobakantorai
 
-python -m pip install -r requirements-dev.txt
-npm run doctor
+node scripts/preflight.mjs --runtime
 npm run smoke
-npm run ready
 npm start
 ```
 
-Open:
+Open `http://127.0.0.1:4322`.
 
-```text
-http://127.0.0.1:4322
+For contributor/release verification:
+
+```bash
+python -m pip install -r requirements-dev.txt
+npm run ready
 ```
 
-Windows users can also run:
+The root package keeps `"private": true` intentionally to prevent accidental publication to npm; it does **not** make the GitHub repository private.
 
-```text
-office/START-NYOBAKANTORAI.bat
-```
+## Hermes runtime configuration
 
-Hermes is optional. Without it, the UI remains usable in fast offline mode. `npm run doctor` checks the local prerequisites, expected project files, character manifest, and office port without reading credentials. `npm run smoke` performs a real local boot test against health/capability/runtime endpoints, security headers, the UI, an original character sprite, and clean shutdown. `npm run ready` runs the complete pre-publication gate.
-
-The root package keeps `"private": true` intentionally to prevent accidental publication to npm; it does **not** prevent making the GitHub repository public.
-
-## Optional Hermes adapter
+Normally the installer and auto-discovery are enough. Advanced overrides:
 
 ```text
 NYOBAKANTORAI_DISABLE_HERMES=0
 NYOBAKANTORAI_HERMES_EXE=/absolute/path/to/hermes
-NYOBAKANTORAI_HERMES_HOME=/absolute/path/to/.hermes
+NYOBAKANTORAI_HERMES_HOME=/absolute/path/to/hermes-data
 NYOBAKANTORAI_BOARD=nyobakantorai
 NYOBAKANTORAI_PORT=4322
 NYOBAKANTORAI_WORKER_PORT=4333
 ```
+
+On native Windows the office detects the upstream Hermes data location under `%LOCALAPPDATA%\hermes`; on POSIX it checks `~/.hermes`. Explicit environment overrides always win.
 
 No secret is required by the repository itself.
 
@@ -405,6 +438,7 @@ No secret is required by the repository itself.
 | --- | --- |
 | `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
 | `agents/` | Six example public SOUL/profile definitions |
+| `hermes-profiles/` | Native Hermes profile distributions for the same six employees |
 | `skills/hermes-custom/` | Reusable portable skills |
 | `operations/taskctl/` | Blocked owner-controlled Hermes task intake |
 | `operations/handoff/` | Manual handoff, receipts, and source-evidence gates |
@@ -438,6 +472,13 @@ Example contract:
 ```
 
 This endpoint is discovery metadata, not authorization.
+
+## Upstreams and credits
+
+- **Hermes Agent** — reference agent runtime: https://github.com/NousResearch/hermes-agent
+- **Pixel Agents** — visual/interaction inspiration for representing active agents as workers in an office: https://github.com/pixel-agents-hq/pixel-agents
+
+nyobakantorai does not vendor Hermes itself and is not presented as a fork of Pixel Agents. See [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) for the exact relationship and provenance notes.
 
 ## Safety model
 
@@ -478,6 +519,7 @@ See:
 
 - [ROADMAP.md](ROADMAP.md)
 - [office/docs/ARCHITECTURE.md](office/docs/ARCHITECTURE.md)
+- [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md)
 - [docs/RUNTIME-ADAPTER-SPEC.md](docs/RUNTIME-ADAPTER-SPEC.md)
 - [docs/APPROVAL-MODEL.md](docs/APPROVAL-MODEL.md)
 - [docs/DEMO.md](docs/DEMO.md)
@@ -487,6 +529,7 @@ See:
 - [docs/PRIVACY.md](docs/PRIVACY.md)
 - [SECURITY.md](SECURITY.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md)
+- [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md)
 
 MIT licensed.
 

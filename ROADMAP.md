@@ -19,7 +19,9 @@
 - [x] automated public-release audit
 - [x] end-to-end boot smoke test with security-header and clean-shutdown assertions
 - [x] dependency-free read-only Runtime Adapter SDK with fail-closed snapshots
-- [ ] migrate Hermes implementation onto the generic adapter interface
+- [x] native Hermes profile distributions + idempotent six-agent bootstrap
+- [x] one-command Hermes-first installers for Windows and POSIX
+- [ ] migrate the office's direct Hermes reader fully onto the generic adapter interface
 - [x] add strict loopback HTTP read-only adapter
 - [ ] add CLI-agent adapter
 - [ ] normalized execution and cost receipts
