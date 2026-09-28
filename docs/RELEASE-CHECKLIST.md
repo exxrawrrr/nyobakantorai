@@ -28,4 +28,5 @@ A release is not ready because the UI looks good. It is ready only when the publ
 
 ## Publication
 - [ ] Visibility remains PRIVATE until every item above is satisfied.
+- [ ] Follow `docs/PUBLICATION-RUNBOOK.md` for branch protection, code-security settings, visibility change, and public verification.
 - [ ] After changing visibility, re-check the repository from an unauthenticated/public view.

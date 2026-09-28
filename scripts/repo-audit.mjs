@@ -9,7 +9,7 @@ const required = [
   "office/package.json", "office/server.mjs", "office/src/asset-manifest.json",
   "packages/runtime-adapter/index.mjs", "packages/runtime-adapter/index.test.mjs", "packages/runtime-adapter/README.md",
   "docs/THREAT-MODEL.md", "docs/PRIVACY.md", "docs/RUNTIME-ADAPTER-SPEC.md", "docs/APPROVAL-MODEL.md",
-  "docs/DEMO.md", "docs/RELEASE-CHECKLIST.md", "CHANGELOG.md", "SUPPORT.md", "CODE_OF_CONDUCT.md",
+  "docs/DEMO.md", "docs/RELEASE-CHECKLIST.md", "docs/PUBLICATION-RUNBOOK.md", "CHANGELOG.md", "SUPPORT.md", "CODE_OF_CONDUCT.md",
   "docs/assets/README.md", "docs/assets/office-overview.png", "docs/assets/approval-flow.png",
 ];
 for (const file of required) {

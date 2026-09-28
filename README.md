@@ -171,6 +171,7 @@ See:
 - `docs/APPROVAL-MODEL.md`
 - `docs/DEMO.md`
 - `docs/RELEASE-CHECKLIST.md`
+- `docs/PUBLICATION-RUNBOOK.md`
 - `docs/THREAT-MODEL.md`
 - `docs/PRIVACY.md`
 - `SECURITY.md`
