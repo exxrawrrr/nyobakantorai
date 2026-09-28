@@ -1,0 +1,57 @@
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+auth.json
+**/auth.json
+**/nous_auth.json
+
+# Runtime/state
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+*.lock
+logs/
+sessions/
+runtime/
+cache/
+audio_cache/
+image_cache/
+sandboxes/
+terminal-sessions/
+
+# Dependencies / generated
+node_modules/
+__pycache__/
+*.py[cod]
+dist/
+build/
+coverage/
+stt-model-cache/
+*.zip
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local control tokens
+
+# Keep the safe configuration template tracked
+!.env.example
+
+# nyobakantorai local runtime artifacts
+.nyobakantorai-stop-token
+**/.nyobakantorai-stop-token
+operations/handoff/packets/
+operations/handoff/receipts/
+operations/handoff/qa-packets/
+operations/handoff/owner-submissions/
+operations/handoff/original-artifacts/
+operations/handoff/source-evidence/

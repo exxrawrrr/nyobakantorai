@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e9ddc3">
+  <meta name="color-scheme" content="light">
+  <title>nyobakantorai — Human-Governed Agent Office</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+</head>
+<body>
+  <a class="skip-link" href="#main">Lewati ke konten</a>
+  <header class="masthead">
+    <a class="brand" href="#office" aria-label="nyobakantorai home"><span class="brand-mark">N</span><span><strong>nyobakantorai</strong><small>LOCAL-FIRST · HUMAN-GOVERNED</small></span></a>
+    <nav class="primary-nav" aria-label="Navigasi utama">
+      <button class="nav-button is-active" data-view="office" type="button">Office</button>
+      <button class="nav-button" data-view="people" type="button">People</button>
+      <button class="nav-button" data-view="missions" type="button">Missions</button>
+      <button class="nav-button" data-view="activity" type="button">Activity</button>
+      <button class="nav-button" data-view="systems" type="button">Systems</button>
+      <button class="nav-button" data-view="architecture" type="button">Architecture</button>
+      <button class="nav-button" data-view="knowledge" type="button">Knowledge</button>
+      <button class="nav-button" data-view="settings" type="button">Settings & Help</button>
+      <button class="nav-button" data-view="workers" type="button">AI Workers</button>
+    </nav>
+    <div class="masthead-state"><span class="dot"></span><span>LOCAL-FIRST</span></div>
+  </header>
+
+  <div class="truth-strip"><strong>LOCAL OFFICE · READ-ONLY RUNTIME</strong><span>Visual state is local; external runtime state is reconciled separately and remains read-only.</span><span id="clock"></span></div>
+
+  <main id="main" class="shell">
+    <section id="view-office" class="view is-active" aria-labelledby="office-title">
+      <div class="page-heading"><div><p class="eyebrow">LOCAL AGENT OFFICE</p><h1 id="office-title">Human-governed multi-agent workspace.</h1><p>A local-first visual office for task truth, evidence, and bounded runtime integration.</p></div><div class="heading-badges"><span>6 PROFILES</span><span>PUBLIC WORKER PILOT ↗</span></div></div>
+      <div class="office-layout">
+        <article class="world-card">
+          <div class="world-toolbar"><div><strong>The little office</strong><small id="scene-status">Scene: VISUAL DEMO · selected Praroro</small></div><div class="scene-actions"><button id="zoom-out" type="button" aria-label="Perkecil scene">−</button><button id="zoom-in" type="button" aria-label="Perbesar scene">＋</button><button id="reset-view" type="button">Reset</button><button id="motion-toggle" type="button" aria-pressed="true">Motion on</button></div></div>
+          <div class="canvas-wrap"><canvas id="office-canvas" width="1280" height="720" tabindex="0" aria-label="Kantor pixel interaktif: lounge, meeting room, coffee bar, smoking area terpisah, dan enam meja kerja. Klik lantai untuk memilih karakter."></canvas><div id="speech-layer" class="speech-layer" aria-label="Preview aktivitas enam karyawan"></div><div class="canvas-label">LOCAL VISUAL DEMO · SIX AGENT ROLES</div></div>
+          <p class="scene-help">Click a bubble to inspect local role state. Visual movement is a demo and never proves agent execution.</p>
+        </article>
+        <aside class="inspector" aria-live="polite">
+          <p class="eyebrow">SELECTED EMPLOYEE</p>
+          <div id="selected-profile"></div>
+          <div id="scene-roster" class="scene-roster" aria-label="Pilih karyawan"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-workers" class="view" hidden aria-labelledby="workers-title">
+      <div class="page-heading"><div><p class="eyebrow">OPTIONAL LOCAL WORKER</p><h1 id="workers-title">Optional worker surface</h1><p>An optional localhost worker can be embedded here. It is separate from the read-only Hermes adapter and is not enabled by default.</p></div><div class="heading-badges"><span id="worker-connection">WORKER: CONNECTING</span><span>PUBLIC DRAFT ONLY</span></div></div>
+      <div class="worker-shell"><div id="worker-offline-panel" class="worker-offline-panel" role="status"><h2>Optional worker is offline</h2><p>The panel is waiting for a local service on the configured worker port. No external worker is bundled or started automatically.</p><p>No task is dispatched while the optional worker is offline.</p></div><iframe id="worker-frame" title="Ruang kerja karyawan nyobakantorai" src="about:blank" loading="eager" referrerpolicy="no-referrer" hidden></iframe></div>
+      <p class="scene-help">Do not send sensitive data or treat this panel as approval. If enabled, the worker remains a separate local capability.</p>
+    </section>
+
+    <section id="view-people" class="view" hidden aria-labelledby="people-title">
+      <div class="page-heading"><div><p class="eyebrow">PUBLIC EXAMPLE AGENTS · SOUL &amp; SKILLS</p><h1 id="people-title">The crew</h1><p>Each example role has a distinct voice, reasoning style, workflow, and six reusable skills. Skills are procedures, not proof that a model, account, or external tool is connected.</p></div></div>
+      <div id="people-grid" class="people-grid"></div>
+    </section>
+
+    <section id="view-missions" class="view" hidden aria-labelledby="missions-title">
+      <div class="page-heading"><div><p class="eyebrow">LOCAL CONTROL PLANE</p><h1 id="missions-title">Mission board</h1><p>Tugas baru bersifat DEMO/local. Klaim Hermes hasil import dikarantina sampai cocok dengan board resmi.</p></div><button id="new-task" class="primary" type="button">＋ New local mission</button></div>
+      <div class="toolbar"><label>Search <input id="task-search" type="search" placeholder="Title atau detail"></label><label>Owner <select id="task-owner"><option value="">All</option></select></label><label>Provenance <select id="task-provenance"><option value="">All</option><option>DEMO</option><option>LOCAL_CLAIM</option><option>AUTHORITATIVE_RUNTIME</option></select></label><button id="export-registry" type="button">Export + backup</button><button id="import-registry" type="button">Import JSON</button></div>
+      <div id="quarantine-notice" class="quarantine-notice" hidden></div>
+      <div id="mission-board" class="mission-board"></div>
+    </section>
+
+    <section id="view-activity" class="view" hidden aria-labelledby="activity-title">
+      <div class="page-heading"><div><p class="eyebrow">APPEND-ONLY HISTORY</p><h1 id="activity-title">Activity</h1><p>Event lokal, klaim, dan event runtime diberi kelas provenance berbeda.</p></div></div>
+      <div id="activity-list" class="activity-list"></div>
+    </section>
+
+    <section id="view-systems" class="view" hidden aria-labelledby="systems-title">
+      <div class="page-heading"><div><p class="eyebrow">INTEGRATION BOUNDARIES</p><h1 id="systems-title">Systems</h1><p>Installed ≠ connected; profile exists ≠ model running.</p></div><button id="refresh-runtime" type="button">Refresh read-only snapshot</button></div>
+      <div id="systems-grid" class="systems-grid"></div>
+      <pre id="runtime-evidence" class="runtime-evidence">No runtime snapshot yet.</pre>
+    </section>
+
+    <section id="view-architecture" class="view" hidden aria-labelledby="architecture-title">
+      <div class="page-heading"><div><p class="eyebrow">PUBLIC TRUST MODEL</p><h1 id="architecture-title">Human-governed architecture</h1><p>Six roles can receive scoped tasks. Runtime adapters remain separate from personas, and no visual state is accepted as proof of execution.</p></div><div class="heading-badges"><span>6 EXAMPLE ROLES</span><span>DISPATCH: OFF BY DEFAULT</span></div></div>
+      <div class="systems-grid">
+        <article class="system-card"><p class="eyebrow">01 / HUMAN INTENT</p><h2>Human remains the authority</h2><p>The operator defines the goal, target, permission boundary, and acceptable evidence. A tool being installed never grants permission by itself.</p><div class="system-states"><span class="pass">SCOPED INTENT</span><span class="blocked">NO IMPLICIT AUTHORITY</span></div></article>
+        <article class="system-card"><p class="eyebrow">02 / ROLE LAYER</p><h2>Six bounded personas</h2><p>Personas provide work style and reusable procedures. They do not contain credentials, private memory, or provider access.</p><div class="system-states"><span class="pass">PUBLIC PROFILES</span><span>16 REUSABLE SKILLS</span></div></article>
+        <article class="system-card"><p class="eyebrow">03 / TASK TRUTH</p><h2>Local evented registry</h2><p>Tasks distinguish DEMO, LOCAL_CLAIM, and AUTHORITATIVE_RUNTIME provenance. Imported runtime-looking data is quarantined until reconciled.</p><div class="system-states"><span class="pass">APPEND-ONLY EVENTS</span><span class="blocked">CLAIM ≠ EXECUTION</span></div></article>
+        <article class="system-card"><p class="eyebrow">04 / RUNTIME ADAPTER</p><h2>Read-only by default</h2><p>Hermes is optional. If unavailable or stale, the office reports NOT CONNECTED rather than inventing a successful runtime state.</p><div class="system-states"><span class="pass">FAIL CLOSED</span><span class="blocked">AUTO DISPATCH: OFF</span></div></article>
+        <article class="system-card"><p class="eyebrow">05 / EVIDENCE</p><h2>Execution needs receipts</h2><p>External actions, handoffs, tests, and work products require concrete evidence before they can be treated as completed.</p><div class="system-states"><span class="pass">PROVENANCE TRACKED</span><span class="blocked">NO EVIDENCE · NO CLAIM</span></div></article>
+        <article class="system-card"><p class="eyebrow">06 / INDEPENDENT QA</p><h2>Verification is separate</h2><p>VERIFIED requires independent evidence review. The worker that produced an artifact cannot manufacture its own independent verification.</p><div class="system-states"><span class="pass">EVIDENCE-GATED</span><span class="blocked">SELF-CERTIFICATION: NO</span></div></article>
+      </div>
+      <article class="panel architecture-next-steps"><h2>Public architecture docs</h2><p>See <code>office/docs/ARCHITECTURE.md</code>, <code>docs/RUNTIME-ADAPTER-SPEC.md</code>, and <code>docs/THREAT-MODEL.md</code> for the trust boundaries and adapter contract.</p></article>
+    </section>
+
+    <section id="view-knowledge" class="view" hidden aria-labelledby="knowledge-title">
+      <div class="page-heading"><div><p class="eyebrow">SAFE REFERENCES</p><h1 id="knowledge-title">Knowledge</h1><p>Daftar ini hanya menunjuk sumber kanonik; browser tidak menelan vault atau credential.</p></div></div>
+      <div id="knowledge-grid" class="knowledge-grid"></div>
+    </section>
+
+    <section id="view-settings" class="view" hidden aria-labelledby="settings-title">
+      <div class="page-heading"><div><p class="eyebrow">LOCAL PREFERENCES</p><h1 id="settings-title">Settings & Help</h1></div></div>
+      <div class="settings-grid">
+        <article class="panel"><h2>Motion</h2><label class="switch-row"><input id="reduced-motion" type="checkbox"> Pause decorative motion and walking</label><label class="switch-row"><input id="debug-grid" type="checkbox"> Show collision grid</label></article>
+        <article class="panel"><h2>What is real?</h2><dl><dt>DEMO</dt><dd>Visual movement and browser-only tasks.</dd><dt>LOCAL CLAIM</dt><dd>Imported Hermes-looking data not confirmed by server.</dd><dt>AUTHORITATIVE RUNTIME</dt><dd>Exact ID, assignee, and status matched to the official read-only board snapshot.</dd></dl></article>
+        <article class="panel"><h2>Safety</h2><p>The local office server does not run model inference or external writes. Runtime integrations are read-only by default, and high-impact actions require explicit human approval.</p></article>
+        <article class="panel"><h2>Keyboard</h2><p>Tab reaches navigation and controls. Enter opens focused controls. Escape closes dialogs. Canvas focus supports arrow keys to move the visual-demo character one grid cell.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="task-create-dialog" class="dialog" aria-labelledby="create-title"><button class="dialog-close" data-close="task-create-dialog" aria-label="Tutup">×</button><p class="eyebrow">DEMO / LOCAL MANUAL</p><h2 id="create-title">New mission</h2><form id="task-create-form" class="form-grid"><label class="wide">Title<input name="title" maxlength="160" required></label><label class="wide">Detail<textarea name="detail" maxlength="4000" rows="4"></textarea></label><label>Assignee<select name="assignee_id" required></select></label><label>Priority<select name="priority"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option><option>CRITICAL</option></select></label><label>Due date<input name="due_date" type="date"></label><div class="wide form-actions"><button type="button" data-close="task-create-dialog">Cancel</button><button class="primary" type="submit">Create local task</button></div></form></dialog>
+
+  <dialog id="task-detail-dialog" class="dialog" aria-labelledby="task-detail-title"><button class="dialog-close" data-close="task-detail-dialog" aria-label="Tutup">×</button><div id="task-detail"></div></dialog>
+  <dialog id="person-dialog" class="dialog" aria-labelledby="person-title"><button class="dialog-close" data-close="person-dialog" aria-label="Tutup">×</button><div id="person-detail"></div></dialog>
+  <input id="registry-file" type="file" accept="application/json,.json" hidden>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

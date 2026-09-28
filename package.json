@@ -1,0 +1,21 @@
+{
+  "name": "nyobakantorai",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Local-first, human-governed multi-agent office with evidence-gated task orchestration.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "npm --prefix office run dev",
+    "build": "npm --prefix office run build",
+    "test": "npm run test:core && npm run test:python",
+    "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs",
+    "test:python": "python scripts/run-python-tests.py",
+    "security:scan": "node scripts/security-scan.mjs",
+    "audit": "node scripts/repo-audit.mjs && npm run security:scan && npm run public:scan",
+    "verify": "npm run audit && npm test && npm run build",
+    "public:scan": "node scripts/public-release-audit.mjs"
+  }
+}

@@ -1,0 +1,40 @@
+import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+
+const root = new URL(".", import.meta.url);
+const src = new URL("src/", root);
+const dist = new URL("dist/", root);
+const files = ["index.html", "styles.css", "app.mjs", "persona-ops.mjs", "scene.mjs", "worker-bubbles.mjs", "favicon.svg", "asset-manifest.json"];
+
+await rm(dist, { recursive: true, force: true });
+await mkdir(dist, { recursive: true });
+
+const manifest = JSON.parse(await readFile(new URL("asset-manifest.json", src), "utf8"));
+if (manifest.schema !== 2 || manifest.license !== "MIT") {
+  throw new Error("Build rejected: public asset manifest is missing schema/license.");
+}
+if (!Array.isArray(manifest.assets) || manifest.assets.length !== 54) {
+  throw new Error("Build rejected: expected 54 public character assets.");
+}
+for (const asset of manifest.assets) {
+  if (!asset.output?.endsWith(".svg")) throw new Error("Build rejected: non-SVG character asset.");
+  if (asset.provenance !== "original_svg_generated_for_nyobakantorai") throw new Error("Build rejected: asset provenance is not public-safe.");
+  for (const forbidden of ["source_file","source_sha256","source_runtime_path","crop"]) {
+    if (forbidden in asset) throw new Error("Build rejected: private reference metadata leaked into manifest.");
+  }
+}
+
+for (const file of files) await cp(new URL(file, src), new URL(file, dist));
+for (const file of ["registry.mjs", "reconcile.mjs"]) await cp(new URL(file, root), new URL(file, dist));
+await cp(new URL("assets/", src), new URL("assets/", dist), { recursive: true });
+
+await writeFile(
+  new URL("build-meta.json", dist),
+  JSON.stringify({
+    schema: 1,
+    built_at: new Date().toISOString(),
+    source_assets: manifest.assets.length,
+    asset_provenance: manifest.provenance,
+    license: manifest.license
+  }, null, 2)
+);
+console.log(`Built ${files.length + 3} files plus ${manifest.assets.length} original SVG assets.`);
