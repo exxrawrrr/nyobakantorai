@@ -139,9 +139,9 @@ Karena:
 
 ## Meet the office
 
-Enam public example employee ini bukan nama pajangan.
+v0.3 membawa **16 specialized AI employees**, bukan enam kostum buat satu chatbot.
 
-Mereka punya role guidance, reusable skills, dan visual state seperti `idle`, `walk`, `think`, `work`, `role`, dan `seated`.
+Enam karakter awal tetap memakai original owner-authored sprites. Sepuluh worker baru sudah punya role, skills, tool policy, routing, approval, verification, dan installable Hermes profile yang nyata—tetapi visualnya sengaja memakai placeholder `PENDING ORIGINAL ART` sampai artwork original tersedia.
 
 ![Meet the nyobakantorai office](docs/assets/meet-the-office.gif)
 
@@ -261,13 +261,13 @@ itu belum kemenangan.
 
 ## Current state
 
-Project sekarang berada di **v0.2 public-preview**.
+Release publik terakhir tetap **v0.2 Public Preview**. Branch/PR ini adalah kandidat **v0.3.0 — Real AI Workforce** dan belum boleh ditag sampai seluruh CI/release gate hijau.
 
-Yang sudah ada termasuk:
+Yang sudah ada di kandidat v0.3 termasuk:
 
 - localhost-only visual office;
-- six agent personas;
-- 16 reusable skills;
+- 16 specialized Hermes employee profiles dari satu canonical registry;
+- reusable canonical skills + role-specific toolset preferences;
 - evidence-gated task state;
 - explicit human approval gate;
 - manual handoff + receipt protocol;
@@ -278,7 +278,7 @@ Yang sudah ada termasuk:
 - deterministic demo;
 - machine-readable capability contract.
 
-Fokus berikutnya masih di adapter boundary, execution receipts, capability negotiation, dan human-governed orchestration.
+Fokus v0.3 adalah workforce yang benar-benar installable, registry-driven, capability-honest, upgrade-safe, dan tetap human-governed. Live ads provider adapters, signed execution receipts, dan finished original art untuk 10 worker baru tetap pekerjaan lanjutan.
 
 Roadmap canonical ada di [ROADMAP.md](ROADMAP.md).
 
@@ -340,11 +340,11 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 
 ## Highlights
 
-- **6 example agent personas** for coordination, metrics, engineering, strategy, creative work, and independent QA.
-- **16 reusable skills** covering task truth, tool safety, approval gates, provenance, research, growth, engineering, creative work, and QA.
+- **16 specialized Hermes employees** driven by one canonical registry, with distinct roles, personalities, habits, skills, toolset preferences, routing, approval, and verification policy.
+- **Canonical reusable skills** spanning task truth, tool safety, ads operations, SEO/CRO, data, integrations, operations, community, governance, and independent QA.
 - **Evidence-gated task state** where VERIFIED requires independent evidence.
 - **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
-- **Hermes-first reference runtime** with six installable Hermes profile distributions and an idempotent bootstrap.
+- **Hermes-first reference runtime** with sixteen installable Hermes profile distributions and an idempotent, v0.2-upgrade-safe bootstrap.
 - **Read-only runtime adapter SDK** with a strict loopback HTTP adapter for plugging in other local runtimes without granting write or dispatch authority.
 - **Manual handoff + receipt protocol** for provenance-aware work across surfaces.
 - **Portable diagnostics** that check expected safety boundaries without printing secrets.
@@ -352,11 +352,44 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 - **Public-release guardrails** for tests, builds, private-path leakage, sensitive filenames, and credential-shaped strings.
 - **Zero npm runtime dependencies** for the main office server.
 
+## v0.3 workforce
+
+```text
+SOUL    = who the employee is
+SKILL   = reusable procedure / knowledge
+TOOL    = executable Hermes capability
+MCP     = external capability connection
+PROFILE = complete installable employee package
+```
+
+Credentials, account access, provider billing state, sessions, memory, and messaging tokens remain **user-owned**. A preferred toolset or external-capability declaration does not mean it is connected.
+
+| Employee | Department | Role | Visual | External capability default |
+| --- | --- | --- | --- | --- |
+| **Praroro** | Leadership / Coordination | COO / Chief of Staff | owner-authored | none required |
+| **Paijo** | Growth / Data | Quant / Growth / Finance | owner-authored | none required |
+| **Subagjo** | Engineering / Automation | Engineering / Operations | owner-authored | none required |
+| **Alex** | Strategy / Research | Strategy / Research | owner-authored | none required |
+| **Sumiati** | Creative / Community | Creative / Communications | owner-authored | none required |
+| **Siti** | QA / Governance | QA / Compliance / Knowledge | owner-authored | none required |
+| **Maya** | Paid Media | Meta Ads Operator | pending-original-art | `ads.meta.read`, `ads.meta.insights`, `ads.meta.creative`, `ads.meta.write`, `ads.meta.media` → NOT_CONNECTED |
+| **Gugun** | Paid Media | Google Ads Operator | pending-original-art | `ads.google.read`, `ads.google.insights`, `ads.google.keywords`, `ads.google.creative`, `ads.google.write`, `ads.google.verify` → NOT_CONNECTED |
+| **Ratri** | Growth / Data | SEO / CRO / Web Analyst | pending-original-art | none required |
+| **Bimo** | Engineering / Automation | Automation / MCP / Integrations Engineer | pending-original-art | none required |
+| **Nara** | Growth / Data | Data / BI / Experimentation | pending-original-art | none required |
+| **Dina** | Operations | Client / Project Operations | pending-original-art | none required |
+| **Bambang** | Engineering / Automation | Automation / Queue Optimizer | pending-original-art | none required |
+| **Fikri** | QA / Governance | Knowledge / Policy / Ethics Steward | pending-original-art | none required |
+| **Tari** | Operations | Execution / Follow-Up Specialist | pending-original-art | none required |
+| **Caca** | Creative / Community | Community / Social / Partnerships | pending-original-art | none required |
+
+Maya and Gugun are capability **consumers**, not bundled ads engines. Telegram is an optional Hermes gateway path. See the dedicated docs below.
+
 ## Install
 
 ### Hermes-first — recommended
 
-This is the path closest to the author's real setup. Hermes is the reference runtime; nyobakantorai adds the visual office, six role profiles, role skills, human approval, evidence rules, and a conservative runtime view around it.
+This is the path closest to the author's real setup. Hermes is the reference runtime; nyobakantorai adds the visual office, sixteen role profiles, role skills, human approval, evidence rules, deterministic routing, and a conservative runtime view around it.
 
 **Windows PowerShell**
 
@@ -370,7 +403,7 @@ This is the path closest to the author's real setup. Hermes is the reference run
 curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --start
 ```
 
-The installer reuses Hermes when it already exists. Otherwise the explicit `WithHermes` flag invokes the official Nous Research Hermes installer, then installs six native Hermes profile distributions and creates/switches the `nyobakantorai` Kanban board.
+The installer reuses Hermes when it already exists. Otherwise the explicit `WithHermes` flag invokes the official Nous Research Hermes installer. Bootstrap then safely upgrades existing nyobakantorai distributions with native Hermes profile update, installs missing workers, and creates/switches the `nyobakantorai` Kanban board.
 
 It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
 
@@ -385,7 +418,7 @@ hermes profile list
 hermes kanban boards show
 ```
 
-You should see Praroro, Paijo, Subagjo, Alex, Sumiati, and Siti as Hermes profile distributions.
+You should see every employee listed in `config/employees.json` as a Hermes profile distribution.
 
 Full walkthrough: [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md).
 
@@ -436,9 +469,11 @@ No secret is required by the repository itself.
 
 | Path | Purpose |
 | --- | --- |
+| `config/employees.json` | Canonical workforce registry — source of truth for employee identity/policy/routing |
+| `config/capabilities.json` | Provider-neutral capability states, ads contracts, and autonomy modes |
 | `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
-| `agents/` | Six example public SOUL/profile definitions |
-| `hermes-profiles/` | Native Hermes profile distributions for the same six employees |
+| `agents/` | Registry-derived public SOUL/profile definitions |
+| `hermes-profiles/` | Native Hermes profile distributions generated for the workforce |
 | `skills/hermes-custom/` | Reusable portable skills |
 | `operations/taskctl/` | Blocked owner-controlled Hermes task intake |
 | `operations/handoff/` | Manual handoff, receipts, and source-evidence gates |
@@ -513,13 +548,20 @@ The CI workflow runs the same verification on Linux and Windows.
 
 ## Project status
 
-**v0.2 public-preview**
+**v0.3 development candidate — v0.2 remains the latest tagged public preview**
 
 See:
 
 - [ROADMAP.md](ROADMAP.md)
 - [office/docs/ARCHITECTURE.md](office/docs/ARCHITECTURE.md)
 - [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md)
+- [docs/EMPLOYEE-ARCHITECTURE.md](docs/EMPLOYEE-ARCHITECTURE.md)
+- [docs/CAPABILITY-MODEL.md](docs/CAPABILITY-MODEL.md)
+- [docs/AUTONOMY-MODES.md](docs/AUTONOMY-MODES.md)
+- [docs/ADS-WORKERS.md](docs/ADS-WORKERS.md)
+- [docs/TELEGRAM-OFFICE.md](docs/TELEGRAM-OFFICE.md)
+- [docs/V0.3-UPGRADE.md](docs/V0.3-UPGRADE.md)
+- [docs/ADDING-EMPLOYEE.md](docs/ADDING-EMPLOYEE.md)
 - [docs/RUNTIME-ADAPTER-SPEC.md](docs/RUNTIME-ADAPTER-SPEC.md)
 - [docs/APPROVAL-MODEL.md](docs/APPROVAL-MODEL.md)
 - [docs/DEMO.md](docs/DEMO.md)

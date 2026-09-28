@@ -9,8 +9,8 @@ The nyobakantorai installer can:
 1. install or reuse the upstream **Hermes Agent** CLI;
 2. download/update nyobakantorai;
 3. validate the runtime prerequisites;
-4. install six native Hermes profile distributions: Praroro, Paijo, Subagjo, Alex, Sumiati, and Siti;
-5. install exactly the six public role skills assigned to each employee;
+4. install or safely upgrade the native Hermes profile distributions from `config/employees.json`;
+5. install the canonical role skills and fresh-install toolset defaults assigned to each employee;
 6. create/switch the Hermes Kanban board named `nyobakantorai`;
 7. optionally start the localhost office.
 
@@ -47,7 +47,7 @@ hermes profile list
 hermes kanban boards show
 ```
 
-You should see six `@0.2.0` profile distributions and the `nyobakantorai` board.
+You should see sixteen baseline `@0.3.0` profile distributions and the `nyobakantorai` board.
 
 The office runs at `http://127.0.0.1:4322` by default.
 
@@ -55,9 +55,10 @@ The office runs at `http://127.0.0.1:4322` by default.
 
 The bootstrap is intentionally conservative:
 
-- a profile that already exists is skipped by default;
+- normal `install` mode skips a profile that already exists;
+- `--upgrade` uses native `hermes profile update` for existing distributions and installs missing workers;
 - it never copies `.env`, `auth.json`, model/provider secrets, memories, sessions, or runtime databases;
-- use `node scripts/hermes-bootstrap.mjs --update` only for profiles that were installed as distributions;
+- use `node scripts/hermes-bootstrap.mjs --upgrade` for v0.2 → v0.3 migration; native Hermes update preserves existing user config/state;
 - use `--force` only when you explicitly want the public distribution files to replace the profile’s distribution-owned files;
 - Hermes user-owned data remains protected by Hermes’ own distribution installer rules.
 
@@ -68,3 +69,5 @@ If you only want the UI and evidence/task model, omit `--with-hermes` / `-WithHe
 ## Upstream
 
 Hermes Agent is maintained upstream at https://github.com/NousResearch/hermes-agent. nyobakantorai does not vendor Hermes itself.
+
+For migration details see [V0.3-UPGRADE.md](V0.3-UPGRADE.md). For Telegram/multiplex gateways see [TELEGRAM-OFFICE.md](TELEGRAM-OFFICE.md).

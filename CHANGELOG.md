@@ -2,6 +2,26 @@
 
 All notable public changes to nyobakantorai are documented here.
 
+## [0.3.0] - Unreleased
+
+### Added
+- Canonical 16-employee workforce registry and generated native Hermes distributions.
+- Ten specialist workers across paid media, SEO/CRO, integrations, data, client operations, automation, governance, follow-up, and community.
+- Provider-neutral Meta/Google Ads capability contracts with fail-closed connection states.
+- Deterministic routing, workforce doctor, custom-employee generator, and permanent v0.3 architecture/Telegram/ads docs.
+- Registry-driven office roster with provenance-honest `pending-original-art` placeholders for the ten new workers.
+- Role-appropriate Hermes toolset defaults for fresh profile installs.
+
+### Changed
+- Bootstrap/installers support v0.2 → v0.3 migration using native Hermes profile update for existing distributions and install for missing profiles.
+- Verification policy is registry-driven; self-verification is forbidden, including Siti reviewing Siti.
+- Office/runtime/tests/audits derive workforce identity from the canonical registry instead of separate six-person arrays.
+
+### Security
+- Existing user config, auth, memory, sessions, provider settings, Telegram config, and runtime state remain user-owned during native profile updates.
+- Advertising actions remain GUARDED by default and no live-provider credentials are bundled.
+
+
 ## [0.2.0] - 2026-09-28
 
 ### Added

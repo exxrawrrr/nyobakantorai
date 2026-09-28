@@ -8,7 +8,7 @@ nyobakantorai is its own project, but it did not appear in a vacuum. This file d
 - Upstream: https://github.com/NousResearch/hermes-agent
 - Maintainer / origin: Nous Research
 - License: MIT
-- Relationship: **primary/reference agent runtime** for nyobakantorai. The public office reads Hermes profiles and Kanban state through a conservative adapter, and the repository ships six native Hermes profile distributions.
+- Relationship: **primary/reference agent runtime** for nyobakantorai. The public office reads Hermes profiles and Kanban state through a conservative adapter, and the repository ships native Hermes profile distributions for its canonical workforce.
 
 nyobakantorai does **not** vendor Hermes source code or Hermes credentials. Users install Hermes from its upstream project and keep provider configuration, auth, billing, sessions, memories, and runtime state in their own Hermes home.
 
