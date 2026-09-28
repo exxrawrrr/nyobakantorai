@@ -25,8 +25,13 @@ for (const employee of WORKFORCE) {
   });
 }
 const board = version.ok ? run(["kanban", "boards", "show"]) : { ok: false };
+const profilesReady = employees.every((employee) => employee.profile);
+const degraded = version.ok && (!profilesReady || !board.ok || employees.some((employee) => Object.values(employee.capabilities).some((state) => state !== "CONNECTED")));
 const report = {
-  ok: version.ok,
+  ok: version.ok && profilesReady && board.ok,
+  runtime_ready: version.ok,
+  profiles_ready: profilesReady,
+  degraded,
   employee_count: WORKFORCE.length,
   hermes: version.ok ? "READY" : "NOT_CONFIGURED",
   office: "READY",
@@ -46,7 +51,9 @@ if (json) {
   for (const employee of employees) {
     console.log(`${employee.name.padEnd(10)} ${employee.state}${Object.keys(employee.capabilities).length ? " — external capability not connected" : ""}`);
   }
-  console.log(`\nHermes       ${report.hermes}`);
+  console.log(`\nOverall      ${report.ok ? "READY" : report.runtime_ready ? "DEGRADED" : "NOT_CONFIGURED"}`);
+  console.log(`Profiles     ${report.profiles_ready ? "READY" : "INCOMPLETE"}`);
+  console.log(`Hermes       ${report.hermes}`);
   console.log(`Office       ${report.office}`);
   console.log(`Kanban       ${report.kanban}`);
   console.log(`Gateway      ${report.gateway}`);
