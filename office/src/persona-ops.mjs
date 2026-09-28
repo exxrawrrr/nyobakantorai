@@ -1,4 +1,4 @@
-import { WORKFORCE } from "./workforce.mjs";
+import { WORKFORCE } from "../workforce.mjs";
 
 export const EMPLOYEE_PLAYBOOK = Object.freeze(Object.fromEntries(WORKFORCE.map((employee) => [
   employee.id,
