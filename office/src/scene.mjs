@@ -1,15 +1,14 @@
+import { WORKFORCE } from "./workforce.mjs";
 const W = 1280, H = 720, CELL = 32;
 const palette = { ink: "#30372d", line: "#5d604d", cream: "#efe6d1", wall: "#e3d5b7", wood: "#b99366", wood2: "#c9a778", olive: "#697a4c", olive2: "#89936a", leaf: "#506844", brown: "#72523b", blue: "#9bbbc0", rug: "#acae86" };
-const deskPoints = {
-  praroro: [330, 430], paijo: [540, 420], subagjo: [750, 430],
-  alex: [390, 610], sumiati: [610, 595], siti: [830, 610],
-};
+const deskPoints = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee.visual.scene_position])));
+const employeeById = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee])));
+const employees = Object.freeze(WORKFORCE.map((employee)=>employee.id));
 const roomObstacles = [
   [0,0,1280,88], [0,0,42,720], [1238,0,42,720], [0,682,1280,38],
   [60,112,255,145], [358,105,360,170], [756,104,245,145], [1034,92,185,205],
   [245,350,170,92], [455,340,170,92], [665,350,170,92], [305,525,170,90], [525,515,170,90], [745,525,170,90],
 ];
-const employees = ["praroro", "paijo", "subagjo", "alex", "sumiati", "siti"];
 
 function rect(ctx, x, y, w, h, fill, stroke = "") { ctx.fillStyle = fill; ctx.fillRect(x,y,w,h); if (stroke) { ctx.strokeStyle=stroke; ctx.lineWidth=3; ctx.strokeRect(x+1.5,y+1.5,w-3,h-3); } }
 function label(ctx, text, x, y, size=13, align="left") { ctx.fillStyle=palette.ink; ctx.font=`700 ${size}px ui-monospace, Consolas, monospace`; ctx.textAlign=align; ctx.fillText(text,x,y); }
@@ -37,6 +36,17 @@ function drawRoom(ctx) {
   for(const [x,y] of [[340,336],[550,326],[760,336],[400,511],[620,501],[840,511]]){ctx.fillStyle="rgba(255,211,120,.24)";ctx.beginPath();ctx.arc(x,y,52,0,Math.PI*2);ctx.fill();rect(ctx,x-7,y-12,14,16,"#e6bd67",palette.line);}
 }
 
+function drawPlaceholder(ctx, actor) {
+  const person=employeeById[actor.id], color=person.visual.color || palette.olive;
+  ctx.save();
+  ctx.fillStyle="rgba(255,250,240,.94)";ctx.strokeStyle=palette.ink;ctx.lineWidth=3;
+  ctx.fillRect(actor.x-38,actor.y-88,76,74);ctx.strokeRect(actor.x-38,actor.y-88,76,74);
+  ctx.fillStyle=color;ctx.fillRect(actor.x-32,actor.y-82,64,44);
+  ctx.fillStyle="#fff";ctx.font="800 18px ui-monospace, monospace";ctx.textAlign="center";ctx.fillText(person.visual.initials,actor.x,actor.y-53);
+  ctx.fillStyle=palette.ink;ctx.font="800 7px ui-monospace, monospace";ctx.fillText("PENDING ART",actor.x,actor.y-24);
+  ctx.restore();
+}
+
 function blocked(x,y) { return roomObstacles.some(([ox,oy,ow,oh]) => x>ox-15 && x<ox+ow+15 && y>oy-15 && y<oy+oh+15); }
 function path(start, goal) {
   const cols=Math.floor(W/CELL),rows=Math.floor(H/CELL), key=(x,y)=>`${x},${y}`;
@@ -52,20 +62,20 @@ function path(start, goal) {
 export function createOfficeScene(canvas, { onSelect, initialMotion = true } = {}) {
   const ctx=canvas.getContext("2d",{alpha:false});ctx.imageSmoothingEnabled=false;
   const images=new Map();
-  for(const employee of employees)for(const state of ["idle","walk","think","work","role","seated","front","side","back"]){const image=new Image();image.src=`./assets/generated/characters/${employee}/${state}.png`;images.set(`${employee}:${state}`,image);}
-  const actors=employees.map((id,index)=>({id,x:deskPoints[id][0],y:deskPoints[id][1]+45,state:index%3===0?"think":"idle",route:[]}));
+  for(const person of WORKFORCE.filter((employee)=>employee.visual.asset_status==="owner-authored"&&employee.visual.asset_id))for(const state of ["idle","walk","think","work","role","seated","front","side","back"]){const image=new Image();image.src=`./assets/generated/characters/${person.visual.asset_id}/${state}.png`;images.set(`${person.id}:${state}`,image);}
+  const actors=employees.map((id,index)=>({id,x:deskPoints[id][0],y:deskPoints[id][1]+45,state:index%3===0?"think":"idle",route:[],movable:employeeById[id].visual.asset_status==="owner-authored"}));
   let selected="praroro",motion=initialMotion,zoom=1,debug=false,last=performance.now(),frame=0;
   function draw(now){
     const dt=Math.min(.04,(now-last)/1000);last=now;frame++;
-    if(motion)for(const actor of actors){if(actor.route.length){const [tx,ty]=actor.route[0],dx=tx-actor.x,dy=ty-actor.y,d=Math.hypot(dx,dy),step=105*dt;actor.state="walk";if(d<=step){actor.x=tx;actor.y=ty;actor.route.shift();if(!actor.route.length)actor.state="idle";}else{actor.x+=dx/d*step;actor.y+=dy/d*step;}}}
+    if(motion)for(const actor of actors){if(actor.movable&&actor.route.length){const [tx,ty]=actor.route[0],dx=tx-actor.x,dy=ty-actor.y,d=Math.hypot(dx,dy),step=105*dt;actor.state="walk";if(d<=step){actor.x=tx;actor.y=ty;actor.route.shift();if(!actor.route.length)actor.state="idle";}else{actor.x+=dx/d*step;actor.y+=dy/d*step;}}}
     ctx.save();ctx.clearRect(0,0,W,H);ctx.translate((W-W*zoom)/2,(H-H*zoom)/2);ctx.scale(zoom,zoom);drawRoom(ctx);
     if(debug){ctx.strokeStyle="rgba(138,79,58,.18)";ctx.lineWidth=1;for(let x=0;x<W;x+=CELL){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=CELL){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}}
-    for(const actor of [...actors].sort((a,b)=>a.y-b.y)){const idleState=!actor.route.length&&motion&&Math.floor(now/3500+employees.indexOf(actor.id))%5===0?"role":actor.state;const image=images.get(`${actor.id}:${idleState}`);ctx.save();ctx.shadowColor="rgba(42,36,26,.22)";ctx.shadowBlur=5;ctx.drawImage(image,actor.x-55,actor.y-116,110,110);ctx.restore();if(actor.id===selected){ctx.strokeStyle="#b66042";ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(actor.x,actor.y-3,28,10,0,0,Math.PI*2);ctx.stroke();}label(ctx,actor.id.toUpperCase(),actor.x,actor.y+18,9,"center");}
+    for(const actor of [...actors].sort((a,b)=>a.y-b.y)){const idleState=!actor.route.length&&motion&&Math.floor(now/3500+employees.indexOf(actor.id))%5===0?"role":actor.state;const image=images.get(`${actor.id}:${idleState}`);if(image){ctx.save();ctx.shadowColor="rgba(42,36,26,.22)";ctx.shadowBlur=5;ctx.drawImage(image,actor.x-55,actor.y-116,110,110);ctx.restore();}else drawPlaceholder(ctx,actor);if(actor.id===selected){ctx.strokeStyle="#b66042";ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(actor.x,actor.y-3,28,10,0,0,Math.PI*2);ctx.stroke();}label(ctx,actor.id.toUpperCase(),actor.x,actor.y+18,9,"center");}
     ctx.restore();requestAnimationFrame(draw);
   }
   function point(event){const box=canvas.getBoundingClientRect();return [(event.clientX-box.left)/box.width*W,(event.clientY-box.top)/box.height*H];}
-  canvas.addEventListener("click",(event)=>{const [px,py]=point(event);const near=actors.find((actor)=>Math.hypot(actor.x-px,actor.y-55-py)<55);if(near){selected=near.id;onSelect?.(selected);return;}if(!motion)return;const actor=actors.find(({id})=>id===selected);actor.route=path([actor.x,actor.y],[px,py]);});
-  canvas.addEventListener("keydown",(event)=>{const delta={ArrowLeft:[-CELL,0],ArrowRight:[CELL,0],ArrowUp:[0,-CELL],ArrowDown:[0,CELL]}[event.key];if(!delta||!motion)return;event.preventDefault();const actor=actors.find(({id})=>id===selected);actor.route=path([actor.x,actor.y],[actor.x+delta[0],actor.y+delta[1]]);});
+  canvas.addEventListener("click",(event)=>{const [px,py]=point(event);const near=actors.find((actor)=>Math.hypot(actor.x-px,actor.y-55-py)<55);if(near){selected=near.id;onSelect?.(selected);return;}if(!motion)return;const actor=actors.find(({id})=>id===selected);if(!actor?.movable)return;actor.route=path([actor.x,actor.y],[px,py]);});
+  canvas.addEventListener("keydown",(event)=>{const delta={ArrowLeft:[-CELL,0],ArrowRight:[CELL,0],ArrowUp:[0,-CELL],ArrowDown:[0,CELL]}[event.key];if(!delta||!motion)return;event.preventDefault();const actor=actors.find(({id})=>id===selected);if(!actor?.movable)return;actor.route=path([actor.x,actor.y],[actor.x+delta[0],actor.y+delta[1]]);});
   requestAnimationFrame(draw);
   return {
     select(id){if(employees.includes(id)){selected=id;onSelect?.(id);}},

@@ -76,7 +76,8 @@ export const WORKFORCE = Object.freeze(${JSON.stringify(registry.employees,null,
 export const EMPLOYEE_IDS = Object.freeze(WORKFORCE.map(({id})=>id));
 export const EMPLOYEE_BY_ID = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee])));
 `;
-const expected=new Map([["office/workforce.mjs",workforce]]);
+const workforceCss=registry.employees.map((e)=>{const [x,y]=e.visual.scene_position;const left=(x/1280*100).toFixed(5),top=((y-75)/720*100).toFixed(5);return `.speech-bubble[data-slot="${e.visual.desk_slot}"]{left:${left}%;top:${top}%}\n.task-card[data-owner="${e.id}"]{--owner:${e.visual.color}}`;}).join("\n");
+const expected=new Map([["office/workforce.mjs",workforce],["office/src/workforce.generated.css",workforceCss+"\n"]]);
 for(const e of registry.employees){
  const soul=soulFor(e);
  expected.set(`agents/${e.id}/SOUL.md`,soul);
