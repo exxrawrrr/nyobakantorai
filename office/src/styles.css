@@ -26,20 +26,8 @@ button,.primary{min-height:36px;border:1px solid var(--line);background:#f8f3e8;
 @media(max-width:1000px){.speech-bubble{min-width:82px;padding:4px 5px}.speech-bubble span{font-size:8px}.speech-bubble strong{font-size:8px}}
 @media(max-width:680px){.speech-bubble{display:none;min-width:105px;max-width:39%;padding:5px 6px}.speech-bubble.is-selected,.speech-bubble[data-state="RUNNING"]{display:grid}.speech-bubble span,.speech-bubble strong{font-size:8px}.worker-shell{min-height:760px}#worker-frame{height:1100px}}
 
-/* Fixed six-desk anchors: CSS-only for Pixel's strict Content-Security-Policy. */
-.speech-bubble{width:15%;max-width:154px;min-width:84px}
-.speech-bubble[data-employee="praroro"]{left:25.78125%;top:49.30556%}
-.speech-bubble[data-employee="paijo"]{left:42.1875%;top:47.91667%}
-.speech-bubble[data-employee="subagjo"]{left:58.59375%;top:49.30556%}
-.speech-bubble[data-employee="alex"]{left:30.46875%;top:74.30556%}
-.speech-bubble[data-employee="sumiati"]{left:47.65625%;top:72.22222%}
-.speech-bubble[data-employee="siti"]{left:64.84375%;top:74.30556%}
-@media(max-width:680px){.speech-bubble{width:34%;max-width:145px;min-width:98px}}
 
 .architecture-next-steps{margin-top:18px}
-.task-card[data-owner="praroro"]{--owner:#697d45}.task-card[data-owner="paijo"]{--owner:#71845a}
-.task-card[data-owner="subagjo"]{--owner:#426d78}.task-card[data-owner="alex"]{--owner:#596c76}
-.task-card[data-owner="sumiati"]{--owner:#8b654d}.task-card[data-owner="siti"]{--owner:#6e7d55}
 
 /* Clear local-service recovery state: never show browser's blank/offline iframe. */
 #worker-frame[hidden],#worker-offline-panel[hidden]{display:none}
@@ -49,3 +37,6 @@ button,.primary{min-height:36px;border:1px solid var(--line);background:#f8f3e8;
 
 /* Human approval queue */
 .approval-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.approval-card{display:grid;gap:10px;align-content:start;padding:16px;border:2px solid var(--ink);background:var(--panel);box-shadow:5px 5px 0 var(--cream-2)}.approval-card h2{margin:0;font:700 23px/1.08 Georgia,serif}.approval-card p{margin:0;color:var(--muted);font-size:11px}.approval-card>.form-actions{justify-content:flex-start;margin-top:2px}.approval-card>[data-approval-open]{justify-self:start}.approval-card .task-meta span:nth-child(2){font-weight:900}.approval-card .task-meta span:nth-child(2):where(:not(:empty)){letter-spacing:.04em}@media(max-width:980px){.approval-grid{grid-template-columns:1fr 1fr}}@media(max-width:640px){.approval-grid{grid-template-columns:1fr}}
+
+/* v0.3 registry-driven workforce */
+.people-grid{display:grid;grid-template-columns:1fr;gap:24px}.department-group{display:grid;gap:10px}.department-heading{display:flex;align-items:end;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:6px}.department-heading h2{margin:0;font:700 24px/1 Georgia,serif}.department-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.pending-avatar{display:grid;place-content:center;gap:4px;min-width:92px;min-height:112px;padding:10px;border:2px dashed var(--ink);background:#e8ddc8;text-align:center}.pending-avatar strong{font:900 28px/1 ui-monospace,monospace}.pending-avatar span{font:800 7px/1.2 ui-monospace,monospace;letter-spacing:.08em}.pending-avatar-large{min-height:190px}.pending-character-sheet{display:grid;grid-template-columns:180px 1fr;gap:16px;align-items:center;margin:15px 0;padding:14px;border:1px solid var(--line);background:#eee5d3}.person-portrait{width:126px;height:152px;object-fit:contain;image-rendering:pixelated}@media(max-width:1050px){.department-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.department-grid{grid-template-columns:1fr}.pending-character-sheet{grid-template-columns:1fr}}

@@ -3,6 +3,7 @@ import { reconcileClaims } from "./reconcile.mjs";
 import { createOfficeScene } from "./scene.mjs";
 import { EMPLOYEE_PLAYBOOK, PERSONA_SNAPSHOT } from "./persona-ops.mjs";
 import { attachWorkerBubbles } from "./worker-bubbles.mjs";
+import { EMPLOYEE_BY_ID } from "./workforce.mjs";
 
 const STORAGE_KEY = "nyobakantorai-registry-v1";
 const SETTINGS_KEY = "nyobakantorai-settings-v1";
@@ -11,17 +12,29 @@ const $ = (selector, parent = document) => parent.querySelector(selector);
 const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
 const employee = (id) => EMPLOYEES.find((item) => item.id === id);
 
-const profiles = {
-  praroro: { personality: "COO hangat, tenang, taktis; memecah pekerjaan, memberi owner dan meminta bukti handoff yang benar-benar terkirim.", skills: ["Coordination", "Handoff", "Evidence"], visual: "Olive suit · tan tie · notebook" },
-  paijo: { personality: "Analis growth yang lugas soal angka, rumus, periode dan asumsi; tidak mengarang akses Ads atau transaksi.", skills: ["KPI analysis", "Finance", "Source checks"], visual: "Glasses · olive jacket · tablet" },
-  subagjo: { personality: "Engineer sistematis yang cek source dan runtime asli, memilih patch kecil, tes nyata, serta rollback; audit GitHub tanpa auto push.", skills: ["Codebase QA", "GitHub review", "Rollback"], visual: "Blue hoodie · backpack · tools" },
-  alex: { personality: "Strategis cepat dan kreatif; merumuskan hipotesis yang bisa diuji, eksperimen kecil, serta keputusan berbasis sumber.", skills: ["Experiments", "Research", "Rapid scope"], visual: "Navy hoodie · headphones · coffee" },
-  sumiati: { personality: "Kreatif dan cair dengan the owner, profesional untuk klien; copy dan visual brief dulu, tidak mengaku sudah generate atau publish.", skills: ["Creative briefs", "Brand copy", "Pashmina"], visual: "Sand pashmina · brown cardigan · guitar" },
-  siti: { personality: "Reviewer independen yang tegas tetapi membantu; memeriksa artefak asli dan tes nyata sebelum menyatakan PASS atau VERIFIED.", skills: ["Independent QA", "Provenance", "Compliance"], visual: "Beige pashmina · green cardigan · clipboard" },
+const profileFor = (id) => {
+  const person = EMPLOYEE_BY_ID[id];
+  return {
+    personality: `${person.personality.traits.join(", ")}. ${person.summary}`,
+    skills: person.skills,
+    visual: person.visual.asset_status === "owner-authored" ? "ORIGINAL CHARACTER ART" : "PENDING ORIGINAL ART",
+  };
 };
+function capabilityPairs(id) {
+  const expected = EMPLOYEE_BY_ID[id]?.external_capabilities || [];
+  const observed = runtime?.employees?.[id]?.external_capabilities || {};
+  return expected.map((capability) => [capability, observed[capability] || "NOT_CONNECTED"]);
+}
+function portraitMarkup(id, state="front", className="") {
+  const person = EMPLOYEE_BY_ID[id];
+  if (person?.visual.asset_status === "owner-authored" && person.visual.asset_id) {
+    return `<img class="${className}" src="./assets/generated/characters/${person.visual.asset_id}/${state}.png" alt="${escapeHtml(person.name)} ${escapeHtml(state)} sprite">`;
+  }
+  return `<div class="${className} pending-avatar" role="img" aria-label="${escapeHtml(person?.name || id)} original art pending"><strong>${escapeHtml(person?.visual.initials || id.slice(0,2).toUpperCase())}</strong><span>ORIGINAL ART PENDING</span></div>`;
+}
 const knowledge = [
   ["Architecture", "Local-first boundaries, runtime adapter rules, and evidence-gated task state.", "docs/ARCHITECTURE.md"],
-  ["Agent profiles", "Six public example personas with role, reasoning style, and safety contract.", "../agents/"],
+  ["Agent profiles", "Sixteen specialized personas with role, reasoning style, habits, and safety contract.", "../agents/"],
   ["Reusable skills", "Portable safety, QA, research, growth, creative, and engineering skills.", "../skills/hermes-custom/"],
   ["Security policy", "Credential handling, least privilege, public-release rules, and disclosure guidance.", "../SECURITY.md"],
   ["Runtime adapter contract", "How external runtimes expose health, capabilities, tasks, and evidence safely.", "../docs/RUNTIME-ADAPTER-SPEC.md"],
@@ -29,7 +42,7 @@ const knowledge = [
 
 let registry = loadRegistry();
 let runtime = null;
-let selected = "praroro";
+let selected = EMPLOYEES[0].id;
 let settings = loadSettings();
 let scene;
 let workerBubbles=null;
@@ -60,13 +73,14 @@ function showView(name) {
 
 function presenceFor(id) {
   if (runtime?.employees?.[id]) return runtime.employees[id].presence;
-  return ["praroro","subagjo","siti"].includes(id) ? "UNKNOWN" : "NOT CONNECTED";
+  return "NOT CONNECTED";
 }
 function renderSelected() {
-  const person=employee(selected),profile=profiles[selected],presence=presenceFor(selected);
-  $("#selected-profile").innerHTML=`<img class="selected-portrait" src="./assets/generated/characters/${selected}/front.png" alt="Sprite ${escapeHtml(person.name)} tampak depan"><h2 class="selected-name">${escapeHtml(person.name)}</h2><div class="selected-role">${escapeHtml(person.role)}</div><p class="selected-copy">${escapeHtml(profile.personality)}</p><div class="profile-states">${profile.skills.map((skill)=>`<span>${escapeHtml(skill)}</span>`).join("")}</div><p class="selected-copy"><strong>Gaya bicara:</strong> ${escapeHtml(EMPLOYEE_PLAYBOOK[selected].voice)}</p><span class="runtime-pill">${escapeHtml(presence)}</span>`;
+  const person=employee(selected),profile=profileFor(selected),presence=presenceFor(selected);
+  const caps=capabilityPairs(selected);
+  $("#selected-profile").innerHTML=`${portraitMarkup(selected,"front","selected-portrait")}<h2 class="selected-name">${escapeHtml(person.name)}</h2><div class="selected-role">${escapeHtml(person.role)} · ${escapeHtml(person.department)}</div><p class="selected-copy">${escapeHtml(profile.personality)}</p><div class="profile-states">${EMPLOYEE_PLAYBOOK[selected].skillNames.slice(0,4).map((skill)=>`<span>${escapeHtml(skill.replace(/^nyoba-/,""))}</span>`).join("")}</div><p class="selected-copy"><strong>Gaya bicara:</strong> ${escapeHtml(EMPLOYEE_PLAYBOOK[selected].voice)}</p><div class="profile-states"><span>${escapeHtml(presence)}</span><span>${escapeHtml(profile.visual)}</span>${caps.map(([cap,state])=>`<span>${escapeHtml(cap)}: ${escapeHtml(state)}</span>`).join("")}</div>`;
   $("#scene-status").textContent=`Scene: VISUAL DEMO · selected ${person.name}`;
-  $$("#scene-roster button").forEach((button)=>button.classList.toggle("is-active",button.dataset.employee===selected));
+  $("#scene-roster button").forEach((button)=>button.classList.toggle("is-active",button.dataset.employee===selected));
 }
 function renderRoster() {
   $("#scene-roster").innerHTML=EMPLOYEES.map(({id,name})=>`<button type="button" data-employee="${id}">${escapeHtml(name)}</button>`).join("");
@@ -76,12 +90,24 @@ function renderRoster() {
 function selectEmployee(id) { selected=id;renderSelected();workerBubbles?.select(id); }
 
 function renderPeople() {
-  $("#people-grid").innerHTML=EMPLOYEES.map((person)=>{const profile=profiles[person.id],presence=presenceFor(person.id);return `<article class="person-card"><div class="person-art"><img src="./assets/generated/characters/${person.id}/front.png" alt="${escapeHtml(person.name)} sesuai character sheet"></div><div class="person-copy"><p class="eyebrow">${escapeHtml(profile.visual)}</p><h2>${escapeHtml(person.name)}</h2><strong>${escapeHtml(person.role)}</strong><p>${escapeHtml(profile.personality)}</p><p class="employee-operating">Gaya bicara: ${escapeHtml(EMPLOYEE_PLAYBOOK[person.id].voice)}</p><p class="employee-operating">Skill profile: ${EMPLOYEE_PLAYBOOK[person.id].skillNames.length} skill lokal aktif, runtime capability is verified separately.</p><div class="profile-states"><span>${escapeHtml(presence)}</span><span>SKILL ≠ LIVE TOOL</span></div></div><button type="button" data-person="${person.id}">Inspect sprites</button></article>`}).join("");
-  $$('[data-person]').forEach((button)=>button.addEventListener("click",()=>openPerson(button.dataset.person)));
+  const departments=[...new Set(EMPLOYEES.map((person)=>person.department))];
+  $("#people-grid").innerHTML=departments.map((department)=>{
+    const cards=EMPLOYEES.filter((person)=>person.department===department).map((person)=>{
+      const profile=profileFor(person.id),presence=presenceFor(person.id),caps=capabilityPairs(person.id);
+      const assigned=registry.tasks.filter((task)=>task.assignee_id===person.id&&!task.quarantined).length;
+      const runtimeSeen=runtime?.employees?.[person.id]?.profile_exists===true;
+      return `<article class="person-card"><div class="person-art">${portraitMarkup(person.id,"front","person-portrait")}</div><div class="person-copy"><p class="eyebrow">${escapeHtml(person.department)} · ${escapeHtml(profile.visual)}</p><h2>${escapeHtml(person.name)}</h2><strong>${escapeHtml(person.role)}</strong><p>${escapeHtml(profile.personality)}</p><p class="employee-operating">Gaya bicara: ${escapeHtml(EMPLOYEE_PLAYBOOK[person.id].voice)}</p><p class="employee-operating">Assigned local tasks: ${assigned} · skills: ${EMPLOYEE_PLAYBOOK[person.id].skillNames.length}</p><div class="profile-states"><span>${escapeHtml(presence)}</span><span>${runtimeSeen?"PROFILE EVIDENCE SEEN":"PROFILE NOT OBSERVED"}</span>${caps.length?caps.map(([cap,state])=>`<span>${escapeHtml(cap)}: ${escapeHtml(state)}</span>`).join(""):"<span>NO EXTERNAL CAPABILITY REQUIRED</span>"}</div></div><button type="button" data-person="${person.id}">Inspect employee</button></article>`;
+    }).join("");
+    return `<section class="department-group"><div class="department-heading"><p class="eyebrow">DEPARTMENT</p><h2>${escapeHtml(department)}</h2></div><div class="department-grid">${cards}</div></section>`;
+  }).join("");
+  $('[data-person]').forEach((button)=>button.addEventListener("click",()=>openPerson(button.dataset.person)));
 }
 function openPerson(id) {
-  const person=employee(id),profile=profiles[id];
-  $("#person-detail").innerHTML=`<p class="eyebrow">CANONICAL CHARACTER</p><h2 id="person-title">${escapeHtml(person.name)}</h2><p><strong>${escapeHtml(person.role)}</strong> · ${escapeHtml(profile.visual)}</p><p>${escapeHtml(profile.personality)}</p><section class="operating-playbook"><p class="eyebrow">PUBLIC SOUL / SKILLS · ${escapeHtml(PERSONA_SNAPSHOT)}</p><h3>Cara bicara</h3><p>${escapeHtml(EMPLOYEE_PLAYBOOK[id].voice)}</p><h3>Cara berpikir</h3><p>${escapeHtml(EMPLOYEE_PLAYBOOK[id].thinking)}</p><h3>Cara kerja</h3><p>${escapeHtml(EMPLOYEE_PLAYBOOK[id].workflow)}</p><h3>6 reusable skills</h3><p>${escapeHtml(EMPLOYEE_PLAYBOOK[id].skillNames.join(" · "))}</p><p class="readonly-warning">${escapeHtml(EMPLOYEE_PLAYBOOK[id].toolState)} · Skills are instructions, not proof that a model or external tool is running.</p></section><div class="person-sheet">${["front","side","back","idle","walk","role"].map((state)=>`<figure><img src="./assets/generated/characters/${id}/${state}.png" alt="${escapeHtml(person.name)} ${state}"><figcaption>${state.toUpperCase()}</figcaption></figure>`).join("")}</div><p class="readonly-warning">Character art uses the original owner-authored PNG sprite set used by the private office build. Visuals are not proof of runtime execution.</p>`;
+  const person=employee(id),full=EMPLOYEE_BY_ID[id],profile=profileFor(id),caps=capabilityPairs(id);
+  const sheet=full.visual.asset_status==="owner-authored"
+    ? `<div class="person-sheet">${["front","side","back","idle","walk","role"].map((state)=>`<figure>${portraitMarkup(id,state,"")}<figcaption>${state.toUpperCase()}</figcaption></figure>`).join("")}</div>`
+    : `<div class="pending-character-sheet">${portraitMarkup(id,"front","pending-avatar-large")}<p>Original character art has not been supplied yet. This deterministic placeholder is presentation only.</p></div>`;
+  $("#person-detail").innerHTML=`<p class="eyebrow">${escapeHtml(full.department)} · ${escapeHtml(full.visual.asset_status.toUpperCase())}</p><h2 id="person-title">${escapeHtml(person.name)}</h2><p><strong>${escapeHtml(person.role)}</strong></p><p>${escapeHtml(profile.personality)}</p><section class="operating-playbook"><p class="eyebrow">CANONICAL WORKFORCE · ${escapeHtml(PERSONA_SNAPSHOT)}</p><h3>Cara bicara</h3><p>${escapeHtml(EMPLOYEE_PLAYBOOK[id].voice)}</p><h3>Cara berpikir</h3><p>${escapeHtml(EMPLOYEE_PLAYBOOK[id].thinking)}</p><h3>Cara kerja</h3><p>${escapeHtml(EMPLOYEE_PLAYBOOK[id].workflow)}</p><h3>Habits</h3><p>Idle: ${escapeHtml(full.habits.idle_habit)}<br>Stress: ${escapeHtml(full.habits.stress_habit)}<br>Success: ${escapeHtml(full.habits.success_habit)}</p><h3>${EMPLOYEE_PLAYBOOK[id].skillNames.length} reusable skills</h3><p>${escapeHtml(EMPLOYEE_PLAYBOOK[id].skillNames.join(" · "))}</p><h3>Preferred Hermes toolsets</h3><p>${escapeHtml(full.preferred_toolsets.join(" · "))}</p><h3>External capability state</h3><div class="profile-states">${caps.length?caps.map(([cap,state])=>`<span>${escapeHtml(cap)}: ${escapeHtml(state)}</span>`).join(""):"<span>NO EXTERNAL CAPABILITY REQUIRED</span>"}</div><p class="readonly-warning">${escapeHtml(EMPLOYEE_PLAYBOOK[id].toolState)} · Tool preference is not evidence of tool availability or execution.</p></section>${sheet}<p class="readonly-warning">Animation/placeholder state is presentation metadata, never execution evidence.</p>`;
   $("#person-dialog").showModal();
 }
 
@@ -148,7 +174,7 @@ function renderSystems() {
   const cards=[
     ["Local office server","Static UI and read-only runtime adapter.",[["LOCALHOST","pass"],["WRITE ENDPOINTS: 0","pass"],["DISPATCH: BLOCKED","blocked"]]],
     ["Hermes Kanban",connected?`${runtime.hermes.version} · ${runtime.hermes.task_count} sanitized task(s).`:"No verified board snapshot.",[[connected?"READ CONNECTED":"UNKNOWN",connected?"pass":"blocked"],["RUNTIME WRITES: 0","pass"],["READ-ONLY ADAPTER","pass"]]],
-    ["Employee runtime","All six named profiles are read from Hermes; model label or animation does NOT prove execution.",EMPLOYEES.map(({id})=>[`${id.toUpperCase()}: ${presenceFor(id)}`,""])],
+    ["Employee runtime",`All ${EMPLOYEES.length} named profiles are reconciled independently; model label or animation does NOT prove execution.`,EMPLOYEES.map(({id})=>[`${id.toUpperCase()}: ${presenceFor(id)}`,""])],
     ["Providers / models","The office server does not read provider keys, change providers, or run model inference.",[["SERVER INFERENCE: 0","pass"],["PROVIDER KEYS: NOT READ","pass"],["CONFIG CHANGES: 0","pass"]]],
     ["MCP / external APIs","External APIs are outside the default local office boundary.",[["DEFAULT MCP CALLS: 0","pass"],["EXTERNAL WRITES: 0","pass"],["MESSAGING: BLOCKED","blocked"]]],
     ["ChatGPT chat biasa","A separate chat can be used manually, but this office cannot invoke private conversations or inherit personal plugins.",[["DESIRED PRIMARY SURFACE",""],["MANUAL HANDOFF ONLY","pass"],["AUTO BRIDGE: NOT VERIFIED","blocked"]]],

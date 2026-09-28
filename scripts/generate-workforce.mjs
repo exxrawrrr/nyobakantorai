@@ -76,7 +76,11 @@ export const WORKFORCE = Object.freeze(${JSON.stringify(registry.employees,null,
 export const EMPLOYEE_IDS = Object.freeze(WORKFORCE.map(({id})=>id));
 export const EMPLOYEE_BY_ID = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee])));
 `;
-const expected=new Map([["office/workforce.mjs",workforce]]);
+const workforceCss=`/* GENERATED from config/employees.json by scripts/generate-workforce.mjs. Do not hand-edit. */
+${registry.employees.map(e=>`.task-card[data-owner="${e.id}"]{--owner:${e.visual.color}}`).join("\n")}
+${registry.employees.map(e=>`.speech-bubble[data-employee="${e.id}"]{left:${(e.visual.scene_position[0]/1280*100).toFixed(5)}%;top:${(e.visual.scene_position[1]/720*100).toFixed(5)}%`).join("\n")}
+`;
+const expected=new Map([["office/workforce.mjs",workforce],["office/src/workforce.css",workforceCss]]);
 for(const e of registry.employees){
  const soul=soulFor(e);
  expected.set(`agents/${e.id}/SOUL.md`,soul);

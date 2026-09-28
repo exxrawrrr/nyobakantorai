@@ -1,18 +1,18 @@
+import { WORKFORCE } from "./workforce.mjs";
 const W = 1280, H = 720, CELL = 32;
 const palette = { ink: "#30372d", line: "#5d604d", cream: "#efe6d1", wall: "#e3d5b7", wood: "#b99366", wood2: "#c9a778", olive: "#697a4c", olive2: "#89936a", leaf: "#506844", brown: "#72523b", blue: "#9bbbc0", rug: "#acae86" };
-const deskPoints = {
-  praroro: [330, 430], paijo: [540, 420], subagjo: [750, 430],
-  alex: [390, 610], sumiati: [610, 595], siti: [830, 610],
-};
+const employees = WORKFORCE.map(({id})=>id);
+const employeeById = Object.freeze(Object.fromEntries(WORKFORCE.map((person)=>[person.id,person])));
+const deskPoints = Object.freeze(Object.fromEntries(WORKFORCE.map((person)=>[person.id,person.visual.scene_position])));
 const roomObstacles = [
   [0,0,1280,88], [0,0,42,720], [1238,0,42,720], [0,682,1280,38],
   [60,112,255,145], [358,105,360,170], [756,104,245,145], [1034,92,185,205],
   [245,350,170,92], [455,340,170,92], [665,350,170,92], [305,525,170,90], [525,515,170,90], [745,525,170,90],
 ];
-const employees = ["praroro", "paijo", "subagjo", "alex", "sumiati", "siti"];
 
 function rect(ctx, x, y, w, h, fill, stroke = "") { ctx.fillStyle = fill; ctx.fillRect(x,y,w,h); if (stroke) { ctx.strokeStyle=stroke; ctx.lineWidth=3; ctx.strokeRect(x+1.5,y+1.5,w-3,h-3); } }
 function label(ctx, text, x, y, size=13, align="left") { ctx.fillStyle=palette.ink; ctx.font=`700 ${size}px ui-monospace, Consolas, monospace`; ctx.textAlign=align; ctx.fillText(text,x,y); }
+function pendingWorker(ctx, person, x, y) {ctx.save();ctx.fillStyle=person.visual.color||palette.olive;ctx.strokeStyle=palette.ink;ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(x-34,y-92,68,68,10);ctx.fill();ctx.stroke();ctx.fillStyle="#fffaf0";ctx.font="800 20px ui-monospace,Consolas,monospace";ctx.textAlign="center";ctx.fillText(person.visual.initials||person.name.slice(0,2).toUpperCase(),x,y-50);ctx.fillStyle=palette.ink;ctx.font="800 7px ui-monospace,Consolas,monospace";ctx.fillText("ART PENDING",x,y-13);ctx.restore();}
 function plant(ctx,x,y,s=1) { rect(ctx,x-12*s,y-17*s,24*s,20*s,"#9a7150",palette.line); for (const [dx,dy,r] of [[0,-32,-.1],[-10,-25,-.6],[11,-24,.55],[-4,-42,-.25]]) { ctx.save(); ctx.translate(x+dx*s,y+dy*s); ctx.rotate(r); ctx.fillStyle=palette.leaf; ctx.fillRect(-5*s,-15*s,10*s,23*s); ctx.restore(); } }
 function chair(ctx,x,y,angle=0) { ctx.save(); ctx.translate(x,y); ctx.rotate(angle); rect(ctx,-18,-16,36,34,"#6b745a",palette.line); rect(ctx,-14,16,6,12,palette.brown); rect(ctx,8,16,6,12,palette.brown); ctx.restore(); }
 function desk(ctx,x,y,w=150) { ctx.save(); ctx.shadowColor="rgba(67,45,27,.2)";ctx.shadowBlur=8;ctx.shadowOffsetY=7;rect(ctx,x,y,w,58,"#9f754e",palette.line);ctx.shadowColor="transparent";rect(ctx,x+12,y+45,10,35,"#684b37");rect(ctx,x+w-22,y+45,10,35,"#684b37");rect(ctx,x+w/2-26,y-19,52,34,"#39433c",palette.ink);rect(ctx,x+w/2-20,y-13,40,22,"#91b6a2");rect(ctx,x+w/2-4,y+12,8,12,palette.ink);rect(ctx,x+10,y+12,30,6,"#e2d4b8");ctx.restore(); }
@@ -52,7 +52,7 @@ function path(start, goal) {
 export function createOfficeScene(canvas, { onSelect, initialMotion = true } = {}) {
   const ctx=canvas.getContext("2d",{alpha:false});ctx.imageSmoothingEnabled=false;
   const images=new Map();
-  for(const employee of employees)for(const state of ["idle","walk","think","work","role","seated","front","side","back"]){const image=new Image();image.src=`./assets/generated/characters/${employee}/${state}.png`;images.set(`${employee}:${state}`,image);}
+  for(const person of WORKFORCE)if(person.visual.asset_status==="owner-authored"&&person.visual.asset_id)for(const state of ["idle","walk","think","work","role","seated","front","side","back"]){const image=new Image();image.src=`./assets/generated/characters/${person.visual.asset_id}/${state}.png`;images.set(`${person.id}:${state}`,image);}
   const actors=employees.map((id,index)=>({id,x:deskPoints[id][0],y:deskPoints[id][1]+45,state:index%3===0?"think":"idle",route:[]}));
   let selected="praroro",motion=initialMotion,zoom=1,debug=false,last=performance.now(),frame=0;
   function draw(now){
@@ -60,7 +60,7 @@ export function createOfficeScene(canvas, { onSelect, initialMotion = true } = {
     if(motion)for(const actor of actors){if(actor.route.length){const [tx,ty]=actor.route[0],dx=tx-actor.x,dy=ty-actor.y,d=Math.hypot(dx,dy),step=105*dt;actor.state="walk";if(d<=step){actor.x=tx;actor.y=ty;actor.route.shift();if(!actor.route.length)actor.state="idle";}else{actor.x+=dx/d*step;actor.y+=dy/d*step;}}}
     ctx.save();ctx.clearRect(0,0,W,H);ctx.translate((W-W*zoom)/2,(H-H*zoom)/2);ctx.scale(zoom,zoom);drawRoom(ctx);
     if(debug){ctx.strokeStyle="rgba(138,79,58,.18)";ctx.lineWidth=1;for(let x=0;x<W;x+=CELL){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<H;y+=CELL){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}}
-    for(const actor of [...actors].sort((a,b)=>a.y-b.y)){const idleState=!actor.route.length&&motion&&Math.floor(now/3500+employees.indexOf(actor.id))%5===0?"role":actor.state;const image=images.get(`${actor.id}:${idleState}`);ctx.save();ctx.shadowColor="rgba(42,36,26,.22)";ctx.shadowBlur=5;ctx.drawImage(image,actor.x-55,actor.y-116,110,110);ctx.restore();if(actor.id===selected){ctx.strokeStyle="#b66042";ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(actor.x,actor.y-3,28,10,0,0,Math.PI*2);ctx.stroke();}label(ctx,actor.id.toUpperCase(),actor.x,actor.y+18,9,"center");}
+    for(const actor of [...actors].sort((a,b)=>a.y-b.y)){const idleState=!actor.route.length&&motion&&Math.floor(now/3500+employees.indexOf(actor.id))%5===0?"role":actor.state;const person=employeeById[actor.id],image=images.get(`${actor.id}:${idleState}`);if(image&&image.complete&&image.naturalWidth>0){ctx.save();ctx.shadowColor="rgba(42,36,26,.22)";ctx.shadowBlur=5;ctx.drawImage(image,actor.x-55,actor.y-116,110,110);ctx.restore();}else pendingWorker(ctx,person,actor.x,actor.y);if(actor.id===selected){ctx.strokeStyle="#b66042";ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(actor.x,actor.y-3,28,10,0,0,Math.PI*2);ctx.stroke();}label(ctx,actor.id.toUpperCase(),actor.x,actor.y+18,9,"center");}
     ctx.restore();requestAnimationFrame(draw);
   }
   function point(event){const box=canvas.getBoundingClientRect();return [(event.clientX-box.left)/box.width*W,(event.clientY-box.top)/box.height*H];}

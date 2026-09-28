@@ -7,10 +7,10 @@
     "start": "node server.mjs",
     "test": "node --test",
     "staging": "node tools/staging.mjs",
-    "check": "node --check src/app.mjs && node --check src/scene.mjs && node --check registry.mjs && node --check reconcile.mjs && node --check server.mjs && node --test",
+    "check": "node --check workforce.mjs && node --check src/app.mjs && node --check src/scene.mjs && node --check src/persona-ops.mjs && node --check src/worker-bubbles.mjs && node --check registry.mjs && node --check reconcile.mjs && node --check server.mjs && node --test",
     "dev": "node build.mjs && node server.mjs"
   },
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "nyobakantorai local-first office dashboard",
   "engines": {
     "node": ">=20"
