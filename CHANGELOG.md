@@ -20,12 +20,15 @@ All notable public changes to nyobakantorai are documented here.
 - Dependency-free Runtime Adapter SDK v1 with bounded fail-closed snapshots.
 - Public-safe office and approval-flow screenshots with SHA-256 provenance.
 - Animated `Meet the Office` README showcase for Praroro, Paijo, Subagjo, Alex, Sumiati, and Siti using the original owner-authored PNG sprites.
+- End-to-end boot smoke test covering health, capabilities, runtime fail-closed mode, UI delivery, security headers, canonical character assets, method guards, and clean shutdown.
 
 ### Changed
 - Restored the canonical owner-authored PNG character sprites for all six employees and removed the temporary generic SVG stand-ins.
 - Runtime staging now supports all six public roles.
 - Machine-specific paths and private workspace assumptions were removed from supported public surfaces.
 - External/runtime claims fail closed when identity, state, or freshness cannot be verified.
+- Hermes auto-discovery can now be explicitly disabled with `NYOBAKANTORAI_DISABLE_HERMES=1`, making standalone/offline behavior deterministic.
+- Direct admin shutdown now removes its ephemeral stop token instead of relying on the CLI wrapper for cleanup.
 
 ### Security
 - Public release excludes credentials, auth state, runtime databases, logs, receipts, client/user records, and private workstation paths.

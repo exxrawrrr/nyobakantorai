@@ -364,6 +364,7 @@ git clone https://github.com/exxrawrrr/nyobakantorai.git
 cd nyobakantorai
 
 python -m pip install -r requirements-dev.txt
+npm run smoke
 npm run verify
 npm start
 ```
@@ -380,11 +381,14 @@ Windows users can also run:
 office/START-NYOBAKANTORAI.bat
 ```
 
-Hermes is optional. Without it, the UI remains usable in fast offline mode.
+Hermes is optional. Without it, the UI remains usable in fast offline mode. `npm run smoke` performs a real local boot test against health/capability/runtime endpoints, security headers, the UI, an original character sprite, and clean shutdown.
+
+The root package keeps `"private": true` intentionally to prevent accidental publication to npm; it does **not** prevent making the GitHub repository public.
 
 ## Optional Hermes adapter
 
 ```text
+NYOBAKANTORAI_DISABLE_HERMES=0
 NYOBAKANTORAI_HERMES_EXE=/absolute/path/to/hermes
 NYOBAKANTORAI_HERMES_HOME=/absolute/path/to/.hermes
 NYOBAKANTORAI_BOARD=nyobakantorai
@@ -455,6 +459,7 @@ npm run audit
 npm test
 npm run demo
 npm run demo:adapter
+npm run smoke
 npm run build
 npm start
 ```

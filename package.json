@@ -15,10 +15,12 @@
     "test:python": "python scripts/run-python-tests.py",
     "security:scan": "node scripts/security-scan.mjs",
     "audit": "node scripts/repo-audit.mjs && npm run security:scan && npm run public:scan",
-    "verify": "npm run audit && npm test && npm run build",
+    "verify": "npm run audit && npm test && npm run build && npm run test:smoke",
     "public:scan": "node scripts/public-release-audit.mjs",
     "demo": "node examples/demo-workflow.mjs",
     "test:demo": "node --test examples/demo-workflow.test.mjs examples/runtime-adapter.test.mjs",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "smoke": "npm run build && npm run test:smoke",
     "release:manifest": "node scripts/release-manifest.mjs",
     "release:check": "npm run verify && npm run release:manifest",
     "demo:adapter": "node examples/runtime-adapter.mjs"

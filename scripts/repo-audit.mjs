@@ -11,6 +11,7 @@ const required = [
   "docs/THREAT-MODEL.md", "docs/PRIVACY.md", "docs/RUNTIME-ADAPTER-SPEC.md", "docs/APPROVAL-MODEL.md",
   "docs/DEMO.md", "docs/RELEASE-CHECKLIST.md", "docs/PUBLICATION-RUNBOOK.md", "CHANGELOG.md", "SUPPORT.md", "CODE_OF_CONDUCT.md",
   "docs/assets/README.md", "docs/assets/office-overview.png", "docs/assets/approval-flow.png", "docs/assets/meet-the-office.gif", "docs/assets/employee-showcase.html",
+  "scripts/smoke-test.mjs",
 ];
 for (const file of required) {
   if (!existsSync(resolve(root, file))) throw new Error(`Missing required public project file: ${file}`);

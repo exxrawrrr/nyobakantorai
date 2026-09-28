@@ -21,6 +21,7 @@ Confirm all of the following:
 - Windows CI passes;
 - the manual `release-gate` workflow passes;
 - the `nyobakantorai-manifest` artifact is present;
+- end-to-end smoke test boots the built server and validates health, capabilities, runtime fail-closed mode, UI, security headers, canonical character assets, and clean shutdown;
 - public-release scan reports zero findings;
 - secret scan reports zero findings;
 - the historical private-development SHA is not reachable from the canonical repository;

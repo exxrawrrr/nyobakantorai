@@ -16,8 +16,9 @@ const requestedPort = Number.parseInt(process.env.NYOBAKANTORAI_PORT || "4322", 
 const port = Number.isInteger(requestedPort) && requestedPort > 1023 && requestedPort < 65536 ? requestedPort : 4322;
 const hermesExe = process.env.NYOBAKANTORAI_HERMES_EXE || process.env.HERMES_EXE || "hermes";
 const defaultHermesHome = join(homedir(), ".hermes");
-const hermesHome = process.env.NYOBAKANTORAI_HERMES_HOME || process.env.HERMES_HOME || (existsSync(defaultHermesHome) ? defaultHermesHome : "");
-const hermesEnabled = Boolean(hermesHome);
+const hermesDisabled = /^(1|true|yes)$/i.test(process.env.NYOBAKANTORAI_DISABLE_HERMES || "");
+const hermesHome = hermesDisabled ? "" : (process.env.NYOBAKANTORAI_HERMES_HOME || process.env.HERMES_HOME || (existsSync(defaultHermesHome) ? defaultHermesHome : ""));
+const hermesEnabled = !hermesDisabled && Boolean(hermesHome);
 const board = process.env.NYOBAKANTORAI_BOARD || "nyobakantorai";
 const employeeIds = ["praroro", "paijo", "subagjo", "alex", "sumiati", "siti"];
 const execFileAsync = promisify(execFile);
@@ -174,7 +175,7 @@ const server = createServer(async (request, response) => {
       assertLocal(request);
       if (request.headers.authorization !== `Bearer ${stopToken}`) throw new PublicError(401, "Stop token required");
       json(response, 202, { stopping: true });
-      setTimeout(() => server.close(() => process.exit(0)), 25);
+      setTimeout(() => server.close(async () => { try { await unlink(stopFile); } catch {} process.exit(0); }), 25);
       return;
     }
     if (pathname.startsWith("/api/")) throw new PublicError(404, "API route not found");
