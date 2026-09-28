@@ -6,6 +6,7 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const office = resolve(root, "office");
 const checks = [];
+const runtimeOnly = process.argv.includes("--runtime");
 const add = (name, ok, detail, level = "required") => checks.push({ name, ok, detail, level });
 
 const nodeMajor = Number.parseInt(process.versions.node.split(".")[0], 10);
@@ -21,7 +22,7 @@ function command(command, args) {
 }
 
 const git = command("git", ["--version"]);
-add("Git", git.ok, git.ok ? git.stdout : "git command not available");
+add("Git", git.ok, git.ok ? git.stdout : "git command not available", runtimeOnly ? "optional" : "required");
 
 let pythonCommand = "";
 let pythonVersion = "";
@@ -31,14 +32,14 @@ for (const candidate of process.platform === "win32" ? ["python", "py"] : ["pyth
   if (result.ok) { pythonCommand = candidate; pythonVersion = result.stdout; break; }
 }
 const [pyMajor = 0, pyMinor = 0] = pythonVersion.split(".").map(Number);
-add("Python 3.10+", Boolean(pythonCommand) && (pyMajor > 3 || (pyMajor === 3 && pyMinor >= 10)), pythonCommand ? `${pythonCommand} ${pythonVersion}` : "python command not available");
+add("Python 3.10+", Boolean(pythonCommand) && (pyMajor > 3 || (pyMajor === 3 && pyMinor >= 10)), pythonCommand ? `${pythonCommand} ${pythonVersion}` : "python command not available", runtimeOnly ? "optional" : "required");
 
 if (pythonCommand) {
   const args = pythonCommand === "py" ? ["-3", "-c", "import yaml; print(yaml.__version__)"] : ["-c", "import yaml; print(yaml.__version__)"];
   const yaml = command(pythonCommand, args);
-  add("PyYAML", yaml.ok, yaml.ok ? `PyYAML ${yaml.stdout}` : "install with: python -m pip install -r requirements-dev.txt");
+  add("PyYAML", yaml.ok, yaml.ok ? `PyYAML ${yaml.stdout}` : "install with: python -m pip install -r requirements-dev.txt", runtimeOnly ? "optional" : "required");
 } else {
-  add("PyYAML", false, "Python is unavailable");
+  add("PyYAML", false, "Python is unavailable", runtimeOnly ? "optional" : "required");
 }
 
 for (const rel of [
@@ -82,7 +83,7 @@ if (hermesDisabled) {
 
 const failures = checks.filter((c) => c.level === "required" && !c.ok);
 if (process.argv.includes("--json")) {
-  process.stdout.write(JSON.stringify({ ok: failures.length === 0, checks }, null, 2) + "\n");
+  process.stdout.write(JSON.stringify({ ok: failures.length === 0, mode: runtimeOnly ? "runtime" : "release", checks }, null, 2) + "\n");
 } else {
   for (const c of checks) {
     const mark = c.ok ? "PASS" : c.level === "optional" ? "WARN" : "FAIL";

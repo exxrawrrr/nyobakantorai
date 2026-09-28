@@ -99,6 +99,29 @@ const agentPaths = tracked.filter((p) => {
 });
 if (agentPaths.length !== 6) findings.push("expected 6 public agent SOUL files, found " + agentPaths.length);
 
+const employeeIds = ["praroro","paijo","subagjo","alex","sumiati","siti"];
+const distManifests = tracked.filter((p) => /^hermes-profiles\/[^/]+\/distribution[.]yaml$/.test(p.split(slash).join("/")));
+if (distManifests.length !== 6) findings.push("expected 6 Hermes distribution manifests, found " + distManifests.length);
+for (const id of employeeIds) {
+  const manifestPath = `hermes-profiles/${id}/distribution.yaml`;
+  if (!tracked.includes(manifestPath)) findings.push(manifestPath + ": missing tracked Hermes distribution");
+  const prefix = `hermes-profiles/${id}/skills/nyobakantorai/`;
+  const packaged = tracked.filter((p) => p.split(slash).join("/").startsWith(prefix) && p.endsWith("/SKILL.md"));
+  if (packaged.length !== 6) findings.push(`hermes-profiles/${id}: expected 6 packaged skills, found ${packaged.length}`);
+  for (const packagedPath of packaged) {
+    const normalizedPath = packagedPath.split(slash).join("/");
+    const skill = normalizedPath.split("/")[4];
+    const canonical = `skills/hermes-custom/${skill}/SKILL.md`;
+    if (!tracked.includes(canonical)) {
+      findings.push(packagedPath + ": packaged skill has no canonical source");
+      continue;
+    }
+    const a = readFileSync(resolve(root, packagedPath), "utf8");
+    const b = readFileSync(resolve(root, canonical), "utf8");
+    if (a !== b) findings.push(packagedPath + ": packaged skill drifted from canonical source");
+  }
+}
+
 if (findings.length) {
   console.error("Public-release audit failed:" + String.fromCharCode(10) + [...new Set(findings)].join(String.fromCharCode(10)));
   process.exit(1);

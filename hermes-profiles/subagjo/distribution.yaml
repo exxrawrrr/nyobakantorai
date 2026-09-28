@@ -1,0 +1,10 @@
+name: subagjo
+version: 0.2.0
+description: "nyobakantorai engineering agent: Codebase inspection, reversible changes, integration review, testing, and rollback evidence."
+author: "exxrawrrr / nyobakantorai contributors"
+license: "MIT"
+distribution_owned:
+  - SOUL.md
+  - profile.yaml
+  - skills
+  - distribution.yaml

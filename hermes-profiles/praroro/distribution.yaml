@@ -1,0 +1,10 @@
+name: praroro
+version: 0.2.0
+description: "nyobakantorai coordination agent: Coordination, prioritization, scoped delegation, and concise executive briefs."
+author: "exxrawrrr / nyobakantorai contributors"
+license: "MIT"
+distribution_owned:
+  - SOUL.md
+  - profile.yaml
+  - skills
+  - distribution.yaml

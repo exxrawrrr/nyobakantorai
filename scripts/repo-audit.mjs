@@ -4,17 +4,22 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const required = [
-  "README.md", "SECURITY.md", "CONTRIBUTING.md", "LICENSE", "scripts/preflight.mjs",
+  "README.md", "SECURITY.md", "CONTRIBUTING.md", "LICENSE", "ACKNOWLEDGEMENTS.md", "install.ps1", "install.sh", "scripts/preflight.mjs", "scripts/hermes-bootstrap.mjs", "scripts/hermes-profile-distribution.test.mjs",
   ".gitignore", ".env.example", "package.json",
   "office/package.json", "office/server.mjs", "office/src/asset-manifest.json",
   "packages/runtime-adapter/index.mjs", "packages/runtime-adapter/index.test.mjs", "packages/runtime-adapter/http-readonly.mjs", "packages/runtime-adapter/http-readonly.test.mjs", "packages/runtime-adapter/README.md",
-  "docs/THREAT-MODEL.md", "docs/PRIVACY.md", "docs/RUNTIME-ADAPTER-SPEC.md", "docs/APPROVAL-MODEL.md",
+  "docs/THREAT-MODEL.md", "docs/PRIVACY.md", "docs/RUNTIME-ADAPTER-SPEC.md", "docs/APPROVAL-MODEL.md", "docs/HERMES-FIRST-SETUP.md",
   "docs/DEMO.md", "docs/RELEASE-CHECKLIST.md", "docs/PUBLICATION-RUNBOOK.md", "CHANGELOG.md", "SUPPORT.md", "CODE_OF_CONDUCT.md",
   "docs/assets/README.md", "docs/assets/office-overview.png", "docs/assets/approval-flow.png", "docs/assets/meet-the-office.gif", "docs/assets/employee-showcase.html",
   "scripts/smoke-test.mjs",
 ];
 for (const file of required) {
   if (!existsSync(resolve(root, file))) throw new Error(`Missing required public project file: ${file}`);
+}
+
+for (const id of ["praroro","paijo","subagjo","alex","sumiati","siti"]) {
+  const manifest = `hermes-profiles/${id}/distribution.yaml`;
+  if (!existsSync(resolve(root, manifest))) throw new Error(`Missing Hermes profile distribution: ${manifest}`);
 }
 
 const readme = readFileSync(resolve(root, "README.md"), "utf8");

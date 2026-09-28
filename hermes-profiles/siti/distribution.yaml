@@ -1,0 +1,10 @@
+name: siti
+version: 0.2.0
+description: "nyobakantorai quality agent: Independent verification, source provenance, acceptance criteria, and evidence review."
+author: "exxrawrrr / nyobakantorai contributors"
+license: "MIT"
+distribution_owned:
+  - SOUL.md
+  - profile.yaml
+  - skills
+  - distribution.yaml

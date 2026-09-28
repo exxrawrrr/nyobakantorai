@@ -19,7 +19,9 @@ Windows helpers:
 
 Use environment variables from the repository-level `.env.example`. The app does not auto-load secrets from files.
 
-Hermes is optional. When no valid Hermes home is detected/configured, the office stays fully usable in fast offline mode and reports `runtime_adapter: none`.
+Hermes is the reference runtime, while core-only mode remains supported. On Windows, the office auto-detects the upstream `%LOCALAPPDATA%\hermes` data directory; on POSIX it checks `~/.hermes`. Explicit `NYOBAKANTORAI_HERMES_HOME` / `HERMES_HOME` values take precedence. When no valid Hermes home exists, the office stays usable in fast offline mode and reports `runtime_adapter: none`.
+
+For a fresh Hermes-backed setup, use the root installer or `node scripts/hermes-bootstrap.mjs`; see `docs/HERMES-FIRST-SETUP.md`.
 
 Useful endpoints:
 - `GET /api/health`
