@@ -76,12 +76,12 @@ After visibility changes:
 
 ## 6. First release
 
-Create the first public release only after the public verification passes.
+Create the v0.3 release only after the public verification passes. Do not tag a failing draft PR.
 
-Suggested initial tag:
+For this v0.3 candidate, the intended tag after all gates and public verification is:
 
 ```text
-v0.2.0
+v0.3.0
 ```
 
 Release notes should be based on `CHANGELOG.md` and must not claim model/runtime capabilities that are not independently verified.

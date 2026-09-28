@@ -15,7 +15,10 @@ nyobakantorai is a local-first visual office for human-governed multi-agent work
 ## Main components
 
 - `office/` — visual dashboard and read-only runtime surface.
-- `agents/` — six example public agent profiles.
+- `config/employees.json` — canonical workforce registry (16 baseline employees, extensible through the safe generator).
+- `config/capabilities.json` — provider-neutral capability/autonomy contract.
+- `agents/` — registry-derived public employee SOUL/profile definitions.
+- `hermes-profiles/` — generated native Hermes profile distributions with role-scoped skills and fresh-install toolset defaults.
 - `skills/hermes-custom/` — reusable procedural skills.
 - `operations/taskctl/` — owner-controlled blocked task intake for Hermes.
 - `operations/handoff/` — manual handoff, return receipts, and source provenance gates.
@@ -29,3 +32,14 @@ nyobakantorai is a local-first visual office for human-governed multi-agent work
 The office exposes localhost-only health, capabilities, runtime, and task views. When Hermes is not configured, it stays in fast offline mode. A configured adapter must fail closed when task identity, status, or freshness cannot be verified.
 
 See `../docs/RUNTIME-ADAPTER-SPEC.md` for the adapter contract.
+
+
+## v0.3 workforce invariants
+
+- The registry is the source of truth; generated SOUL/profile/toolset packaging must not drift.
+- Six original workers keep owner-authored sprites; additional workers may use explicit `pending-original-art` placeholders.
+- Routing is deterministic and advisory; a human assignment always wins.
+- `OBSERVE`, `GUARDED`, and `DELEGATED` describe autonomy policy, not tool availability.
+- External ads capabilities default to `NOT_CONNECTED`.
+- Self-verification is forbidden; VERIFIED requires independent evidence.
+- Native Hermes profile updates preserve user-owned runtime state and existing config by default.

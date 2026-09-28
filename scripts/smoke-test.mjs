@@ -90,10 +90,16 @@ try {
   assert.equal(caps.runtime_adapter, "none");
   assert.deepEqual(caps.employees, EMPLOYEE_IDS);
   assert.equal(caps.workforce_version, "0.3.0");
+  assert.equal(caps.autonomy_default, "GUARDED");
+  assert.ok(caps.autonomy_modes.includes("OBSERVE") && caps.autonomy_modes.includes("DELEGATED"));
+  assert.ok(caps.capability_states.includes("NOT_CONNECTED"));
+  assert.ok(caps.external_capability_catalog.some((item) => item.id === "ads.meta.write"));
+  assert.ok(caps.external_capability_catalog.some((item) => item.id === "ads.google.write"));
   const workforceResponse = await fetch(base + "/api/workforce");
   assert.equal(workforceResponse.status, 200);
   const workforce = await workforceResponse.json();
-  assert.equal(workforce.employees.length, 16);
+  assert.equal(workforce.employees.length, EMPLOYEE_IDS.length);
+  assert.ok(workforce.employees.length >= 16);
   const maya = workforce.employees.find((person) => person.id === "maya");
   assert.equal(maya.asset_status, "pending-original-art");
   assert.equal(maya.capability_state["ads.meta.write"], "NOT_CONNECTED");
