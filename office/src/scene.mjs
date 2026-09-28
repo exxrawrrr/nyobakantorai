@@ -1,4 +1,4 @@
-import { WORKFORCE } from "./workforce.mjs";
+import { WORKFORCE } from "../workforce.mjs";
 const W = 1280, H = 720, CELL = 32;
 const palette = { ink: "#30372d", line: "#5d604d", cream: "#efe6d1", wall: "#e3d5b7", wood: "#b99366", wood2: "#c9a778", olive: "#697a4c", olive2: "#89936a", leaf: "#506844", brown: "#72523b", blue: "#9bbbc0", rug: "#acae86" };
 const deskPoints = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee.visual.scene_position])));
