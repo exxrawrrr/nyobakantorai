@@ -9,7 +9,7 @@
 > **berarti gue bikin The Sims, bukan agent system.**
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/ai-trust-me-bro.jpg" width="320" alt="trust me bro meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/hello-it.gif" width="315" alt="hello IT reaction gif" />
 </p>
 
 ## Ngene loh.
@@ -54,7 +54,7 @@ Model configured bukan evidence.
 Agent bilang `done` juga belum tentu evidence.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/surprised-pikachu.jpg" width="280" alt="surprised pikachu meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/monkas-gif.gif" width="280" alt="monkas reaction gif" />
 </p>
 
 ---
@@ -97,7 +97,7 @@ Simple secara konsep.
 Implementasinya tentu bikin rambut rontok.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/confused-math-lady.jpg" width="300" alt="confused math lady meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/apu-helper.jpg" width="300" alt="helper reaction meme" />
 </p>
 
 ---
@@ -132,7 +132,7 @@ Karena:
 > **"AI-nya yakin" bukan permission model.**
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/drake-reject-approve.jpg" width="300" alt="approval meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/two-buttons-sweating.jpg" width="300" alt="two buttons decision meme" />
 </p>
 
 ---
@@ -162,6 +162,10 @@ itu bukan QA.
 
 Itu teman nongkrong.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/apu-candidate.png" width="280" alt="candidate reaction meme" />
+</p>
+
 ---
 
 ## Local-first bukan berarti anti-internet
@@ -183,7 +187,7 @@ Hermes optional.
 Kalau provider lagi mati atau saldo API habis, kantor nggak boleh berubah jadi batu nisan digital.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/waiting-skeleton.jpg" width="285" alt="waiting skeleton meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/pepe-typing.gif" width="285" alt="typing reaction gif" />
 </p>
 
 Tanpa Hermes pun UI tetap usable di offline mode.
@@ -191,6 +195,10 @@ Tanpa Hermes pun UI tetap usable di offline mode.
 Yang nggak diketahui harus gagal secara jujur.
 
 Bukan dikarang biar dashboard kelihatan penuh.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/we-dont-do-that-here.jpg" width="300" alt="we dont do that here meme" />
+</p>
 
 ---
 
@@ -240,7 +248,7 @@ AI answer ≠ evidence
 ```
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/works-dont-know-why.jpg" width="300" alt="works dont know why meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/spiderman-pointing.jpg" width="305" alt="spiderman pointing meme" />
 </p>
 
 Kalau suatu hari sistemnya jalan tapi nggak ada yang ngerti kenapa:
@@ -291,7 +299,7 @@ berarti kantornya tambah ramai.
 Belum tentu tambah pintar.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/thinking-pepe.jpg" width="250" alt="thinking pepe meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/pepe-clap.gif" width="275" alt="pepe clap gif" />
 </p>
 
 **Oke. Balik kerja.**
