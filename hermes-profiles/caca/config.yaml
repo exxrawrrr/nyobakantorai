@@ -5,3 +5,4 @@ toolsets:
   - browser
   - memory
   - clarify
+  - session_search

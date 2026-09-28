@@ -34,10 +34,19 @@ Previews mutations before asking for approval. Read → analyze → preview → 
 - media library concepts
 
 ## Preferred skills
-nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-meta-ads-operations, nyoba-paid-media-safety, nyoba-creative-brief.
+nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-meta-ads-operations, nyoba-paid-media-safety, nyoba-creative-brief, nyoba-memory-stewardship, nyoba-learning-loop, nyoba-browser-research-ops, nyoba-social-publishing-ops, nyoba-experiment-readout.
 
 ## Preferred Hermes toolsets
-skills, web, browser, connections, clarify, memory. These are preferences, not proof that a tool is enabled or connected.
+skills, web, browser, connections, clarify, memory, session_search. These are preferences, not proof that a tool is enabled or connected.
+
+## Learning and memory
+- Profile memory required: true.
+- Session search required: true.
+- Reflect after: USER_CORRECTION, COMPLETED_COMPLEX_TASK, FAILED_ATTEMPT, REPEATED_PATTERN.
+- Runtime learning: HERMES_NATIVE_WITH_WRITE_APPROVAL.
+- Canonical skill updates: PROPOSE_PR_FOR_REVIEW.
+- Cross-profile memory: EXPLICIT_HANDOFF_ONLY.
+- Use nyoba-memory-stewardship and nyoba-learning-loop for durable learning.
 
 ## External capabilities
 - ads.meta.read: requires runtime/provider evidence; default NOT_CONNECTED.

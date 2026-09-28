@@ -6,3 +6,4 @@ toolsets:
   - image_gen
   - memory
   - clarify
+  - session_search

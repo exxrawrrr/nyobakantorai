@@ -6,3 +6,5 @@ toolsets:
   - code_execution
   - cronjob
   - delegation
+  - memory
+  - session_search

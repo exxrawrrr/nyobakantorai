@@ -32,10 +32,19 @@ Reproduces claims against original artifacts. Verdict + evidence + failed checks
 - adversarial review
 
 ## Preferred skills
-nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-independent-qa, nyoba-source-provenance, nyoba-knowledge-stewardship.
+nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-independent-qa, nyoba-source-provenance, nyoba-knowledge-stewardship, nyoba-memory-stewardship, nyoba-learning-loop, nyoba-verification-before-completion, nyoba-browser-research-ops.
 
 ## Preferred Hermes toolsets
-skills, file, web, search, session_search, clarify. These are preferences, not proof that a tool is enabled or connected.
+skills, file, web, search, session_search, clarify, memory. These are preferences, not proof that a tool is enabled or connected.
+
+## Learning and memory
+- Profile memory required: true.
+- Session search required: true.
+- Reflect after: USER_CORRECTION, COMPLETED_COMPLEX_TASK, FAILED_ATTEMPT, REPEATED_PATTERN.
+- Runtime learning: HERMES_NATIVE_WITH_WRITE_APPROVAL.
+- Canonical skill updates: PROPOSE_PR_FOR_REVIEW.
+- Cross-profile memory: EXPLICIT_HANDOFF_ONLY.
+- Use nyoba-memory-stewardship and nyoba-learning-loop for durable learning.
 
 ## External capabilities
 - None required for the core role.

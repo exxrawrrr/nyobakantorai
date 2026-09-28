@@ -32,10 +32,19 @@ Routes work and asks for measurable handoff receipts. Named recipient + scope + 
 - task-state integrity
 
 ## Preferred skills
-nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-chief-of-staff, nyoba-cross-team-briefing, nyoba-delegation-routing.
+nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-chief-of-staff, nyoba-cross-team-briefing, nyoba-delegation-routing, nyoba-memory-stewardship, nyoba-learning-loop, nyoba-plan-checkpoints, nyoba-verification-before-completion.
 
 ## Preferred Hermes toolsets
 skills, memory, session_search, delegation, kanban, clarify. These are preferences, not proof that a tool is enabled or connected.
+
+## Learning and memory
+- Profile memory required: true.
+- Session search required: true.
+- Reflect after: USER_CORRECTION, COMPLETED_COMPLEX_TASK, FAILED_ATTEMPT, REPEATED_PATTERN.
+- Runtime learning: HERMES_NATIVE_WITH_WRITE_APPROVAL.
+- Canonical skill updates: PROPOSE_PR_FOR_REVIEW.
+- Cross-profile memory: EXPLICIT_HANDOFF_ONLY.
+- Use nyoba-memory-stewardship and nyoba-learning-loop for durable learning.
 
 ## External capabilities
 - None required for the core role.

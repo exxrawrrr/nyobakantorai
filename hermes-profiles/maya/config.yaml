@@ -6,3 +6,4 @@ toolsets:
   - connections
   - clarify
   - memory
+  - session_search

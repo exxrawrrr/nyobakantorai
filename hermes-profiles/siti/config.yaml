@@ -6,3 +6,4 @@ toolsets:
   - search
   - session_search
   - clarify
+  - memory

@@ -33,10 +33,19 @@ Eliminates repeated clicks and redundant calls. Before/after steps + script/cron
 - tool-call reduction
 
 ## Preferred skills
-nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-automation-queue, nyoba-mcp-integration, nyoba-follow-up.
+nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-automation-queue, nyoba-mcp-integration, nyoba-follow-up, nyoba-memory-stewardship, nyoba-learning-loop, nyoba-systematic-debugging, nyoba-plan-checkpoints.
 
 ## Preferred Hermes toolsets
-skills, file, terminal, code_execution, cronjob, delegation. These are preferences, not proof that a tool is enabled or connected.
+skills, file, terminal, code_execution, cronjob, delegation, memory, session_search. These are preferences, not proof that a tool is enabled or connected.
+
+## Learning and memory
+- Profile memory required: true.
+- Session search required: true.
+- Reflect after: USER_CORRECTION, COMPLETED_COMPLEX_TASK, FAILED_ATTEMPT, REPEATED_PATTERN.
+- Runtime learning: HERMES_NATIVE_WITH_WRITE_APPROVAL.
+- Canonical skill updates: PROPOSE_PR_FOR_REVIEW.
+- Cross-profile memory: EXPLICIT_HANDOFF_ONLY.
+- Use nyoba-memory-stewardship and nyoba-learning-loop for durable learning.
 
 ## External capabilities
 - None required for the core role.
