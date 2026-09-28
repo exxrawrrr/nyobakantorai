@@ -1,4 +1,4 @@
-import { WORKFORCE } from "./workforce.mjs";
+import { WORKFORCE } from "../workforce.mjs";
 
 export const EMPLOYEE_DESKS = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee.visual.scene_position])));
 export const WORKER_NAMES = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee.name])));
