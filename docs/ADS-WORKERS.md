@@ -12,7 +12,7 @@ Maya (Meta Ads) and Gugun (Google Ads) are provider-neutral consumers. No Meta A
 
 `ads.google.read`, `ads.google.insights`, `ads.google.keywords`, `ads.google.creative`, `ads.google.write`, `ads.google.verify`
 
-Default state is `NOT_CONNECTED`. Without a provider, Maya/Gugun can reason over user-supplied data and produce previews, but execution is **BLOCKED**.
+Default state is `NOT_CONNECTED`. Without a provider, Maya/Gugun can reason over user-supplied data and produce previews, but execution is **BLOCKED**. `packages/capability-router/` validates provider snapshots and applies approval/autonomy policy without embedding proprietary provider code.
 
 Mutation lifecycle:
 
