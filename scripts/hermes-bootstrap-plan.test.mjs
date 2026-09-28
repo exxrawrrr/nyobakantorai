@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { planProfileAction, USER_OWNED_HERMES_STATE } from "./hermes-bootstrap-plan.mjs";
+import { planProfileAction, USER_OWNED_HERMES_STATE, bootstrapSucceeded } from "./hermes-bootstrap-plan.mjs";
 import { EMPLOYEE_IDS } from "../office/workforce.mjs";
 
 const v02 = new Set(["praroro","paijo","subagjo","alex","sumiati","siti"]);
@@ -22,4 +22,23 @@ test("normal install remains conservative for an existing profile", () => {
 
 test("force remains explicit and separate from safe upgrade", () => {
   assert.equal(planProfileAction({ mode:"upgrade", exists:true, force:true }), "force-install");
+});
+
+
+test("bootstrap fails closed when any install/update action failed even if profiles still exist", () => {
+  assert.equal(bootstrapSucceeded({
+    results:[{profile:"praroro",ok:false}],
+    profiles:[{id:"praroro",ok:true}],
+    boardOk:true,
+    mode:"upgrade",
+  }), false);
+});
+
+test("bootstrap succeeds only when actions, profiles, and board are all ready", () => {
+  assert.equal(bootstrapSucceeded({
+    results:[{profile:"praroro",ok:true},{profile:"maya",ok:true}],
+    profiles:[{id:"praroro",ok:true},{id:"maya",ok:true}],
+    boardOk:true,
+    mode:"upgrade",
+  }), true);
 });

@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { EMPLOYEE_IDS } from "../office/workforce.mjs";
-import { planProfileAction } from "./hermes-bootstrap-plan.mjs";
+import { planProfileAction, bootstrapSucceeded } from "./hermes-bootstrap-plan.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const profileIds = EMPLOYEE_IDS;
@@ -63,7 +63,7 @@ if (mode !== "check") {
 }
 const currentBoard = run(["kanban","boards","show"], true);
 const verify = profileIds.map((id) => ({ id, ok: run(["profile","show",id], true).ok }));
-const ok = verify.every((x) => x.ok) && (mode === "check" ? true : currentBoard.ok);
+const ok = bootstrapSucceeded({ results, profiles: verify, boardOk: currentBoard.ok, mode });
 const summary = { ok, employee_count:profileIds.length, hermes_version:version.stdout || version.stderr, hermes_home:env.HERMES_HOME || "(Hermes default)", board:currentBoard.ok ? currentBoard.stdout : board, mode, results, profiles:verify };
 if (json) console.log(JSON.stringify(summary,null,2));
 else {
