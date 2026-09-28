@@ -46,7 +46,7 @@ Requirements:
 - PyYAML for Python utilities/tests
 
 ```bash
-git clone https://github.com/exxrawrrr/nyobakantorai-release.git
+git clone https://github.com/exxrawrrr/nyobakantorai.git
 cd nyobakantorai
 
 python -m pip install -r requirements-dev.txt

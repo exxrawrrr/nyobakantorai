@@ -16,6 +16,10 @@ for (const file of required) {
   if (!existsSync(resolve(root, file))) throw new Error(`Missing required public project file: ${file}`);
 }
 
+const readme = readFileSync(resolve(root, "README.md"), "utf8");
+if (!readme.includes("git clone https://github.com/exxrawrrr/nyobakantorai.git")) throw new Error("README does not point to the canonical repository URL.");
+if (readme.includes("nyobakantorai-release")) throw new Error("README still references the temporary release-candidate repository name.");
+
 const pkg = JSON.parse(readFileSync(resolve(root, "office/package.json"), "utf8"));
 if (pkg.name !== "nyobakantorai") throw new Error("Office package name is not portable.");
 

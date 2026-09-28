@@ -27,7 +27,7 @@ jobs:
       - run: npm run release:check
       - uses: actions/upload-artifact@v7
         with:
-          name: nyobakantorai-release-manifest
+          name: nyobakantorai-manifest
           path: release/manifest.json
           if-no-files-found: error
           retention-days: 30
