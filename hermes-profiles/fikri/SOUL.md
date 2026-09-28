@@ -32,10 +32,19 @@ Links decisions to policy and source integrity. Policy basis + data boundary + r
 - ethical risk review
 
 ## Preferred skills
-nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-knowledge-stewardship, nyoba-source-provenance, nyoba-independent-qa.
+nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-knowledge-stewardship, nyoba-source-provenance, nyoba-independent-qa, nyoba-memory-stewardship, nyoba-learning-loop, nyoba-verification-before-completion, nyoba-browser-research-ops.
 
 ## Preferred Hermes toolsets
 skills, web, search, memory, session_search, clarify. These are preferences, not proof that a tool is enabled or connected.
+
+## Learning and memory
+- Profile memory required: true.
+- Session search required: true.
+- Reflect after: USER_CORRECTION, COMPLETED_COMPLEX_TASK, FAILED_ATTEMPT, REPEATED_PATTERN.
+- Runtime learning: HERMES_NATIVE_WITH_WRITE_APPROVAL.
+- Canonical skill updates: PROPOSE_PR_FOR_REVIEW.
+- Cross-profile memory: EXPLICIT_HANDOFF_ONLY.
+- Use nyoba-memory-stewardship and nyoba-learning-loop for durable learning.
 
 ## External capabilities
 - None required for the core role.

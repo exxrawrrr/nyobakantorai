@@ -7,3 +7,5 @@ toolsets:
   - search
   - code_execution
   - delegation
+  - memory
+  - session_search

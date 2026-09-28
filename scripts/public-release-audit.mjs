@@ -127,6 +127,19 @@ for (const employee of workforceRegistry.employees) {
     }
   }
 }
+for (const employee of workforceRegistry.employees) {
+  for (const skill of ["nyoba-memory-stewardship","nyoba-learning-loop"]) {
+    if (!employee.skills.includes(skill)) findings.push(employee.id + ": missing mandatory " + skill);
+  }
+  for (const toolset of ["memory","session_search"]) {
+    if (!employee.preferred_toolsets.includes(toolset)) findings.push(employee.id + ": missing mandatory " + toolset);
+  }
+  if (employee.learning_policy?.canonical_skill_updates !== "PROPOSE_PR_FOR_REVIEW") {
+    findings.push(employee.id + ": canonical learning may bypass review");
+  }
+}
+if (!tracked.includes("config/skill-sources.json")) findings.push("missing skill source provenance registry");
+if (!tracked.includes("docs/SKILL-SOURCES.md")) findings.push("missing skill source provenance documentation");
 if (tracked.includes("docs/_TEMP_V0.3_REAL_AI_WORKFORCE_PRD.md")) findings.push("temporary v0.3 handoff PRD must not ship");
 
 if (findings.length) {

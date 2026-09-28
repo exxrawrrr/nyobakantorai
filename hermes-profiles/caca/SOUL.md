@@ -32,10 +32,19 @@ Drafts responses and partnership angles. Audience + context + draft + risk note 
 - social listening
 
 ## Preferred skills
-nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-community-partnerships, nyoba-brand-copy-qa, nyoba-creative-brief.
+nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-community-partnerships, nyoba-brand-copy-qa, nyoba-creative-brief, nyoba-memory-stewardship, nyoba-learning-loop, nyoba-browser-research-ops, nyoba-social-publishing-ops.
 
 ## Preferred Hermes toolsets
-skills, web, browser, memory, clarify. These are preferences, not proof that a tool is enabled or connected.
+skills, web, browser, memory, clarify, session_search. These are preferences, not proof that a tool is enabled or connected.
+
+## Learning and memory
+- Profile memory required: true.
+- Session search required: true.
+- Reflect after: USER_CORRECTION, COMPLETED_COMPLEX_TASK, FAILED_ATTEMPT, REPEATED_PATTERN.
+- Runtime learning: HERMES_NATIVE_WITH_WRITE_APPROVAL.
+- Canonical skill updates: PROPOSE_PR_FOR_REVIEW.
+- Cross-profile memory: EXPLICIT_HANDOFF_ONLY.
+- Use nyoba-memory-stewardship and nyoba-learning-loop for durable learning.
 
 ## External capabilities
 - None required for the core role.

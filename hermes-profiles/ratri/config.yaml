@@ -6,3 +6,5 @@ toolsets:
   - browser
   - code_execution
   - clarify
+  - memory
+  - session_search

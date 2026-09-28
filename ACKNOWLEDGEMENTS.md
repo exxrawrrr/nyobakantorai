@@ -29,3 +29,17 @@ The current nyobakantorai office is not presented as a fork of Pixel Agents. Its
 - Python + PyYAML are used by developer/release utilities and are not required just to run the office UI.
 
 If an upstream project materially contributes code or design to nyobakantorai in the future, add it here in the same change that introduces that dependency.
+
+## Skill/workflow inspirations
+
+The following projects informed rewritten nyobakantorai procedures. Source code and long-form source text are not vendored into the skills; provenance and license metadata live in `config/skill-sources.json` and `docs/SKILL-SOURCES.md`.
+
+- Mem0 — https://github.com/mem0ai/mem0 — Apache-2.0
+- Letta — https://github.com/letta-ai/letta — Apache-2.0
+- Cognee — https://github.com/topoteretes/cognee — Apache-2.0
+- Superpowers — https://github.com/obra/superpowers — MIT
+- Browser Use — https://github.com/browser-use/browser-use — MIT
+- Model Context Protocol reference servers — https://github.com/modelcontextprotocol/servers — Apache-2.0 / legacy MIT transition
+- Anthropic Claude plugins directory — https://github.com/anthropics/claude-plugins-official — Apache-2.0 for Anthropic repository; third-party plugin licenses vary
+- Publora Skills — https://github.com/publora/skills — MIT
+- PM Claude Skills — https://github.com/mohitagw15856/pm-claude-skills — MIT

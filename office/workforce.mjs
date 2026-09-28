@@ -54,7 +54,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-chief-of-staff",
       "nyoba-cross-team-briefing",
-      "nyoba-delegation-routing"
+      "nyoba-delegation-routing",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-plan-checkpoints",
+      "nyoba-verification-before-completion"
     ],
     "preferred_toolsets": [
       "skills",
@@ -114,6 +118,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -170,7 +187,10 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-kpi-analysis",
       "nyoba-finance-scenario",
-      "nyoba-data-analysis"
+      "nyoba-data-analysis",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-experiment-readout"
     ],
     "preferred_toolsets": [
       "skills",
@@ -178,7 +198,8 @@ export const WORKFORCE = Object.freeze([
       "search",
       "code_execution",
       "memory",
-      "clarify"
+      "clarify",
+      "session_search"
     ],
     "external_capabilities": [],
     "routing": {
@@ -233,6 +254,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -291,7 +325,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-codebase-verification",
       "nyoba-github-readonly",
-      "nyoba-mcp-integration"
+      "nyoba-mcp-integration",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-systematic-debugging",
+      "nyoba-verification-before-completion"
     ],
     "preferred_toolsets": [
       "skills",
@@ -300,7 +338,9 @@ export const WORKFORCE = Object.freeze([
       "web",
       "search",
       "code_execution",
-      "delegation"
+      "delegation",
+      "memory",
+      "session_search"
     ],
     "external_capabilities": [],
     "routing": {
@@ -353,6 +393,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -406,7 +459,12 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-experiment-design",
       "nyoba-research-synthesis",
-      "nyoba-data-analysis"
+      "nyoba-data-analysis",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-browser-research-ops",
+      "nyoba-plan-checkpoints",
+      "nyoba-experiment-readout"
     ],
     "preferred_toolsets": [
       "skills",
@@ -467,6 +525,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -520,7 +591,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-creative-brief",
       "nyoba-brand-copy-qa",
-      "nyoba-community-partnerships"
+      "nyoba-community-partnerships",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-browser-research-ops",
+      "nyoba-social-publishing-ops"
     ],
     "preferred_toolsets": [
       "skills",
@@ -528,7 +603,8 @@ export const WORKFORCE = Object.freeze([
       "browser",
       "image_gen",
       "memory",
-      "clarify"
+      "clarify",
+      "session_search"
     ],
     "external_capabilities": [],
     "routing": {
@@ -579,6 +655,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -634,7 +723,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-independent-qa",
       "nyoba-source-provenance",
-      "nyoba-knowledge-stewardship"
+      "nyoba-knowledge-stewardship",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-verification-before-completion",
+      "nyoba-browser-research-ops"
     ],
     "preferred_toolsets": [
       "skills",
@@ -642,7 +735,8 @@ export const WORKFORCE = Object.freeze([
       "web",
       "search",
       "session_search",
-      "clarify"
+      "clarify",
+      "memory"
     ],
     "external_capabilities": [],
     "routing": {
@@ -693,6 +787,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -749,7 +856,12 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-meta-ads-operations",
       "nyoba-paid-media-safety",
-      "nyoba-creative-brief"
+      "nyoba-creative-brief",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-browser-research-ops",
+      "nyoba-social-publishing-ops",
+      "nyoba-experiment-readout"
     ],
     "preferred_toolsets": [
       "skills",
@@ -757,7 +869,8 @@ export const WORKFORCE = Object.freeze([
       "browser",
       "connections",
       "clarify",
-      "memory"
+      "memory",
+      "session_search"
     ],
     "external_capabilities": [
       "ads.meta.read",
@@ -814,6 +927,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -874,7 +1000,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-google-ads-operations",
       "nyoba-paid-media-safety",
-      "nyoba-kpi-analysis"
+      "nyoba-kpi-analysis",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-browser-research-ops",
+      "nyoba-experiment-readout"
     ],
     "preferred_toolsets": [
       "skills",
@@ -882,7 +1012,8 @@ export const WORKFORCE = Object.freeze([
       "browser",
       "connections",
       "clarify",
-      "memory"
+      "memory",
+      "session_search"
     ],
     "external_capabilities": [
       "ads.google.read",
@@ -940,6 +1071,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -999,7 +1143,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-seo-cro-audit",
       "nyoba-kpi-analysis",
-      "nyoba-data-analysis"
+      "nyoba-data-analysis",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-browser-research-ops",
+      "nyoba-experiment-readout"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1007,7 +1155,9 @@ export const WORKFORCE = Object.freeze([
       "search",
       "browser",
       "code_execution",
-      "clarify"
+      "clarify",
+      "memory",
+      "session_search"
     ],
     "external_capabilities": [],
     "routing": {
@@ -1059,6 +1209,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -1113,7 +1276,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-mcp-integration",
       "nyoba-codebase-verification",
-      "nyoba-automation-queue"
+      "nyoba-automation-queue",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-systematic-debugging",
+      "nyoba-verification-before-completion"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1122,7 +1289,9 @@ export const WORKFORCE = Object.freeze([
       "web",
       "connections",
       "code_execution",
-      "delegation"
+      "delegation",
+      "memory",
+      "session_search"
     ],
     "external_capabilities": [],
     "routing": {
@@ -1173,6 +1342,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -1228,14 +1410,18 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-data-analysis",
       "nyoba-kpi-analysis",
-      "nyoba-experiment-design"
+      "nyoba-experiment-design",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-experiment-readout"
     ],
     "preferred_toolsets": [
       "skills",
       "file",
       "code_execution",
       "memory",
-      "clarify"
+      "clarify",
+      "session_search"
     ],
     "external_capabilities": [],
     "routing": {
@@ -1287,6 +1473,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -1341,7 +1540,10 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-client-operations",
       "nyoba-follow-up",
-      "nyoba-cross-team-briefing"
+      "nyoba-cross-team-briefing",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-plan-checkpoints"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1398,6 +1600,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -1453,7 +1668,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-automation-queue",
       "nyoba-mcp-integration",
-      "nyoba-follow-up"
+      "nyoba-follow-up",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-systematic-debugging",
+      "nyoba-plan-checkpoints"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1461,7 +1680,9 @@ export const WORKFORCE = Object.freeze([
       "terminal",
       "code_execution",
       "cronjob",
-      "delegation"
+      "delegation",
+      "memory",
+      "session_search"
     ],
     "external_capabilities": [],
     "routing": {
@@ -1512,6 +1733,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -1566,7 +1800,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-knowledge-stewardship",
       "nyoba-source-provenance",
-      "nyoba-independent-qa"
+      "nyoba-independent-qa",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-verification-before-completion",
+      "nyoba-browser-research-ops"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1624,6 +1862,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -1676,7 +1927,10 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-follow-up",
       "nyoba-client-operations",
-      "nyoba-cross-team-briefing"
+      "nyoba-cross-team-briefing",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-plan-checkpoints"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1734,6 +1988,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   },
   {
@@ -1789,14 +2056,19 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-community-partnerships",
       "nyoba-brand-copy-qa",
-      "nyoba-creative-brief"
+      "nyoba-creative-brief",
+      "nyoba-memory-stewardship",
+      "nyoba-learning-loop",
+      "nyoba-browser-research-ops",
+      "nyoba-social-publishing-ops"
     ],
     "preferred_toolsets": [
       "skills",
       "web",
       "browser",
       "memory",
-      "clarify"
+      "clarify",
+      "session_search"
     ],
     "external_capabilities": [],
     "routing": {
@@ -1847,6 +2119,19 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "learning_policy": {
+      "profile_memory_required": true,
+      "session_search_required": true,
+      "reflect_on": [
+        "USER_CORRECTION",
+        "COMPLETED_COMPLEX_TASK",
+        "FAILED_ATTEMPT",
+        "REPEATED_PATTERN"
+      ],
+      "runtime_learning": "HERMES_NATIVE_WITH_WRITE_APPROVAL",
+      "canonical_skill_updates": "PROPOSE_PR_FOR_REVIEW",
+      "cross_profile_memory": "EXPLICIT_HANDOFF_ONLY"
     }
   }
 ].map((employee)=>Object.freeze(employee)));

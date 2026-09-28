@@ -6,7 +6,7 @@ const check=process.argv.includes("--check");
 const registry=JSON.parse(await readFile(resolve(root,"config/employees.json"),"utf8"));
 const capabilities=JSON.parse(await readFile(resolve(root,"config/capabilities.json"),"utf8"));
 const ids=new Set(), capabilityIds=new Set(capabilities.capabilities.map(x=>x.id));
-const required=["id","name","role","department","summary","aliases","personality","habits","work_style","expertise","skills","preferred_toolsets","external_capabilities","approval_policy","verification_policy","memory_boundary","routing","visual","profile"];
+const required=["id","name","role","department","summary","aliases","personality","habits","work_style","expertise","skills","preferred_toolsets","external_capabilities","approval_policy","verification_policy","memory_boundary","learning_policy","routing","visual","profile"];
 const findings=[];
 if(registry.schema!==1||registry.version!=="0.3.0"||!Array.isArray(registry.employees)||registry.employees.length<16)findings.push("registry must contain at least 16 v0.3 employees");
 for(const e of registry.employees){
@@ -19,6 +19,9 @@ for(const e of registry.employees){
  for(const skill of e.skills)if(!existsSync(resolve(root,"skills/hermes-custom",skill,"SKILL.md")))findings.push(`${e.id}: missing canonical skill ${skill}`);
  for(const cap of e.external_capabilities||[])if(!capabilityIds.has(cap))findings.push(`${e.id}: unknown capability ${cap}`);
  if(e.verification_policy?.self_verify!==false)findings.push(`${e.id}: self verification must be false`);
+ if(!e.skills.includes("nyoba-memory-stewardship")||!e.skills.includes("nyoba-learning-loop"))findings.push(`${e.id}: mandatory memory/learning skills missing`);
+ if(!e.preferred_toolsets.includes("memory")||!e.preferred_toolsets.includes("session_search"))findings.push(`${e.id}: memory/session_search toolsets are mandatory`);
+ if(e.learning_policy?.canonical_skill_updates!=="PROPOSE_PR_FOR_REVIEW")findings.push(`${e.id}: canonical learning policy must require review`);
  if(!["owner-authored","pending-original-art"].includes(e.visual?.asset_status))findings.push(`${e.id}: invalid asset status`);
 }
 if(findings.length){console.error(findings.join("\n"));process.exit(1)}
@@ -55,6 +58,15 @@ ${e.skills.join(", ")}.
 
 ## Preferred Hermes toolsets
 ${e.preferred_toolsets.join(", ")}. These are preferences, not proof that a tool is enabled or connected.
+
+## Learning and memory
+- Profile memory required: ${e.learning_policy.profile_memory_required}.
+- Session search required: ${e.learning_policy.session_search_required}.
+- Reflect after: ${e.learning_policy.reflect_on.join(", ")}.
+- Runtime learning: ${e.learning_policy.runtime_learning}.
+- Canonical skill updates: ${e.learning_policy.canonical_skill_updates}.
+- Cross-profile memory: ${e.learning_policy.cross_profile_memory}.
+- Use nyoba-memory-stewardship and nyoba-learning-loop for durable learning.
 
 ## External capabilities
 ${e.external_capabilities?.length?e.external_capabilities.map(x=>`- ${x}: requires runtime/provider evidence; default NOT_CONNECTED.`).join("\n"):"- None required for the core role."}

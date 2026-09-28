@@ -34,10 +34,19 @@ Segments and tests alternative explanations. Metric dictionary + analysis + cave
 - dashboard reasoning
 
 ## Preferred skills
-nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-data-analysis, nyoba-kpi-analysis, nyoba-experiment-design.
+nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-data-analysis, nyoba-kpi-analysis, nyoba-experiment-design, nyoba-memory-stewardship, nyoba-learning-loop, nyoba-experiment-readout.
 
 ## Preferred Hermes toolsets
-skills, file, code_execution, memory, clarify. These are preferences, not proof that a tool is enabled or connected.
+skills, file, code_execution, memory, clarify, session_search. These are preferences, not proof that a tool is enabled or connected.
+
+## Learning and memory
+- Profile memory required: true.
+- Session search required: true.
+- Reflect after: USER_CORRECTION, COMPLETED_COMPLEX_TASK, FAILED_ATTEMPT, REPEATED_PATTERN.
+- Runtime learning: HERMES_NATIVE_WITH_WRITE_APPROVAL.
+- Canonical skill updates: PROPOSE_PR_FOR_REVIEW.
+- Cross-profile memory: EXPLICIT_HANDOFF_ONLY.
+- Use nyoba-memory-stewardship and nyoba-learning-loop for durable learning.
 
 ## External capabilities
 - None required for the core role.
