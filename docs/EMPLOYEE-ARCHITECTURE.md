@@ -23,7 +23,7 @@ The first six workers retain owner-authored sprites. The ten v0.3 workers delibe
 
 ## Routing and handoff
 
-`lib/routing.mjs` performs deterministic registry-keyword routing. Human assignment always wins. Routing creates a proposal, not execution. A real handoff still needs a receiving-runtime receipt and task provenance.
+`lib/routing.mjs` performs deterministic registry routing using role/expertise text signals, required canonical skills, bounded workload penalty, bounded historical success/failure signal, and risk-policy compatibility. Human assignment always wins. Routing creates a proposal, not execution. A real handoff still needs a receiving-runtime receipt and task provenance. Historical signal is only a small tie-breaker; it is never treated as proof of competence.
 
 ## Verification
 
