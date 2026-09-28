@@ -36,20 +36,23 @@ for (const file of core) {
 }
 
 const manifest = JSON.parse(readFileSync(resolve(root, "office/src/asset-manifest.json"), "utf8"));
-if (manifest.schema !== 2 || manifest.license !== "MIT") throw new Error("Asset manifest lacks public provenance/license.");
+if (manifest.schema !== 3 || manifest.license !== "MIT") throw new Error("Asset manifest lacks public provenance/license.");
 for (const asset of manifest.assets ?? []) {
-  if (!asset.output?.endsWith(".svg") || asset.provenance !== "original_svg_generated_for_nyobakantorai") {
+  if (!asset.output?.endsWith(".png") || asset.provenance !== "owner_authored_character_sprite") {
     throw new Error(`Asset provenance rejected: ${asset.output ?? "unknown"}`);
   }
+  const assetPath = resolve(root, "office/src", asset.output);
+  const digest = createHash("sha256").update(readFileSync(assetPath)).digest("hex").toUpperCase();
+  if (digest !== asset.sha256) throw new Error(`Character sprite hash mismatch: ${asset.output}`);
   for (const forbidden of ["source_file", "source_sha256", "source_runtime_path", "crop"]) {
     if (forbidden in asset) throw new Error(`Private reference metadata leaked into asset: ${asset.output}`);
   }
 }
 
 const expectedScreenshots = new Map([
-  ["docs/assets/office-overview.png", "9BD001D8AD182411761D910562094B096A636FCE08BF5CA5D00D5389F4D92D7B"],
-  ["docs/assets/approval-flow.png", "6B894CDEF9D117615AF705C31320708F4CF57C8578BF32B63B07CFBEB9D02BF2"],
-  ["docs/assets/meet-the-office.gif", "08E3E5A04F92550FF13CB7DFA038BAD1D030A42CB5E6574915DCA6A3983C6228"],
+  ["docs/assets/office-overview.png", "9985852162B8658AC69BE0E7873ACB45130395F45ACFF56780D8E6DA4AA1F88C"],
+  ["docs/assets/approval-flow.png", "D19B14F3BBB83B016F0072B888C2DCA0B5973802C967FFA8CFA380F47A70595F"],
+  ["docs/assets/meet-the-office.gif", "08E47736358796FD6BEBD33DFCCA7BE2E3626F08B2EFA29BCB48DCB04633D0F1"],
 ]);
 for (const [file, expected] of expectedScreenshots) {
   const digest = createHash("sha256").update(readFileSync(resolve(root, file))).digest("hex").toUpperCase();

@@ -22,12 +22,12 @@ const people=[
 ];
 const states=["idle","walk","think","work","role","seated"];
 const grid=document.querySelector("#grid");
-grid.innerHTML=people.map(([id,role],i)=>`<div class="card" data-state="idle"><img class="avatar" src="../../office/src/assets/generated/characters/${id}/idle.svg"><div class="name">${id.toUpperCase()}</div><div class="role">${role}</div><div class="state">IDLE</div></div>`).join("");
+grid.innerHTML=people.map(([id,role],i)=>`<div class="card" data-state="idle"><img class="avatar" src="../../office/src/assets/generated/characters/${id}/idle.png"><div class="name">${id.toUpperCase()}</div><div class="role">${role}</div><div class="state">IDLE</div></div>`).join("");
 window.setFrame=(frame)=>{
  [...grid.children].forEach((card,i)=>{
    const state=states[(frame+i)%states.length];
    card.dataset.state=state;
-   card.querySelector(".avatar").src=`../../office/src/assets/generated/characters/${people[i][0]}/${state}.svg?f=${frame}`;
+   card.querySelector(".avatar").src=`../../office/src/assets/generated/characters/${people[i][0]}/${state}.png?f=${frame}`;
    card.querySelector(".state").textContent=state.toUpperCase();
  });
  return frame;

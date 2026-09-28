@@ -1,655 +1,872 @@
 {
-  "schema": 2,
-  "provenance": "All character assets are original geometric SVGs generated for this repository; no external reference artwork is included.",
+  "schema": 3,
+  "provenance": "Owner-authored character art. Final cropped sprites are distributed; private source sheets and workstation paths are not.",
   "license": "MIT",
+  "source_policy": "final_sprites_only",
   "assets": [
     {
-      "employee": "praroro",
-      "state": "front",
-      "output": "assets/generated/characters/praroro/front.svg",
-      "sha256": "b5fb8e6c62a8c99bf17147ab1944736a251d6c4980ddd49409302646ff3cc317",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "praroro",
-      "state": "side",
-      "output": "assets/generated/characters/praroro/side.svg",
-      "sha256": "2a3278011255a2a62f9d92bdb7db4d4c955afc9c46b74588da01a5e9507ccb24",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "praroro",
-      "state": "back",
-      "output": "assets/generated/characters/praroro/back.svg",
-      "sha256": "2439373722ab6392e522372a6eaf8bd1b8fbfc39bca766480f062dd1f2182b50",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "praroro",
-      "state": "idle",
-      "output": "assets/generated/characters/praroro/idle.svg",
-      "sha256": "684e86ac57f1d0231126fa10b53bd8be4d6240cc4c5a547595602b57e7c6cb90",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "praroro",
-      "state": "walk",
-      "output": "assets/generated/characters/praroro/walk.svg",
-      "sha256": "39cffe98f26e6ba5615a5d51820d3f0ed2c78e37f4ccfd5188a6464f6c1c7001",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "praroro",
-      "state": "think",
-      "output": "assets/generated/characters/praroro/think.svg",
-      "sha256": "ba4a6bc237ccbabb5ba504fa8f712b1b0ba8550b9ea440ee27dbfe06a32c9f08",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "praroro",
-      "state": "work",
-      "output": "assets/generated/characters/praroro/work.svg",
-      "sha256": "3d5110e626506b25094d1222c01ad29d02dee9a96de591ac75a5f15001f081b8",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "praroro",
-      "state": "role",
-      "output": "assets/generated/characters/praroro/role.svg",
-      "sha256": "aba3a36bee0309ea39d1fdad8368f2b9023c3624b06a3cf89c3dfae83ac73ad6",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "praroro",
-      "state": "seated",
-      "output": "assets/generated/characters/praroro/seated.svg",
-      "sha256": "83f0a6a80876e5e50483cff5d0079aadf2e4208708bd11d352d13d8dffe8c82d",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "front",
-      "output": "assets/generated/characters/paijo/front.svg",
-      "sha256": "5e87741c54209ece503b97dd3746f3e248fc7286543db264f2162e162c4c3a56",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "side",
-      "output": "assets/generated/characters/paijo/side.svg",
-      "sha256": "eea8b83cca49b848004922aae0b4e4dcb4bcdc573fd1593b6d7357dd65642e11",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "back",
-      "output": "assets/generated/characters/paijo/back.svg",
-      "sha256": "b01d96c365cdefe4edefd7ec8c2a41841c51736cc16ffdbe52e192208ecb313c",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "idle",
-      "output": "assets/generated/characters/paijo/idle.svg",
-      "sha256": "65545c04f746a32c3f8d3f057b1a6c72d60205538815b4aa125d3c0203858d4f",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "walk",
-      "output": "assets/generated/characters/paijo/walk.svg",
-      "sha256": "c9291223dcd017793de1c68108e785bd2355a39cefe216ee1ab4eebf05d08b46",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "think",
-      "output": "assets/generated/characters/paijo/think.svg",
-      "sha256": "fa22d6b03eb6821ed1732a97cc0b8dd48236ce4fbf07aaaef653072e9e50fb82",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "work",
-      "output": "assets/generated/characters/paijo/work.svg",
-      "sha256": "f450defa8a26b4dc64f2a7a9c4c2e4cb04d3952eaa1c2a5d5e92c0a77323cfdf",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "role",
-      "output": "assets/generated/characters/paijo/role.svg",
-      "sha256": "1c02ea898534c4cc41185f440a896e3e587aba5101ac50f18e0a7b0b4bc1dcdf",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "paijo",
-      "state": "seated",
-      "output": "assets/generated/characters/paijo/seated.svg",
-      "sha256": "c7bce6d68825a8fdb8d2e80c906a6e33f14e6b4d84ba16057ff4064d32067891",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "front",
-      "output": "assets/generated/characters/subagjo/front.svg",
-      "sha256": "e5ecf7ed972d78bfe12a7c260342b036de6a9f283aefbd0dc89d8c2deb7d49e1",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "side",
-      "output": "assets/generated/characters/subagjo/side.svg",
-      "sha256": "3531d5da2afc78e2f2624c3058dd45ebee80b1c09757242091900096f932dc4b",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "back",
-      "output": "assets/generated/characters/subagjo/back.svg",
-      "sha256": "b8f3b75f60e2b93962b4e74c14bc25c9e9040f3b7eed425367333e3053666f19",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "idle",
-      "output": "assets/generated/characters/subagjo/idle.svg",
-      "sha256": "8bccb38e9b874f24ed7d53207a7354f4b85c23892d81c600f15989b914a70028",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "walk",
-      "output": "assets/generated/characters/subagjo/walk.svg",
-      "sha256": "7a12f64e95754203b895a61c04ccd553f37f45d3994077e57eaec7a0350e5447",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "think",
-      "output": "assets/generated/characters/subagjo/think.svg",
-      "sha256": "8ec29f8ce6670125154c973180ff0ae17ad9f90ddeb6e103da52ce77f690d19a",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "work",
-      "output": "assets/generated/characters/subagjo/work.svg",
-      "sha256": "9d573f974d20acacfc5515dc5c1c7dc953c3201380f842fc74fc7b469c896cef",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "role",
-      "output": "assets/generated/characters/subagjo/role.svg",
-      "sha256": "b0176253e84ffa21a26139c7aec774e6e7566503a53d70612f10a1b965811df2",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "subagjo",
-      "state": "seated",
-      "output": "assets/generated/characters/subagjo/seated.svg",
-      "sha256": "210799be1e5e6746cc024c10a29053bdbc2a7cdda036bd7075e0f1f3f8247904",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
       "employee": "alex",
       "state": "front",
-      "output": "assets/generated/characters/alex/front.svg",
-      "sha256": "d73b7c7cb1b7c1737c5eb5a5ce5a55151e848aa28b9c254d4c32edbf6fa33f72",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/front.png",
+      "sha256": "A35F0E37E987FD72DDC048D808B5DF3D63F418420B8FE50BBFA02DCD12648CEE",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "alex",
       "state": "side",
-      "output": "assets/generated/characters/alex/side.svg",
-      "sha256": "3d7bfd6fc3100b351250d889e3f8ae3b4d74d79dcd90a40cffe0edcd60895013",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/side.png",
+      "sha256": "872A6DA07DFF3CFEF6E274B68B7D8637F8626953B8E32263021A8311B47FC9EB",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "alex",
       "state": "back",
-      "output": "assets/generated/characters/alex/back.svg",
-      "sha256": "d8c7dd0e1606e1da6753d93c57e0b74dc5fb2f6d56540f1eeace6564a5a9a610",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/back.png",
+      "sha256": "C8E95FA2F00A8252DB2E536D5ECCB0FC8559A2BF7367871DF45A85FB7A1B15EE",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "alex",
       "state": "idle",
-      "output": "assets/generated/characters/alex/idle.svg",
-      "sha256": "b4e1b38778cba8abb1dcf876fe7a0ab5f2497eed1e3e904716b2c48d65600bcc",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/idle.png",
+      "sha256": "51B148606EE1EF8B91C30A96A7EE7FC7513A65CA42474F5155B436D093293DD6",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "alex",
       "state": "walk",
-      "output": "assets/generated/characters/alex/walk.svg",
-      "sha256": "946f257245bb917e545679e7ab7dcf9f7a1beb90315652928c246490cb9e8774",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/walk.png",
+      "sha256": "617BA99F1D688232F4C7B3DEF145B608310E8E17E06D6427DD656447F3862B35",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "alex",
       "state": "think",
-      "output": "assets/generated/characters/alex/think.svg",
-      "sha256": "8fae7b7ac356e437b08e57075883b90178e7a0b4fcd3a98c54db00199cbcf0eb",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/think.png",
+      "sha256": "CFD544E9E1FD3AC84AF22EBF96CD1B1F129A0E8A7F7525F22A591117450A1574",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "alex",
       "state": "work",
-      "output": "assets/generated/characters/alex/work.svg",
-      "sha256": "fcf6a6600a1a12e4613a0631579d9a9d70790b3d2b2509d0114a3214db0da5c6",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/work.png",
+      "sha256": "A0C03B0449F332BF96B8568CCB40DDB7C7BBBDF05D34E6EC00517EF73D854820",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "alex",
       "state": "role",
-      "output": "assets/generated/characters/alex/role.svg",
-      "sha256": "33dfa9b8bf9a1ba0747be6c400aa7039495d8415c862b076c63372f1a7d2fe32",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/role.png",
+      "sha256": "B78B9978EB135D30995768E4059F33D04C2AE278149CC14FF636B2218200E816",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "alex",
       "state": "seated",
-      "output": "assets/generated/characters/alex/seated.svg",
-      "sha256": "6490cd733a657a6d160bffdc22e146db05b624e163b5679343c1be173bbf2a05",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/alex/seated.png",
+      "sha256": "A0C03B0449F332BF96B8568CCB40DDB7C7BBBDF05D34E6EC00517EF73D854820",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "front",
+      "output": "assets/generated/characters/paijo/front.png",
+      "sha256": "6935CF863A89C8C878004BBF0886AC194709184D5AEB48DA4865971F1BB20E75",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "side",
+      "output": "assets/generated/characters/paijo/side.png",
+      "sha256": "C311747A7BEC789FDD55A5E5F2B4FD8414A765E587F74233C7945DBC89DF8E7A",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "back",
+      "output": "assets/generated/characters/paijo/back.png",
+      "sha256": "30595310A9F9104016D06C75FBE2A3C095BDE446B528EF975B0B820B99AACFD6",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "idle",
+      "output": "assets/generated/characters/paijo/idle.png",
+      "sha256": "B792A94C0A72B6F7804CA093747C001D7033BD1B2437B4AE72F89CAA45F8188C",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "walk",
+      "output": "assets/generated/characters/paijo/walk.png",
+      "sha256": "D4A0244F41AF3B221670069167C17F2465C58C6A3D8FE17D582FF7122F932DEE",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "think",
+      "output": "assets/generated/characters/paijo/think.png",
+      "sha256": "A70BFD8E24F8C70DCF93704852B12E181598BC24B31E5D38F11CDD537AF6815F",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "work",
+      "output": "assets/generated/characters/paijo/work.png",
+      "sha256": "A03DFCF272C9464D1A759ADC19C8BB627CA551674C011D6BBA1E6262B08D4D43",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "role",
+      "output": "assets/generated/characters/paijo/role.png",
+      "sha256": "31A879E36B4BE09F63B53D67BDF834FDB772EE8B6B5A9550B30BDA0F8963D31C",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "paijo",
+      "state": "seated",
+      "output": "assets/generated/characters/paijo/seated.png",
+      "sha256": "C699A6D41FE7325501F9052B3047227DF5F865EA4FBFDEBA0A6F326441FDD9D5",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "front",
+      "output": "assets/generated/characters/praroro/front.png",
+      "sha256": "CEC7E00C4E4A335E83407A1B7162FCF2BA07B65FCCBA32FBB0021D1357232D8B",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "side",
+      "output": "assets/generated/characters/praroro/side.png",
+      "sha256": "E2065BC4ACE3880743DDFEA902EF7E9C991B415B1DFFDDFAB45DD6A486F65CAE",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "back",
+      "output": "assets/generated/characters/praroro/back.png",
+      "sha256": "F38D32DA6C1DD81A0A5D2E1592F264A4CA43E45C08FBCFA0F4248ADB2A539924",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "idle",
+      "output": "assets/generated/characters/praroro/idle.png",
+      "sha256": "4FCA332572B42A6D53D6DDC6F25081F6F9A51DFE61731F902E08F213FA522451",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "walk",
+      "output": "assets/generated/characters/praroro/walk.png",
+      "sha256": "08B87C50E8529F57E7E233DE9BA289F2A9E07BD3E72A53BE5CF0C49AE0C3B8C1",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "think",
+      "output": "assets/generated/characters/praroro/think.png",
+      "sha256": "0ED7C745FA7410DFAA4F08D84AE99A33631A8FC1852249BA78FC0A53D0C491D5",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "work",
+      "output": "assets/generated/characters/praroro/work.png",
+      "sha256": "0221FA537810C93B2453A138A5F37D5B4027906B3809B3DD360BF9B18ADDCFAD",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "role",
+      "output": "assets/generated/characters/praroro/role.png",
+      "sha256": "994D763D281754B98034CB197CAAF3B1B71E7C2C137928155FBC5282DB2FA1EC",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "praroro",
+      "state": "seated",
+      "output": "assets/generated/characters/praroro/seated.png",
+      "sha256": "4382703A72402BFDF52F2061AA69D7FEF4D14EFEED4D61656E0A7D506BDF5C94",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "front",
+      "output": "assets/generated/characters/siti/front.png",
+      "sha256": "0045B9A5B06B3C3592A10D512659CBAF19A478887C7C40EAA10783BB0AB4A0D6",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "side",
+      "output": "assets/generated/characters/siti/side.png",
+      "sha256": "B7A9A334DEE28E4F787198F4E301808248227C7C999BA5B02E7AA98AFD9AA114",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "back",
+      "output": "assets/generated/characters/siti/back.png",
+      "sha256": "7E7AF7785AAA39D6BB1051C20B9CC9C43A550BBDEE72E3916F7ED819FBE2F531",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "idle",
+      "output": "assets/generated/characters/siti/idle.png",
+      "sha256": "6B81BAC6E3014975CCE44D6D332A47FA16917C20DCCE6387648BDAE905F7CA39",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "walk",
+      "output": "assets/generated/characters/siti/walk.png",
+      "sha256": "6C7A678E227DCD2DCE0C0C3211006C50B661D43E804359D8F8DDFC0158CC4891",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "think",
+      "output": "assets/generated/characters/siti/think.png",
+      "sha256": "BBAEDA23DA24A725AB36C891C17542C98F5D2681E0109F25F40D936CCA9816DB",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "work",
+      "output": "assets/generated/characters/siti/work.png",
+      "sha256": "B742E06ABF9319D9709F2A33528C49CFB44F312EF39FE6565CD343F73C8249CB",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "role",
+      "output": "assets/generated/characters/siti/role.png",
+      "sha256": "0B55790627DD59601364145FC96C6E4C91F0F915A128ABE1888626AC19EAAE9E",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "siti",
+      "state": "seated",
+      "output": "assets/generated/characters/siti/seated.png",
+      "sha256": "C7F49C301D4E884D1FFA65891865B7B4C44C25CA99E8025836230B770D7F4472",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "front",
+      "output": "assets/generated/characters/subagjo/front.png",
+      "sha256": "784580DB9BCF3FD5A4D7A3A9C607C634EB8C3E5C8BAC1361C9C883C64BC48DBB",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "side",
+      "output": "assets/generated/characters/subagjo/side.png",
+      "sha256": "1790051260FD70EBDA286265B0CBFC84C9C1C4E9D2171F9CFAB72305CF2ED2CF",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "back",
+      "output": "assets/generated/characters/subagjo/back.png",
+      "sha256": "3DBE18FE9608932B937AE53DEDBD0C47976BD43D0EE018C870D6841285FD1DEE",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "idle",
+      "output": "assets/generated/characters/subagjo/idle.png",
+      "sha256": "4971FE82F6B182CD38DFA61288F2C1DC717416E68E404267239BF414DCBC7AC1",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "walk",
+      "output": "assets/generated/characters/subagjo/walk.png",
+      "sha256": "2A3052256A99FE5E1DDA9C9FE1FEFB5A490508D114BEBDFE303738D74B8DCC5B",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "think",
+      "output": "assets/generated/characters/subagjo/think.png",
+      "sha256": "308A796CA6DF17C1847EBA993A10EB53DF81EE24D503DA371D9E933D28AEB452",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "work",
+      "output": "assets/generated/characters/subagjo/work.png",
+      "sha256": "91AF9DEB2DA673C2253A1F518E9269FBE2F47239702A5F49FDC179526F9FB6C2",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "role",
+      "output": "assets/generated/characters/subagjo/role.png",
+      "sha256": "0BC9C68F91AEE253E3578AABF1410AEAD4E3032BF185D940B1AB7AB5B8F5650F",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
+    },
+    {
+      "employee": "subagjo",
+      "state": "seated",
+      "output": "assets/generated/characters/subagjo/seated.png",
+      "sha256": "E25F2735CC78B9ABC2E38C6D0B0F43CDC531D9CE1B55901183C017D188E7F98A",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "front",
-      "output": "assets/generated/characters/sumiati/front.svg",
-      "sha256": "ccdf2aa26e8033fc04b23cdc6a9d6d6f816b892eea264098febd803b73b2c765",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/front.png",
+      "sha256": "415EFF475C4F6CB926F8FDA0C996A3652F2481DA88821E09E7770F5D04886CFA",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "side",
-      "output": "assets/generated/characters/sumiati/side.svg",
-      "sha256": "f748810e907414fec819d4a2e05376bacff27288413cb32155476578ec757123",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/side.png",
+      "sha256": "54CC8C7BDDED1B352E1C2AB58894476350A1CCE9419DB55AD53E2B259EFEC8ED",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "back",
-      "output": "assets/generated/characters/sumiati/back.svg",
-      "sha256": "2be3e09421f6cde40b9ded9db1ea206d4a4a704815dba36e6fc16c22dd137a50",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/back.png",
+      "sha256": "97143E33E2964435A5DD5FA9DF6A1B7A714779998C480CDD2D3090C7D408E939",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "idle",
-      "output": "assets/generated/characters/sumiati/idle.svg",
-      "sha256": "4634454f7bc8407a917a7fe473da5e356792f2921c43e97fa58fddfd309d5f9b",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/idle.png",
+      "sha256": "848302DDEDBE7C2373E39678E3C8CCB9CD89EBC12E4DCF8852A87A598C57471B",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "walk",
-      "output": "assets/generated/characters/sumiati/walk.svg",
-      "sha256": "80fc1b72b5f88e384892f54ef798477e3f6406cb0dbbb436877547881375fbb0",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/walk.png",
+      "sha256": "81DB54410217DD3CBC30708B4999CFA4567C80EF6990B63355E8B69EDEA55FD8",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "think",
-      "output": "assets/generated/characters/sumiati/think.svg",
-      "sha256": "d6c78441eccdc3e44eb591a20d2e6c063ec244f1f9d0d4dd1402e68871c90c48",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/think.png",
+      "sha256": "7A800AA7C43BF37D7C14009681B1E9BB815F46C00F4E5F847747E3E4ECC08475",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "work",
-      "output": "assets/generated/characters/sumiati/work.svg",
-      "sha256": "d92e0040f36b6989a84ba3ba09faa53af5ffa428f593c85d9f9ec1266f82d67b",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/work.png",
+      "sha256": "6C79AC5ED5F12D77F5ACB76EAB85CD92F7E44014CBFDC3634AC14D6EC1FA4965",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "role",
-      "output": "assets/generated/characters/sumiati/role.svg",
-      "sha256": "59b2ff0a180ddbe9fcbe943a8920a7d08f8b151ae43495440cc79a7ab1160875",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/role.png",
+      "sha256": "DCF9D4528B26A844288AC3E3EE7D90A359575BD9B750A3E698E33A3EAB6334D6",
       "canvas": [
         128,
         128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     },
     {
       "employee": "sumiati",
       "state": "seated",
-      "output": "assets/generated/characters/sumiati/seated.svg",
-      "sha256": "81c6d9964e4195dccee4f268cad22bd22e8b6102e13314ab208842cfd3856ec5",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
+      "output": "assets/generated/characters/sumiati/seated.png",
+      "sha256": "FB175EE6739B444BB04DF2A57C41BA9FDE21B4E1666A316046A0AE18571A01D6",
       "canvas": [
         128,
         128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "front",
-      "output": "assets/generated/characters/siti/front.svg",
-      "sha256": "b028e004747654ab5f68c151005983d31a90f473a1f5e071e484d074d9c676b7",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "side",
-      "output": "assets/generated/characters/siti/side.svg",
-      "sha256": "c044f7faac692c159cd81b6acfdf3b3baa5adf5c6187d7161532dd504d552faa",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "back",
-      "output": "assets/generated/characters/siti/back.svg",
-      "sha256": "9ba6d27ccbcb8c53328c2b3ebbcb7c90aa2c3d1ed1cf292b42ebd507904e0186",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "idle",
-      "output": "assets/generated/characters/siti/idle.svg",
-      "sha256": "49c31cc82bfde25120a1bc16900fc89593f04f3524cffa7cde43d2cd2b0ae334",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "walk",
-      "output": "assets/generated/characters/siti/walk.svg",
-      "sha256": "947321c8d5a3c349dc251c72d54e7e0e973d02dd50bf6fc3bd21fec5ab73b343",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "think",
-      "output": "assets/generated/characters/siti/think.svg",
-      "sha256": "32468e2a1918a05e77d214ef7573ba79c372777ca4d82210ff1330e2ba63fa6d",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "work",
-      "output": "assets/generated/characters/siti/work.svg",
-      "sha256": "13c73681a3bc438cb14d17e5677d2030afb42f818da1a8adfa672f59e35b1cdf",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "role",
-      "output": "assets/generated/characters/siti/role.svg",
-      "sha256": "45ede3a6449b2aefab3f063a0e3a93ab9f33a996be2b694d2437103a5e12555f",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
-    },
-    {
-      "employee": "siti",
-      "state": "seated",
-      "output": "assets/generated/characters/siti/seated.svg",
-      "sha256": "d0f2d2c6e4c17c6c6b166a0dae93bf960045354a1f0a003dbe74df2292839967",
-      "provenance": "original_svg_generated_for_nyobakantorai",
-      "license": "MIT",
-      "canvas": [
-        128,
-        128
-      ]
+      ],
+      "anchor": [
+        64,
+        124
+      ],
+      "provenance": "owner_authored_character_sprite",
+      "license": "MIT"
     }
   ]
 }

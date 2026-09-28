@@ -52,7 +52,7 @@ function path(start, goal) {
 export function createOfficeScene(canvas, { onSelect, initialMotion = true } = {}) {
   const ctx=canvas.getContext("2d",{alpha:false});ctx.imageSmoothingEnabled=false;
   const images=new Map();
-  for(const employee of employees)for(const state of ["idle","walk","think","work","role","seated","front","side","back"]){const image=new Image();image.src=`./assets/generated/characters/${employee}/${state}.svg`;images.set(`${employee}:${state}`,image);}
+  for(const employee of employees)for(const state of ["idle","walk","think","work","role","seated","front","side","back"]){const image=new Image();image.src=`./assets/generated/characters/${employee}/${state}.png`;images.set(`${employee}:${state}`,image);}
   const actors=employees.map((id,index)=>({id,x:deskPoints[id][0],y:deskPoints[id][1]+45,state:index%3===0?"think":"idle",route:[]}));
   let selected="praroro",motion=initialMotion,zoom=1,debug=false,last=performance.now(),frame=0;
   function draw(now){
