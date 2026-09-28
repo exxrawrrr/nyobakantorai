@@ -35,7 +35,7 @@ Drafts responses and partnership angles. Audience + context + draft + risk note 
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-community-partnerships, nyoba-brand-copy-qa, nyoba-creative-brief.
 
 ## Preferred Hermes toolsets
-skills, web, browser, messaging, memory, clarify. These are preferences, not proof that a tool is enabled or connected.
+skills, web, browser, memory, clarify. These are preferences, not proof that a tool is enabled or connected.
 
 ## External capabilities
 - None required for the core role.

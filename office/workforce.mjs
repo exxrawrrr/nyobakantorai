@@ -1795,7 +1795,6 @@ export const WORKFORCE = Object.freeze([
       "skills",
       "web",
       "browser",
-      "messaging",
       "memory",
       "clarify"
     ],

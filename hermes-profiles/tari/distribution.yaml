@@ -6,5 +6,6 @@ license: "MIT"
 distribution_owned:
   - SOUL.md
   - profile.yaml
+  - config.yaml
   - skills
   - distribution.yaml

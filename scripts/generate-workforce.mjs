@@ -84,7 +84,8 @@ for(const e of registry.employees){
  expected.set(`agents/${e.id}/profile.yaml`,`description: "${e.summary.replaceAll('"',"'")}"\ndescription_auto: false\n`);
  expected.set(`hermes-profiles/${e.id}/SOUL.md`,soul);
  expected.set(`hermes-profiles/${e.id}/profile.yaml`,`description: "${e.summary.replaceAll('"',"'")}"\ndescription_auto: false\n`);
- expected.set(`hermes-profiles/${e.id}/distribution.yaml`,`name: ${e.id}\nversion: ${e.profile.distribution_version}\ndescription: "${e.role.replaceAll('"',"'")} — nyobakantorai"\nauthor: "exxrawrrr / nyobakantorai contributors"\nlicense: "MIT"\ndistribution_owned:\n  - SOUL.md\n  - profile.yaml\n  - skills\n  - distribution.yaml\n`);
+ expected.set(`hermes-profiles/${e.id}/config.yaml`,`# Fresh-install role defaults. Hermes profile updates preserve an existing user config.yaml.\ntoolsets:\n${e.preferred_toolsets.map((toolset)=>`  - ${toolset}`).join("\n")}\n`);
+ expected.set(`hermes-profiles/${e.id}/distribution.yaml`,`name: ${e.id}\nversion: ${e.profile.distribution_version}\ndescription: "${e.role.replaceAll('"',"'")} — nyobakantorai"\nauthor: "exxrawrrr / nyobakantorai contributors"\nlicense: "MIT"\ndistribution_owned:\n  - SOUL.md\n  - profile.yaml\n  - config.yaml\n  - skills\n  - distribution.yaml\n`);
  for(const skill of e.skills)expected.set(`hermes-profiles/${e.id}/skills/nyobakantorai/${skill}/SKILL.md`,await readFile(resolve(root,"skills/hermes-custom",skill,"SKILL.md"),"utf8"));
 }
 if(check){

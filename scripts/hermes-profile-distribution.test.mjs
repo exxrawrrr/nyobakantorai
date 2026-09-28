@@ -14,10 +14,32 @@ test("all registry employees have native Hermes distributions with canonical ski
     const manifest = await readFile(resolve(dir,"distribution.yaml"),"utf8");
     const soul = await readFile(resolve(dir,"SOUL.md"),"utf8");
     const profile = await readFile(resolve(dir,"profile.yaml"),"utf8");
+    const config = await readFile(resolve(dir,"config.yaml"),"utf8");
     assert.match(manifest,new RegExp(`^name: ${employee.id}$`,"m"));
     assert.match(manifest,new RegExp(`^version: ${employee.profile.distribution_version.replaceAll(".","\\.")}$`,"m"));
     assert.match(manifest,/license: "MIT"/);
     assert.match(profile,/description:/);
+    for (const toolset of employee.preferred_toolsets) assert.match(config,new RegExp(`^  - ${toolset.replaceAll("-","\\-")}import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile, readdir } from "node:fs/promises";
+import { resolve } from "node:path";
+import { WORKFORCE } from "../office/workforce.mjs";
+
+const root = resolve(import.meta.dirname, "..");
+const forbidden = [".env","auth.json","state.db","sessions","memories","logs"];
+
+test("all registry employees have native Hermes distributions with canonical skill copies", async () => {
+  assert.equal(WORKFORCE.length,16);
+  for (const employee of WORKFORCE) {
+    const dir = resolve(root,"hermes-profiles",employee.id);
+    const manifest = await readFile(resolve(dir,"distribution.yaml"),"utf8");
+    const soul = await readFile(resolve(dir,"SOUL.md"),"utf8");
+    const profile = await readFile(resolve(dir,"profile.yaml"),"utf8");
+    const config = await readFile(resolve(dir,"config.yaml"),"utf8");
+    assert.match(manifest,new RegExp(`^name: ${employee.id}$`,"m"));
+    assert.match(manifest,new RegExp(`^version: ${employee.profile.distribution_version.replaceAll(".","\\.")}$`,"m"));
+    assert.match(manifest,/license: "MIT"/);
+,"m"),`${employee.id} config should include ${toolset}`);
     const installed = (await readdir(resolve(dir,"skills","nyobakantorai"))).sort();
     assert.deepEqual(installed,[...employee.skills].sort(),`${employee.id} packaged skill set must match registry`);
     for (const skill of installed) {

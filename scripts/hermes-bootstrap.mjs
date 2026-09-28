@@ -46,13 +46,13 @@ for (const id of profileIds) {
     results.push({ profile:id, action, ok: action === "check" ? show.ok : true });
     continue;
   }
-  if (action === "native-update") {
+  if (action === "native-update" || action === "native-upgrade") {
     const update = run(["profile","update",id,"--yes"], true);
     results.push({ profile:id, action, ok:update.ok, detail:update.ok ? update.stdout : (update.stderr || update.stdout) });
     continue;
   }
   const args = ["profile","install",source,"-y"];
-  if (action === "force-install" || action === "upgrade-distribution") args.push("--force");
+  if (action === "force-install") args.push("--force");
   const install = run(args, true);
   results.push({ profile:id, action, ok:install.ok, detail:install.ok ? install.stdout : (install.stderr || install.stdout) });
 }

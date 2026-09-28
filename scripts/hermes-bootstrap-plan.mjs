@@ -3,7 +3,7 @@ export function planProfileAction({ mode="install", exists=false, force=false } 
   if (mode === "check") return "check";
   if (force) return "force-install";
   if (!exists) return "install";
-  if (mode === "upgrade") return "upgrade-distribution";
+  if (mode === "upgrade") return "native-upgrade";
   if (mode === "update") return "native-update";
   return "skip-existing";
 }

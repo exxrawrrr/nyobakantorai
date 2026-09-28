@@ -110,8 +110,8 @@ Write-Host "Running runtime preflight..."
 if ($LASTEXITCODE -ne 0) { throw "Runtime preflight failed." }
 
 if ($hermesExe) {
-  Write-Host "Installing/verifying six Hermes employee profiles..."
-  $bootstrap = @((Join-Path $InstallDir "scripts\hermes-bootstrap.mjs"))
+  Write-Host "Installing/upgrading sixteen Hermes employee profiles..."
+  $bootstrap = @((Join-Path $InstallDir "scripts\hermes-bootstrap.mjs"), "--upgrade")
   if ($HermesHome) { $bootstrap += "--home=$env:NYOBAKANTORAI_HERMES_HOME" }
   & $node @bootstrap
   if ($LASTEXITCODE -ne 0) { throw "Hermes profile bootstrap failed." }
