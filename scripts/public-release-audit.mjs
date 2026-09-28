@@ -1,9 +1,9 @@
 import { execFileSync } from "node:child_process";
 import { basename, extname, resolve } from "node:path";
 import { readFileSync } from "node:fs";
-const workforceRegistry = JSON.parse(readFileSync(resolve(root, "config/employees.json"), "utf8"));
 
 const root = resolve(import.meta.dirname, "..");
+const workforceRegistry = JSON.parse(readFileSync(resolve(root, "config/employees.json"), "utf8"));
 const tracked = execFileSync("git", ["ls-files"], { cwd: root, encoding: "utf8" })
   .split(String.fromCharCode(10))
   .map((line) => line.replace(String.fromCharCode(13), ""))
