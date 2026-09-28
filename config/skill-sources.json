@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "policy": "Concepts may be adapted only with source/license attribution. No long-form source text or source code is copied into nyobakantorai skills.",
+  "sources": [
+    {
+      "id": "hermes-agent",
+      "repo": "NousResearch/hermes-agent",
+      "license": "MIT",
+      "relationship": "primary runtime; profile memory, session search, skills, native learning loop"
+    },
+    {
+      "id": "mem0",
+      "repo": "mem0ai/mem0",
+      "license": "Apache-2.0",
+      "relationship": "memory retrieval and personalization concepts"
+    },
+    {
+      "id": "letta",
+      "repo": "letta-ai/letta",
+      "license": "Apache-2.0",
+      "relationship": "persistent agent-memory architecture concepts"
+    },
+    {
+      "id": "cognee",
+      "repo": "topoteretes/cognee",
+      "license": "Apache-2.0",
+      "relationship": "structured knowledge and memory concepts"
+    },
+    {
+      "id": "superpowers",
+      "repo": "obra/superpowers",
+      "license": "MIT",
+      "relationship": "planning, systematic debugging and verification workflow concepts"
+    },
+    {
+      "id": "browser-use",
+      "repo": "browser-use/browser-use",
+      "license": "MIT",
+      "relationship": "browser-agent operating patterns"
+    },
+    {
+      "id": "mcp-servers",
+      "repo": "modelcontextprotocol/servers",
+      "license": "Apache-2.0 / legacy MIT transition",
+      "relationship": "reference MCP and memory-server patterns"
+    },
+    {
+      "id": "claude-plugins-official",
+      "repo": "anthropics/claude-plugins-official",
+      "license": "Apache-2.0 for Anthropic repository; third-party plugins vary",
+      "relationship": "plugin and skill packaging reference"
+    },
+    {
+      "id": "publora-skills",
+      "repo": "publora/skills",
+      "license": "MIT",
+      "relationship": "social publishing workflow concepts"
+    },
+    {
+      "id": "pm-claude-skills",
+      "repo": "mohitagw15856/pm-claude-skills",
+      "license": "MIT",
+      "relationship": "project follow-up, learning and experiment-readout concepts"
+    }
+  ],
+  "skills": {
+    "nyoba-memory-stewardship": [
+      "hermes-agent",
+      "mem0",
+      "letta",
+      "cognee",
+      "mcp-servers"
+    ],
+    "nyoba-learning-loop": [
+      "hermes-agent",
+      "mem0",
+      "pm-claude-skills"
+    ],
+    "nyoba-systematic-debugging": [
+      "superpowers"
+    ],
+    "nyoba-verification-before-completion": [
+      "superpowers"
+    ],
+    "nyoba-plan-checkpoints": [
+      "superpowers",
+      "pm-claude-skills"
+    ],
+    "nyoba-browser-research-ops": [
+      "browser-use"
+    ],
+    "nyoba-social-publishing-ops": [
+      "publora-skills"
+    ],
+    "nyoba-experiment-readout": [
+      "pm-claude-skills"
+    ]
+  }
+}

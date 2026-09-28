@@ -342,6 +342,7 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 
 - **16 specialized Hermes employees** driven by one canonical registry, with distinct roles, personalities, habits, skills, toolset preferences, routing, approval, and verification policy.
 - **Canonical reusable skills** spanning task truth, tool safety, ads operations, SEO/CRO, data, integrations, operations, community, governance, and independent QA.
+- **Mandatory memory + learning loop for every worker** using Hermes profile memory, session search, and governed skill improvement.
 - **Evidence-gated task state** where VERIFIED requires independent evidence.
 - **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
 - **Hermes-first reference runtime** with sixteen installable Hermes profile distributions and an idempotent, v0.2-upgrade-safe bootstrap.
@@ -562,6 +563,8 @@ See:
 - [docs/TELEGRAM-OFFICE.md](docs/TELEGRAM-OFFICE.md)
 - [docs/V0.3-UPGRADE.md](docs/V0.3-UPGRADE.md)
 - [docs/ADDING-EMPLOYEE.md](docs/ADDING-EMPLOYEE.md)
+- [docs/SKILL-SOURCES.md](docs/SKILL-SOURCES.md)
+- [docs/WORKFORCE-EXTENSIONS.md](docs/WORKFORCE-EXTENSIONS.md)
 - [docs/RUNTIME-ADAPTER-SPEC.md](docs/RUNTIME-ADAPTER-SPEC.md)
 - [docs/APPROVAL-MODEL.md](docs/APPROVAL-MODEL.md)
 - [docs/DEMO.md](docs/DEMO.md)

@@ -5,6 +5,8 @@ All notable public changes to nyobakantorai are documented here.
 ## [0.3.0] - Unreleased
 
 ### Added
+- Mandatory profile-scoped memory + session-search learning loop for every workforce employee.
+- Source-attributed specialist workflows for systematic debugging, completion verification, planning checkpoints, browser research, social publishing, and experiment readouts.
 - Canonical 16-employee workforce registry and generated native Hermes distributions.
 - Ten specialist workers across paid media, SEO/CRO, integrations, data, client operations, automation, governance, follow-up, and community.
 - Provider-neutral Meta/Google Ads capability contracts with fail-closed connection states.
