@@ -81,6 +81,7 @@ export function updateTask(registry, taskId, patch, clock = now) {
   const actor = clean(patch.actor || "owner", 40).toLowerCase();
   const evidence = clean(patch.evidence_ref, 1000);
   if (status === "VERIFIED") {
+    if (actor === task.assignee_id) throw new Error("A worker cannot independently verify its own work.");
     if (!mayVerify(task.assignee_id, actor)) throw new Error("VERIFIED requires an independent registry-approved reviewer.");
     if (!evidence && !task.evidence_refs.length) throw new Error("VERIFIED requires evidence.");
   }
