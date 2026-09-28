@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "states": [
+    "CONNECTED",
+    "NOT_CONNECTED",
+    "PARTIAL",
+    "ERROR"
+  ],
+  "autonomy_modes": [
+    "OBSERVE",
+    "GUARDED",
+    "DELEGATED"
+  ],
+  "default_mode": "GUARDED",
+  "note": "Capability metadata describes a contract, not a live connection. Runtime adapters must provide evidence before state may be CONNECTED.",
+  "capabilities": [
+    {
+      "id": "ads.meta.read",
+      "description": "Meta Ads account/campaign read",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "ads.meta.insights",
+      "description": "Meta Ads performance insights",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "ads.meta.creative",
+      "description": "Meta creative draft/inspection",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "ads.meta.write",
+      "description": "Meta campaign/ad mutation",
+      "risk_class": "PAID_ACTION",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "ads.meta.media",
+      "description": "Meta media upload/library bridge",
+      "risk_class": "EXTERNAL_WRITE",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "ads.google.read",
+      "description": "Google Ads account/campaign read",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "ads.google.insights",
+      "description": "Google Ads performance insights",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "ads.google.keywords",
+      "description": "Google Ads keyword/search-term operations",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "ads.google.creative",
+      "description": "Google Ads creative draft/inspection",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "ads.google.write",
+      "description": "Google Ads mutation",
+      "risk_class": "PAID_ACTION",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "ads.google.verify",
+      "description": "Post-mutation Google Ads verification",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    }
+  ]
+}
