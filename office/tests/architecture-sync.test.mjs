@@ -14,9 +14,9 @@ test("public architecture describes local-first fail-closed boundaries", async (
   assert.match(spec, /Skills define procedures/i);
 });
 
-test("canonical workforce exposes sixteen employees and server consumes generated IDs", async () => {
-  assert.equal(WORKFORCE.length,16);
-  assert.equal(new Set(EMPLOYEE_IDS).size,16);
+test("canonical workforce exposes the sixteen-person baseline and server consumes generated IDs", async () => {
+  assert.ok(WORKFORCE.length >= 16);
+  assert.equal(new Set(EMPLOYEE_IDS).size, EMPLOYEE_IDS.length);
   const server = await read("server.mjs");
   assert.match(server,/from ".\/workforce\.mjs"/);
   assert.doesNotMatch(server,/const employeeIds = \[/);

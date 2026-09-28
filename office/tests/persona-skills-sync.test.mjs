@@ -5,8 +5,8 @@ import { EMPLOYEES } from "../registry.mjs";
 import { WORKFORCE } from "../workforce.mjs";
 import { EMPLOYEE_PLAYBOOK, PERSONA_SNAPSHOT } from "../src/persona-ops.mjs";
 
-test("sixteen public employees have complete registry-driven operating styles", async () => {
-  assert.equal(EMPLOYEES.length,16);
+test("all public employees have complete registry-driven operating styles", async () => {
+  assert.ok(EMPLOYEES.length >= 16);
   assert.deepEqual(EMPLOYEES.map(({id})=>id),WORKFORCE.map(({id})=>id));
   assert.deepEqual(Object.keys(EMPLOYEE_PLAYBOOK),WORKFORCE.map(({id})=>id));
   for (const employee of WORKFORCE) {

@@ -25,7 +25,7 @@ const capabilityStateFor = (person) => runtime?.employees?.[person.id]?.external
 const capabilityChips = (person) => Object.entries(capabilityStateFor(person)).map(([capability, state]) => `<span>${escapeHtml(capability)}: ${escapeHtml(state)}</span>`).join("");
 const knowledge = [
   ["Architecture", "Local-first boundaries, runtime adapter rules, and evidence-gated task state.", "docs/ARCHITECTURE.md"],
-  ["Agent profiles", "Sixteen installable Hermes workers with distinct roles, policies, routing, and capability expectations.", "../agents/"],
+  ["Agent profiles", "Registry-driven installable Hermes workers with distinct roles, policies, routing, and capability expectations.", "../agents/"],
   ["Reusable skills", "Portable safety, QA, research, growth, creative, and engineering skills.", "../skills/hermes-custom/"],
   ["Security policy", "Credential handling, least privilege, public-release rules, and disclosure guidance.", "../SECURITY.md"],
   ["Runtime adapter contract", "How external runtimes expose health, capabilities, tasks, and evidence safely.", "../docs/RUNTIME-ADAPTER-SPEC.md"],
@@ -155,7 +155,7 @@ function renderSystems() {
   const cards=[
     ["Local office server","Static UI and read-only runtime adapter.",[["LOCALHOST","pass"],["WRITE ENDPOINTS: 0","pass"],["DISPATCH: BLOCKED","blocked"]]],
     ["Hermes Kanban",connected?`${runtime.hermes.version} · ${runtime.hermes.task_count} sanitized task(s).`:"No verified board snapshot.",[[connected?"READ CONNECTED":"UNKNOWN",connected?"pass":"blocked"],["RUNTIME WRITES: 0","pass"],["READ-ONLY ADAPTER","pass"]]],
-    ["Employee runtime","All sixteen registry profiles are read from Hermes; model label or animation does NOT prove execution.",EMPLOYEES.map(({id})=>[`${id.toUpperCase()}: ${presenceFor(id)}`,""])],
+    ["Employee runtime","All registry profiles are read from Hermes; model label or animation does NOT prove execution.",EMPLOYEES.map(({id})=>[`${id.toUpperCase()}: ${presenceFor(id)}`,""])],
     ["Providers / models","The office server does not read provider keys, change providers, or run model inference.",[["SERVER INFERENCE: 0","pass"],["PROVIDER KEYS: NOT READ","pass"],["CONFIG CHANGES: 0","pass"]]],
     ["MCP / external APIs","External APIs are outside the default local office boundary.",[["DEFAULT MCP CALLS: 0","pass"],["EXTERNAL WRITES: 0","pass"],["MESSAGING: BLOCKED","blocked"]]],
     ["ChatGPT chat biasa","A separate chat can be used manually, but this office cannot invoke private conversations or inherit personal plugins.",[["DESIRED PRIMARY SURFACE",""],["MANUAL HANDOFF ONLY","pass"],["AUTO BRIDGE: NOT VERIFIED","blocked"]]],
