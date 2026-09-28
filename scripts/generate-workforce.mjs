@@ -70,11 +70,15 @@ Profile-scoped Hermes state only; never read another employee's memory/session/c
 
 ${common}
 `;
-const workforce=`// GENERATED from config/employees.json by scripts/generate-workforce.mjs. Do not hand-edit.
+const workforce=`// GENERATED from config/employees.json + config/capabilities.json by scripts/generate-workforce.mjs. Do not hand-edit.
 export const WORKFORCE_VERSION = ${JSON.stringify(registry.version)};
 export const WORKFORCE = Object.freeze(${JSON.stringify(registry.employees,null,2)}.map((employee)=>Object.freeze(employee)));
 export const EMPLOYEE_IDS = Object.freeze(WORKFORCE.map(({id})=>id));
 export const EMPLOYEE_BY_ID = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee])));
+export const CAPABILITY_STATES = Object.freeze(${JSON.stringify(capabilities.states)});
+export const AUTONOMY_MODES = Object.freeze(${JSON.stringify(capabilities.autonomy_modes)});
+export const DEFAULT_AUTONOMY = ${JSON.stringify(capabilities.default_mode)};
+export const CAPABILITY_CATALOG = Object.freeze(${JSON.stringify(capabilities.capabilities,null,2)}.map((capability)=>Object.freeze(capability)));
 `;
 const workforceCss=registry.employees.map((e)=>{const [x,y]=e.visual.scene_position;const left=(x/1280*100).toFixed(5),top=((y-75)/720*100).toFixed(5);return `.speech-bubble[data-slot="${e.visual.desk_slot}"]{left:${left}%;top:${top}%}\n.task-card[data-owner="${e.id}"]{--owner:${e.visual.color}}`;}).join("\n");
 const expected=new Map([["office/workforce.mjs",workforce],["office/src/workforce.generated.css",workforceCss+"\n"]]);

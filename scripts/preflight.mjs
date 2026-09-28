@@ -45,7 +45,7 @@ if (pythonCommand) {
 for (const rel of [
   "package.json", "office/package.json", "office/server.mjs",
   "office/src/asset-manifest.json", "packages/runtime-adapter/index.mjs",
-  "README.md", "SECURITY.md",
+  "README.md", "SECURITY.md", "config/employees.json", "config/capabilities.json", "office/workforce.mjs", "office/src/workforce.generated.css",
 ]) add(`Required file: ${rel}`, existsSync(resolve(root, rel)), rel);
 
 try {
@@ -54,6 +54,19 @@ try {
   add("Character asset manifest", good, good ? "schema 3 · 54 owner-authored sprites" : "unexpected asset manifest");
 } catch {
   add("Character asset manifest", false, "cannot parse asset manifest");
+}
+
+try {
+  const workforce = JSON.parse(readFileSync(resolve(root, "config/employees.json"), "utf8"));
+  const caps = JSON.parse(readFileSync(resolve(root, "config/capabilities.json"), "utf8"));
+  const good = workforce.version === "0.3.0"
+    && workforce.employee_count === workforce.employees?.length
+    && workforce.employees.length >= 16
+    && caps.default_mode === "GUARDED"
+    && Array.isArray(caps.capabilities);
+  add("Workforce registry", good, `${workforce.employees?.length || 0} employees · ${workforce.version || "unknown"} · autonomy ${caps.default_mode || "unknown"}`);
+} catch {
+  add("Workforce registry", false, "cannot parse workforce/capability registry");
 }
 
 const requestedPort = Number.parseInt(process.env.NYOBAKANTORAI_PORT || "4322", 10);

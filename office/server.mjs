@@ -9,7 +9,7 @@ import { promisify } from "node:util";
 import { randomBytes } from "node:crypto";
 import { sanitizeRuntimeTask } from "./reconcile.mjs";
 import { createRuntimeSnapshotCache } from "./runtime-cache.mjs";
-import { WORKFORCE, EMPLOYEE_IDS, WORKFORCE_VERSION } from "./workforce.mjs";
+import { WORKFORCE, EMPLOYEE_IDS, WORKFORCE_VERSION, CAPABILITY_STATES, AUTONOMY_MODES, DEFAULT_AUTONOMY, CAPABILITY_CATALOG } from "./workforce.mjs";
 
 const projectRoot = fileURLToPath(new URL(".", import.meta.url));
 const root = join(projectRoot, "dist");
@@ -134,7 +134,7 @@ const server = createServer(async (request, response) => {
     }
     if (pathname === "/api/capabilities" && request.method === "GET") {
       assertLocal(request);
-      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: hermesEnabled ? "hermes-readonly" : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, employees: EMPLOYEE_IDS, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks"] }); return;
+      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: hermesEnabled ? "hermes-readonly" : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, autonomy_default: DEFAULT_AUTONOMY, autonomy_modes: AUTONOMY_MODES, capability_states: CAPABILITY_STATES, external_capability_catalog: CAPABILITY_CATALOG, employees: EMPLOYEE_IDS, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks"] }); return;
     }
     if (pathname === "/api/capabilities") throw new PublicError(405, "Method not allowed");
     if (pathname === "/api/workforce" && request.method === "GET") {

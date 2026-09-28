@@ -1,4 +1,4 @@
-// GENERATED from config/employees.json by scripts/generate-workforce.mjs. Do not hand-edit.
+// GENERATED from config/employees.json + config/capabilities.json by scripts/generate-workforce.mjs. Do not hand-edit.
 export const WORKFORCE_VERSION = "0.3.0";
 export const WORKFORCE = Object.freeze([
   {
@@ -1852,3 +1852,85 @@ export const WORKFORCE = Object.freeze([
 ].map((employee)=>Object.freeze(employee)));
 export const EMPLOYEE_IDS = Object.freeze(WORKFORCE.map(({id})=>id));
 export const EMPLOYEE_BY_ID = Object.freeze(Object.fromEntries(WORKFORCE.map((employee)=>[employee.id,employee])));
+export const CAPABILITY_STATES = Object.freeze(["CONNECTED","NOT_CONNECTED","PARTIAL","ERROR"]);
+export const AUTONOMY_MODES = Object.freeze(["OBSERVE","GUARDED","DELEGATED"]);
+export const DEFAULT_AUTONOMY = "GUARDED";
+export const CAPABILITY_CATALOG = Object.freeze([
+  {
+    "id": "ads.meta.read",
+    "description": "Meta Ads account/campaign read",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "ads.meta.insights",
+    "description": "Meta Ads performance insights",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "ads.meta.creative",
+    "description": "Meta creative draft/inspection",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "ads.meta.write",
+    "description": "Meta campaign/ad mutation",
+    "risk_class": "PAID_ACTION",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": true
+  },
+  {
+    "id": "ads.meta.media",
+    "description": "Meta media upload/library bridge",
+    "risk_class": "EXTERNAL_WRITE",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": true
+  },
+  {
+    "id": "ads.google.read",
+    "description": "Google Ads account/campaign read",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "ads.google.insights",
+    "description": "Google Ads performance insights",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "ads.google.keywords",
+    "description": "Google Ads keyword/search-term operations",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "ads.google.creative",
+    "description": "Google Ads creative draft/inspection",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "ads.google.write",
+    "description": "Google Ads mutation",
+    "risk_class": "PAID_ACTION",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": true
+  },
+  {
+    "id": "ads.google.verify",
+    "description": "Post-mutation Google Ads verification",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  }
+].map((capability)=>Object.freeze(capability)));
