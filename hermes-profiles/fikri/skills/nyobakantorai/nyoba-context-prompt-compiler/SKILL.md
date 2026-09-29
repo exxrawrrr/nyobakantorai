@@ -7,6 +7,8 @@ metadata:
   nyoba-version: "1.0.0"
   nyoba-author: "nyobakantorai"
   nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "agent-skills,markitdown,docling,repomix,llmlingua,ecc"
 ---
 
 # Context & Prompt Compiler
