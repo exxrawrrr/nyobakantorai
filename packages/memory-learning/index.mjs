@@ -86,3 +86,63 @@ export function markSkillCandidateMerged(candidate, { repositoryPr, approved = f
   if (!repositoryPr || !String(repositoryPr).trim()) throw new Error("repository PR reference required");
   return Object.freeze({ ...candidate, status:"MERGED_VIA_REPOSITORY_PR", repository_pr:String(repositoryPr).trim() });
 }
+
+
+export function exportProfileLearningState({ events = [], candidates = [], employeeId, includeShared = false } = {}) {
+  const id = String(employeeId ?? "").trim();
+  if (!/^[a-z][a-z0-9-]{1,39}$/.test(id)) throw new Error("valid employeeId required");
+  const profileEvents = events.filter((event) =>
+    event?.employee_id === id && (includeShared || event?.layer !== "M3")
+  ).map((event) => structuredClone(event));
+  const profileCandidates = candidates.filter((candidate) =>
+    candidate?.employee_id === id
+  ).map((candidate) => structuredClone(candidate));
+  return Object.freeze({
+    schema: 1,
+    employee_id: id,
+    include_shared: Boolean(includeShared),
+    events: Object.freeze(profileEvents),
+    skill_candidates: Object.freeze(profileCandidates),
+  });
+}
+
+export function deleteProfileLearningState({ events = [], candidates = [], employeeId, deleteShared = false } = {}) {
+  const id = String(employeeId ?? "").trim();
+  if (!/^[a-z][a-z0-9-]{1,39}$/.test(id)) throw new Error("valid employeeId required");
+
+  const deletedEvents = [];
+  const keptEvents = [];
+  for (const event of events) {
+    const owned = event?.employee_id === id;
+    const sharedProtected = event?.layer === "M3" && !deleteShared;
+    if (owned && !sharedProtected) deletedEvents.push(structuredClone(event));
+    else keptEvents.push(structuredClone(event));
+  }
+
+  const deletedCandidates = [];
+  const keptCandidates = [];
+  for (const candidate of candidates) {
+    const owned = candidate?.employee_id === id;
+    const canonicalProtected = candidate?.status === "MERGED_VIA_REPOSITORY_PR";
+    if (owned && !canonicalProtected) deletedCandidates.push(structuredClone(candidate));
+    else keptCandidates.push(structuredClone(candidate));
+  }
+
+  return Object.freeze({
+    schema: 1,
+    employee_id: id,
+    delete_shared: Boolean(deleteShared),
+    remaining: Object.freeze({
+      events: Object.freeze(keptEvents),
+      skill_candidates: Object.freeze(keptCandidates),
+    }),
+    deleted: Object.freeze({
+      events: Object.freeze(deletedEvents),
+      skill_candidates: Object.freeze(deletedCandidates),
+    }),
+    preserved: Object.freeze({
+      shared_events: Object.freeze(keptEvents.filter((event) => event?.employee_id === id && event?.layer === "M3")),
+      merged_skill_candidates: Object.freeze(keptCandidates.filter((candidate) => candidate?.employee_id === id && candidate?.status === "MERGED_VIA_REPOSITORY_PR")),
+    }),
+  });
+}
