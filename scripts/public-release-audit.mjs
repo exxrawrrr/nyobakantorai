@@ -45,6 +45,9 @@ const findings = [];
 for (const relative of tracked) {
   const normalized = relative.split(slash).join("/").toLowerCase();
   const name = basename(relative).toLowerCase();
+  if (normalized.startsWith("docs/_temp_")) {
+    findings.push(relative + ": temporary planning document must not ship");
+  }
   if (forbiddenFileNames.has(name) || (name.startsWith(".env.") && name !== ".env.example")) {
     findings.push(relative + ": forbidden sensitive filename");
   }
@@ -128,7 +131,7 @@ for (const employee of workforceRegistry.employees) {
     }
   }
 }
-if (tracked.includes("docs/_TEMP_V0.3_REAL_AI_WORKFORCE_PRD.md")) findings.push("temporary v0.3 handoff PRD must not ship");
+// Any docs/_TEMP_* file is rejected generically above.
 
 if (findings.length) {
   console.error("Public-release audit failed:" + String.fromCharCode(10) + [...new Set(findings)].join(String.fromCharCode(10)));
