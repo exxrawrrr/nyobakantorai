@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
-import { buildEmployeePack, buildSelectedEmployeePacks, verifyEmployeePack } from "./employee-pack.mjs";
+import { buildEmployeePack, buildSelectedEmployeePacks, checkSelectedEmployeePacks, verifyEmployeePack } from "./employee-pack.mjs";
 
 async function tempRoot() {
   return await mkdtemp(resolve(tmpdir(), "nyoba-pack-"));
@@ -65,4 +65,19 @@ test("checksum verification catches a modified pack artifact", async (t) => {
   const verification = await verifyEmployeePack(target);
   assert.equal(verification.ok, false);
   assert.ok(verification.failures.some((item) => item.file === "SOUL.md"));
+});
+
+
+test("determinism check rebuilds the selected pack twice with identical manifests", async () => {
+  const result = await checkSelectedEmployeePacks({ selection:"siti" });
+  assert.equal(result.ok, true);
+  assert.equal(result.employee_count, 1);
+  assert.deepEqual(result.failures, []);
+});
+
+test("determinism check supports arbitrary subsets without pulling unrelated workers", async () => {
+  const result = await checkSelectedEmployeePacks({ selection:"praroro,siti" });
+  assert.equal(result.ok, true);
+  assert.equal(result.employee_count, 2);
+  assert.deepEqual(result.failures, []);
 });
