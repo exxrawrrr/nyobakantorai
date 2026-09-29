@@ -775,7 +775,8 @@ export async function runUpgradeUninstallLifecycleMatrix({
     }
     const afterFullUninstall=(await readdir(profilesDir,{withFileTypes:true}))
       .filter(x=>x.isDirectory()).map(x=>x.name).sort();
-    const fullUninstallPassed=afterFullUninstall.length===0&&allIds.every(id=>!(exists(resolve(profilesDir,id))));
+    const profileAbsenceChecks=await Promise.all(allIds.map(async id=>!(await exists(resolve(profilesDir,id)))));
+    const fullUninstallPassed=afterFullUninstall.length===0&&profileAbsenceChecks.every(Boolean);
 
     const reinstallPlan=planSelectedProfileActions({
       selectedIds:allIds,
