@@ -95,6 +95,72 @@
         "minLength": 1,
         "maxLength": 128
       }
+    },
+    "reviewed_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 128
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "layer": {
+            "const": "M3"
+          }
+        },
+        "required": [
+          "layer"
+        ]
+      },
+      "then": {
+        "required": [
+          "shared_scope",
+          "human_review",
+          "reviewed_by"
+        ],
+        "properties": {
+          "shared_scope": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "human_review": {
+            "const": true
+          },
+          "reviewed_by": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "layer": {
+            "const": "M4"
+          }
+        },
+        "required": [
+          "layer"
+        ]
+      },
+      "then": {
+        "required": [
+          "human_review"
+        ],
+        "properties": {
+          "human_review": {
+            "const": true
+          }
+        }
+      }
+    }
+  ]
 }
