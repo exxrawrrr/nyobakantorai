@@ -26,8 +26,9 @@ export function validateLearningEvent(event, { employeeIds = [] } = {}) {
   if (containsSecretLikeContent(event?.summary)) errors.push("secret-like content prohibited");
   if (event?.sensitivity === "SECRET_PROHIBITED") errors.push("SECRET_PROHIBITED cannot be persisted");
   if (event?.layer === "M3") {
-    if (!event?.shared_scope) errors.push("M3 requires shared_scope");
+    if (!event?.shared_scope || !String(event.shared_scope).trim()) errors.push("M3 requires shared_scope");
     if (event?.human_review !== true) errors.push("M3 requires human_review=true");
+    if (!event?.reviewed_by || !String(event.reviewed_by).trim()) errors.push("M3 requires reviewed_by");
   }
   if (event?.layer === "M4" && event?.human_review !== true) errors.push("M4 requires human_review=true");
   return errors;
@@ -37,15 +38,17 @@ export function promoteToShared(event, { sharedScope, approved = false, reviewer
   const baseErrors = validateLearningEvent(event);
   if (baseErrors.length) throw new Error(baseErrors.join("; "));
   if (!["M1","M2"].includes(event.layer)) throw new Error("Only M1/M2 events can be promoted to shared M3 knowledge");
-  if (!approved || !reviewer) throw new Error("Shared promotion requires explicit human review");
-  if (!sharedScope || !String(sharedScope).trim()) throw new Error("Shared promotion requires shared_scope");
+  const reviewerId=String(reviewer ?? "").trim();
+  if (!approved || !reviewerId) throw new Error("Shared promotion requires explicit human review");
+  const scope=String(sharedScope ?? "").trim();
+  if (!scope) throw new Error("Shared promotion requires shared_scope");
   if (containsSecretLikeContent(event.summary) || event.sensitivity === "SECRET_PROHIBITED") throw new Error("Secret-like memory cannot be promoted");
   return Object.freeze({
     ...event,
     layer: "M3",
-    shared_scope: String(sharedScope).trim(),
+    shared_scope: scope,
     human_review: true,
-    reviewed_by: String(reviewer),
+    reviewed_by: reviewerId,
   });
 }
 
