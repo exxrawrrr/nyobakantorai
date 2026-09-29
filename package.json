@@ -92,6 +92,7 @@
     "test:real-task-baseline": "node --test packages/real-task-baseline/index.test.mjs",
     "real-task:baseline": "node scripts/real-task-baseline.mjs",
     "test:fresh-install-matrix": "node --test packages/fresh-install-matrix/index.test.mjs",
-    "release:matrix:one-worker": "node scripts/fresh-install-matrix.mjs --employee=siti"
+    "release:matrix:one-worker": "node scripts/fresh-install-matrix.mjs --employee=siti",
+    "release:matrix:subset": "node scripts/fresh-install-matrix.mjs --mode=subset --employees=engineering --remove=bimo"
   }
 }
