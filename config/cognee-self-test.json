@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "provider_id": "cognee-hermes",
+  "integration_id": "cognee-hermes-evaluation",
+  "source_id": "cognee-integrations",
+  "source_commit": "3323e30a71564eccc1794b8c4a0bac84fc3d2b30",
+  "pinned_integration_package": "cognee-integration-hermes-agent",
+  "pinned_integration_version": "1.3.1",
+  "pinned_cognee_version": "1.6.0",
+  "transport": "http",
+  "base_url_env": "COGNEE_BASE_URL",
+  "api_key_env": "COGNEE_API_KEY",
+  "default_local_url": "http://127.0.0.1:8011",
+  "request_timeout_ms": 20000,
+  "dataset_prefix": "nyoba_eval",
+  "required_case_ids": [
+    "profile-isolation",
+    "cross-profile-contamination-negative",
+    "write-read-roundtrip",
+    "provenance",
+    "export",
+    "delete",
+    "secret-rejection",
+    "shared-promotion-boundary"
+  ],
+  "safety": {
+    "auto_install_forbidden": true,
+    "auto_login_forbidden": true,
+    "auto_key_mint_forbidden": true,
+    "existing_dataset_reuse_forbidden": true,
+    "delete_outside_run_datasets_forbidden": true,
+    "raw_credentials_in_evidence_forbidden": true,
+    "remote_requires_explicit_opt_in": true,
+    "remote_requires_api_key": true,
+    "cleanup_attempt_required": true
+  },
+  "claim_limit": "SELF_TEST_PASSED proves only that the configured Cognee HTTP endpoint satisfied the repository's isolated eight-case storage/isolation contract. It does not prove Hermes lifecycle integration, model/LLM quality, arbitrary semantic recall quality, or automatically change the canonical Cognee provider record from NOT_RUN/UNPROVEN."
+}
