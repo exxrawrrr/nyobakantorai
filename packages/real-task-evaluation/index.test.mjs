@@ -22,6 +22,8 @@ function makeCase(index, overrides={}) {
   return {
     case_id:`real-${String(index).padStart(3,"0")}`,
     source_type:"owner_real_task",
+    source_ref:`owner-task://real/${index}`,
+    source_generated:false,
     employee_id:index % 2 ? "siti" : "subagjo",
     task_summary:`Redacted real task ${index}`,
     evidence_refs:[`receipt://real/${index}`],
@@ -93,4 +95,39 @@ test("secret-like content is rejected from redacted summaries",()=>{
   const result=validateRealTaskDataset({dataset:collecting,policy,employeeIds:ids});
   assert.equal(result.ok,false);
   assert.ok(result.errors.some((e)=>/secret-like/.test(e)));
+});
+
+
+test("generated pipeline derivative cannot be relabeled as owner real task",()=>{
+  const collecting=structuredClone(dataset);
+  collecting.status="COLLECTING";
+  collecting.claim_state="COLLECTING";
+  collecting.cases=[makeCase(1,{source_generated:true})];
+  const result=validateRealTaskDataset({dataset:collecting,policy,employeeIds:ids});
+  assert.equal(result.ok,false);
+  assert.ok(result.errors.some((e)=>/source_generated must be false/.test(e)));
+  assert.equal(result.generated_or_unbound_sources,1);
+});
+
+test("real-task metrics must use typed non-negative values",()=>{
+  const collecting=structuredClone(dataset);
+  collecting.status="COLLECTING";
+  collecting.claim_state="COLLECTING";
+  collecting.cases=[makeCase(1,{metrics:{
+    success:"yes",
+    evidence_complete:true,
+    false_success:false,
+    human_intervention:-1,
+    retries:0.5,
+    duration_ms:-10,
+    cost_known:false,
+    verification_passed:true,
+    recovered_after_failure:false,
+  }})];
+  const result=validateRealTaskDataset({dataset:collecting,policy,employeeIds:ids});
+  assert.equal(result.ok,false);
+  assert.ok(result.errors.some((e)=>/success must be boolean/.test(e)));
+  assert.ok(result.errors.some((e)=>/human_intervention must be a non-negative integer/.test(e)));
+  assert.ok(result.errors.some((e)=>/retries must be a non-negative integer/.test(e)));
+  assert.ok(result.errors.some((e)=>/duration_ms must be a non-negative integer/.test(e)));
 });
