@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
-import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { resolve, relative } from "node:path";
+import { tmpdir } from "node:os";
 import { pathToFileURL } from "node:url";
 import { findEmployeeSelectionArg, resolveEmployeeSelection } from "./employee-selection.mjs";
 
@@ -164,6 +165,38 @@ export async function buildSelectedEmployeePacks({ selection = "all", outRoot = 
   return built;
 }
 
+export async function checkSelectedEmployeePacks({ selection = "all" } = {}) {
+  const firstRoot = await mkdtemp(resolve(tmpdir(), "nyoba-pack-check-a-"));
+  const secondRoot = await mkdtemp(resolve(tmpdir(), "nyoba-pack-check-b-"));
+  try {
+    const first = await buildSelectedEmployeePacks({ selection, outRoot:firstRoot });
+    const second = await buildSelectedEmployeePacks({ selection, outRoot:secondRoot });
+    const failures = [];
+    for (const item of first) {
+      const peer = second.find((candidate) => candidate.employee_id === item.employee_id);
+      if (!peer) {
+        failures.push({ employee_id:item.employee_id, reason:"missing_second_build" });
+        continue;
+      }
+      const [a, b, verifiedA, verifiedB] = await Promise.all([
+        readFile(resolve(firstRoot, item.employee_id, "checksums.json"), "utf8"),
+        readFile(resolve(secondRoot, item.employee_id, "checksums.json"), "utf8"),
+        verifyEmployeePack(resolve(firstRoot, item.employee_id)),
+        verifyEmployeePack(resolve(secondRoot, item.employee_id)),
+      ]);
+      if (a !== b) failures.push({ employee_id:item.employee_id, reason:"checksum_manifest_drift" });
+      if (!verifiedA.ok) failures.push({ employee_id:item.employee_id, reason:"first_build_failed_verification", details:verifiedA.failures });
+      if (!verifiedB.ok) failures.push({ employee_id:item.employee_id, reason:"second_build_failed_verification", details:verifiedB.failures });
+    }
+    return { ok: failures.length === 0, selection, employee_count:first.length, failures };
+  } finally {
+    await Promise.all([
+      rm(firstRoot, { recursive:true, force:true }),
+      rm(secondRoot, { recursive:true, force:true }),
+    ]);
+  }
+}
+
 function parseOut(argv) {
   const eq = argv.find((arg) => arg.startsWith("--out="));
   if (eq) return resolve(eq.slice("--out=".length));
@@ -186,6 +219,16 @@ async function main() {
     const next = argv[employeeIndex + 1];
     if (!next || next.startsWith("--")) throw new Error("--employee requires an employee ID.");
     selection = next;
+  }
+  if (argv.includes("--check")) {
+    const result = await checkSelectedEmployeePacks({ selection });
+    if (!result.ok) {
+      console.error(JSON.stringify(result, null, 2));
+      process.exitCode = 1;
+      return;
+    }
+    console.log(`Employee pack determinism check passed for ${result.employee_count} employee(s).`);
+    return;
   }
   const outRoot = parseOut(argv);
   const built = await buildSelectedEmployeePacks({ selection, outRoot });
