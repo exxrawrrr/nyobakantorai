@@ -12,6 +12,8 @@ All notable public changes to nyobakantorai are documented here.
 - Fikri L0/L1/L2 context compiler with controlled live-model evaluation evidence.
 - Browser/memory provider evaluation contracts, evaluation doctor, and release claim snapshot.
 - Anti-synthetic real-task dataset gate with direct-source provenance requirements.
+- Hash-chained Real Task Recorder / Collector and read-only Unified Provider Doctor.
+- Browser Use self-service six-case runner with isolated disposable browser profile and server-side write/auth evidence.
 
 ### Evaluation
 - Fikri controlled live-model run: 5/5 compiled-context downstream pass, zero critical losses, 41.10% average estimated token reduction, and 100% protected/source fidelity on the recorded synthetic fixture set.
