@@ -213,3 +213,31 @@ Are the evaluation records honest and structurally valid?
 !=
 Have all live evaluations actually been completed?
 ```
+
+
+## Release claim snapshot
+
+`npm run release:manifest` now embeds a compact evaluation claim snapshot into `release/manifest.json`.
+
+The snapshot includes:
+
+- whether evaluation records are structurally valid;
+- whether all live evaluations are actually complete;
+- Playwright MCP / Browser Use status and acceptance result;
+- Cognee status and acceptance result;
+- real-task baseline status, case count, false-success count, and publication-gate result;
+- the project truth boundary.
+
+The manifest generator fails closed if evaluation records are invalid.
+
+An honest release may still say:
+
+```text
+evaluation_records_valid = true
+live_evaluation_complete = false
+browser providers = NOT_RUN
+memory provider = NOT_RUN
+real tasks = NOT_READY
+```
+
+That means the release artifacts are internally consistent while optional live claims remain explicitly unproven. It is not converted into a success claim.
