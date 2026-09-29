@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "benchmark": "browser-use-live-readiness",
+  "observed_on": "2026-09-29",
+  "provider_id": "browser-use",
+  "integration_id": "browser-use-evaluation",
+  "source_id": "browser-use",
+  "source_commit": "4cbe921673b48a488f5415d9159249afd12a625b",
+  "evaluation_status": "NOT_RUN",
+  "claim_state": "UNPROVEN",
+  "environment": {
+    "machine": "GROWTH",
+    "os": "Windows",
+    "python": "3.11.16",
+    "hermes_version": "0.21.3"
+  },
+  "pinned_upstream": {
+    "package": "browser-use",
+    "package_version": "0.13.10",
+    "python_requirement": ">=3.11,<4.0",
+    "local_agent_requirement": "Browser Use package plus a supported model/provider credential",
+    "cloud_or_bu2_requirement": "BROWSER_USE_API_KEY",
+    "hermes_bundled_backend": "browser-browser-use 1.0.0"
+  },
+  "live_checks": {
+    "browser_use_command": "NOT_FOUND",
+    "browser_use_python_module": "NOT_FOUND",
+    "browser_use_environment_names": "NONE_DETECTED",
+    "hermes_browser_use_plugin": "PRESENT_BUT_DISABLED",
+    "hermes_model_provider_credentials": "NONE_CONFIGURED"
+  },
+  "blockers": [
+    "Browser Use Python package/CLI is not installed on GROWTH.",
+    "The bundled Hermes Browser Use backend is disabled.",
+    "No Browser Use API key or other configured Hermes/model credential is available for an agent-mode run."
+  ],
+  "required_cases_not_executed": [
+    "read-navigation",
+    "structured-evidence",
+    "write-guard",
+    "auth-isolation",
+    "timeout-recovery",
+    "partial-result-recovery"
+  ],
+  "safety_note": "Browser Use was not installed or enabled and no credential was created during this readiness check.",
+  "next_valid_transition": "Configure an isolated Browser Use evaluation runtime with a supported model/provider path, then execute the same six disposable tasks before any comparison or candidate claim."
+}
