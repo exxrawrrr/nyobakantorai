@@ -121,6 +121,7 @@ export function createTask(registry, input, clock = defaultClock, idFactory = de
     source: clean(input.source, 240) || "manual dashboard",
     output_ref: "",
     evidence_ref: "",
+    execution_receipt_ref: "",
     risk_class: RISK_CLASSES.includes(input.risk_class) ? input.risk_class : "READ_ONLY",
     approval_required: false,
     approval_status: "NOT_REQUIRED",
@@ -219,6 +220,31 @@ export function updateTask(registry, taskId, patch, clock = defaultClock, idFact
   return next;
 }
 
+export function attachExecutionReceipt(registry, taskId, receipt, clock = defaultClock, idFactory = defaultId) {
+  validateRegistry(registry);
+  const next = clone(registry);
+  const task = next.tasks.find(({ id }) => id === taskId);
+  assert(task, "Tugas tidak ditemukan.");
+  const receiptRef = clean(receipt?.receipt_ref, 1000);
+  assert(/^receipt:sha256:[a-f0-9]{64}$/.test(receiptRef), "Execution receipt reference tidak valid.");
+  assert(task.lifecycle_status !== "VERIFIED", "Execution receipt tidak boleh ditempel setelah task VERIFIED tanpa reopen.");
+  const actor = clean(receipt?.actor, 80).toLowerCase() || task.assignee_id;
+  assert(actor === task.assignee_id || actor === "adapter:runtime", "Execution receipt hanya boleh direkam oleh assignee atau runtime adapter.");
+  const at = clock();
+  task.execution_receipt_ref = receiptRef;
+  task.updated_at = at;
+  next.events.push(makeEvent(task.id, "EXECUTION_RECEIPT_ATTACHED", {
+    actor,
+    oldStatus: task.lifecycle_status,
+    newStatus: task.lifecycle_status,
+    source: clean(receipt?.source, 240) || "signed execution receipt",
+    evidenceRef: receiptRef,
+  }, clock, idFactory));
+  next.updated_at = at;
+  validateRegistry(next);
+  return next;
+}
+
 export function recordApproval(registry, taskId, decision, clock = defaultClock, idFactory = defaultId) {
   validateRegistry(registry);
   const next = clone(registry);
@@ -262,6 +288,15 @@ export function validateRegistry(registry) {
     if (AUTO_APPROVAL_RISKS.has(task.risk_class)) assert(task.approval_required === true, "High-impact task wajib membutuhkan approval.");
     if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(task.lifecycle_status)) {
       assert(task.approval_status === "APPROVED", "Task berisiko tinggi tidak boleh berjalan tanpa approval.");
+    }
+    if (clean(task.execution_receipt_ref, 1000)) {
+      assert(/^receipt:sha256:[a-f0-9]{64}$/.test(task.execution_receipt_ref), "Task memiliki execution receipt reference tidak valid.");
+      const receiptEvent = registry.events.find((event) =>
+        event.task_id === task.id
+        && event.action === "EXECUTION_RECEIPT_ATTACHED"
+        && event.evidence_ref === task.execution_receipt_ref
+      );
+      assert(receiptEvent, "Task execution receipt harus memiliki append-only attachment event.");
     }
     if (task.lifecycle_status === "VERIFIED") {
       const verified = registry.events.find((event) =>
