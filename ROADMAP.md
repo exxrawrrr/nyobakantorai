@@ -57,6 +57,7 @@
 - [x] expanded pinned upstream provenance and role-scoped optional integration catalog
 - [x] provider-neutral contracts for repository packing, experimental compression, browser operation, Lighthouse, and Polars
 - [ ] cross-harness Agent Skills compatibility tests before claiming broad portability
+- [x] local profile learning export/delete isolation with shared/canonical preservation guards
 - [ ] Cognee memory-provider isolation/export/deletion evaluation
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
 - [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
