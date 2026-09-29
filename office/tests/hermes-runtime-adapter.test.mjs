@@ -35,7 +35,7 @@ function fakeExecFactory() {
 test("Hermes adapter is read-only and task reads go through generic snapshot normalization", async () => {
   const fake = fakeExecFactory();
   const hermes = createHermesRuntimeAdapter({
-    executable:"hermes-test",
+    executable:"hermes",
     hermesHome:"/tmp/hermes-home",
     board:"nyobakantorai",
     employeeIds:["subagjo","siti"],
@@ -66,7 +66,7 @@ test("Hermes adapter is read-only and task reads go through generic snapshot nor
 test("Hermes adapter profile snapshot preserves only public profile state", async () => {
   const fake = fakeExecFactory();
   const hermes = createHermesRuntimeAdapter({
-    executable:"hermes-test",
+    executable:"hermes",
     hermesHome:"/tmp/hermes-home",
     employeeIds:["subagjo","siti"],
     execFileImpl:fake.execFileImpl,
@@ -90,7 +90,7 @@ test("Hermes adapter profile snapshot preserves only public profile state", asyn
 test("Hermes adapter offline mode never executes the CLI", async () => {
   let calls = 0;
   const hermes = createHermesRuntimeAdapter({
-    executable:"hermes-test",
+    executable:"hermes",
     hermesHome:"",
     employeeIds:["subagjo"],
     execFileImpl:async () => { calls += 1; throw new Error("must not run"); },
@@ -113,7 +113,7 @@ test("Hermes adapter offline mode never executes the CLI", async () => {
 
 test("Hermes task command failure fails closed without leaking child error", async () => {
   const hermes = createHermesRuntimeAdapter({
-    executable:"hermes-test",
+    executable:"hermes",
     hermesHome:"/tmp/hermes-home",
     employeeIds:["subagjo"],
     execFileImpl:async (_exe, args) => {
@@ -133,7 +133,7 @@ test("Hermes task command failure fails closed without leaking child error", asy
 test("Hermes descriptor can reuse a known version without another CLI probe", async () => {
   const fake = fakeExecFactory();
   const hermes = createHermesRuntimeAdapter({
-    executable:"hermes-test",
+    executable:"hermes",
     hermesHome:"/tmp/hermes-home",
     employeeIds:["subagjo"],
     execFileImpl:fake.execFileImpl,
@@ -150,7 +150,7 @@ test("Hermes descriptor can reuse a known version without another CLI probe", as
 test("Hermes adapter rejects malformed employee id configuration", () => {
   assert.throws(
     () => createHermesRuntimeAdapter({
-      executable:"hermes-test",
+      executable:"hermes",
       hermesHome:"/tmp/hermes-home",
       employeeIds:"subagjo",
     }),
