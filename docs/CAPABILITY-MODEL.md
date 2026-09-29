@@ -109,3 +109,33 @@ cataloged != installed != connected != authorized != executed != verified
 ```
 
 CI rejects catalog drift, unknown workers/sources, source commit/license drift, invalid kinds/states/risks, missing verification/install methods, and unsafe bundled high-impact capabilities.
+
+
+## Capability taxonomy inventory
+
+The broader machine-readable inventory is generated into `config/capability-catalog.json` from canonical project sources. Its taxonomy is defined in `config/capability-taxonomy.json` and documented structurally by `schemas/capability.schema.json`.
+
+Kinds currently represented:
+
+```text
+skill
+tool
+mcp
+plugin
+extension
+workflow
+memory
+hook
+adapter
+policy
+```
+
+Run:
+
+```bash
+npm run capability-catalog:generate
+npm run capability-catalog:check
+npm run test:capability-catalog
+```
+
+The catalog is generated, not hand-maintained. CI rejects drift, unknown upstream sources, unsafe bundled defaults, and role mappings that accidentally turn specialist capabilities into universal access.
