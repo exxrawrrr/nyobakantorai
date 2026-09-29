@@ -19,7 +19,8 @@
     "recreated-concepts",
     "optional-upstream-dependency",
     "reference-only",
-    "excluded-license-boundary"
+    "excluded-license-boundary",
+    "provider-neutral-contract"
   ],
   "integration_type_kind_map": {
     "hermes-plugin": "plugin",
@@ -54,5 +55,26 @@
       "ACCOUNT_CHANGE",
       "DESTRUCTIVE"
     ]
-  }
+  },
+  "default_states": [
+    "BUNDLED",
+    "NOT_INSTALLED",
+    "REFERENCE_ONLY",
+    "NOT_CONNECTED"
+  ],
+  "inventory_risk_classes": [
+    "PROCEDURAL",
+    "READ_ONLY",
+    "EXTERNAL_WRITE",
+    "PAID_ACTION",
+    "ACCOUNT_CHANGE",
+    "DESTRUCTIVE",
+    "MEMORY"
+  ],
+  "platforms": [
+    "windows",
+    "linux",
+    "macos",
+    "unspecified"
+  ]
 }
