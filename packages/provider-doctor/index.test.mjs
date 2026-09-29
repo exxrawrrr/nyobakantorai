@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { evaluateRequirements, inspectProviders } from "./index.mjs";
+import { evaluateRequirements, inspectProviders, validateProviderCatalog } from "./index.mjs";
 const catalog=JSON.parse(await readFile(new URL("../../config/provider-doctor.json",import.meta.url),"utf8"));
 
 function probes({commands=[],python=[],node=[],paths=[]}={}) {
@@ -52,4 +52,32 @@ test("unknown provider filters fail closed and requirements are explicit",()=>{
   const req=evaluateRequirements(report,{requireReady:["playwright-mcp","browser-use"]});
   assert.equal(req.ok,false);
   assert.ok(req.errors.some(x=>x.startsWith("browser-use:")));
+});
+
+
+test("catalog validation rejects duplicate IDs and malformed detection metadata",()=>{
+  const duplicate=structuredClone(catalog);
+  duplicate.providers.push(structuredClone(duplicate.providers[0]));
+  const d=validateProviderCatalog(duplicate);
+  assert.equal(d.ok,false);
+  assert.ok(d.errors.some((x)=>/duplicate provider id/.test(x)));
+
+  const malformed=structuredClone(catalog);
+  malformed.providers[0].detection.env_any=["bad-name"];
+  const m=validateProviderCatalog(malformed);
+  assert.equal(m.ok,false);
+  assert.ok(m.errors.some((x)=>/invalid environment signal name/.test(x)));
+
+  assert.throws(
+    ()=>inspectProviders({catalog:duplicate,probes:probes()}),
+    /invalid provider doctor catalog/
+  );
+});
+
+test("doctor reports catalog validity without converting detection into proof",()=>{
+  const report=inspectProviders({catalog,env:{PATH:""},selectedIds:["codex"],probes:probes({commands:["codex"]})});
+  assert.equal(report.catalog_valid,true);
+  assert.equal(report.providers[0].install_state,"INSTALLED");
+  assert.equal(report.providers[0].self_test_state,"NOT_RUN");
+  assert.notEqual(report.providers[0].readiness,"LIVE_PROVEN");
 });
