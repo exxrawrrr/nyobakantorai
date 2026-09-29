@@ -18,7 +18,8 @@ For the current v0.4 Draft candidate, stable promotion is **HOLD**. See `docs/V0
 - [ ] `npm run verify` passes from the canonical worktree.
 - [ ] A fresh clone passes `npm run ready`.
 - [x] One-worker isolated fresh-install matrix passes with an empty temporary profile home (`npm run release:matrix:one-worker`). This is deterministic release-matrix evidence, not a real Hermes/provider machine claim.
-- [ ] Subset/full/upgrade/uninstall clean-install matrix is complete across the intended release platforms.
+- [x] Subset isolated fresh-install matrix passes for the engineering preset (`npm run release:matrix:subset`): only Subagjo/Siti/Bimo install, per-worker skill/integration closure stays isolated, Bimo-only uninstall requires explicit destructive confirmation, and survivor profiles remain byte-identical.
+- [ ] Full/upgrade/uninstall clean-install matrix is complete across the intended release platforms.
 - [ ] Linux and Windows CI are green.
 - [ ] Minimum-version CI is green.
 - [ ] Manual `release-gate` passes from the final promoted commit.
