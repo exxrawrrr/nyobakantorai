@@ -57,6 +57,99 @@
         "praroro"
       ],
       "security": "Shared graph memory can cross profile boundaries; do not enable as the default per-agent memory store."
+    },
+    {
+      "id": "repomix-cli",
+      "type": "local-context-tool",
+      "source_id": "repomix",
+      "install": "npx repomix",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "fikri",
+        "subagjo",
+        "bimo"
+      ],
+      "security": "May read broad repository contents. Use explicit include/exclude rules and secret scanning; never assume packed context is safe to share.",
+      "capability": "context.repo.pack"
+    },
+    {
+      "id": "llmlingua-experimental",
+      "type": "experimental-local-library",
+      "source_id": "llmlingua",
+      "install": "pip install llmlingua",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "fikri"
+      ],
+      "security": "Lossy semantic compression. Never use as the only representation for approvals, exact numbers, legal/compliance text, credentials/security instructions, or irreversible-action instructions.",
+      "capability": "context.prompt.compress.experimental"
+    },
+    {
+      "id": "cognee-hermes-evaluation",
+      "type": "memory-provider-candidate",
+      "source_id": "cognee-integrations",
+      "default_state": "REFERENCE_ONLY",
+      "recommended_for": [
+        "fikri",
+        "praroro",
+        "bimo"
+      ],
+      "security": "Do not adopt as shared default memory until per-profile isolation, deletion/export, provenance, and secret-handling tests pass."
+    },
+    {
+      "id": "playwright-mcp",
+      "type": "mcp-browser",
+      "source_id": "playwright-mcp",
+      "install": "npx @playwright/mcp@latest",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "alex",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "caca",
+        "subagjo"
+      ],
+      "security": "Browser automation may inherit authenticated sessions and can perform external writes. Read/inspect and write/interact capabilities must remain policy-separated.",
+      "capability": "browser.structured"
+    },
+    {
+      "id": "browser-use-evaluation",
+      "type": "browser-agent-candidate",
+      "source_id": "browser-use",
+      "default_state": "REFERENCE_ONLY",
+      "recommended_for": [
+        "alex",
+        "ratri",
+        "bimo"
+      ],
+      "security": "Higher-level browser agent candidate only. Evaluate observability, auth handling, write safety, recovery, and cost before adoption."
+    },
+    {
+      "id": "lighthouse-cli",
+      "type": "local-audit-tool",
+      "source_id": "lighthouse",
+      "install": "npx lighthouse",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "ratri"
+      ],
+      "security": "Read-oriented website audit. Treat scores as measurements with environment variance, not absolute truth.",
+      "capability": "web.audit.lighthouse"
+    },
+    {
+      "id": "polars-python",
+      "type": "local-data-library",
+      "source_id": "polars",
+      "install": "pip install polars",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "paijo",
+        "nara"
+      ],
+      "security": "Local data processing can expose sensitive input in generated artifacts; preserve data classification and do not publish outputs automatically.",
+      "capability": "data.local.polars"
     }
   ]
 }
