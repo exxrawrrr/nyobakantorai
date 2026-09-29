@@ -6,6 +6,47 @@ import { spawnSync } from "node:child_process";
 const requireFromHere = createRequire(import.meta.url);
 const nonEmpty = (value) => typeof value === "string" && value.trim().length > 0;
 
+export function validateProviderCatalog(catalog) {
+  const errors=[];
+  if (catalog?.schema !== 1) errors.push("catalog schema must be 1");
+  if (!catalog?.statuses || typeof catalog.statuses !== "object") errors.push("catalog statuses required");
+  if (!Array.isArray(catalog?.providers) || !catalog.providers.length) errors.push("catalog providers must be a non-empty array");
+  const providers=Array.isArray(catalog?.providers)?catalog.providers:[];
+  const ids=new Set();
+  const arrayFields=["commands","python_modules","node_modules","paths","on_demand_commands","env_any"];
+  const allowedConfigRequirements=new Set(["none","external-or-oauth","provider"]);
+
+  for (const provider of providers) {
+    if (!nonEmpty(provider?.id) || !/^[a-z0-9][a-z0-9._-]{0,63}$/.test(provider.id)) {
+      errors.push("provider id must be a safe lowercase identifier");
+      continue;
+    }
+    if (ids.has(provider.id)) errors.push(`duplicate provider id ${provider.id}`);
+    ids.add(provider.id);
+    if (!nonEmpty(provider.label)) errors.push(`${provider.id}: label required`);
+    if (!nonEmpty(provider.category)) errors.push(`${provider.id}: category required`);
+    if (!catalog?.statuses?.support?.includes(provider.support_state)) errors.push(`${provider.id}: invalid support_state`);
+    if (!provider.detection || typeof provider.detection !== "object" || Array.isArray(provider.detection)) {
+      errors.push(`${provider.id}: detection object required`);
+      continue;
+    }
+    for (const field of arrayFields) {
+      const value=provider.detection[field];
+      if (value === undefined) continue;
+      if (!Array.isArray(value) || value.some((item)=>!nonEmpty(item))) errors.push(`${provider.id}: detection.${field} must contain non-empty strings`);
+      if (Array.isArray(value) && new Set(value).size !== value.length) errors.push(`${provider.id}: detection.${field} contains duplicates`);
+    }
+    const requirement=provider.detection.config_requirement || "external-or-oauth";
+    if (!allowedConfigRequirements.has(requirement)) errors.push(`${provider.id}: invalid config_requirement`);
+    for (const name of provider.detection.env_any || []) {
+      if (!/^[A-Z][A-Z0-9_]*$/.test(name)) errors.push(`${provider.id}: invalid environment signal name ${name}`);
+    }
+    if (!nonEmpty(provider.setup_hint)) errors.push(`${provider.id}: setup_hint required`);
+    if (!nonEmpty(provider.self_test_hint)) errors.push(`${provider.id}: self_test_hint required`);
+  }
+  return Object.freeze({ok:errors.length===0,errors:Object.freeze(errors),providers:providers.length});
+}
+
 function executableCandidates(command, platform, env) {
   if (platform !== "win32") return [command];
   if (extname(command)) return [command];
@@ -108,7 +149,8 @@ export function inspectProvider(provider, {
 }
 
 export function inspectProviders({ catalog, selectedIds = null, env, platform, root, probes } = {}) {
-  if (catalog?.schema !== 1 || !Array.isArray(catalog.providers)) throw new Error("invalid provider doctor catalog");
+  const catalogCheck=validateProviderCatalog(catalog);
+  if (!catalogCheck.ok) throw new Error(`invalid provider doctor catalog: ${catalogCheck.errors.join("; ")}`);
   const allIds = new Set(catalog.providers.map((item) => item.id));
   const selected = selectedIds?.length ? selectedIds : catalog.providers.map((item) => item.id);
   const unknown = selected.filter((id) => !allIds.has(id));
@@ -120,6 +162,7 @@ export function inspectProviders({ catalog, selectedIds = null, env, platform, r
   return Object.freeze({
     schema:1,
     generated_at:new Date().toISOString(),
+    catalog_valid:true,
     side_effect_free:true,
     credentials_exposed:false,
     providers:Object.freeze(providers),
