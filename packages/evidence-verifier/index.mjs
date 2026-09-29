@@ -68,7 +68,19 @@ export function verifyEvidencePacket({ expected = {}, report = {}, evidence = {}
   const injection = uniq([...detectPromptInjection(reportText), ...detectPromptInjection(evidenceText), ...evidenceRefs.flatMap(detectPromptInjection)]);
   if (injection.length) reasons.push({ code: "PROMPT_INJECTION_SIGNAL", details: injection });
 
-  if (report.claimed_verified === true && report.verifier_id !== "siti") reasons.push({ code: "UNAUTHORIZED_VERIFIER", details: [String(report.verifier_id ?? "")] });
+  if (report.claimed_verified === true) {
+    const verifierId = normalizeRef(report.verifier_id).toLowerCase();
+    const assigneeId = normalizeRef(expected.assignee_id).toLowerCase();
+    const allowedVerifierIds = uniq(asList(expected.allowed_verifier_ids).map((value) => value.toLowerCase()));
+
+    if (!assigneeId || !allowedVerifierIds.length) {
+      reasons.push({ code: "VERIFIER_POLICY_MISSING", details: [] });
+    } else if (verifierId === assigneeId) {
+      reasons.push({ code: "SELF_VERIFICATION", details: [verifierId] });
+    } else if (!allowedVerifierIds.includes(verifierId)) {
+      reasons.push({ code: "UNAUTHORIZED_VERIFIER", details: [verifierId] });
+    }
+  }
   if (report.claimed_executed === true && report.authorization?.allowed !== true) reasons.push({ code: "UNAUTHORIZED_ACTION_CLAIM", details: [String(report.authorization?.reason ?? "missing authorization")] });
 
   return Object.freeze({
