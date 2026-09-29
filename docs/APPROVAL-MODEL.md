@@ -61,3 +61,16 @@ technical capability
       ≠
 verified execution
 ```
+
+
+## Signed execution receipts
+
+Approval answers **may this action happen?** A signed execution receipt answers **what does this trusted runtime key claim happened?**
+
+They are intentionally separate.
+
+For high-impact authorized actions, the normalized receipt requires an approval reference. The receipt is signed with Ed25519 and can be bound to the expected task, employee, capability, and result state.
+
+A valid signature does not make the outcome correct. Independent evidence and reviewer policy still control `VERIFIED`.
+
+See [EXECUTION-RECEIPTS.md](EXECUTION-RECEIPTS.md).
