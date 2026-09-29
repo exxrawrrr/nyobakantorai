@@ -65,6 +65,7 @@
 - [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
 - [x] deterministic adversarial policy/recovery benchmark with zero-false-success gate
 - [ ] live Fikri context-compaction benchmark: token reduction + semantic/source fidelity + downstream task success
+- [x] real-task dataset schema + anti-synthetic publication gate
 - [ ] real-task evaluation dataset and published baseline comparison
 
 ## Non-goals
