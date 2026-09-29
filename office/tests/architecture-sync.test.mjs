@@ -39,3 +39,14 @@ test("public UI does not depend on private machine paths or removed legacy docs"
   assert.doesNotMatch(app, /D:\\RAFDI_DATA|C:\\Users\\User|03_AI_OFFICE|Office Preview 4310/i);
   assert.match(app, /docs\/ARCHITECTURE\.md/);
 });
+
+
+test("task/reconciliation boundaries also consume the canonical workforce", async () => {
+  const reconcile = await read("reconcile.mjs");
+  assert.match(reconcile, /from ".\/workforce\.mjs"/);
+  assert.doesNotMatch(reconcile, /new Set\(\["praroro",\s*"paijo",\s*"subagjo"/);
+
+  const packageRegistry = await read("../packages/task-registry/registry.mjs");
+  assert.match(packageRegistry, /from "..\/..\/lib\/workforce\.mjs"/);
+  assert.doesNotMatch(packageRegistry, /export const EMPLOYEES = Object\.freeze\(\[/);
+});
