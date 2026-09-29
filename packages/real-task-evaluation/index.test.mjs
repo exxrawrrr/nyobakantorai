@@ -154,3 +154,74 @@ test("historical source audit excludes sandbox and generated derivative records"
   assert.equal(firstEvidence.verification.final_truth_state,"NEEDS_EVIDENCE");
   assert.equal(firstEvidence.verification.verification_passed,false);
 });
+
+
+test("duplicate direct source references are rejected",()=>{
+  const collecting=structuredClone(dataset);
+  collecting.status="COLLECTING";
+  collecting.claim_state="COLLECTING";
+  collecting.cases=[
+    makeCase(1,{source_ref:"owner-task://same-source"}),
+    makeCase(2,{source_ref:"owner-task://same-source"}),
+  ];
+  const result=validateRealTaskDataset({dataset:collecting,policy,employeeIds:ids});
+  assert.equal(result.ok,false);
+  assert.equal(result.unique_sources,false);
+  assert.ok(result.errors.some((e)=>/duplicate source_ref/.test(e)));
+});
+
+test("semantic verification contradictions fail closed",()=>{
+  const collecting=structuredClone(dataset);
+  collecting.status="COLLECTING";
+  collecting.claim_state="COLLECTING";
+  collecting.cases=[
+    makeCase(1,{metrics:{
+      success:true,
+      evidence_complete:false,
+      false_success:false,
+      human_intervention:0,
+      retries:0,
+      duration_ms:60000,
+      cost_known:false,
+      verification_passed:true,
+      recovered_after_failure:false,
+    }}),
+    makeCase(2,{metrics:{
+      success:false,
+      evidence_complete:true,
+      false_success:true,
+      human_intervention:0,
+      retries:0,
+      duration_ms:60000,
+      cost_known:false,
+      verification_passed:false,
+      recovered_after_failure:false,
+    }}),
+    makeCase(3,{metrics:{
+      success:true,
+      evidence_complete:true,
+      false_success:true,
+      human_intervention:0,
+      retries:0,
+      duration_ms:60000,
+      cost_known:false,
+      verification_passed:true,
+      recovered_after_failure:false,
+    }}),
+  ];
+  const result=validateRealTaskDataset({dataset:collecting,policy,employeeIds:ids});
+  assert.equal(result.ok,false);
+  assert.ok(result.errors.some((e)=>/verification_passed requires evidence_complete/.test(e)));
+  assert.ok(result.errors.some((e)=>/false_success requires an earlier success claim/.test(e)));
+  assert.ok(result.errors.some((e)=>/false_success cannot also be verification_passed/.test(e)));
+});
+
+test("credential-bearing source refs are rejected",()=>{
+  const collecting=structuredClone(dataset);
+  collecting.status="COLLECTING";
+  collecting.claim_state="COLLECTING";
+  collecting.cases=[makeCase(1,{source_ref:"https://example.invalid/task?token=supersecretvalue123456"})];
+  const result=validateRealTaskDataset({dataset:collecting,policy,employeeIds:ids});
+  assert.equal(result.ok,false);
+  assert.ok(result.errors.some((e)=>/source_ref contains secret-like material/.test(e)));
+});
