@@ -38,6 +38,11 @@ export function validateProviderCatalog(catalog) {
     }
     const requirement=provider.detection.config_requirement || "external-or-oauth";
     if (!allowedConfigRequirements.has(requirement)) errors.push(`${provider.id}: invalid config_requirement`);
+    for (const flag of ["self_test_install_required","self_test_default_local"]) {
+      if (provider.detection[flag] !== undefined && typeof provider.detection[flag] !== "boolean") {
+        errors.push(`${provider.id}: detection.${flag} must be boolean`);
+      }
+    }
     for (const name of provider.detection.env_any || []) {
       if (!/^[A-Z][A-Z0-9_]*$/.test(name)) errors.push(`${provider.id}: invalid environment signal name ${name}`);
     }
@@ -119,8 +124,12 @@ export function inspectProvider(provider, {
       ? "CONFIG_SIGNAL_PRESENT"
       : "UNKNOWN";
 
+  const selfTestInstallRequired = detection.self_test_install_required !== false;
+  const selfTestDefaultLocal = detection.self_test_default_local === true;
+
   let readiness = "NEEDS_INSTALL";
-  if (install_state === "AVAILABLE_ON_DEMAND" && configuration_state === "NOT_REQUIRED") readiness = "READY_FOR_SELF_TEST";
+  if (!selfTestInstallRequired && (configuration_state === "CONFIG_SIGNAL_PRESENT" || selfTestDefaultLocal)) readiness = "READY_FOR_SELF_TEST";
+  else if (install_state === "AVAILABLE_ON_DEMAND" && configuration_state === "NOT_REQUIRED") readiness = "READY_FOR_SELF_TEST";
   else if (install_state === "INSTALLED" && configuration_state === "NOT_REQUIRED") readiness = "READY_FOR_SELF_TEST";
   else if (install_state === "INSTALLED" && configuration_state === "CONFIG_SIGNAL_PRESENT") readiness = "READY_FOR_SELF_TEST";
   else if (install_state === "INSTALLED") readiness = "NEEDS_AUTH_OR_CONFIG_CHECK";
@@ -142,6 +151,8 @@ export function inspectProvider(provider, {
       path_detected:foundPaths.length > 0,
       on_demand_runtime_detected:onDemandCommands.length > 0,
       configuration_signal_count:envSignals.length,
+      self_test_install_required:selfTestInstallRequired,
+      self_test_default_local:selfTestDefaultLocal,
     },
     setup_hint:provider.setup_hint,
     self_test_hint:provider.self_test_hint,
