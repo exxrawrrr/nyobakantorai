@@ -159,3 +159,16 @@ For a remote endpoint, the user must additionally provide `--allow-remote` and t
 See `docs/COGNEE-SELF-TEST.md`.
 
 This keeps detection, execution, and canonical live-evaluation claims separate.
+
+
+### Cognee package-free self-test readiness
+
+Cognee is a deliberate exception to the usual install-readiness relationship.
+
+The repository's HTTP self-test does not require a local `cognee` command or Python module. Therefore Provider Doctor can report Cognee as `READY_FOR_SELF_TEST` while its local package state remains `NOT_INSTALLED`.
+
+That means only:
+
+> the repository has enough information to attempt the isolated HTTP self-test path.
+
+It does **not** mean the endpoint is reachable, authenticated, or live-proven. Reachability remains `NOT_CHECKED` until the user explicitly runs `npm run memory:self-test`.
