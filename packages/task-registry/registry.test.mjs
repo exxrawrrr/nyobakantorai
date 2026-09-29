@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { EMPLOYEES, attachRuntimeTask, createEmptyRegistry, createTask, importRegistry, recordApproval, updateTask, validateRegistry } from "./registry.mjs";
+import { WORKFORCE } from "../../lib/workforce.mjs";
 
 const clock = (() => {
   let n = 0;
@@ -35,17 +36,31 @@ test("enforces lifecycle order", () => {
   }, clock, ids), /tidak diizinkan/);
 });
 
-test("VERIFIED requires Siti and evidence", () => {
+test("VERIFIED requires an independent registry-approved reviewer and evidence", () => {
   let registry = oneTask();
   const id = registry.tasks[0].id;
+  const subagjo = WORKFORCE.find((employee) => employee.id === "subagjo");
+  const reviewer = subagjo.verification_policy.reviewer_candidates[0];
+  assert.ok(reviewer && reviewer !== "subagjo");
+
   registry = updateTask(registry, id, { lifecycle_status: "REQUESTED", actor: "owner" }, clock, ids);
   registry = updateTask(registry, id, { lifecycle_status: "IN_PROGRESS", actor: "subagjo" }, clock, ids);
   registry = updateTask(registry, id, { lifecycle_status: "COMPLETED", actor: "subagjo" }, clock, ids);
-  assert.throws(() => updateTask(registry, id, { lifecycle_status: "VERIFIED", actor: "subagjo", evidence_ref: "test.txt" }, clock, ids), /hanya dapat dicatat oleh Siti/);
-  assert.throws(() => updateTask(registry, id, { lifecycle_status: "VERIFIED", actor: "siti" }, clock, ids), /membutuhkan evidence/);
-  registry = updateTask(registry, id, { lifecycle_status: "VERIFIED", actor: "siti", evidence_ref: "tests/pass.txt" }, clock, ids);
+
+  assert.throws(
+    () => updateTask(registry, id, { lifecycle_status: "VERIFIED", actor: "subagjo", evidence_ref: "test.txt" }, clock, ids),
+    /cannot independently verify its own work/
+  );
+  assert.throws(
+    () => updateTask(registry, id, { lifecycle_status: "VERIFIED", actor: reviewer }, clock, ids),
+    /membutuhkan evidence/
+  );
+
+  registry = updateTask(registry, id, { lifecycle_status: "VERIFIED", actor: reviewer, evidence_ref: "tests/pass.txt" }, clock, ids);
   assert.equal(registry.tasks[0].lifecycle_status, "VERIFIED");
+  assert.equal(registry.events.at(-1).actor, reviewer);
   assert.equal(registry.events.at(-1).evidence_ref, "tests/pass.txt");
+  assert.equal(validateRegistry(registry), true);
 });
 
 test("Hermes staging records a real runtime reference and blocks manual verification", () => {
@@ -140,4 +155,31 @@ test("owner may reject and later re-approve a high-impact task", () => {
   assert.throws(() => updateTask(registry, id, { lifecycle_status: "IN_PROGRESS", actor: "paijo" }, clock, ids), /Owner approval required/);
   registry = recordApproval(registry, id, { status: "APPROVED", actor: "owner", evidence_ref: "approval://approved" }, clock, ids);
   assert.equal(registry.tasks[0].approval_status, "APPROVED");
+});
+
+
+test("Siti cannot verify Siti's own task in package registry", () => {
+  let registry = createTask(createEmptyRegistry(clock), {
+    title: "Siti independent review boundary",
+    assignee_id: "siti",
+    requester: "the owner",
+  }, clock, ids);
+  const id = registry.tasks[0].id;
+  const siti = WORKFORCE.find((employee) => employee.id === "siti");
+  const reviewer = siti.verification_policy.reviewer_candidates.find((candidate) => candidate !== "siti");
+  assert.ok(reviewer, "Siti must have at least one independent reviewer candidate");
+
+  registry = updateTask(registry, id, { lifecycle_status: "REQUESTED", actor: "owner" }, clock, ids);
+  registry = updateTask(registry, id, { lifecycle_status: "IN_PROGRESS", actor: "siti" }, clock, ids);
+  registry = updateTask(registry, id, { lifecycle_status: "COMPLETED", actor: "siti" }, clock, ids);
+
+  assert.throws(
+    () => updateTask(registry, id, { lifecycle_status: "VERIFIED", actor: "siti", evidence_ref: "evidence/self.log" }, clock, ids),
+    /cannot independently verify its own work/
+  );
+
+  registry = updateTask(registry, id, { lifecycle_status: "VERIFIED", actor: reviewer, evidence_ref: "evidence/independent.log" }, clock, ids);
+  assert.equal(registry.tasks[0].lifecycle_status, "VERIFIED");
+  assert.equal(registry.events.at(-1).actor, reviewer);
+  assert.equal(validateRegistry(registry), true);
 });
