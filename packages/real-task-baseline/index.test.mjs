@@ -10,11 +10,12 @@ import {
 } from "./index.mjs";
 
 const readJson=async(path)=>JSON.parse(await readFile(new URL(path,import.meta.url),"utf8"));
-const [evaluationPolicy,baselinePolicy,canonical,employees]=await Promise.all([
+const [evaluationPolicy,baselinePolicy,canonical,employees,checkpoint]=await Promise.all([
   readJson("../../config/real-task-evaluation.json"),
   readJson("../../config/real-task-baseline.json"),
   readJson("../../benchmarks/real-tasks/dataset.json"),
   readJson("../../config/employees.json"),
+  readJson("../../benchmarks/real-tasks/collection-status-2026-09-29.json"),
 ]);
 const employeeIds=employees.employees.map(x=>x.id);
 
@@ -179,4 +180,23 @@ test("coverage recommendations are warnings, not hidden publication requirements
   assert.ok(coverage.coverage_warnings.some(x=>/recommendation is at least 3/.test(x)));
   const ready=prepareRealTaskBaseline({dataset,evaluationPolicy,baselinePolicy,employeeIds});
   assert.equal(ready.summary.acceptance_passed,true);
+});
+
+
+test("committed collection checkpoint matches the canonical dataset",()=>{
+  const report=buildRealTaskCollectionReport({dataset:canonical,evaluationPolicy,baselinePolicy,employeeIds});
+  assert.equal(checkpoint.status,report.status);
+  assert.equal(checkpoint.claim_state,report.claim_state);
+  assert.equal(checkpoint.eligible_cases,report.cases);
+  assert.equal(checkpoint.minimum_cases_required,report.minimum_cases_required);
+  assert.equal(checkpoint.remaining_cases,report.remaining);
+  assert.equal(checkpoint.successes,report.successes);
+  assert.equal(checkpoint.failures,report.failures);
+  assert.equal(checkpoint.verification_passes,report.verification_passes);
+  assert.equal(checkpoint.verification_failures,report.verification_failures);
+  assert.equal(checkpoint.false_successes,report.false_successes);
+  assert.equal(checkpoint.distinct_employees,report.distinct_employees);
+  assert.deepEqual(checkpoint.employees,report.employees);
+  assert.deepEqual(checkpoint.source_types,report.source_types);
+  assert.equal(checkpoint.publication_gate_passed,report.publication_gate_passed);
 });
