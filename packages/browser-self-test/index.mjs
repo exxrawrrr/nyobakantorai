@@ -580,7 +580,8 @@ export function buildSelfTestPlan({config,commandDetected=false,browserDetected=
       "starts a disposable loopback HTTP target",
       "starts a headless browser with a temporary isolated user-data directory",
       "invokes the user-installed Browser Use CLI against only the loopback target",
-      "deletes the temporary browser profile after the run"
+      "uses a temporary isolated Browser Harness home",
+      "deletes the temporary browser profile and Browser Harness state after the run"
     ],
     forbidden:[
       "automatic package installation",
@@ -588,7 +589,11 @@ export function buildSelfTestPlan({config,commandDetected=false,browserDetected=
       "production website navigation",
       "reuse of the user's normal browser profile",
       "write/submit actions",
-      "authentication"
+      "authentication",
+      "Browser Use/Browser Harness telemetry",
+      "Browser Use cloud sync or cloud autospawn",
+      "Browser Harness update-check network calls",
+      "inheritance of parent provider credentials"
     ],
     next:commandDetected
       ? browserDetected
