@@ -173,7 +173,7 @@ export function compileGuardPacket({ sources, objective = "", working = {}, targ
     dependencies:workingState.dependencies,
     next_action:workingState.next_action,
   });
-  const l0 = `Objective: ${normalizedObjective || "(derive from source; do not invent)"}\nSource: ${sourceIndex}\nProtected atoms:\n${protectedSection}\n`;
+  const l0 = `O: ${normalizedObjective || "(derive from source; do not invent)"}\nS: ${sourceIndex}\nP:\n${protectedSection}\n`;
   const l1Sections = [
     ["Objective", normalizedObjective ? [normalizedObjective] : []],
     ["Owner", workingState.owner ? [workingState.owner] : []],
