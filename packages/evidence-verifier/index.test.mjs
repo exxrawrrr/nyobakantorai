@@ -5,6 +5,8 @@ import { detectPromptInjection, verifyEvidencePacket } from "./index.mjs";
 const now = new Date("2026-09-29T03:20:00.000Z");
 const base = () => ({
   expected: {
+    assignee_id: "maya",
+    allowed_verifier_ids: ["siti","fikri"],
     required_facts: ["Rp1.500.000", "26 September 2026"],
     required_artifacts: ["artifact://report.pdf"],
     required_completion_items: ["mutation", "read-back", "receipt"],
@@ -101,10 +103,34 @@ test("prompt injection in evidence is surfaced and rejected", () => {
   assert.ok(detectPromptInjection(input.evidence.observed_text).length > 0);
 });
 
-test("only Siti may claim verifier identity in this deterministic guard", () => {
+test("reviewer outside the trusted role policy is rejected", () => {
   const input = base();
   input.report.verifier_id = "subagjo";
   const result = verifyEvidencePacket(input);
   assert.equal(result.ok, false);
   assert.ok(result.reasons.some((item) => item.code === "UNAUTHORIZED_VERIFIER"));
+});
+
+test("approved non-Siti reviewer is accepted when the trusted policy allows it", () => {
+  const input = base();
+  input.report.verifier_id = "fikri";
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, true);
+  assert.equal(result.decision, "VERIFIED");
+});
+
+test("assignee may not verify their own evidence packet", () => {
+  const input = base();
+  input.report.verifier_id = "maya";
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  assert.ok(result.reasons.some((item) => item.code === "SELF_VERIFICATION"));
+});
+
+test("VERIFIED claim fails closed when trusted reviewer policy is missing", () => {
+  const input = base();
+  delete input.expected.allowed_verifier_ids;
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  assert.ok(result.reasons.some((item) => item.code === "VERIFIER_POLICY_MISSING"));
 });
