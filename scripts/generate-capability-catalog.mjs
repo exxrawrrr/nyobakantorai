@@ -133,14 +133,6 @@ export async function buildCapabilityCatalog() {
       artifact_ref:"scripts/employee-pack.mjs",
     },
     {
-      id:"workflow.employee-profile-removal", kind:"workflow",
-      description:"Preview or explicitly delete only selected Hermes employee profiles, then verify selected profiles are absent.",
-      source_refs:[projectSource()], usage_mode:"original", default_state:"BUNDLED", risk_class:"DESTRUCTIVE",
-      required_by:[], optional_for:workers.map((worker)=>worker.id), platforms:["windows","linux","macos"],
-      install_method:"npm run hermes:remove", verification_method:"selected-profile removal tests + post-delete profile-show verification",
-      artifact_ref:"scripts/hermes-remove-selected.mjs",
-    },
-    {
       id:"workflow.fikri-context-compile", kind:"workflow",
       description:"Compile source-preserving L2/L1/L0 context with deterministic protected-atom guards.",
       source_refs:[projectSource()], usage_mode:"adapted", default_state:"BUNDLED", risk_class:"PROCEDURAL",
