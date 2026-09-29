@@ -24,7 +24,7 @@
 - [ ] migrate the office's direct Hermes reader fully onto the generic adapter interface
 - [x] add strict loopback HTTP read-only adapter
 - [ ] add CLI-agent adapter
-- [ ] normalized execution and cost receipts
+- [x] normalized execution and cost receipts
 
 ## v0.3 — Real AI Workforce
 - [x] dedicated approval-queue view with pending count and owner decisions
@@ -37,7 +37,7 @@
 - [x] Telegram / multi-profile gateway path documented
 - [x] safe custom employee generator
 - [x] 16-person office with provenance-honest placeholder visuals
-- [ ] signed/verifiable execution receipts
+- [x] signed/verifiable execution receipts
 - [ ] live provider adapters for ads capabilities
 - [ ] original character art for the ten v0.3 workers
 - [ ] pluggable storage with export/import
