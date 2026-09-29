@@ -1,6 +1,6 @@
 # Markdown knowledge workflow
 
-Fikri is the default **Knowledge / Markdown / Policy Steward**.
+Fikri is the default **Knowledge / Markdown / Context / Prompt Engineer**.
 
 The goal is not “convert everything to Markdown.” The goal is a **smaller, source-preserving representation** that workers can load progressively without losing decision-changing structure.
 
@@ -51,3 +51,66 @@ Keep exact dates, amounts, requirements, numbered clauses, table relationships, 
 Load L0 by default. Load L1 while working on the topic. Load only the relevant L2 section when evidence or detail is required.
 
 Compression is not verification: important claims still need comparison against the original artifact.
+
+
+## Context & prompt compiler
+
+Fikri also owns the canonical `nyoba-context-prompt-compiler` procedure.
+
+The pipeline is deliberately source-preserving:
+
+```text
+raw input
+-> source inventory
+-> protected must-preserve atoms
+-> Markdown normalization
+-> L2 canonical notes
+-> L1 working brief
+-> L0 dispatch card
+-> optional lossy compression experiment
+```
+
+The **must-preserve** set includes objective, exclusions, exact numbers, dates, IDs, paths, URLs, approval scope, security boundaries, requested output format, evidence requirements, and acceptance criteria.
+
+A prettier prompt is a failure if it changes any of those.
+
+### Repository/code context — Repomix candidate
+
+Repomix is an optional Fikri/Subagjo/Bimo integration candidate for:
+- explicit include/exclude repository packing;
+- token-aware codebase context;
+- reducing duplicate/irrelevant repository text before handoff.
+
+It remains `NOT_INSTALLED` by default. Packed repository context must still be treated as potentially sensitive local data.
+
+### Lossy compression — LLMLingua experimental only
+
+LLMLingua is recorded as an experimental Fikri-only candidate.
+
+Lossy compression must **never** be the only representation for:
+- approval scope;
+- legal/compliance language;
+- exact financial or measurement values;
+- credentials/security instructions;
+- irreversible-action instructions;
+- exact user wording that must be preserved;
+- contradictory source evidence.
+
+Before an experimental compressed packet is accepted, compare it against the protected atoms and measure instruction, numeric, and source fidelity.
+
+Token reduction by itself is not success. Downstream task quality must stay equal or improve.
+
+## Execution brief
+
+When useful, Fikri can emit a structured brief containing:
+- objective;
+- must-preserve constraints;
+- inputs and sources;
+- requested/prohibited actions;
+- risk classes;
+- expected artifacts;
+- verification;
+- unresolved questions;
+- original vs compiled token estimate.
+
+The structured brief supplements the original evidence. It does not replace it.
