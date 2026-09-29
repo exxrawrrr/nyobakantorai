@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "store_dir": ".nyobakantorai/real-task-recorder",
+  "ledger_file": "ledger.jsonl",
+  "event_types": [
+    "TASK_STARTED",
+    "TASK_FINISHED",
+    "TASK_VERIFIED"
+  ],
+  "max_task_summary_chars": 2000,
+  "max_note_chars": 4000,
+  "source_attestations": {
+    "owner_real_task": "OWNER_DIRECT",
+    "external_real_request": "EXTERNAL_DIRECT",
+    "repository_real_issue": "REPOSITORY_ISSUE"
+  },
+  "forbidden_payload_fields": [
+    "raw_prompt",
+    "raw_transcript",
+    "transcript",
+    "credentials",
+    "credential",
+    "secret",
+    "api_key",
+    "token",
+    "password",
+    "cookie"
+  ],
+  "privacy": "Store redacted summaries and evidence references only. Do not store raw private transcripts, credentials, cookies, tokens, or unnecessary client/user data.",
+  "integrity": "Append-only JSONL events are SHA-256 hash-chained. Existing events must verify before a new event may be appended.",
+  "export_policy": "Only independently verified TASK_VERIFIED lifecycles are exportable as real-task dataset cases."
+}
