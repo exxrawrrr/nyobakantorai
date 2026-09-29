@@ -13,7 +13,7 @@ const slash = String.fromCharCode(92);
 const binary = new Set([".png",".jpg",".jpeg",".gif",".webp",".ico",".pdf",".zip",".db",".sqlite",".sqlite3",".woff",".woff2"]);
 const forbiddenPathFragments = [
   "ai-office-operations/", "office-next/", "office-preview/", "codex_hermes_prep/",
-  "/packets/", "/receipts/", "/qa-packets/", "/owner-submissions/", "/evidence/screenshots/",
+  "/packets/", "/receipts/", "/qa-packets/", "/owner-submissions/", "/evidence/screenshots/", "/.nyobakantorai/",
 ];
 const forbiddenFileNames = new Set([
   ".env","auth.json","nous_auth.json","credentials.json","secrets.json",
