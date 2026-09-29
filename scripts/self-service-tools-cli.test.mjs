@@ -300,3 +300,26 @@ test("subset fresh-install CLI installs only the engineering preset and removes 
   assert.equal(data.hermes_cli_executed,false);
   assert.equal(data.real_machine_claim,false);
 });
+
+
+test("full-workforce fresh-install CLI covers all canonical employees",()=>{
+  const result=run(["scripts/fresh-install-matrix.mjs","--mode=full","--json"]);
+  assert.equal(result.status,0,result.stderr);
+  const data=JSON.parse(result.stdout);
+  assert.equal(data.matrix_case,"fresh-install-full-workforce");
+  assert.equal(data.passed,true);
+  assert.equal(data.claim_state,"DETERMINISTICALLY_VERIFIED");
+  assert.equal(data.registry_employee_count,16);
+  assert.equal(data.selected_employee_count,16);
+  assert.equal(data.installed_profiles.length,16);
+  assert.equal(data.installed_all_profiles_exactly,true);
+  assert.equal(data.pack_set_exact,true);
+  assert.equal(data.capability_isolation_passed,true);
+  assert.equal(data.all_packs_verified,true);
+  assert.equal(data.rerun_profiles_exact,true);
+  assert.equal(data.all_user_owned_state_preserved,true);
+  assert.equal(data.all_profiles_non_empty,true);
+  assert.equal(data.external_provider_calls,0);
+  assert.equal(data.hermes_cli_executed,false);
+  assert.equal(data.real_machine_claim,false);
+});
