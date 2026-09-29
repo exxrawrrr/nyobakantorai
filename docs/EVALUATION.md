@@ -733,3 +733,40 @@ publication gate:       NOT PASSED
 The single eligible historical failure remains preserved. Git commit/PR activity is not bulk-relabeled as real-task evidence because repository activity alone does not prove a direct human source, named workforce execution, independent verification, or complete operational metrics.
 
 This means Phase 6 **tooling is implemented**, while Phase 6 **evidence collection remains open**. The 20-case target remains an initial baseline threshold, not a general reliability claim.
+
+
+## Release install/lifecycle matrix evidence
+
+The candidate now has deterministic isolated release-matrix coverage for four scopes:
+
+```text
+one worker
+subset/preset
+full workforce
+full upgrade -> selective uninstall -> full uninstall -> reinstall -> rerun lifecycle
+```
+
+The matrices exercise canonical packs and bootstrap/removal planning inside temporary isolated profile homes. They verify, depending on scope:
+
+- exact selected profile set;
+- exact per-worker skill/integration closure;
+- pack verification and byte-integrity;
+- native-upgrade rerun/idempotency;
+- preservation of seeded user-owned state during upgrade;
+- preview-first destructive removal;
+- survivor byte-integrity after selective uninstall;
+- zero remaining profiles after confirmed full uninstall;
+- clean reinstall of the canonical 16-worker set;
+- no resurrection of deleted user-owned state after reinstall.
+
+This evidence is **DETERMINISTICALLY_VERIFIED release behavior**, not a real Hermes/provider machine claim.
+
+The following distinction remains mandatory:
+
+```text
+isolated temporary-home release matrix
+!=
+real clean-machine Hermes lifecycle execution on intended release platforms
+```
+
+The deterministic matrix closes the repository-level install/upgrade/uninstall/reinstall implementation gate. The final real clean-machine environment-level lifecycle check remains open in the release checklist and release decision.
