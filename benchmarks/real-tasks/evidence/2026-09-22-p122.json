@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "evidence_id": "real-task-2026-09-22-p122",
+  "source": {
+    "kind": "local_pilot_ledger",
+    "ledger_sha256": "8cdf0a3b4e8f1064324461b0a14ed8d01b5092919323a0887a6c214f5411f75e",
+    "record_id": "p_122c67fbe239",
+    "reviewer_record_id": "p_262badcdb597",
+    "raw_path_redacted": true
+  },
+  "redaction": {
+    "reviewed": true,
+    "raw_owner_identity_removed": true,
+    "secrets_present": false,
+    "client_data_present": false
+  },
+  "execution": {
+    "employee_id": "praroro",
+    "model_route": "gemini/gemini-3.5-flash-lite",
+    "started_at": "2026-09-22T15:27:21+07:00",
+    "result_ready_at": "2026-09-22T15:27:32+07:00",
+    "independent_review_finished_at": "2026-09-22T15:28:58+07:00",
+    "official_board_mutated": false
+  },
+  "task": {
+    "source_type": "owner_real_task",
+    "source_generated": false,
+    "redacted_request": "Owner asked the coordinator to delegate creation of useful content/growth ideas for the local AI workspace.",
+    "primary_result": "A three-idea draft was returned and marked ready for review."
+  },
+  "verification": {
+    "reviewer_employee_id": "siti",
+    "reviewer_prompt_generated_by_pipeline": true,
+    "reviewer_outcome": "NEEDS_EVIDENCE",
+    "findings": [
+      "One market-opportunity claim lacked runtime or market-research evidence.",
+      "The draft attributed work to specialist employees without proof that those specialist executions occurred.",
+      "The draft self-labeled its status as done before owner confirmation."
+    ],
+    "final_truth_state": "NEEDS_EVIDENCE",
+    "verification_passed": false,
+    "false_success": false,
+    "note": "The generated reviewer record is evidence for this owner task, not a second eligible real-task case."
+  }
+}
