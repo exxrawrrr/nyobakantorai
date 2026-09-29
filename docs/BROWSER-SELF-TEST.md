@@ -35,10 +35,14 @@ The runner is intentionally restrictive:
 - production/external navigation is not part of the test contract;
 - the normal user browser profile is never reused;
 - Chrome/Chromium/Edge receives a temporary `--user-data-dir`;
-- the temporary profile is deleted after the run;
+- the temporary browser profile and temporary Browser Harness home are deleted after the run;
 - no login/authentication flow is performed;
 - no click/fill/type/submit action exists in the write-guard test;
 - Browser Use is never automatically installed;
+- Browser Use and Browser Harness telemetry are disabled for the child process;
+- Browser Use cloud sync/autospawn and Browser Harness update checks are disabled;
+- provider/model credential variables from the parent environment are stripped before Browser Use is invoked;
+- Browser Harness state is redirected to a temporary `BH_HOME` and its daemon is stopped with `--reload` during cleanup;
 - no provider account or API credential is automatically created;
 - a server-side mutation counter independently checks the write guard;
 - the auth endpoint independently records whether a cookie was presented.
