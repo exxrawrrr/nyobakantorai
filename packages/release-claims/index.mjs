@@ -1,4 +1,4 @@
-export function buildReleaseClaimSnapshot(report) {
+export function buildReleaseClaimSnapshot(report,{deferredEvidence=null}={}) {
   if (!report || typeof report !== "object") throw new Error("evaluation report required");
   if (report.valid !== true) throw new Error("release claims cannot be generated from invalid evaluation records");
 
@@ -26,6 +26,7 @@ export function buildReleaseClaimSnapshot(report) {
       false_successes:Number(report.real_tasks?.false_successes || 0),
       acceptance_passed:Boolean(report.real_tasks?.acceptance_passed),
     }),
+    deferred_evidence:deferredEvidence ? Object.freeze(deferredEvidence) : null,
     truth_boundary:"cataloged != installed != connected != authorized != executed != succeeded != verified",
   });
 }
