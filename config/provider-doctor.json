@@ -36,7 +36,7 @@
         "config_requirement": "external-or-oauth"
       },
       "setup_hint": "Install Hermes if needed, then configure a user-owned model/provider with `hermes setup --portal`.",
-      "self_test_hint": "Run `hermes status` and an isolated disposable task before making live-execution claims."
+      "self_test_hint": "Run `npm run harness:self-test:plan -- --target hermes`, then `npm run harness:self-test -- --target hermes --json --out hermes-parity.json`. The runner preloads a disposable probe skill via a temporary bundled-skill override and does not mutate the user's Hermes home."
     },
     {
       "id": "codex",
@@ -53,7 +53,7 @@
         "config_requirement": "external-or-oauth"
       },
       "setup_hint": "Install/authenticate Codex using the user's own OpenAI account or supported credential flow.",
-      "self_test_hint": "Run an isolated read-only task and capture environment/model/evidence before using it in parity claims."
+      "self_test_hint": "Run `npm run harness:self-test:plan -- --target codex`, then `npm run harness:self-test -- --target codex --json --out codex-parity.json`. The runner uses a temporary workspace, project `.agents/skills`, ephemeral execution, and read-only sandbox mode."
     },
     {
       "id": "gemini-cli",
@@ -71,7 +71,7 @@
         "config_requirement": "external-or-oauth"
       },
       "setup_hint": "Install Gemini CLI and authenticate with the user's own supported OAuth/API-key flow.",
-      "self_test_hint": "Run the same disposable parity task used by other harnesses before claiming behavioral portability."
+      "self_test_hint": "Run `npm run harness:self-test:plan -- --target gemini-cli`, then `npm run harness:self-test -- --target gemini-cli --json --out gemini-parity.json`. The runner uses a temporary workspace, `.agents/skills`, and approval-mode=plan."
     },
     {
       "id": "github-copilot-cli",
@@ -90,7 +90,7 @@
         "config_requirement": "external-or-oauth"
       },
       "setup_hint": "Install GitHub Copilot CLI and authenticate through the user's own GitHub/Copilot account.",
-      "self_test_hint": "Run the same disposable parity task used by other harnesses before claiming behavioral portability."
+      "self_test_hint": "Run `npm run harness:self-test:plan -- --target github-copilot-cli`, then `npm run harness:self-test -- --target github-copilot-cli --json --out copilot-parity.json`. The runner uses a temporary workspace and `.github/skills`; no login or permission bypass is performed."
     },
     {
       "id": "cognee",
