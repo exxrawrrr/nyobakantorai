@@ -340,7 +340,8 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 
 ## Highlights
 
-- **16 specialized Hermes employees** driven by one canonical registry, with distinct roles, personalities, habits, skills, toolset preferences, routing, approval, and verification policy.
+- **16 specialized Hermes employees** driven by one canonical registry, with distinct dialogue fingerprints, roles, habits, skills, toolset preferences, routing, approval, and verification policy.
+- **Standalone employee packs** so users can install/download one worker, an arbitrary subset, a preset team, or the full workforce.
 - **Canonical reusable skills** spanning task truth, tool safety, ads operations, SEO/CRO, data, integrations, operations, community, governance, and independent QA.
 - **Evidence-gated task state** where VERIFIED requires independent evidence.
 - **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
@@ -379,7 +380,7 @@ Credentials, account access, provider billing state, sessions, memory, and messa
 | **Nara** | Growth / Data | Data / BI / Experimentation | pending-original-art | none required |
 | **Dina** | Operations | Client / Project Operations | pending-original-art | none required |
 | **Bambang** | Engineering / Automation | Automation / Queue Optimizer | pending-original-art | none required |
-| **Fikri** | QA / Governance | Knowledge / Markdown / Policy Steward | pending-original-art | none required |
+| **Fikri** | QA / Governance | Knowledge / Markdown / Context / Prompt Engineer | pending-original-art | none required |
 | **Tari** | Operations | Execution / Follow-Up Specialist | pending-original-art | none required |
 | **Caca** | Creative / Community | Community / Social / Partnerships | pending-original-art | none required |
 
@@ -389,7 +390,7 @@ Maya and Gugun are capability **consumers**, not bundled ads engines. Telegram i
 
 The workforce uses recreated/adapted workflow concepts with explicit provenance from ECC, Superpowers, MarkItDown, Docling, Mem0, Letta, Jina Reader, MCP reference servers, and Anthropic's Apache-2.0 MCP builder. See [UPSTREAM-SOURCE-CATALOG.md](docs/UPSTREAM-SOURCE-CATALOG.md). Restricted Anthropic document skills are not copied or used to create derivatives.
 
-**Fikri** is the default Knowledge / Markdown / Policy Steward. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
+**Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
 ## Install
 
 ### Hermes-first — recommended
@@ -408,6 +409,33 @@ This is the path closest to the author's real setup. Hermes is the reference run
 curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --start
 ```
 
+**Want only part of the office?**
+
+Windows:
+
+```powershell
+# one worker
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "siti"
+
+# arbitrary subset
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "praroro,siti"
+
+# preset
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "growth"
+```
+
+Linux / macOS / WSL2:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees siti
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees praroro,siti
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees growth
+```
+
+Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creative-community`, and `full`.
+
+Tagged releases also publish one ZIP per employee with SHA-256 checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
+
 The installer reuses Hermes when it already exists. Otherwise the explicit `WithHermes` flag invokes the official Nous Research Hermes installer. Bootstrap then safely upgrades existing nyobakantorai distributions with native Hermes profile update, installs missing workers, and creates/switches the `nyobakantorai` Kanban board.
 
 It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
@@ -423,7 +451,7 @@ hermes profile list
 hermes kanban boards show
 ```
 
-You should see every employee listed in `config/employees.json` as a Hermes profile distribution.
+You should see the selected employees as Hermes profile distributions. The default selection is the full workforce.
 
 Full walkthrough: [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md).
 
@@ -475,7 +503,8 @@ No secret is required by the repository itself.
 | Path | Purpose |
 | --- | --- |
 | `config/employees.json` | Canonical workforce registry — source of truth for employee identity/policy/routing |
-| `config/capabilities.json` | Provider-neutral capability states, ads contracts, and autonomy modes |
+| `config/capabilities.json` | Provider-neutral capability states, ads/tool contracts, and autonomy modes |
+| `config/memory-policy.json` | M0–M4 profile/shared learning and canonical-skill promotion policy |
 | `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
 | `agents/` | Registry-derived public SOUL/profile definitions |
 | `hermes-profiles/` | Native Hermes profile distributions generated for the workforce |
@@ -487,7 +516,7 @@ No secret is required by the repository itself.
 | `packages/task-registry/` | Standalone evented task-registry prototype |
 | `packages/runtime-adapter/` | Dependency-free read-only runtime adapter SDK |
 | `docs/` | Architecture, approval model, threat model, privacy, demos, release docs, and adapter contracts |
-| `scripts/` | Security, public-release, and test automation |
+| `scripts/` | Security, public-release, employee-pack, selection, and test automation |
 
 ## Capability endpoint
 
@@ -561,6 +590,9 @@ See:
 - [office/docs/ARCHITECTURE.md](office/docs/ARCHITECTURE.md)
 - [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md)
 - [docs/EMPLOYEE-ARCHITECTURE.md](docs/EMPLOYEE-ARCHITECTURE.md)
+- [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md)
+- [docs/PERSONALITY-CONTRACT.md](docs/PERSONALITY-CONTRACT.md)
+- [docs/MEMORY-LEARNING.md](docs/MEMORY-LEARNING.md)
 - [docs/CAPABILITY-MODEL.md](docs/CAPABILITY-MODEL.md)
 - [docs/AUTONOMY-MODES.md](docs/AUTONOMY-MODES.md)
 - [docs/ADS-WORKERS.md](docs/ADS-WORKERS.md)
