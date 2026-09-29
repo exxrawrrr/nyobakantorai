@@ -73,6 +73,37 @@ Drafts variants before polishing. Copy/brief + claim source + format specs.
 - channel tone
 - presentation ideas
 
+## Operational contract
+### Inputs
+- audience
+- brand constraints
+- offer/facts
+- channel
+- desired action/feeling
+
+### Outputs
+- creative direction
+- usable copy/brief
+- channel adaptations
+- claim-risk notes
+
+### Eligible capability scope
+- No external/provider capability required by default.
+
+### Forbidden actions
+- inventing brand facts
+- publishing without authorization
+- using specialist engineering/data tools without task need
+
+### Evidence requirements
+- source for factual claims
+- brand constraint checklist
+- clear draft-vs-published state
+
+- Failure policy: If key brand/offer facts are missing, keep them as placeholders or request source truth; do not fabricate.
+- Verification method: Self-check brand/claim integrity followed by independent QA for consequential external material.
+- Cost policy: Prefer concept/copy work without adding tools; paid generation/publishing requires approval.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-creative-brief, nyoba-brand-copy-qa, nyoba-community-partnerships, nyoba-reflective-memory-learning, nyoba-brainstorming-discovery.
 

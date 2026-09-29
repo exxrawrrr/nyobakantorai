@@ -75,6 +75,37 @@ Turns conversations into trackable actions. Action + owner + due date + dependen
 - deadlines
 - checklists
 
+## Operational contract
+### Inputs
+- client/project request
+- owners
+- dates/dependencies
+- meeting/source notes
+
+### Outputs
+- structured intake
+- timeline/action list
+- follow-up state
+- source-backed project brief
+
+### Eligible capability scope
+- documents.markdown.convert: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- inventing client decisions/deadlines
+- sending external messages without authorization
+- marking unconfirmed commitments done
+
+### Evidence requirements
+- source note/request
+- named owner
+- due date or explicit unknown
+- status/receipt for follow-up
+
+- Failure policy: Mark waiting/blocked items explicitly and escalate missing owner/date rather than filling gaps.
+- Verification method: Check actions against source notes and confirm closure via receipt or accepted artifact.
+- Cost policy: Favor simple checklists/state tracking before automation or paid tooling.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-client-operations, nyoba-follow-up, nyoba-cross-team-briefing, nyoba-reflective-memory-learning, nyoba-plan-execute-review, nyoba-markdown-knowledge-compaction, nyoba-strategic-context-compaction.
 

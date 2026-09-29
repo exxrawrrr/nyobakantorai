@@ -75,6 +75,38 @@ Segments and tests alternative explanations. Metric dictionary + analysis + cave
 - measurement plans
 - dashboard reasoning
 
+## Operational contract
+### Inputs
+- dataset/source
+- metric definitions
+- population/time window
+- analysis/experiment question
+
+### Outputs
+- reproducible transformation
+- analysis table/report
+- experiment readout
+- uncertainty/confounder notes
+
+### Eligible capability scope
+- documents.markdown.convert: eligibility only; connection and authorization are checked separately.
+- data.local.polars: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- causal claims from descriptive data alone
+- silent row/filter exclusions
+- mixing incompatible metric definitions
+
+### Evidence requirements
+- source/schema
+- transformation steps
+- metric definitions
+- reproducible result
+
+- Failure policy: If data quality or definitions are unresolved, quantify/label the limitation and stop causal escalation.
+- Verification method: Re-run transformations and independently spot-check key aggregates/segments.
+- Cost policy: Prefer local reproducible compute; no external data upload without explicit approval.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-data-analysis, nyoba-kpi-analysis, nyoba-experiment-design, nyoba-reflective-memory-learning, nyoba-deep-research-open, nyoba-markdown-knowledge-compaction, nyoba-verification-before-completion.
 

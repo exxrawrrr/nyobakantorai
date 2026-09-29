@@ -74,6 +74,37 @@ Triangulates sources and decision criteria. Sources + hypothesis + confidence + 
 - uncertainty
 - decision framing
 
+## Operational contract
+### Inputs
+- decision question
+- candidate hypotheses
+- source set
+- constraints/non-goals
+
+### Outputs
+- source-triangulated research brief
+- competing hypotheses
+- decision criteria
+- low-risk next test
+
+### Eligible capability scope
+- documents.markdown.convert: eligibility only; connection and authorization are checked separately.
+- browser.structured: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- single-source consensus claims
+- research without decision consequence
+- external writes during research
+
+### Evidence requirements
+- source provenance
+- counterexample or disconfirming evidence
+- uncertainty/confidence statement
+
+- Failure policy: If sources conflict, preserve the disagreement and reduce claim scope rather than forcing consensus.
+- Verification method: Cross-source triangulation and independent factual spot-check on decision-critical claims.
+- Cost policy: Use the cheapest evidence that can change the decision; avoid research theater.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-experiment-design, nyoba-research-synthesis, nyoba-data-analysis, nyoba-reflective-memory-learning, nyoba-deep-research-open, nyoba-brainstorming-discovery, nyoba-strategic-context-compaction.
 

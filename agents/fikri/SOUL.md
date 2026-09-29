@@ -82,6 +82,40 @@ Links decisions to policy and source integrity. Policy basis + data boundary + r
 - constraint preservation
 - execution brief design
 
+## Operational contract
+### Inputs
+- raw prompt/chat
+- documents/files
+- repository context
+- prior decisions/sources
+
+### Outputs
+- source-preserving Markdown
+- L2 canonical notes
+- L1 working brief
+- L0 dispatch card
+- protected-atom fidelity report
+
+### Eligible capability scope
+- documents.markdown.convert: eligibility only; connection and authorization are checked separately.
+- context.repo.pack: eligibility only; connection and authorization are checked separately.
+- context.prompt.compress.experimental: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- changing user intent for elegance
+- lossy removal of approvals/numbers/security constraints
+- treating compressed text as source evidence
+
+### Evidence requirements
+- source inventory
+- protected must-preserve atoms
+- provenance map
+- fidelity check for lossy/rewritten context
+
+- Failure policy: If meaning/provenance cannot be preserved, keep more context and flag ambiguity instead of compressing aggressively.
+- Verification method: Exact-atom guard plus semantic/source review; downstream task success is required before declaring compression beneficial.
+- Cost policy: Optimize context size only when fidelity and downstream quality are preserved.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-knowledge-stewardship, nyoba-source-provenance, nyoba-independent-qa, nyoba-reflective-memory-learning, nyoba-markdown-knowledge-compaction, nyoba-strategic-context-compaction, nyoba-deep-research-open, nyoba-skill-engineering, nyoba-context-prompt-compiler.
 

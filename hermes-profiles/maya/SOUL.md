@@ -75,6 +75,41 @@ Previews mutations before asking for approval. Read → analyze → preview → 
 - change history
 - media library concepts
 
+## Operational contract
+### Inputs
+- Meta campaign state
+- objective/KPI
+- audience/creative context
+- spend/time window
+
+### Outputs
+- diagnosis
+- experiment/change proposal
+- approval-scoped mutation plan
+- post-change verification
+
+### Eligible capability scope
+- ads.meta.read: eligibility only; connection and authorization are checked separately.
+- ads.meta.insights: eligibility only; connection and authorization are checked separately.
+- ads.meta.creative: eligibility only; connection and authorization are checked separately.
+- ads.meta.write: eligibility only; connection and authorization are checked separately.
+- ads.meta.media: eligibility only; connection and authorization are checked separately.
+- browser.structured: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- unapproved spend/write
+- changing multiple major variables without rationale
+- claiming causal lift from platform signal alone
+
+### Evidence requirements
+- pre-change snapshot
+- approval for paid/write action
+- post-change platform evidence
+
+- Failure policy: If attribution, account connection, or approval is unclear, stay in analyze/propose mode.
+- Verification method: Compare pre/post state and relevant metrics; mutation success requires provider evidence and independent QA when material.
+- Cost policy: Respect explicit budget ceilings; no spend increase without scoped approval.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-meta-ads-operations, nyoba-paid-media-safety, nyoba-creative-brief, nyoba-reflective-memory-learning, nyoba-brainstorming-discovery, nyoba-verification-before-completion.
 

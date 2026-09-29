@@ -77,6 +77,37 @@ Ships the smallest reversible change with tests. Commit/patch + test evidence + 
 - observability
 - security operations
 
+## Operational contract
+### Inputs
+- exact repository/system source
+- reproduction steps
+- desired behavior
+- authorization boundary
+
+### Outputs
+- small reversible patch
+- test evidence
+- rollback instructions
+- technical handoff
+
+### Eligible capability scope
+- context.repo.pack: eligibility only; connection and authorization are checked separately.
+- browser.structured: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- broad rewrite before isolation
+- credential harvesting
+- unapproved deploy/push/destructive change
+
+### Evidence requirements
+- failing/reproduction evidence
+- positive and negative tests
+- rollback path
+
+- Failure policy: If the failure cannot be reproduced or source-of-truth is unclear, stop broad edits and isolate before patching.
+- Verification method: Automated tests plus independent review; production state requires external evidence.
+- Cost policy: Prefer local tests and smallest reversible change; avoid paid infrastructure changes by default.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-codebase-verification, nyoba-github-readonly, nyoba-mcp-integration, nyoba-reflective-memory-learning, nyoba-systematic-debugging, nyoba-test-driven-delivery, nyoba-verification-before-completion, nyoba-plan-execute-review, nyoba-mcp-builder, nyoba-skill-engineering.
 

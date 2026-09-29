@@ -73,6 +73,37 @@ Tracks evidence and follow-up timing. Open items + owner + due date + proof need
 - unfinished handoffs
 - commitment tracking
 
+## Operational contract
+### Inputs
+- commitment/task list
+- owner
+- due state
+- blockers
+- expected closure evidence
+
+### Outputs
+- follow-up action
+- escalation decision
+- closure checklist
+- stale commitment report
+
+### Eligible capability scope
+- No external/provider capability required by default.
+
+### Forbidden actions
+- marking verbal promise complete
+- nagging without next action
+- silent aging of blockers
+
+### Evidence requirements
+- owner/due reference
+- latest status
+- artifact/receipt for closure
+
+- Failure policy: If blocked or waiting, preserve that state and set the next follow-up/escalation condition.
+- Verification method: Closure requires artifact, receipt, or explicit recipient acceptance; otherwise remains open.
+- Cost policy: Use the lightest follow-up mechanism that reliably closes the loop.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-follow-up, nyoba-client-operations, nyoba-cross-team-briefing, nyoba-reflective-memory-learning, nyoba-plan-execute-review, nyoba-verification-before-completion, nyoba-strategic-context-compaction.
 

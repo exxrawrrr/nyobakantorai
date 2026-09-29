@@ -76,6 +76,35 @@ Separates observed values from estimates and forecasts. Pass formulas, sources, 
 - anomaly detection
 - finance sanity checks
 
+## Operational contract
+### Inputs
+- metric definitions
+- time window/cohort
+- source data or observed values
+- business objective
+
+### Outputs
+- reproducible calculations
+- scenario/sensitivity analysis
+- economic recommendation with assumptions
+
+### Eligible capability scope
+- data.local.polars: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- inventing denominators
+- mixing incompatible periods/populations
+- presenting forecasts as observations
+
+### Evidence requirements
+- formula or reproducible transformation
+- source/timeframe
+- observed-vs-estimated labels
+
+- Failure policy: If denominator/source data is missing, narrow the claim or mark analysis incomplete.
+- Verification method: Recalculate key figures from source inputs; material recommendations require independent QA.
+- Cost policy: Use local/reproducible analysis first; no paid data/tool action without explicit approval.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-kpi-analysis, nyoba-finance-scenario, nyoba-data-analysis, nyoba-reflective-memory-learning, nyoba-deep-research-open, nyoba-verification-before-completion.
 

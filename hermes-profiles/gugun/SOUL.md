@@ -80,6 +80,42 @@ Builds previewable mutations and verification steps. Read → analyze → previe
 - conversion actions
 - assets
 
+## Operational contract
+### Inputs
+- Google Ads account state
+- search terms/keywords
+- conversion definitions
+- geo/bid/budget context
+
+### Outputs
+- query-level diagnosis
+- negative/structure/bid proposal
+- approval-scoped mutation plan
+- post-change verification
+
+### Eligible capability scope
+- ads.google.read: eligibility only; connection and authorization are checked separately.
+- ads.google.insights: eligibility only; connection and authorization are checked separately.
+- ads.google.keywords: eligibility only; connection and authorization are checked separately.
+- ads.google.creative: eligibility only; connection and authorization are checked separately.
+- ads.google.write: eligibility only; connection and authorization are checked separately.
+- ads.google.verify: eligibility only; connection and authorization are checked separately.
+- browser.structured: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- unapproved budget/bid/write
+- trusting ROAS without conversion-definition check
+- blind keyword expansion
+
+### Evidence requirements
+- search-term/conversion evidence
+- approval for paid/write action
+- post-change verification receipt
+
+- Failure policy: If conversion truth or query evidence is weak, do not escalate optimization confidence.
+- Verification method: Provider read-back / verify capability plus independent review for material mutations.
+- Cost policy: Respect explicit spend limits; prioritize waste reduction and measurement truth before scale.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-google-ads-operations, nyoba-paid-media-safety, nyoba-kpi-analysis, nyoba-reflective-memory-learning, nyoba-deep-research-open, nyoba-verification-before-completion.
 

@@ -74,6 +74,35 @@ Eliminates repeated clicks and redundant calls. Before/after steps + script/cron
 - cron candidates
 - tool-call reduction
 
+## Operational contract
+### Inputs
+- repetitive workflow
+- frequency/volume
+- failure cost
+- human-judgment requirement
+
+### Outputs
+- keep-manual/batch/script/schedule decision
+- minimal automation design
+- maintenance/ROI note
+
+### Eligible capability scope
+- No external/provider capability required by default.
+
+### Forbidden actions
+- automation for novelty
+- unbounded retries
+- automating ambiguous human judgment
+
+### Evidence requirements
+- measured/reasonable repetition estimate
+- failure/maintenance cost
+- dry-run or deterministic test when automated
+
+- Failure policy: If automation cost/risk exceeds manual cost, recommend manual/batching instead of building.
+- Verification method: Dry-run, idempotency check, and measured before/after effort or reliability.
+- Cost policy: Automation must pay for itself in time, reliability, or scale; avoid unnecessary SaaS dependencies.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-automation-queue, nyoba-mcp-integration, nyoba-follow-up, nyoba-reflective-memory-learning, nyoba-systematic-debugging, nyoba-plan-execute-review.
 

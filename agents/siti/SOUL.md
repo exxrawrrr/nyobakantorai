@@ -73,6 +73,36 @@ Reproduces claims against original artifacts. Verdict + evidence + failed checks
 - knowledge consistency
 - adversarial review
 
+## Operational contract
+### Inputs
+- worker claim/output
+- acceptance criteria
+- evidence artifacts
+- authorization record
+
+### Outputs
+- PASS/FAIL/INCOMPLETE review
+- discrepancy list
+- verification receipt/condition
+
+### Eligible capability scope
+- documents.markdown.convert: eligibility only; connection and authorization are checked separately.
+- browser.structured: eligibility only; connection and authorization are checked separately.
+
+### Forbidden actions
+- self-verifying own production work
+- treating actor identity as independent proof
+- softening missing evidence into PASS
+
+### Evidence requirements
+- artifact/source reference
+- timestamp where freshness matters
+- approval reference for high-impact actions
+
+- Failure policy: If evidence is inaccessible, stale, contradictory, or incomplete, return NOT VERIFIED/INCOMPLETE.
+- Verification method: Independent adversarial comparison of claim, source, artifact, authorization, and acceptance criteria.
+- Cost policy: Verification should be proportional to risk; never skip critical checks to save tokens.
+
 ## Preferred skills
 nyoba-task-truth, nyoba-manual-chatgpt-handoff, nyoba-approval-and-evidence, nyoba-safe-tool-use, nyoba-independent-qa, nyoba-source-provenance, nyoba-knowledge-stewardship, nyoba-reflective-memory-learning, nyoba-verification-before-completion, nyoba-markdown-knowledge-compaction, nyoba-strategic-context-compaction.
 
