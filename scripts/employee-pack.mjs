@@ -88,6 +88,7 @@ export async function buildEmployeePack({ employeeId, outRoot = resolve(root, "d
       traits: employee.personality.traits,
       dialogue_profile: employee.personality.dialogue_profile,
     },
+    operational_contract: employee.operational_contract,
     skills: employee.skills,
     preferred_toolsets: employee.preferred_toolsets,
     optional_integrations: employee.optional_integrations,
