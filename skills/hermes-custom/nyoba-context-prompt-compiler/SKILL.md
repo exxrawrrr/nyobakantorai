@@ -119,6 +119,16 @@ Workers should receive L0 plus only the relevant parts of L1. Load L2 on demand.
 
 The machine brief supplements the original source; it never replaces it as evidence.
 
+## Deterministic fidelity guard
+
+When exact details matter, use the repository's local guard module before accepting a compressed/rewritten context packet:
+
+`packages/context-guard/index.mjs`
+
+It extracts machine-detectable protected atoms such as constraint lines, URLs, paths, dates/times, rupiah amounts, percentages, and explicit numeric forms. `verifyProtectedAtoms()` fails when any detected atom disappears from a compiled representation.
+
+This is a **floor**, not full semantic verification: it catches exact-detail loss but cannot prove that a paraphrase preserved meaning. Human/model review still owns semantic fidelity.
+
 ## Tool strategy
 
 Use the narrowest available path:
