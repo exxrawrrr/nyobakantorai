@@ -13,7 +13,11 @@ for(const e of registry.employees){
  for(const k of required)if(e[k]===undefined)findings.push(`${e.id||"?"}: missing ${k}`);
  if(!/^[a-z][a-z0-9-]{1,39}$/.test(e.id||""))findings.push(`${e.id}: invalid id`);
  if(ids.has(e.id))findings.push(`${e.id}: duplicate id`); ids.add(e.id);
- if(!Array.isArray(e.personality?.traits)||!e.personality?.communication_style)findings.push(`${e.id}: incomplete personality`);\n const dp=e.personality?.dialogue_profile;\n const dialogueRequired=["default_register","opening_behavior","response_shape","sentence_rhythm","question_style","disagreement_style","uncertainty_style","humor_style","closing_behavior","signature_moves","avoid"];\n for(const k of dialogueRequired)if(dp?.[k]===undefined)findings.push(`${e.id}: missing dialogue_profile.${k}`);\n if(dp&&(!Array.isArray(dp.signature_moves)||dp.signature_moves.length<2||!Array.isArray(dp.avoid)||dp.avoid.length<2))findings.push(`${e.id}: dialogue profile needs at least two signature moves and two avoid rules`);
+ if(!Array.isArray(e.personality?.traits)||!e.personality?.communication_style)findings.push(`${e.id}: incomplete personality`);
+ const dp=e.personality?.dialogue_profile;
+ const dialogueRequired=["default_register","opening_behavior","response_shape","sentence_rhythm","question_style","disagreement_style","uncertainty_style","humor_style","closing_behavior","signature_moves","avoid"];
+ for(const k of dialogueRequired)if(dp?.[k]===undefined)findings.push(`${e.id}: missing dialogue_profile.${k}`);
+ if(dp&&(!Array.isArray(dp.signature_moves)||dp.signature_moves.length<2||!Array.isArray(dp.avoid)||dp.avoid.length<2))findings.push(`${e.id}: dialogue profile needs at least two signature moves and two avoid rules`);
  for(const k of ["idle_habit","thinking_habit","working_habit","stress_habit","success_habit"])if(!e.habits?.[k])findings.push(`${e.id}: missing habit ${k}`);
  if(!Array.isArray(e.skills)||e.skills.length<4)findings.push(`${e.id}: insufficient skills`);
  if(!Array.isArray(e.reasoning_profile?.mental_models)||e.reasoning_profile.mental_models.length<3||!Array.isArray(e.reasoning_profile?.default_questions)||!Array.isArray(e.reasoning_profile?.failure_modes))findings.push(`${e.id}: incomplete reasoning profile`);
