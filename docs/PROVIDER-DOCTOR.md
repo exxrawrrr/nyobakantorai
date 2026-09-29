@@ -172,3 +172,28 @@ That means only:
 > the repository has enough information to attempt the isolated HTTP self-test path.
 
 It does **not** mean the endpoint is reachable, authenticated, or live-proven. Reachability remains `NOT_CHECKED` until the user explicitly runs `npm run memory:self-test`.
+
+
+## Cross-harness next step
+
+Provider Doctor remains detection-only. It never launches an AI harness.
+
+Use:
+
+```bash
+npm run harness:self-test:plan
+npm run harness:self-test -- --target codex,gemini-cli --json --out cross-harness-self-test.json
+```
+
+Supported target IDs are:
+
+```text
+hermes
+codex
+gemini-cli
+github-copilot-cli
+```
+
+See `docs/CROSS-HARNESS-SELF-TEST.md`.
+
+A detected executable means only that the harness can be attempted. Authentication, live execution, skill activation, and parity evidence remain separate states.
