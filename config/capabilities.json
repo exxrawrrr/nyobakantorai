@@ -90,6 +90,13 @@
       "risk_class": "READ_ONLY",
       "default_state": "NOT_CONNECTED",
       "requires_human_approval": false
+    },
+    {
+      "id": "documents.markdown.convert",
+      "description": "Convert trusted local/remote documents or web content into Markdown through an explicitly connected provider such as MarkItDown MCP.",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
     }
   ]
 }

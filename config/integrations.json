@@ -31,7 +31,8 @@
         "ratri",
         "nara"
       ],
-      "security": "Run locally/STDIO or localhost only; it has no authentication and inherits process file/network access."
+      "security": "Run locally/STDIO or localhost only; it has no authentication and inherits process file/network access.",
+      "capability": "documents.markdown.convert"
     },
     {
       "id": "ecc-memory-vault",

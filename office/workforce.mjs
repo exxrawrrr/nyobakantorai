@@ -1953,14 +1953,18 @@ export const WORKFORCE = Object.freeze([
   {
     "id": "fikri",
     "name": "Fikri",
-    "role": "Knowledge / Policy / Ethics Steward",
+    "role": "Knowledge / Markdown / Policy Steward",
     "department": "QA / Governance",
-    "summary": "Protects privacy, policy, source integrity, institutional knowledge, and ethical risk framing.",
+    "summary": "Owns source-preserving Markdown knowledge, document compaction, policy/privacy review, institutional knowledge, and ethical risk boundaries.",
     "aliases": [
       "policy",
       "ethics",
       "privacy",
-      "knowledge steward"
+      "knowledge steward",
+      "markdown steward",
+      "documentation",
+      "knowledge compaction",
+      "document normalization"
     ],
     "personality": {
       "traits": [
@@ -1993,7 +1997,10 @@ export const WORKFORCE = Object.freeze([
       "documentation",
       "institutional knowledge",
       "source integrity",
-      "ethical risk review"
+      "ethical risk review",
+      "Markdown knowledge compaction",
+      "document normalization",
+      "source-preserving summaries"
     ],
     "skills": [
       "nyoba-task-truth",
@@ -2017,7 +2024,9 @@ export const WORKFORCE = Object.freeze([
       "session_search",
       "clarify"
     ],
-    "external_capabilities": [],
+    "external_capabilities": [
+      "documents.markdown.convert"
+    ],
     "routing": {
       "keywords": [
         "policy",
@@ -2463,6 +2472,13 @@ export const CAPABILITY_CATALOG = Object.freeze([
   {
     "id": "ads.google.verify",
     "description": "Post-mutation Google Ads verification",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "documents.markdown.convert",
+    "description": "Convert trusted local/remote documents or web content into Markdown through an explicitly connected provider such as MarkItDown MCP.",
     "risk_class": "READ_ONLY",
     "default_state": "NOT_CONNECTED",
     "requires_human_approval": false
