@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { EMPLOYEE_IDS } from "../office/workforce.mjs";
-import { planProfileAction, bootstrapSucceeded } from "./hermes-bootstrap-plan.mjs";
+import { planSelectedProfileActions, bootstrapSucceeded } from "./hermes-bootstrap-plan.mjs";
 import { findEmployeeSelectionArg, resolveEmployeeSelection } from "./employee-selection.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
@@ -38,12 +38,23 @@ if (!version.ok) {
   process.exit(2);
 }
 
-const results = [];
+const showById = new Map();
 for (const id of profileIds) {
   const source = resolve(root, "hermes-profiles", id);
   if (!existsSync(resolve(source, "distribution.yaml"))) throw new Error(`Missing Hermes distribution for ${id}`);
-  const show = run(["profile","show",id], true);
-  const action = planProfileAction({ mode, exists: show.ok, force });
+  showById.set(id, run(["profile","show",id], true));
+}
+const actionPlan = planSelectedProfileActions({
+  selectedIds: profileIds,
+  existingIds: profileIds.filter((id) => showById.get(id)?.ok),
+  mode,
+  force,
+});
+
+const results = [];
+for (const { profile:id, action } of actionPlan) {
+  const source = resolve(root, "hermes-profiles", id);
+  const show = showById.get(id);
   if (action === "check" || action === "skip-existing") {
     results.push({ profile:id, action, ok: action === "check" ? show.ok : true });
     continue;
