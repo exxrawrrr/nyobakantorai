@@ -279,3 +279,24 @@ test("fresh-install one-worker CLI reports deterministic isolated success",()=>{
   assert.equal(data.hermes_cli_executed,false);
   assert.equal(data.real_machine_claim,false);
 });
+
+
+test("subset fresh-install CLI installs only the engineering preset and removes only Bimo",()=>{
+  const result=run(["scripts/fresh-install-matrix.mjs","--mode=subset","--employees=engineering","--remove=bimo","--json"]);
+  assert.equal(result.status,0,result.stderr);
+  const data=JSON.parse(result.stdout);
+  assert.equal(data.matrix_case,"fresh-install-subset-workers");
+  assert.equal(data.passed,true);
+  assert.deepEqual(data.selected_profiles,["subagjo","siti","bimo"]);
+  assert.deepEqual(data.installed_profiles,["bimo","siti","subagjo"]);
+  assert.equal(data.only_selected_profiles_installed,true);
+  assert.equal(data.capability_isolation_passed,true);
+  assert.equal(data.removal.preview_action,"PREVIEW_ONLY");
+  assert.equal(data.removal.confirmed_action,"DELETE_PROFILE_AND_USER_STATE");
+  assert.equal(data.removal.requested_profile,"bimo");
+  assert.deepEqual(data.removal.remaining_profiles,["siti","subagjo"]);
+  assert.equal(data.survivor_profiles_preserved,true);
+  assert.equal(data.external_provider_calls,0);
+  assert.equal(data.hermes_cli_executed,false);
+  assert.equal(data.real_machine_claim,false);
+});
