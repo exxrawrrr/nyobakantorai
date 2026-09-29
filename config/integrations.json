@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "defaults": "optional-disabled",
+  "integrations": [
+    {
+      "id": "superpowers-hermes",
+      "type": "hermes-plugin",
+      "source_id": "superpowers",
+      "install": "hermes plugins install obra/superpowers",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "praroro",
+        "subagjo",
+        "alex",
+        "bimo"
+      ],
+      "reason": "Optional upstream workflow library with native Hermes plugin integration."
+    },
+    {
+      "id": "markitdown-mcp",
+      "type": "mcp-stdio",
+      "source_id": "markitdown",
+      "install": "pip install markitdown-mcp",
+      "command": "markitdown-mcp",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "fikri",
+        "siti",
+        "dina",
+        "alex",
+        "ratri",
+        "nara"
+      ],
+      "security": "Run locally/STDIO or localhost only; it has no authentication and inherits process file/network access.",
+      "capability": "documents.markdown.convert"
+    },
+    {
+      "id": "ecc-memory-vault",
+      "type": "cross-harness-memory",
+      "source_id": "ecc",
+      "install": "npm install -g ecc-universal",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "praroro",
+        "fikri",
+        "bimo"
+      ],
+      "security": "Optional cross-harness memory; never a secret store or authorization boundary."
+    },
+    {
+      "id": "mcp-memory-reference",
+      "type": "mcp-memory",
+      "source_id": "mcp-reference-servers",
+      "default_state": "REFERENCE_ONLY",
+      "recommended_for": [
+        "fikri",
+        "praroro"
+      ],
+      "security": "Shared graph memory can cross profile boundaries; do not enable as the default per-agent memory store."
+    }
+  ]
+}

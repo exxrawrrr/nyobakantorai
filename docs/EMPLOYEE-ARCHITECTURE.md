@@ -28,3 +28,12 @@ The first six workers retain owner-authored sprites. The ten v0.3 workers delibe
 ## Verification
 
 Every registry entry has `self_verify: false`. Reviewer candidates are explicit. Siti can review other workers but cannot independently verify Siti's own work. VERIFIED requires independent evidence.
+
+
+## Reasoning and learning profiles
+
+Each employee carries a structured `reasoning_profile` in the canonical registry: mental models, default questions, and known failure modes.
+
+Each employee also carries a `learning_profile`: profile-scoped memory mode, role-specific learning focus, reflection prompts, and a promotion rule. The shared `nyoba-reflective-memory-learning` skill converts meaningful outcomes/corrections into atomic lessons without storing raw transcripts or secrets.
+
+Upstream-derived workflow skills are attributed through `config/upstream-sources.json`. Optional plugins/MCPs are recommendations, not bundled authority; see `config/integrations.json`.

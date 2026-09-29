@@ -379,12 +379,17 @@ Credentials, account access, provider billing state, sessions, memory, and messa
 | **Nara** | Growth / Data | Data / BI / Experimentation | pending-original-art | none required |
 | **Dina** | Operations | Client / Project Operations | pending-original-art | none required |
 | **Bambang** | Engineering / Automation | Automation / Queue Optimizer | pending-original-art | none required |
-| **Fikri** | QA / Governance | Knowledge / Policy / Ethics Steward | pending-original-art | none required |
+| **Fikri** | QA / Governance | Knowledge / Markdown / Policy Steward | pending-original-art | none required |
 | **Tari** | Operations | Execution / Follow-Up Specialist | pending-original-art | none required |
 | **Caca** | Creative / Community | Community / Social / Partnerships | pending-original-art | none required |
 
 Maya and Gugun are capability **consumers**, not bundled ads engines. Telegram is an optional Hermes gateway path. See the dedicated docs below.
 
+### Upstream skill enrichment
+
+The workforce uses recreated/adapted workflow concepts with explicit provenance from ECC, Superpowers, MarkItDown, Docling, Mem0, Letta, Jina Reader, MCP reference servers, and Anthropic's Apache-2.0 MCP builder. See [UPSTREAM-SOURCE-CATALOG.md](docs/UPSTREAM-SOURCE-CATALOG.md). Restricted Anthropic document skills are not copied or used to create derivatives.
+
+**Fikri** is the default Knowledge / Markdown / Policy Steward. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
 ## Install
 
 ### Hermes-first — recommended
