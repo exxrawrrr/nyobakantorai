@@ -94,6 +94,7 @@
     "test:fresh-install-matrix": "node --test packages/fresh-install-matrix/index.test.mjs",
     "release:matrix:one-worker": "node scripts/fresh-install-matrix.mjs --employee=siti",
     "release:matrix:subset": "node scripts/fresh-install-matrix.mjs --mode=subset --employees=engineering --remove=bimo",
-    "release:matrix:full": "node scripts/fresh-install-matrix.mjs --mode=full"
+    "release:matrix:full": "node scripts/fresh-install-matrix.mjs --mode=full",
+    "release:matrix:lifecycle": "node scripts/fresh-install-matrix.mjs --mode=lifecycle --remove=bimo"
   }
 }
