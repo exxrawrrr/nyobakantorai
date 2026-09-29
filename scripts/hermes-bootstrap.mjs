@@ -4,10 +4,12 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { EMPLOYEE_IDS } from "../office/workforce.mjs";
 import { planProfileAction, bootstrapSucceeded } from "./hermes-bootstrap-plan.mjs";
+import { findEmployeeSelectionArg, resolveEmployeeSelection } from "./employee-selection.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const profileIds = EMPLOYEE_IDS;
 const argv = process.argv.slice(2);
+const selection = findEmployeeSelectionArg(argv);
+const profileIds = resolveEmployeeSelection(selection, EMPLOYEE_IDS);
 const mode = argv.includes("--upgrade") ? "upgrade" : argv.includes("--update") ? "update" : argv.includes("--check") ? "check" : "install";
 const force = argv.includes("--force");
 const json = argv.includes("--json");
@@ -64,12 +66,12 @@ if (mode !== "check") {
 const currentBoard = run(["kanban","boards","show"], true);
 const verify = profileIds.map((id) => ({ id, ok: run(["profile","show",id], true).ok }));
 const ok = bootstrapSucceeded({ results, profiles: verify, boardOk: currentBoard.ok, mode });
-const summary = { ok, employee_count:profileIds.length, hermes_version:version.stdout || version.stderr, hermes_home:env.HERMES_HOME || "(Hermes default)", board:currentBoard.ok ? currentBoard.stdout : board, mode, results, profiles:verify };
+const summary = { ok, employee_count:profileIds.length, selected_profiles:profileIds, selection, hermes_version:version.stdout || version.stderr, hermes_home:env.HERMES_HOME || "(Hermes default)", board:currentBoard.ok ? currentBoard.stdout : board, mode, results, profiles:verify };
 if (json) console.log(JSON.stringify(summary,null,2));
 else {
   console.log(`Hermes: ${summary.hermes_version}`);
   console.log(`Home: ${summary.hermes_home}`);
-  console.log(`Workforce: ${profileIds.length} profiles`);
+  console.log(`Workforce: ${profileIds.length} selected profiles (${profileIds.join(", ")})`);
   for (const item of results) console.log(`${item.ok ? "PASS" : "FAIL"}  ${item.profile} — ${item.action}`);
   console.log(`Board: ${summary.board}`);
   console.log(ok ? "Hermes bootstrap ready." : "Hermes bootstrap incomplete.");
