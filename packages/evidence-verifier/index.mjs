@@ -1,3 +1,5 @@
+import { verifyExecutionReceipt } from "../execution-receipt/index.mjs";
+
 const INJECTION_PATTERNS = [
   /ignore (?:all|any|the) previous instructions/i,
   /bypass (?:approval|policy|verification|guard)/i,
@@ -37,6 +39,42 @@ export function verifyEvidencePacket({ expected = {}, report = {}, evidence = {}
   const requiredEvidenceRefs = uniq(asList(expected.required_evidence_refs));
   const allowedSchemes = new Set(asList(expected.allowed_evidence_schemes).map((value) => value.endsWith(":") ? value.toLowerCase() : value.toLowerCase() + ":"));
   const effectiveAllowedSchemes = allowedSchemes.size ? allowedSchemes : ALLOWED_EVIDENCE_SCHEMES;
+
+  const signedReceipts = Array.isArray(evidence.signed_receipts) ? evidence.signed_receipts : [];
+  const receiptPublicKeys = expected.receipt_public_keys && typeof expected.receipt_public_keys === "object" && !Array.isArray(expected.receipt_public_keys)
+    ? expected.receipt_public_keys
+    : {};
+  const requiredReceiptStates = asList(expected.required_receipt_result_states);
+  const signedReceiptChecks = signedReceipts.map((envelope) => verifyExecutionReceipt(envelope, {
+    publicKeys:receiptPublicKeys,
+    now,
+    requiredTaskId:normalizeRef(expected.task_id) || null,
+    requiredEmployeeId:normalizeRef(expected.assignee_id).toLowerCase() || null,
+    requiredCapabilityId:Object.prototype.hasOwnProperty.call(expected, "capability_id") ? expected.capability_id : undefined,
+    requiredResultStates:requiredReceiptStates.length ? requiredReceiptStates : null,
+  }));
+  const validSignedReceiptRefs = signedReceiptChecks.filter((item) => item.ok).map((item) => item.receipt_ref).filter(Boolean);
+  const invalidSignedReceiptChecks = signedReceiptChecks.filter((item) => !item.ok);
+
+  if (expected.require_signed_execution_receipt === true && signedReceipts.length === 0) {
+    reasons.push({ code:"SIGNED_EXECUTION_RECEIPT_REQUIRED", details:[] });
+  }
+  if (invalidSignedReceiptChecks.length) {
+    reasons.push({
+      code:"SIGNED_EXECUTION_RECEIPT_INVALID",
+      details:invalidSignedReceiptChecks.flatMap((item) => [
+        item.receipt_ref || item.key_id || "unknown-receipt",
+        ...item.reasons,
+      ]),
+    });
+  }
+  if (expected.require_signed_execution_receipt === true && validSignedReceiptRefs.length === 0 && signedReceipts.length > 0) {
+    reasons.push({ code:"SIGNED_EXECUTION_RECEIPT_MISSING_VALID", details:[] });
+  }
+  if (expected.require_signed_execution_receipt === true) {
+    const missingSignedRefs = validSignedReceiptRefs.filter((ref) => !evidenceRefs.includes(ref));
+    if (missingSignedRefs.length) reasons.push({ code:"SIGNED_RECEIPT_REFERENCE_MISSING", details:missingSignedRefs });
+  }
 
   const missingReportFacts = requiredFacts.filter((fact) => !includesExact(reportText, fact));
   const missingEvidenceFacts = requiredFacts.filter((fact) => !includesExact(evidenceText, fact));
@@ -92,6 +130,8 @@ export function verifyEvidencePacket({ expected = {}, report = {}, evidence = {}
       evidence_fact_recall: requiredFacts.length ? (requiredFacts.length - missingEvidenceFacts.length) / requiredFacts.length : 1,
       artifact_recall: requiredArtifacts.length ? (requiredArtifacts.length - missingArtifacts.length) / requiredArtifacts.length : 1,
       completion_recall: requiredCompletion.length ? (requiredCompletion.length - missingCompletion.length) / requiredCompletion.length : 1,
+      signed_receipts_valid: validSignedReceiptRefs.length,
+      signed_receipts_invalid: invalidSignedReceiptChecks.length,
     }),
   });
 }
