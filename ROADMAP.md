@@ -77,7 +77,8 @@
 - [x] one-worker isolated fresh-install matrix: empty temporary Hermes profile home -> Siti only -> verified pack -> native-upgrade rerun -> user-owned state preserved -> no unrelated profiles; deterministic simulation only, not a real Hermes/provider machine claim
 - [x] subset isolated fresh-install matrix: engineering preset (Subagjo + Siti + Bimo), exact per-worker skill/integration isolation, preview-before-destructive selective uninstall, Bimo-only removal, survivor byte-integrity
 - [x] full-workforce isolated fresh-install matrix: every canonical employee pack verified, exact 16-profile registry parity, exact per-worker skill/integration closure, native-upgrade rerun for all profiles, user-owned state preserved across every profile, no extra/missing profile or pack directory
-- [ ] broader upgrade/uninstall lifecycle matrix and final real clean-machine Hermes coverage
+- [x] deterministic full-workforce upgrade/uninstall/reinstall lifecycle matrix: 16-profile existing install -> native-upgrade refresh with user-state preservation -> previewed selective removal -> previewed/confirmed full uninstall -> clean 16-profile reinstall -> native-upgrade rerun; no real Hermes/provider machine claim
+- [ ] final real clean-machine Hermes coverage
 - [ ] explicit stable promotion to `main` + final main-based release gate — HOLD until deferred evidence scope is re-approved
 
 ## Non-goals
