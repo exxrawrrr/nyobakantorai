@@ -59,6 +59,7 @@
 - [x] static cross-harness skill packaging tests: Agent Skills core + Hermes + Gemini CLI + GitHub Copilot
 - [ ] live cross-harness activation/execution parity before claiming broad behavioral portability
 - [x] local profile learning export/delete isolation with shared/canonical preservation guards
+- [x] fail-closed provider evaluation contracts for browser + memory candidates
 - [ ] Cognee memory-provider isolation/export/deletion evaluation
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
 - [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
