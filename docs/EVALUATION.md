@@ -645,3 +645,45 @@ SELF_TEST_FAILED
 A self-test pass proves only the configured endpoint's isolated storage/isolation/export/delete behavior under this runner. It does not prove Hermes lifecycle integration, semantic recall quality, LLM quality, or production reliability, and it does not mutate `benchmarks/provider-evaluations/memory-results.json`.
 
 Core CI installs no Cognee package and contacts no external memory service. Instead it runs the eight-case harness against a disposable local Cognee-compatible HTTP target and includes adversarial contamination, deletion failure, cleanup failure, dataset-reuse refusal, wire-contract, and credential non-disclosure tests.
+
+
+## Cross-harness self-service parity adapter
+
+The repository now ships a provider-optional runtime probe for Hermes, Codex CLI, Gemini CLI, and GitHub Copilot CLI:
+
+- `config/cross-harness-self-test.json`;
+- `packages/cross-harness-self-test/`;
+- `scripts/cross-harness-self-test.mjs`;
+- `docs/CROSS-HARNESS-SELF-TEST.md`.
+
+The runner uses one disposable skill and the same exact task/verification contract for every selected harness. The activation sentinel and result marker exist only in the staged skill, not in the visible task prompt.
+
+The deterministic checks require:
+
+```text
+skill_activated
+objective_exact
+protected_atoms_exact
+prohibited_action_exact
+verification_exact
+invented_actions_zero
+workspace_canary_unchanged
+```
+
+Every target executes inside a fresh temporary workspace. Codex uses read-only sandbox mode; Gemini uses approval-mode=plan; Hermes receives a temporary `HERMES_BUNDLED_SKILLS` override plus an explicit preloaded probe skill; Copilot runs in non-interactive prompt mode without permission-bypass flags.
+
+The runner never installs a harness, logs in, creates credentials, executes inside the user's repository, or persists raw stdout/stderr. Missing harnesses remain `NOT_RUN / UNPROVEN`.
+
+Per-target self-service states:
+
+```text
+SELF_TEST_PASSED
+SELF_TEST_FAILED
+NOT_RUN / UNPROVEN
+```
+
+Run-level `COMPARISON_READY` requires at least two completed passing harnesses in the same run with zero completed failures. That state is intentionally narrower than canonical cross-harness parity. It does not rank products, prove model equality, or prove all canonical skills.
+
+Core CI does not install/authenticate Hermes, Codex, Gemini, or Copilot. It validates the orchestration with injected harness results, temporary skill staging, exact-output parsing, forged-sentinel negatives, canary mutation, non-zero processes, missing markers, partial availability, and raw-output non-persistence.
+
+The historical machine-level record in `benchmarks/cross-harness/run-2026-09-29.json` remains `UNPROVEN` until reviewed live evidence is intentionally promoted.
