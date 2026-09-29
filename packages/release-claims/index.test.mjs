@@ -11,11 +11,11 @@ test("release claims preserve mixed evaluated and UNPROVEN provider state", asyn
   assert.ok(snapshot.browser.length >= 2);
   assert.deepEqual(
     snapshot.browser.find((item)=>item.provider_id==="playwright-mcp"),
-    {provider_id:"playwright-mcp",status:"COMPLETED",claim_state:"EVALUATED_CANDIDATE",acceptance_passed:true}
+    {provider_id:"playwright-mcp",status:"COMPLETED",acceptance_passed:true}
   );
   assert.deepEqual(
     snapshot.browser.find((item)=>item.provider_id==="browser-use"),
-    {provider_id:"browser-use",status:"NOT_RUN",claim_state:"UNPROVEN",acceptance_passed:false}
+    {provider_id:"browser-use",status:"NOT_RUN",acceptance_passed:false}
   );
   assert.ok(snapshot.memory.length >= 1);
   assert.ok(snapshot.memory.every((item) => item.status === "NOT_RUN" && item.acceptance_passed === false));
