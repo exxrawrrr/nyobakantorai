@@ -131,7 +131,7 @@
         "config_requirement": "external-or-oauth"
       },
       "setup_hint": "Install Browser Use and configure a user-owned supported model/provider path.",
-      "self_test_hint": "Execute the same six disposable browser cases as Playwright MCP before comparing providers."
+      "self_test_hint": "Run `npm run browser:self-test:plan` first. When Browser Use and Chrome/Chromium/Edge are present, run `npm run browser:self-test -- --json --out browser-use-self-test.json`. The runner uses a disposable loopback target and isolated temporary browser profile."
     },
     {
       "id": "playwright-mcp",
@@ -151,7 +151,7 @@
         "config_requirement": "none"
       },
       "setup_hint": "Use a pinned Playwright MCP package version. On-demand npx availability is reported without downloading anything.",
-      "self_test_hint": "Run the disposable six-case browser contract in an isolated browser profile."
+      "self_test_hint": "Playwright MCP already has a recorded controlled live candidate result. Use its disposable six-case browser contract as the comparison baseline; the Browser Use self-service runner uses the same six case IDs."
     }
   ]
 }
