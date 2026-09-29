@@ -26,7 +26,7 @@ test("guard packet preserves the original source as L2 and exposes a compact L0"
     sources: [{ id:"owner-request", type:"chat", text:sample }],
     targetTokens: 250,
   });
-  assert.match(packet.l0, /Protected atoms/);
+  assert.match(packet.l0, /^P:/m);
   assert.match(packet.l1, /Source pointers/);
   assert.match(packet.l1, /26 September 2026/);
   assert.match(packet.l2, /26 September 2026/);
