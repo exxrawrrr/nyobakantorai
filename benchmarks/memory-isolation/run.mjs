@@ -84,7 +84,7 @@ const forged=buildProfileMemoryView({
     event_id:"evt.maya.forged-m3",
     layer:"M3",
     shared_scope:"project-alpha",
-    human_review:false,
+    human_review:true,
   })],
   employeeId:"gugun",
   authorizedSharedScopes:["project-alpha"],
