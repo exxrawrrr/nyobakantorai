@@ -67,6 +67,8 @@
 - [x] live Fikri context-compaction benchmark on controlled synthetic fixtures: 41.10% average reduction, 100% protected/source fidelity, 5/5 blind downstream pass; real-task generalization remains separate
 - [x] real-task dataset schema + anti-synthetic publication gate
 - [ ] real-task evaluation dataset and published baseline comparison — COLLECTING 1/20 eligible direct owner tasks; 23 historical pilot records rejected (22 sandbox/fictional, 1 generated derivative); first eligible case ended NEEDS_EVIDENCE with zero false-success
+- [x] release convergence: permanent decision record, README/changelog/release-doc claim audit, and temporary PRD/workplan retirement
+- [ ] explicit stable promotion to `main` + final main-based release gate — HOLD until deferred evidence scope is re-approved
 
 ## Non-goals
 
