@@ -41,7 +41,7 @@
 - [ ] live provider adapters for ads capabilities
 - [ ] original character art for the ten v0.3 workers
 - [ ] pluggable storage with export/import
-- [ ] adapter sandboxing and permission-policy extensions
+- [x] application-level adapter sandboxing and permission-policy extensions (not OS isolation)
 
 
 ## v0.4 — Modular Workforce
