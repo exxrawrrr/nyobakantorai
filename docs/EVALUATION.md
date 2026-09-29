@@ -177,3 +177,39 @@ The required metrics include:
 The validator also rejects secret-like content from the redacted task summary.
 
 This does not create or fake the 20 cases. It only makes it difficult to accidentally call synthetic/demo work a published real-task baseline.
+
+
+## Evaluation doctor
+
+Use one command to inspect whether evaluation data is valid and which live-evidence gaps are still open:
+
+```bash
+npm run evaluation:doctor
+npm run evaluation:doctor:json
+```
+
+The doctor treats honest `NOT_RUN / UNPROVEN` baselines as structurally valid, but **not complete**.
+
+It summarizes:
+
+- Playwright MCP / Browser Use evaluation state;
+- Cognee memory-provider evaluation state;
+- real-task baseline case count and publication-gate state;
+- invalid evidence/claim records;
+- concrete next evidence required.
+
+For release or automation workflows that explicitly require all live evaluations to exist, run:
+
+```bash
+node scripts/evaluation-doctor.mjs --require-live
+```
+
+That strict form exits non-zero while any live browser/memory/real-task evaluation is still unproven.
+
+This intentionally separates two questions:
+
+```text
+Are the evaluation records honest and structurally valid?
+!=
+Have all live evaluations actually been completed?
+```
