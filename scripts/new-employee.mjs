@@ -89,6 +89,16 @@ export function draftEmployee(options, registry) {
     preferred_toolsets: toolsets,
     external_capabilities: [],
     optional_integrations: [],
+    operational_contract: {
+      inputs: ["role-scoped request","relevant source material","constraints and acceptance criteria"],
+      outputs: ["role-scoped artifact","evidence-backed result","clear next action or blocker"],
+      capability_scope: [],
+      forbidden_actions: ["claiming unavailable capabilities","external writes without scoped approval","claiming completion without evidence"],
+      evidence_requirements: ["source or artifact reference","verification condition","explicit unknowns/blockers"],
+      failure_policy: "If capability, evidence, approval, or source truth is missing, mark the task blocked/incomplete instead of inventing progress.",
+      verification_method: "Use role-appropriate evidence and an independent reviewer for consequential completion claims.",
+      cost_policy: "Prefer the smallest safe workflow and require approval before paid actions.",
+    },
     routing: { keywords: unique([...aliases, ...expertise]).slice(0, 24), collaborators: ["praroro","siti"] },
     visual: {
       color: "#777777",
