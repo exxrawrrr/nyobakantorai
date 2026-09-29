@@ -45,7 +45,41 @@ export function validateBrowserSelfTestConfig(config) {
   if (config?.safety?.authentication_forbidden!==true) errors.push("authentication must be forbidden");
   if (config?.safety?.auto_install_forbidden!==true) errors.push("auto-install must be forbidden");
   if (config?.safety?.auto_login_forbidden!==true) errors.push("auto-login must be forbidden");
+  if (config?.safety?.telemetry_disabled!==true) errors.push("telemetry must be disabled");
+  if (config?.safety?.cloud_sync_disabled!==true) errors.push("cloud sync must be disabled");
+  if (config?.safety?.update_check_disabled!==true) errors.push("update checks must be disabled");
+  if (config?.safety?.strip_parent_credentials!==true) errors.push("parent credentials must be stripped");
+  if (config?.safety?.isolate_browser_harness_home!==true) errors.push("Browser Harness home must be isolated");
+  if (config?.safety?.cleanup_browser_harness_daemon!==true) errors.push("Browser Harness daemon cleanup must be enabled");
   return Object.freeze({ok:errors.length===0,errors:Object.freeze(errors)});
+}
+
+const CREDENTIAL_ENV_RE=/(?:API[_-]?KEY|TOKEN|SECRET|PASSWORD|PASSWD|COOKIE|AUTH(?:ORIZATION)?)/i;
+const MODEL_PROVIDER_ENV_RE=/^(?:OPENAI|ANTHROPIC|GEMINI|GOOGLE|AZURE|AWS|GROQ|MISTRAL|COHERE|DEEPSEEK|XAI|BROWSER_USE)_/i;
+
+export function buildBrowserUseChildEnv({env=process.env,config,cdpUrl,harnessHome}) {
+  assertLoopbackUrl(cdpUrl,"cdpUrl");
+  if(!nonEmpty(harnessHome)) throw new Error("harnessHome required");
+  const clean={};
+  for(const [key,value] of Object.entries(env||{})) {
+    if(CREDENTIAL_ENV_RE.test(key)) continue;
+    if(MODEL_PROVIDER_ENV_RE.test(key)) continue;
+    clean[key]=value;
+  }
+  clean[config.cdp_env]=cdpUrl;
+  clean.ANONYMIZED_TELEMETRY="false";
+  clean.BH_TELEMETRY="0";
+  clean.BROWSER_HARNESS_TELEMETRY="0";
+  clean.BROWSER_USE_CLOUD_SYNC="false";
+  clean.BH_UPDATE_CHECK="0";
+  clean.BU_AUTOSPAWN="";
+  clean.BH_HOME=harnessHome;
+  clean.BROWSER_HARNESS_HOME=harnessHome;
+  clean.BROWSER_USE_CLOUD_API_URL="http://127.0.0.1:1";
+  clean.BROWSER_USE_CLOUD_UI_URL="http://127.0.0.1:1";
+  clean.NO_PROXY=["127.0.0.1","localhost","::1",clean.NO_PROXY||clean.no_proxy||""].filter(Boolean).join(",");
+  clean.no_proxy=clean.NO_PROXY;
+  return Object.freeze(clean);
 }
 
 export function buildBrowserUseProgram({caseId,baseUrl,phase="main",resultMarker="NYOBA_BROWSER_RESULT="}) {
