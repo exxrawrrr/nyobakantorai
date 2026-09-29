@@ -139,3 +139,26 @@ CANDIDATE
 A candidate cannot claim a repository PR before review, and cannot become canonical without explicit human approval plus a repository PR reference.
 
 This makes "skills grow" auditable without allowing hidden self-modification.
+
+
+## Profile export and deletion
+
+The local memory-learning module exposes explicit profile portability primitives:
+
+- `exportProfileLearningState(...)`
+- `deleteProfileLearningState(...)`
+
+Default behavior is intentionally conservative.
+
+A profile export includes only that employee's learning state. Shared M3 knowledge is excluded unless `includeShared=true`.
+
+A profile deletion removes private/profile-scoped learning and non-merged skill candidates for that employee while leaving unrelated workers untouched.
+
+By default, deletion preserves:
+
+- M3 shared/project knowledge that was explicitly promoted;
+- skill candidates already merged through a repository PR.
+
+Deleting shared M3 knowledge requires an explicit `deleteShared=true` request.
+
+This prevents "delete Maya memory" from silently erasing project knowledge or Fikri/Siti state.
