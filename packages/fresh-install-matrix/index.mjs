@@ -245,7 +245,7 @@ export async function runSubsetFreshInstallMatrix({
 
       await copyDistributionOwned(packDir,resolve(profilesDir,employeeId));
 
-      const installedSkillEntries=(await readdir(resolve(profilesDir,employeeId,"skills"),{withFileTypes:true}))
+      const installedSkillEntries=(await readdir(resolve(profilesDir,employeeId,"skills","nyobakantorai"),{withFileTypes:true}))
         .filter(x=>x.isDirectory())
         .map(x=>x.name)
         .sort();
@@ -278,11 +278,9 @@ export async function runSubsetFreshInstallMatrix({
     const expectedProfiles=[...selectedIds].sort();
     const onlySelectedInstalled=JSON.stringify(installedProfiles)===JSON.stringify(expectedProfiles);
 
-    const userStateByProfile={};
     for(const employeeId of selectedIds){
       const profileDir=resolve(profilesDir,employeeId);
-      const fixtures=await seedUserOwnedState(profileDir);
-      userStateByProfile[employeeId]=await snapshotFixtures(profileDir,fixtures);
+      await seedUserOwnedState(profileDir);
     }
 
     const survivorIds=selectedIds.filter(id=>id!==removeEmployeeId);
