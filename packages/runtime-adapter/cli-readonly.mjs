@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { defineRuntimeAdapter } from "./index.mjs";
+import { authorizeCliAdapterConfig } from "./policy.mjs";
 
 const execFileAsync = promisify(execFile);
 const BASE_ENV_KEYS = Object.freeze([
@@ -80,6 +81,7 @@ export function createCliJsonAdapter({
   commandTimeoutMs = 1_500,
   maxBufferBytes = 1024 * 1024,
   execFileImpl = execFileAsync,
+  permissionPolicy = null,
 } = {}) {
   const exe = clean(executable, 512);
   assert(exe, "executable is required");
@@ -92,6 +94,17 @@ export function createCliJsonAdapter({
 
   assert(Number.isInteger(commandTimeoutMs) && commandTimeoutMs > 0 && commandTimeoutMs <= 10_000, "commandTimeoutMs must be 1..10000");
   assert(Number.isInteger(maxBufferBytes) && maxBufferBytes >= 1024 && maxBufferBytes <= 4 * 1024 * 1024, "maxBufferBytes must be 1024..4194304");
+
+  if (permissionPolicy) {
+    authorizeCliAdapterConfig(permissionPolicy, {
+      adapterId:id,
+      executable:exe,
+      envKeys:Object.keys(env),
+      timeoutMs:commandTimeoutMs,
+      maxBufferBytes,
+      shell:false,
+    });
+  }
 
   const runJson = async (args, purpose) => {
     const result = await execFileImpl(exe, [...args], {
