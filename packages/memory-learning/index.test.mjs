@@ -48,6 +48,8 @@ test("shared promotion requires explicit review and scope",()=>{
   assert.equal(promoted.layer,"M3");
   assert.equal(promoted.shared_scope,"project-alpha");
   assert.equal(promoted.human_review,true);
+  assert.equal(promoted.reviewed_by,"owner");
+  assert.deepEqual(validateLearningEvent(promoted,{employeeIds:ids}),[]);
 });
 
 test("M3 cannot appear without shared scope and review",()=>{
@@ -92,7 +94,7 @@ test("candidate cannot become canonical without review and repository PR",()=>{
 test("profile learning export stays scoped and excludes shared memory by default",()=>{
   const fikri=event();
   const maya={...event(),event_id:"evt.maya.0001",employee_id:"maya"};
-  const shared={...event(),event_id:"evt.fikri.shared1",layer:"M3",shared_scope:"project-alpha",human_review:true};
+  const shared={...event(),event_id:"evt.fikri.shared1",layer:"M3",shared_scope:"project-alpha",human_review:true,reviewed_by:"owner"};
   const bundle=exportProfileLearningState({
     events:[fikri,maya,shared],
     candidates:[candidate()],
@@ -106,7 +108,7 @@ test("profile learning export stays scoped and excludes shared memory by default
 
 test("profile deletion removes private learning but preserves promoted shared knowledge and merged canonical history",()=>{
   const privateEvent=event();
-  const shared={...event(),event_id:"evt.fikri.shared2",layer:"M3",shared_scope:"project-alpha",human_review:true};
+  const shared={...event(),event_id:"evt.fikri.shared2",layer:"M3",shared_scope:"project-alpha",human_review:true,reviewed_by:"owner"};
   const other={...event(),event_id:"evt.maya.0002",employee_id:"maya"};
   const reviewing={...candidate(),status:"REVIEW_REQUIRED",reviewed_by:"owner"};
   const merged={...candidate(),candidate_id:"skillcand.fikri.0002",status:"MERGED_VIA_REPOSITORY_PR",repository_pr:"https://github.com/exxrawrrr/nyobakantorai/pull/99"};
@@ -123,7 +125,7 @@ test("profile deletion removes private learning but preserves promoted shared kn
 });
 
 test("shared profile memory deletion requires explicit deleteShared opt-in",()=>{
-  const shared={...event(),event_id:"evt.fikri.shared3",layer:"M3",shared_scope:"project-alpha",human_review:true};
+  const shared={...event(),event_id:"evt.fikri.shared3",layer:"M3",shared_scope:"project-alpha",human_review:true,reviewed_by:"owner"};
   const result=deleteProfileLearningState({events:[shared],candidates:[],employeeId:"fikri",deleteShared:true});
   assert.equal(result.remaining.events.length,0);
   assert.deepEqual(result.deleted.events.map((item)=>item.event_id),["evt.fikri.shared3"]);
@@ -197,7 +199,7 @@ test("forged or invalid M3 event fails closed instead of leaking into another pr
     employee_id:"maya",
     layer:"M3",
     shared_scope:"project-alpha",
-    human_review:false,
+    human_review:true,
   };
   const view=buildProfileMemoryView({
     events:[forged],
@@ -207,7 +209,7 @@ test("forged or invalid M3 event fails closed instead of leaking into another pr
   });
   assert.equal(view.events.length,0);
   assert.equal(view.denied[0].reason,"INVALID_EVENT");
-  assert.ok(view.denied[0].details.some((item)=>/human_review/.test(item)));
+  assert.ok(view.denied[0].details.some((item)=>/reviewed_by/.test(item)));
 });
 
 test("M4 repository candidates are not injected into runtime memory context",()=>{
