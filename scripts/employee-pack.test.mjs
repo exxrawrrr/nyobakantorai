@@ -21,6 +21,9 @@ test("a single employee exports as a self-contained secret-free Hermes pack", as
   assert.equal(manifest.credentials_bundled, false);
   assert.equal(manifest.memory_boundary, "PROFILE_SCOPED");
   assert.ok(manifest.personality.dialogue_profile.opening_behavior);
+  assert.ok(manifest.operational_contract.inputs.length > 0);
+  assert.ok(manifest.operational_contract.outputs.length > 0);
+  assert.ok(manifest.operational_contract.verification_method);
   assert.ok(manifest.skills.length >= 4);
 
   const entries = await readdir(resolve(outRoot, "siti"));
