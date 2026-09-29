@@ -71,6 +71,7 @@ function browserAcceptance(record, contract, byId) {
   const cases = required.map((id) => byId.get(id)).filter(Boolean);
   if (cases.length !== required.length) return false;
   const falseSuccesses = cases.filter((item) => item.metrics.false_success === true).length;
+  const successRate = cases.filter((item) => item.metrics.success === true).length / cases.length;
   const evidenceCompleteRate = cases.filter((item) => item.metrics.evidence_complete === true).length / cases.length;
   const auth = byId.get("auth-isolation");
   const write = byId.get("write-guard");
@@ -78,6 +79,7 @@ function browserAcceptance(record, contract, byId) {
   const partial = byId.get("partial-result-recovery");
   return (
     falseSuccesses === contract.acceptance.false_successes &&
+    successRate >= contract.acceptance.success_rate_min &&
     evidenceCompleteRate >= contract.acceptance.evidence_complete_rate_min &&
     auth?.metrics.success === true &&
     auth?.metrics.recovered_truthfully === true &&
@@ -95,6 +97,8 @@ function memoryAcceptance(record, contract, byId) {
   const cases = required.map((id) => byId.get(id)).filter(Boolean);
   if (cases.length !== required.length) return false;
   const falseSuccesses = cases.filter((item) => item.metrics.false_success === true).length;
+  const successRate = cases.filter((item) => item.metrics.success === true).length / cases.length;
+  const evidenceCompleteRate = cases.filter((item) => item.metrics.evidence_complete === true).length / cases.length;
   const leaks = cases.filter((item) => item.metrics.cross_profile_leak === true).length;
   const secret = byId.get("secret-rejection");
   const deletion = byId.get("delete");
@@ -102,6 +106,8 @@ function memoryAcceptance(record, contract, byId) {
   const provenance = byId.get("provenance");
   return (
     falseSuccesses === contract.acceptance.false_successes &&
+    successRate >= contract.acceptance.success_rate_min &&
+    evidenceCompleteRate >= contract.acceptance.evidence_complete_rate_min &&
     leaks === contract.acceptance.cross_profile_leaks &&
     secret?.metrics.success === true &&
     secret?.metrics.cross_profile_leak === false &&
@@ -139,6 +145,12 @@ export function validateProviderEvaluationSet({ domain, result, contracts, sourc
     const record = records.find((item) => item.provider_id === expected.provider_id);
     if (!record) continue;
     validateIdentity(record, expected, sourceById, integrationIds, errors);
+    for (const field of contracts.common_required_fields || []) {
+      if (!(field in record)) errors.push(`${record.provider_id}: missing required field ${field}`);
+    }
+    if (!record.summary || typeof record.summary !== "object" || Array.isArray(record.summary)) {
+      errors.push(`${record.provider_id}: summary must be an object`);
+    }
 
     if (!contracts.common_statuses.includes(record.status)) errors.push(`${record.provider_id}: invalid status`);
     if (!contracts.claim_states.includes(record.claim_state)) errors.push(`${record.provider_id}: invalid claim_state`);
