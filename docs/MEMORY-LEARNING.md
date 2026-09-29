@@ -90,3 +90,52 @@ verified task
 The normal evidence threshold is 3+ independent observations, unless an explicit human rule provides a stronger direct basis.
 
 This keeps "the agent learns" from silently becoming "the agent rewrote its own constitution."
+
+
+## Learning event and skill candidate contracts
+
+The repository now has explicit schemas for governed learning:
+
+- `schemas/learning-event.schema.json`
+- `schemas/skill-candidate.schema.json`
+
+Runtime validation helpers live in:
+
+`packages/memory-learning/index.mjs`
+
+### Learning events
+
+Durable learning events require:
+
+- employee/profile ID;
+- M1/M2/M3/M4 layer;
+- timestamp;
+- concise summary;
+- evidence references;
+- source references;
+- sensitivity classification.
+
+Secret-like content is rejected. `SECRET_PROHIBITED` cannot be persisted.
+
+M3 shared knowledge requires an explicit shared scope and human review. Profile memory does not become shared merely because another worker could benefit from it.
+
+### Skill candidates
+
+A runtime worker may propose a skill candidate, but the candidate is not canonical.
+
+Normal evidence basis:
+
+- 3+ independent observations, or
+- an explicit human rule.
+
+The allowed transition is:
+
+```text
+CANDIDATE
+-> REVIEW_REQUIRED
+-> MERGED_VIA_REPOSITORY_PR
+```
+
+A candidate cannot claim a repository PR before review, and cannot become canonical without explicit human approval plus a repository PR reference.
+
+This makes "skills grow" auditable without allowing hidden self-modification.
