@@ -381,7 +381,7 @@ On the evaluated GROWTH machine:
 - GitHub Copilot CLI is not installed;
 - Codex CLI 0.154.0 was authenticated and used only as the live-model evaluation runtime.
 
-Therefore static packaging claims remain intact, but live Hermes/Gemini/Copilot behavioral parity remains `UNPROVEN`. No target is promoted to runtime parity from this readiness check.
+Therefore static packaging claims remain intact, but live Hermes/Codex/Gemini/Copilot behavioral parity remains `UNPROVEN`. Codex being authenticated for the separate Fikri evaluator role does not establish cross-harness parity, and no target is promoted to runtime parity from this readiness check.
 
 ### Cognee/Hermes live readiness — 2026-09-29
 
