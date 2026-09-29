@@ -342,6 +342,7 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 
 - **16 specialized Hermes employees** driven by one canonical registry, with distinct dialogue fingerprints, roles, habits, skills, toolset preferences, routing, approval, and verification policy.
 - **Standalone employee packs** so users can install/download one worker, an arbitrary subset, a preset team, or the full workforce.
+- **Signed execution receipts** with Ed25519 tamper detection, task/worker/capability binding, normalized token/cost fields, and evidence-verifier integration.
 - **Canonical reusable skills** spanning task truth, tool safety, ads operations, SEO/CRO, data, integrations, operations, community, governance, and independent QA.
 - **Evidence-gated task state** where VERIFIED requires independent evidence.
 - **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
@@ -593,6 +594,7 @@ See:
 - [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md)
 - [docs/PERSONALITY-CONTRACT.md](docs/PERSONALITY-CONTRACT.md)
 - [docs/MEMORY-LEARNING.md](docs/MEMORY-LEARNING.md)
+- [docs/EXECUTION-RECEIPTS.md](docs/EXECUTION-RECEIPTS.md)
 - [docs/CAPABILITY-MODEL.md](docs/CAPABILITY-MODEL.md)
 - [docs/AUTONOMY-MODES.md](docs/AUTONOMY-MODES.md)
 - [docs/ADS-WORKERS.md](docs/ADS-WORKERS.md)
