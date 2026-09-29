@@ -53,3 +53,13 @@ test("token estimator is explicitly approximate and deterministic", () => {
   assert.equal(estimateTokens("12345678"), 2);
   assert.equal(estimateTokens("12345678"), estimateTokens("12345678"));
 });
+
+
+test("Windows path and URL extraction does not swallow sentence tails", () => {
+  const text = "Source D:\\WORK\\service\\config.json. Health http://127.0.0.1:4322. Date 2026-09-29.";
+  const atoms = extractProtectedAtoms(text);
+  assert.ok(atoms.windows_paths.includes("D:\\WORK\\service\\config.json"));
+  assert.equal(atoms.windows_paths.some((value) => value.includes("Health")), false);
+  assert.ok(atoms.urls.includes("http://127.0.0.1:4322"));
+  assert.equal(atoms.urls.some((value) => value.endsWith(".")), false);
+});
