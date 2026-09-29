@@ -21,10 +21,12 @@ test("upstream-derived skills and integrations have explicit provenance",async()
     if(source.usage_mode==="excluded-from-copy-or-derivation") assert.match(source.license,/restricted/i);
   }
   const integrationIds=new Set(integrations.integrations.map(i=>i.id));
+  const capabilityIds=new Set(capabilities.capabilities.map(c=>c.id));
   assert.equal(integrationIds.size,integrations.integrations.length);
   for(const item of integrations.integrations){
     assert.ok(sourceIds.has(item.source_id),item.id);
     assert.match(item.default_state,/NOT_INSTALLED|REFERENCE_ONLY/);
+    if(item.capability) assert.ok(capabilityIds.has(item.capability),item.id+" references unknown capability "+item.capability);
   }
   const skillDirs=(await readdir(resolve(root,"skills/hermes-custom"),{withFileTypes:true})).filter(x=>x.isDirectory()).map(x=>x.name);
   for(const name of skillDirs){
@@ -48,6 +50,8 @@ test("upstream-derived skills and integrations have explicit provenance",async()
   }
   const fikri=employees.employees.find(e=>e.id==="fikri");
   assert.match(fikri.role,/Markdown/);
+  assert.match(fikri.role,/Context|Prompt/);
+  assert.ok(fikri.skills.includes("nyoba-context-prompt-compiler"));
   assert.ok(fikri.external_capabilities.includes("documents.markdown.convert"));
   assert.ok(capabilities.capabilities.some(c=>c.id==="documents.markdown.convert"&&c.risk_class==="READ_ONLY"&&c.default_state==="NOT_CONNECTED"));
 });
