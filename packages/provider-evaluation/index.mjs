@@ -105,6 +105,7 @@ function memoryAcceptance(record, contract, byId) {
     leaks === contract.acceptance.cross_profile_leaks &&
     secret?.metrics.success === true &&
     secret?.metrics.cross_profile_leak === false &&
+    secret?.metrics.secret_persistence === false &&
     deletion?.metrics.delete_verified === true &&
     exported?.metrics.export_verified === true &&
     provenance?.metrics.provenance_verified === true
