@@ -36,6 +36,7 @@ test("Agent Skills core export is byte-identical to canonical skills", async (t)
 });
 
 for (const target of [
+  { id:"codex-cli", root:["codex-cli",".agents","skills"], source:"codex-cli" },
   { id:"gemini-cli", root:["gemini-cli",".agents","skills"], source:"gemini-cli" },
   { id:"github-copilot", root:["github-copilot",".github","skills"], source:"awesome-copilot" },
 ]) {
@@ -79,7 +80,7 @@ test("Hermes native target verifies generated employee skill parity", async (t) 
 
 test("cross-harness manifests are deterministic across fresh exports", async () => {
   const result = await checkHarnessExports({
-    targets:["agent-skills-core","hermes","gemini-cli","github-copilot"],
+    targets:["agent-skills-core","hermes","codex-cli","gemini-cli","github-copilot"],
   });
   assert.equal(result.ok, true);
   assert.deepEqual(result.failures, []);
@@ -92,14 +93,18 @@ test("all adapter exports expose exactly the canonical skill names", async (t) =
   const canonical = (await readdir(new URL("../skills/hermes-custom/", import.meta.url), { withFileTypes:true }))
     .filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
 
+  await exportHarnessTarget({ targetId:"codex-cli", outRoot });
   await exportHarnessTarget({ targetId:"gemini-cli", outRoot });
   await exportHarnessTarget({ targetId:"github-copilot", outRoot });
 
+  const codex = (await readdir(resolve(outRoot,"codex-cli",".agents","skills"), { withFileTypes:true }))
+    .filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
   const gemini = (await readdir(resolve(outRoot,"gemini-cli",".agents","skills"), { withFileTypes:true }))
     .filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
   const copilot = (await readdir(resolve(outRoot,"github-copilot",".github","skills"), { withFileTypes:true }))
     .filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
 
+  assert.deepEqual(codex, canonical);
   assert.deepEqual(gemini, canonical);
   assert.deepEqual(copilot, canonical);
 });
