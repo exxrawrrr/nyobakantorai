@@ -56,7 +56,8 @@
 - [x] M0–M4 memory/learning policy with repository-PR-only canonical skill mutation
 - [x] expanded pinned upstream provenance and role-scoped optional integration catalog
 - [x] provider-neutral contracts for repository packing, experimental compression, browser operation, Lighthouse, and Polars
-- [ ] cross-harness Agent Skills compatibility tests before claiming broad portability
+- [x] static cross-harness skill packaging tests: Agent Skills core + Hermes + Gemini CLI + GitHub Copilot
+- [ ] live cross-harness activation/execution parity before claiming broad behavioral portability
 - [x] local profile learning export/delete isolation with shared/canonical preservation guards
 - [ ] Cognee memory-provider isolation/export/deletion evaluation
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
