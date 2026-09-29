@@ -169,3 +169,19 @@ direct user/external/repository source
 ```
 
 Do not treat recorder presence alone as proof of real-world reliability.
+
+
+## Integrity and semantic guardrails
+
+Verification semantics are fail-closed:
+
+- `verification_passed=true` requires `evidence_complete=true`;
+- `false_success=true` is valid only when the worker previously claimed task success and the reviewer did not pass verification;
+- self-verification is rejected;
+- reviewer selection follows the employee's verification policy;
+- duplicate source references cannot be counted as separate real tasks;
+- unsafe case IDs, newline-bearing references, credential-bearing URLs, private-key material, token/password/cookie-shaped text, and forbidden raw transcript/credential fields are rejected before persistence.
+
+The JSONL ledger is SHA-256 hash-chained. Existing ledger integrity is revalidated before every append. A corrupted or reordered ledger fails closed rather than silently continuing.
+
+CLI lifecycle behavior is exercised end-to-end in CI: start -> finish -> independent verify -> validate -> export.
