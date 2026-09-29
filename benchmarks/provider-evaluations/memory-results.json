@@ -13,7 +13,14 @@
       "environment": null,
       "cases": [],
       "summary": {
-        "note": "No live provider run recorded."
+        "note": "Live readiness was checked on GROWTH, but the provider itself was not runnable; no memory evaluation case was executed.",
+        "readiness_evidence_ref": "benchmarks/provider-evaluations/memory-readiness-2026-09-29.json",
+        "blockers": [
+          "Cognee integration/package not installed.",
+          "Hermes model/provider credentials and OAuth are not configured.",
+          "No local or remote Cognee configuration is present."
+        ],
+        "acceptance_passed": false
       }
     }
   ]
