@@ -260,6 +260,45 @@
         "local structured-data analysis",
         "reproducible transformations"
       ]
+    },
+    {
+      "id": "codex-cli",
+      "name": "OpenAI Codex CLI",
+      "repo": "https://github.com/openai/codex",
+      "commit": "c248f6d48b97eb4a2aa56147a0b11b7d763278b9",
+      "license": "Apache-2.0",
+      "usage_mode": "runtime-and-skill-discovery-reference",
+      "used_for": [
+        "cross-harness self-test",
+        "project .agents/skills discovery",
+        "read-only exec invocation"
+      ]
+    },
+    {
+      "id": "hermes-agent",
+      "name": "Hermes Agent",
+      "repo": "https://github.com/NousResearch/hermes-agent",
+      "commit": "ea114c3e98c3339e13004adfc6098cf28ed7d754",
+      "license": "MIT",
+      "usage_mode": "runtime-and-skill-discovery-reference",
+      "used_for": [
+        "cross-harness self-test",
+        "non-interactive stream-json execution",
+        "explicit skill preload"
+      ]
+    },
+    {
+      "id": "copilot-cli",
+      "name": "GitHub Copilot CLI",
+      "repo": "https://github.com/github/copilot-cli",
+      "commit": "8dfa6009c4a04b3a22a5ca4a7c36a056edd718dd",
+      "license": "GitHub Copilot CLI License",
+      "usage_mode": "runtime-reference-no-vendoring",
+      "used_for": [
+        "cross-harness self-test",
+        "non-interactive prompt execution",
+        "JSONL output contract"
+      ]
     }
   ]
 }
