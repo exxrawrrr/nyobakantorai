@@ -1,12 +1,13 @@
 ---
 name: nyoba-mcp-integration
-description: Design MCP/API/plugin/connector integrations with explicit auth, capability, health, and failure boundaries.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Design MCP/API/plugin/connector integrations with explicit auth, capability, health, and failure boundaries."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, workforce, v0.3]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,workforce,v0.3"
 ---
 
 # MCP / integration engineering

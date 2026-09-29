@@ -1,12 +1,13 @@
 ---
 name: nyoba-kpi-analysis
-description: Reproducible growth and paid-media metrics with sources, time windows and formulas.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Reproducible growth and paid-media metrics with sources, time windows and formulas."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Paijo KPI analysis

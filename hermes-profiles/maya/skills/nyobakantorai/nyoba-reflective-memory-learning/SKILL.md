@@ -1,13 +1,12 @@
 ---
 name: nyoba-reflective-memory-learning
-description: Use when a meaningful task finishes, a correction occurs, or prior experience should inform the next run without copying raw transcripts.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when a meaningful task finishes, a correction occurs, or prior experience should inform the next run without copying raw transcripts."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [ecc, mem0, letta, mcp-reference-servers]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
 ---
 
 # Reflective Memory & Learning
