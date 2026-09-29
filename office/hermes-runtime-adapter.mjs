@@ -57,12 +57,12 @@ export function createHermesRuntimeAdapter({
 } = {}) {
   const exe = clean(executable, 512);
   const boardName = clean(board, 120);
+  if (!Array.isArray(employeeIds)) throw new TypeError("employeeIds must be an array.");
   const ids = Object.freeze([...employeeIds].map((id) => clean(id, 80).toLowerCase()).filter(Boolean));
   const configured = !disabled && Boolean(clean(hermesHome, 2000));
 
   if (!exe) throw new TypeError("Hermes executable is required.");
   if (!boardName) throw new TypeError("Hermes board is required.");
-  if (!Array.isArray(employeeIds)) throw new TypeError("employeeIds must be an array.");
   if (!Number.isInteger(commandTimeoutMs) || commandTimeoutMs < 100 || commandTimeoutMs > 30_000) {
     throw new TypeError("commandTimeoutMs must be 100..30000.");
   }
