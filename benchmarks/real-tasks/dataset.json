@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "status": "NOT_READY",
+  "claim_state": "UNPROVEN",
+  "note": "No real-task baseline has been collected/published yet. Synthetic demos and benchmark fixtures must not be counted.",
+  "environment": null,
+  "cases": [],
+  "summary": null
+}
