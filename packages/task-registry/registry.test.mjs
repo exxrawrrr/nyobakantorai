@@ -209,6 +209,10 @@ test("execution receipt attachment rejects malformed refs and unauthorized actor
     /reference tidak valid/
   );
   assert.throws(
+    () => attachExecutionReceipt(registry, id, { receipt_ref:"receipt:sha256:" + "e".repeat(64) }, clock, ids),
+    /actor wajib diisi/
+  );
+  assert.throws(
     () => attachExecutionReceipt(registry, id, {
       receipt_ref:"receipt:sha256:" + "b".repeat(64),
       actor:"maya",
