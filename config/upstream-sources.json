@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "reviewed_at": "2026-09-29",
+  "policy": "Prefer recreated/adapted concepts with explicit attribution. Vendor upstream text/code only when the specific license permits it and notices are preserved.",
+  "sources": [
+    {
+      "id": "ecc",
+      "name": "Everything Claude Code (ECC)",
+      "repo": "https://github.com/affaan-m/ECC",
+      "commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+      "license": "MIT",
+      "usage_mode": "recreated-concepts",
+      "used_for": [
+        "reflective memory",
+        "continuous learning",
+        "strategic compaction",
+        "deep research",
+        "agent introspection"
+      ]
+    },
+    {
+      "id": "superpowers",
+      "name": "Superpowers",
+      "repo": "https://github.com/obra/superpowers",
+      "commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+      "license": "MIT",
+      "usage_mode": "recreated-concepts-and-optional-plugin",
+      "used_for": [
+        "brainstorming",
+        "systematic debugging",
+        "TDD",
+        "verification",
+        "planning",
+        "skill engineering",
+        "Hermes plugin option"
+      ]
+    },
+    {
+      "id": "anthropic-mcp-builder",
+      "name": "Anthropic mcp-builder skill",
+      "repo": "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
+      "commit": "33375500bcea98d610eb30ce10ac4e59b89c390d",
+      "license": "Apache-2.0",
+      "usage_mode": "recreated-concepts",
+      "used_for": [
+        "MCP server design",
+        "evaluation",
+        "security boundaries"
+      ]
+    },
+    {
+      "id": "markitdown",
+      "name": "Microsoft MarkItDown + MarkItDown MCP",
+      "repo": "https://github.com/microsoft/markitdown",
+      "commit": "b8f79c57ebc0044be41323d89b2a45d3fda8460e",
+      "license": "MIT",
+      "usage_mode": "optional-integration-and-concept-reference",
+      "used_for": [
+        "document-to-Markdown",
+        "local MCP conversion"
+      ]
+    },
+    {
+      "id": "docling",
+      "name": "Docling",
+      "repo": "https://github.com/docling-project/docling",
+      "commit": "98d78ef87bbe4eb88b3212e3ef2a5cbe4dd4729c",
+      "license": "MIT",
+      "usage_mode": "concept-reference",
+      "used_for": [
+        "structured document extraction",
+        "tables",
+        "chunking"
+      ]
+    },
+    {
+      "id": "jina-reader",
+      "name": "Jina Reader",
+      "repo": "https://github.com/jina-ai/reader",
+      "commit": "1574bfd380d249c86c82db4dace0d9c8fe17e2b1",
+      "license": "Apache-2.0",
+      "usage_mode": "concept-reference",
+      "used_for": [
+        "web-to-Markdown",
+        "readability",
+        "Markdown profiles"
+      ]
+    },
+    {
+      "id": "mem0",
+      "name": "Mem0",
+      "repo": "https://github.com/mem0ai/mem0",
+      "commit": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "license": "Apache-2.0",
+      "usage_mode": "concept-reference",
+      "used_for": [
+        "memory lifecycle",
+        "memory scoping",
+        "retrieve-generate-store pattern"
+      ]
+    },
+    {
+      "id": "letta",
+      "name": "Letta",
+      "repo": "https://github.com/letta-ai/letta",
+      "commit": "5bcdd177d70fa2b31a754cfcd801e77b2e1ab16a",
+      "license": "Apache-2.0",
+      "usage_mode": "concept-reference",
+      "used_for": [
+        "stateful agents",
+        "learning over time",
+        "memory boundaries"
+      ]
+    },
+    {
+      "id": "mcp-reference-servers",
+      "name": "Model Context Protocol reference servers",
+      "repo": "https://github.com/modelcontextprotocol/servers",
+      "commit": "f46d9578190b476b3501923ea8977d899e8db2cb",
+      "license": "MIT / repository notices",
+      "usage_mode": "concept-reference",
+      "used_for": [
+        "memory server patterns",
+        "MCP tool contracts"
+      ]
+    },
+    {
+      "id": "anthropic-document-skills-excluded",
+      "name": "Anthropic PDF/DOCX document skills",
+      "repo": "https://github.com/anthropics/skills",
+      "commit": "33375500bcea98d610eb30ce10ac4e59b89c390d",
+      "license": "restricted skill-specific terms",
+      "usage_mode": "excluded-from-copy-or-derivation",
+      "used_for": [
+        "license boundary only"
+      ],
+      "note": "Not copied, vendored, or used to create derivative document skills."
+    }
+  ]
+}

@@ -29,3 +29,8 @@ The current nyobakantorai office is not presented as a fork of Pixel Agents. Its
 - Python + PyYAML are used by developer/release utilities and are not required just to run the office UI.
 
 If an upstream project materially contributes code or design to nyobakantorai in the future, add it here in the same change that introduces that dependency.
+## Skill, memory, and document workflow sources
+
+The v0.3 workforce enrichment uses **recreated concepts** (not unattributed copies) from permissively licensed projects including ECC, Superpowers, MarkItDown, Docling, Mem0, Letta, Jina Reader, MCP reference servers, and Anthropic's Apache-2.0 `mcp-builder` skill. Exact source commits, licenses, and usage mode are recorded in `config/upstream-sources.json` and `docs/UPSTREAM-SOURCE-CATALOG.md`.
+
+Anthropic PDF/DOCX document skills with restrictive skill-specific terms are intentionally excluded from copying/derivation.
