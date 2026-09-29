@@ -56,7 +56,7 @@
 - [x] M0–M4 memory/learning policy with repository-PR-only canonical skill mutation
 - [x] expanded pinned upstream provenance and role-scoped optional integration catalog
 - [x] provider-neutral contracts for repository packing, experimental compression, browser operation, Lighthouse, and Polars
-- [x] static cross-harness skill packaging tests: Agent Skills core + Hermes + Gemini CLI + GitHub Copilot
+- [x] static cross-harness skill packaging tests: Agent Skills core + Hermes + Codex CLI + Gemini CLI + GitHub Copilot
 - [x] cross-harness self-service activation/execution probe runner for Hermes/Codex/Gemini/Copilot: disposable probe skill, exact protected atoms, isolated temporary workspace, bounded evidence, no auto-install/login
 - [ ] canonical live cross-harness activation/execution parity before claiming broad behavioral portability — historical readiness remains UNPROVEN until reviewed live user runs are intentionally promoted
 - [x] local profile learning read/export/delete isolation with explicit M3 scope + cross-profile contamination guards
