@@ -50,3 +50,19 @@ test("task/reconciliation boundaries also consume the canonical workforce", asyn
   assert.match(packageRegistry, /from "..\/..\/lib\/workforce\.mjs"/);
   assert.doesNotMatch(packageRegistry, /export const EMPLOYEES = Object\.freeze\(\[/);
 });
+
+
+test("server routes Hermes through the runtime adapter boundary", async () => {
+  const server = await read("server.mjs");
+  const adapter = await read("hermes-runtime-adapter.mjs");
+  assert.match(server, /createHermesRuntimeAdapter/);
+  assert.match(server, /hermesRuntime\.runtimeSnapshot/);
+  assert.doesNotMatch(server, /node:child_process/);
+  assert.doesNotMatch(server, /\bexecFile\b/);
+  assert.doesNotMatch(server, /\brunHermes\b/);
+  assert.match(adapter, /defineRuntimeAdapter/);
+  assert.match(adapter, /snapshotRuntime/);
+  assert.match(adapter, /shell:false/);
+  assert.match(adapter, /write:false/);
+  assert.match(adapter, /dispatch:false/);
+});
