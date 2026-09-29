@@ -1,8 +1,6 @@
 # Publication runbook
 
-The canonical repository is intentionally kept **PRIVATE** until the owner chooses to publish it.
-
-Use this runbook only after the private release candidate is green.
+The canonical repository is already **PUBLIC**. This runbook now governs stable release promotion and public verification; it no longer assumes a private-to-public visibility transition.
 
 ## 1. Pre-public proof
 
@@ -55,17 +53,20 @@ In **Settings → Code security and analysis**, enable the protections available
 
 Do not add credentials merely to test these controls.
 
-## 4. Change visibility
+## 4. Stable promotion
 
-Only after the checks above:
+The current v0.4 Draft candidate must not be promoted while `docs/V0.4-RELEASE-DECISION.md` says **HOLD**.
 
-**Settings → General → Danger Zone → Change repository visibility → Public**
+When a future release decision allows promotion:
 
-The publication step is intentionally manual. It should never happen as a side effect of CI, a script, or an agent.
+1. merge/promote the reviewed candidate through an explicit path to `main`;
+2. confirm the exact promoted commit SHA;
+3. rerun `npm run release:check` and the manual `release-gate` from that final commit;
+4. do not treat a merge into a staging/PRD branch as shipment.
 
 ## 5. Public verification
 
-After visibility changes:
+Before creating a stable release tag:
 
 - open the repository in a logged-out/private browser window;
 - confirm README screenshots render;
@@ -74,14 +75,14 @@ After visibility changes:
 - re-run the manual `release-gate` workflow;
 - verify the generated manifest artifact belongs to the public commit SHA.
 
-## 6. First release
+## 6. v0.4 release
 
-Create the v0.3 release only after the public verification passes. Do not tag a failing draft PR.
+Do not tag the current Draft candidate while the release decision is `HOLD`.
 
-For this v0.3 candidate, the intended tag after all gates and public verification is:
+When the deferred release scope is explicitly resolved or accepted and the **final promoted main commit** passes every gate, the intended stable tag is:
 
 ```text
-v0.3.0
+v0.4.0
 ```
 
-Release notes should be based on `CHANGELOG.md` and must not claim model/runtime capabilities that are not independently verified.
+Release notes must be based on `CHANGELOG.md` plus the permanent evaluation/release-decision records. They must preserve `NOT_RUN / UNPROVEN` provider states and must not present the 1/20 collecting dataset as a completed real-task baseline.
