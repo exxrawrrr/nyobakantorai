@@ -2,7 +2,7 @@ const MONTHS = "januari|februari|maret|april|mei|juni|juli|agustus|september|okt
 const CONSTRAINT_RE = /\b(harus|wajib|jangan|tidak boleh|dilarang|hanya|izin|approval|approve|must|must not|do not|don't|never|only|required|forbidden)\b/i;
 const PATTERNS = Object.freeze({
   url: /https?:\/\/[^\s<>"')\]}]+/gi,
-  windows_path: /\b[A-Za-z]:\\[^\r\n"'<>|]+/g,
+  windows_path: /\\b[A-Za-z]:\\\\(?:[^\\s\\\\/:*?"<>|\\r\\n]+\\\\)*[^\\s\\\\/:*?"<>|\\r\\n]+/g,
   posix_path: /(?:^|\s)(\/(?:[^\s/"']+\/)*[^\s/"']+)/g,
   iso_date: /\b\d{4}-\d{2}-\d{2}\b/g,
   named_date: new RegExp(`\\b\\d{1,2}\\s+(?:${MONTHS})\\s+\\d{4}\\b`, "gi"),

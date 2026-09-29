@@ -15,7 +15,7 @@ test("protected atom extraction preserves high-risk exact details", () => {
   assert.ok(atoms.amounts.includes("Rp1.500.000"));
   assert.ok(atoms.percentages.includes("3.7%"));
   assert.ok(atoms.urls.includes("https://example.com/source"));
-  assert.ok(atoms.windows_paths.some((value) => value.includes("D:\\WORK\\brief.md")));
+  assert.deepEqual(atoms.windows_paths, ["D:\\WORK\\brief.md"]);
   assert.ok(atoms.constraints.some((value) => value.startsWith("Harus")));
   assert.ok(atoms.constraints.some((value) => value.startsWith("Jangan")));
 });
