@@ -110,3 +110,61 @@ test("false-success failures are preserved instead of filtered",async()=>{
   assert.equal(dataset.cases[0].metrics.verification_passed,false);
   assert.equal(dataset.summary.false_successes,1);
 });
+
+
+test("semantic verification contradictions fail closed",async()=>{
+  const dir=await mkdtemp(join(tmpdir(),"nyoba-recorder-"));
+  const ledger=join(dir,"ledger.jsonl");
+  await recordStart({ledgerPath:ledger,payload:startPayload,context,now:"2026-09-29T10:00:00Z"});
+  await recordFinish({ledgerPath:ledger,payload:finishPayload,context,now:"2026-09-29T10:01:00Z"});
+
+  await assert.rejects(
+    ()=>recordVerification({
+      ledgerPath:ledger,
+      payload:{...verifyPayload,verification_passed:true,evidence_complete:false},
+      context,now:"2026-09-29T10:02:00Z"
+    }),
+    /verification_passed requires evidence_complete/
+  );
+
+  await assert.rejects(
+    ()=>recordVerification({
+      ledgerPath:ledger,
+      payload:{...verifyPayload,false_success:true,verification_passed:true},
+      context,now:"2026-09-29T10:02:00Z"
+    }),
+    /false_success cannot also be verification_passed/
+  );
+});
+
+test("false_success cannot be attached to a task that already declared failure",async()=>{
+  const dir=await mkdtemp(join(tmpdir(),"nyoba-recorder-"));
+  const ledger=join(dir,"ledger.jsonl");
+  await recordStart({ledgerPath:ledger,payload:startPayload,context,now:"2026-09-29T10:00:00Z"});
+  await recordFinish({ledgerPath:ledger,payload:{...finishPayload,success:false},context,now:"2026-09-29T10:01:00Z"});
+  await assert.rejects(
+    ()=>recordVerification({
+      ledgerPath:ledger,
+      payload:{...verifyPayload,verification_passed:false,false_success:true},
+      context,now:"2026-09-29T10:02:00Z"
+    }),
+    /false_success requires an earlier success claim/
+  );
+});
+
+test("case ids and refs reject unsafe or credential-bearing material",async()=>{
+  const dir=await mkdtemp(join(tmpdir(),"nyoba-recorder-"));
+  const ledger=join(dir,"ledger.jsonl");
+  await assert.rejects(
+    ()=>recordStart({ledgerPath:ledger,payload:{...startPayload,case_id:"bad case id"},context}),
+    /case_id must be/
+  );
+  await assert.rejects(
+    ()=>recordStart({ledgerPath:ledger,payload:{...startPayload,case_id:"safe-id",source_ref:"https://example.invalid/task?token=SECRET123456789"},context}),
+    /secret-like/
+  );
+  await assert.rejects(
+    ()=>recordStart({ledgerPath:ledger,payload:{...startPayload,case_id:"safe-id-2",source_ref:"https://user:password@example.invalid/task"},context}),
+    /secret-like/
+  );
+});
