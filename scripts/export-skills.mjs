@@ -118,7 +118,7 @@ async function verifyHermesAssignments() {
 
 function resolveTargetRoot(base, target) {
   if (target.id === "agent-skills-core") return resolve(base, target.id, "skills");
-  if (target.id === "gemini-cli") return resolve(base, target.id, ".agents/skills");
+  if (target.id === "gemini-cli" || target.id === "codex-cli") return resolve(base, target.id, ".agents/skills");
   if (target.id === "github-copilot") return resolve(base, target.id, ".github/skills");
   return resolve(base, target.id);
 }
@@ -182,13 +182,13 @@ export async function exportHarnessTarget({ targetId, outRoot = resolve(root, "d
   });
 }
 
-export async function exportHarnessTargets({ targets = ["agent-skills-core","hermes","gemini-cli","github-copilot"], outRoot = resolve(root, "dist/harness-skills") } = {}) {
+export async function exportHarnessTargets({ targets = ["agent-skills-core","hermes","codex-cli","gemini-cli","github-copilot"], outRoot = resolve(root, "dist/harness-skills") } = {}) {
   const results = [];
   for (const targetId of targets) results.push(await exportHarnessTarget({ targetId, outRoot }));
   return results;
 }
 
-export async function checkHarnessExports({ targets = ["agent-skills-core","hermes","gemini-cli","github-copilot"] } = {}) {
+export async function checkHarnessExports({ targets = ["agent-skills-core","hermes","codex-cli","gemini-cli","github-copilot"] } = {}) {
   const a = await mkdtemp(resolve(tmpdir(), "nyoba-harness-a-"));
   const b = await mkdtemp(resolve(tmpdir(), "nyoba-harness-b-"));
   try {
@@ -232,7 +232,7 @@ async function main() {
   const argv = process.argv.slice(2);
   const targetArg = parseArg(argv, "target") || "all";
   const targets = targetArg === "all"
-    ? ["agent-skills-core","hermes","gemini-cli","github-copilot"]
+    ? ["agent-skills-core","hermes","codex-cli","gemini-cli","github-copilot"]
     : targetArg.split(",").map((item) => item.trim()).filter(Boolean);
 
   if (argv.includes("--check")) {
