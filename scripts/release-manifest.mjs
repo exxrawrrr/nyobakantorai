@@ -7,6 +7,7 @@ import { buildReleaseClaimSnapshot } from "../packages/release-claims/index.mjs"
 
 const root = resolve(import.meta.dirname, "..");
 const outPath = resolve(root, "release", "manifest.json");
+const check = process.argv.includes("--check");
 const tracked = execFileSync("git", ["ls-files"], { cwd: root, encoding: "utf8" })
   .split(/\r?\n/).filter(Boolean)
   .filter((file) => file !== "release/manifest.json")
@@ -39,6 +40,10 @@ const manifest = {
   files,
 };
 
-mkdirSync(dirname(outPath), { recursive: true });
-writeFileSync(outPath, JSON.stringify(manifest, null, 2) + "\n");
-console.log(`Release manifest written: ${files.length} files @ ${commit.slice(0, 12)}`);
+if (check) {
+  console.log(`Release manifest check passed: ${files.length} files @ ${commit.slice(0, 12)} · live_evaluation_complete=${claims.live_evaluation_complete}`);
+} else {
+  mkdirSync(dirname(outPath), { recursive: true });
+  writeFileSync(outPath, JSON.stringify(manifest, null, 2) + "\n");
+  console.log(`Release manifest written: ${files.length} files @ ${commit.slice(0, 12)}`);
+}
