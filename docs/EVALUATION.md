@@ -132,3 +132,48 @@ INVALID -> REJECTED
 ```
 
 A result cannot label itself candidate while its evidence fails the acceptance gate.
+
+
+## Real-task dataset gate
+
+The project now has an explicit anti-theater gate for the future real-task baseline:
+
+- `config/real-task-evaluation.json`
+- `benchmarks/real-tasks/dataset.json`
+- `packages/real-task-evaluation/index.mjs`
+
+The committed dataset starts empty:
+
+```text
+status = NOT_READY
+claim_state = UNPROVEN
+cases = []
+```
+
+That is intentional.
+
+Synthetic demos, generated prompts, benchmark fixtures, and other fabricated work cannot count as real-task cases.
+
+Eligible source types are limited to:
+
+- owner real tasks;
+- real external requests;
+- real repository issues.
+
+A future report requires at least 20 cases, evidence references, redaction review, environment metadata, complete metric fields, and zero false-successes before it may move to `READY_FOR_REPORT`.
+
+The required metrics include:
+
+- task success;
+- evidence completeness;
+- false-success;
+- human intervention;
+- retries;
+- duration;
+- whether cost is known;
+- verification result;
+- recovery after failure.
+
+The validator also rejects secret-like content from the redacted task summary.
+
+This does not create or fake the 20 cases. It only makes it difficult to accidentally call synthetic/demo work a published real-task baseline.
