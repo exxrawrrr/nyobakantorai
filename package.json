@@ -49,6 +49,7 @@
     "capability-catalog:generate": "node scripts/generate-capability-catalog.mjs",
     "capability-catalog:check": "node scripts/generate-capability-catalog.mjs --check",
     "test:capability-catalog": "node --test scripts/capability-catalog.test.mjs",
-    "test:memory-learning": "node --test packages/memory-learning/index.test.mjs"
+    "test:memory-learning": "node --test packages/memory-learning/index.test.mjs",
+    "employee:pack:check": "node scripts/employee-pack.mjs --check --employees=all"
   }
 }
