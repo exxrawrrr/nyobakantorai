@@ -145,3 +145,15 @@ test("Hermes descriptor can reuse a known version without another CLI probe", as
   assert.equal(descriptor.installed, true);
   assert.equal(fake.calls.filter((call) => call.args[0] === "--version").length, 0);
 });
+
+
+test("Hermes adapter rejects malformed employee id configuration", () => {
+  assert.throws(
+    () => createHermesRuntimeAdapter({
+      executable:"hermes-test",
+      hermesHome:"/tmp/hermes-home",
+      employeeIds:"subagjo",
+    }),
+    /employeeIds must be an array/
+  );
+});
