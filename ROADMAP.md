@@ -61,7 +61,7 @@
 - [x] local profile learning read/export/delete isolation with explicit M3 scope + cross-profile contamination guards
 - [x] fail-closed provider evaluation contracts for browser + memory candidates
 - [ ] Cognee memory-provider isolation/export/deletion evaluation — live readiness checked 2026-09-29; provider package/config/credentials absent on GROWTH, so status remains NOT_RUN / UNPROVEN
-- [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
+- [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark — Playwright MCP controlled live run is EVALUATED_CANDIDATE (6/6, zero false-success, no writes/auth leakage, truthful timeout/partial recovery); Browser Use remains NOT_RUN / UNPROVEN, so head-to-head comparison stays open
 - [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
 - [x] deterministic adversarial policy/recovery benchmark with zero-false-success gate
 - [x] live Fikri context-compaction benchmark on controlled synthetic fixtures: 41.10% average reduction, 100% protected/source fidelity, 5/5 blind downstream pass; real-task generalization remains separate
