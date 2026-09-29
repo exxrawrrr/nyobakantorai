@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "note": "Synthetic regression fixtures for the deterministic context guard. These do not prove live-model or cross-harness task quality.",
+  "cases": [
+    {
+      "id": "paid-media-approval",
+      "objective": "Prepare a Meta campaign change brief without executing the change.",
+      "minimum_reduction": 0.15,
+      "required_facts": [
+        "Prepare a Meta campaign change brief",
+        "approval owner",
+        "Rp1.500.000",
+        "3.7%",
+        "26 September 2026",
+        "https://example.com/campaign"
+      ],
+      "source": "The campaign discussion has repeated the same background several times. The team wants a concise handoff for review, not a history lesson. Earlier exploratory notes about alternative headlines are no longer relevant to the immediate decision.\n\nTarget review is 26 September 2026 at 13:30 WIB. Budget ceiling Rp1.500.000 and the observed CTR reference is 3.7%. Source dashboard: https://example.com/campaign\n\nHarus pertahankan budget ceiling persis.\nJangan execute atau publish sebelum approval owner.\nHarus pisahkan observed platform signal dari causal conclusion.\n\nThe purpose of the packet is to let an approver understand the requested change, its spend boundary, and what evidence must be checked afterward. The repeated campaign narrative above can be removed from the dispatch layer as long as the exact decision constraints survive."
+    },
+    {
+      "id": "engineering-patch",
+      "objective": "Prepare a reversible engineering handoff for the failing local service.",
+      "minimum_reduction": 0.15,
+      "required_facts": [
+        "reversible engineering handoff",
+        "D:\\\\WORK\\\\service\\\\config.json",
+        "http://127.0.0.1:4322",
+        "2026-09-29",
+        "Jangan deploy"
+      ],
+      "source": "A local service has accumulated debugging notes from several attempts. Most of the notes repeat that the service should remain local-first and that previous guesses did not isolate the failure. Those repeated explanations are not required in the final dispatch card.\n\nCurrent source of truth is D:\\\\WORK\\\\service\\\\config.json. Health endpoint is http://127.0.0.1:4322. The current checkpoint date is 2026-09-29.\n\nHarus buat perubahan sekecil dan reversible mungkin.\nJangan deploy ke production.\nJangan claim fixed sebelum negative test dan smoke test lulus.\n\nThe engineer needs the exact path, endpoint, restrictions, and verification rule. Historical speculation can stay in canonical notes rather than occupying the short dispatch context."
+    },
+    {
+      "id": "training-schedule",
+      "objective": "Compile the training revision into a short execution brief.",
+      "minimum_reduction": 0.15,
+      "required_facts": [
+        "training revision",
+        "08:00 WIB",
+        "11:00 WIB",
+        "Rp12.500.000",
+        "14 Oktober 2026"
+      ],
+      "source": "The proposal contains a long narrative about previous drafts, formatting preferences, and why the schedule was revised. The operational revision itself is much smaller than the surrounding explanation.\n\nTraining date is 14 Oktober 2026. Morning block starts 08:00 WIB and the practical demonstration starts 11:00 WIB. Session reference value Rp12.500.000.\n\nWajib pertahankan jam dan nominal apa adanya.\nJangan ubah practical demonstration menjadi full practical assessment.\nHarus bedakan teori, demo, dan verification evidence.\n\nThe final worker only needs the revision facts, protected terminology, and acceptance boundary. Repeated proposal history belongs in the longer source layer."
+    },
+    {
+      "id": "research-synthesis",
+      "objective": "Create a source-traceable research dispatch without flattening disagreement.",
+      "minimum_reduction": 0.15,
+      "required_facts": [
+        "source-traceable research dispatch",
+        "https://example.com/source-a",
+        "https://example.org/source-b",
+        "Jangan paksa"
+      ],
+      "source": "The research thread contains duplicated summaries from multiple turns. Some paragraphs repeat the same thesis with slightly different language. The dispatch layer should be smaller while leaving the detailed notes available on demand.\n\nPrimary source: https://example.com/source-a\nCounter-source: https://example.org/source-b\n\nHarus pertahankan kedua source pointer.\nJangan paksa dua sumber yang berbeda menjadi satu kesimpulan palsu.\nHarus label uncertainty jika evidence belum cukup.\n\nThe researcher should preserve disagreement and use the canonical notes for detail. The short packet exists only to orient the next decision and should not become a substitute for the source material."
+    },
+    {
+      "id": "document-context",
+      "objective": "Prepare a compact document-processing handoff with exact source constraints.",
+      "minimum_reduction": 0.15,
+      "required_facts": [
+        "document-processing handoff",
+        "D:\\\\DOCS\\\\proposal.pdf",
+        "https://example.net/reference",
+        "25%",
+        "Rp2.200.000"
+      ],
+      "source": "A document-processing request includes many repetitions about keeping formatting clean, reducing token use, and making the next worker efficient. Those repetitions can be compacted if source fidelity remains visible.\n\nOriginal file: D:\\\\DOCS\\\\proposal.pdf\nReference page: https://example.net/reference\nComparison threshold: 25%\nQuoted project value: Rp2.200.000\n\nHarus simpan source path dan reference URL.\nJangan hilangkan angka atau approval-related wording saat compaction.\nHarus treat converted Markdown sebagai working representation, bukan original evidence.\n\nThe output should allow a downstream worker to know what to open and what must remain exact without loading all duplicated prose first."
+    }
+  ]
+}
