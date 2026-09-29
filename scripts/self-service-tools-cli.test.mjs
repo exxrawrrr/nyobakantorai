@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -178,4 +178,85 @@ test("cross-harness plan CLI is side-effect free and never upgrades detection in
   assert.ok(data.targets.every((x)=>x.provider_call_performed===false));
   assert.ok(data.targets.every((x)=>["READY_FOR_SELF_TEST","NOT_INSTALLED"].includes(x.status)));
   assert.match(data.claim_limit,/neither state proves all canonical skills/i);
+});
+
+
+test("real-task baseline CLI reports current 1/20 without mutating canonical data",()=>{
+  const result=run(["scripts/real-task-baseline.mjs","status"]);
+  assert.equal(result.status,0,result.stderr);
+  const data=JSON.parse(result.stdout);
+  assert.equal(data.valid,true);
+  assert.equal(data.cases,1);
+  assert.equal(data.remaining,19);
+  assert.equal(data.false_successes,0);
+  assert.equal(data.publication_gate_passed,false);
+});
+
+test("real-task baseline CLI rejects automatic publication",()=>{
+  const result=run(["scripts/real-task-baseline.mjs","publish"]);
+  assert.equal(result.status,1);
+  assert.match(result.stderr,/automatic publication is forbidden/i);
+});
+
+test("real-task baseline CLI audits and merges a valid recorder snapshot only to a separate candidate",async()=>{
+  const dir=await mkdtemp(join(tmpdir(),"nyoba-baseline-cli-"));
+  const snapshotPath=join(dir,"snapshot.json");
+  const candidatePath=join(dir,"candidate.json");
+  const snapshot={
+    schema:1,
+    status:"COLLECTING",
+    claim_state:"COLLECTING",
+    note:"CLI real-task snapshot.",
+    environment:{runtime:"cli-test"},
+    cases:[{
+      case_id:"cli-baseline-real-002",
+      source_type:"owner_real_task",
+      source_ref:"owner-task://cli-baseline/002",
+      source_generated:false,
+      employee_id:"subagjo",
+      task_summary:"Redacted real owner task for baseline CLI integration coverage.",
+      evidence_refs:["receipt://cli-baseline/002","review://cli-baseline/002"],
+      redaction_reviewed:true,
+      started_at:"2026-09-29T09:00:00.000Z",
+      finished_at:"2026-09-29T09:01:00.000Z",
+      metrics:{
+        success:true,
+        evidence_complete:true,
+        false_success:false,
+        human_intervention:0,
+        retries:0,
+        duration_ms:60000,
+        cost_known:false,
+        verification_passed:true,
+        recovered_after_failure:false
+      },
+      outcome_note:"Task completed and independent verification passed."
+    }],
+    summary:{
+      acceptance_passed:false,
+      eligible_cases:1,
+      minimum_cases_required:20,
+      task_successes:1,
+      verification_passes:1,
+      false_successes:0,
+      note:"Recorder export."
+    }
+  };
+  await writeFile(snapshotPath,JSON.stringify(snapshot,null,2));
+
+  const audit=run(["scripts/real-task-baseline.mjs","audit","--snapshot",snapshotPath]);
+  assert.equal(audit.status,0,audit.stderr);
+  assert.equal(JSON.parse(audit.stdout).snapshots[0].ok,true);
+
+  const merge=run(["scripts/real-task-baseline.mjs","merge","--snapshot",snapshotPath,"--out",candidatePath]);
+  assert.equal(merge.status,0,merge.stderr);
+  const result=JSON.parse(merge.stdout);
+  assert.equal(result.canonical_mutated,false);
+  assert.equal(result.coverage.cases,2);
+  assert.equal(result.coverage.remaining,18);
+
+  const candidate=JSON.parse(await readFile(candidatePath,"utf8"));
+  assert.equal(candidate.status,"COLLECTING");
+  assert.equal(candidate.claim_state,"COLLECTING");
+  assert.equal(candidate.cases.length,2);
 });
