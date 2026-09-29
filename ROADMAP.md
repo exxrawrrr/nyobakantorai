@@ -75,7 +75,8 @@
 - [ ] real-task evaluation dataset and published baseline comparison — COLLECTING 1/20 eligible direct owner tasks, 19 remaining; tooling is complete but evidence cannot be manufactured
 - [x] release convergence: permanent decision record, README/changelog/release-doc claim audit, and temporary PRD/workplan retirement
 - [x] one-worker isolated fresh-install matrix: empty temporary Hermes profile home -> Siti only -> verified pack -> native-upgrade rerun -> user-owned state preserved -> no unrelated profiles; deterministic simulation only, not a real Hermes/provider machine claim
-- [ ] subset/full/upgrade/uninstall clean-install matrix and final real release-machine coverage
+- [x] subset isolated fresh-install matrix: engineering preset (Subagjo + Siti + Bimo), exact per-worker skill/integration isolation, preview-before-destructive selective uninstall, Bimo-only removal, survivor byte-integrity
+- [ ] full/upgrade/uninstall clean-install matrix and final real release-machine coverage
 - [ ] explicit stable promotion to `main` + final main-based release gate — HOLD until deferred evidence scope is re-approved
 
 ## Non-goals
