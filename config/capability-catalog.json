@@ -1,0 +1,2346 @@
+{
+  "schema": 1,
+  "generated": true,
+  "generated_from": [
+    "config/capability-taxonomy.json",
+    "config/employees.json",
+    "config/capabilities.json",
+    "config/integrations.json",
+    "config/upstream-sources.json",
+    "config/skill-provenance.json",
+    "skills/hermes-custom/*/SKILL.md"
+  ],
+  "taxonomy": {
+    "kinds": [
+      "skill",
+      "tool",
+      "mcp",
+      "plugin",
+      "extension",
+      "workflow",
+      "memory",
+      "hook",
+      "adapter",
+      "policy"
+    ],
+    "usage_modes": [
+      "original",
+      "copied-with-license",
+      "adapted",
+      "recreated-concepts",
+      "optional-upstream-dependency",
+      "reference-only",
+      "excluded-license-boundary",
+      "provider-neutral-contract"
+    ],
+    "default_states": [
+      "BUNDLED",
+      "NOT_INSTALLED",
+      "REFERENCE_ONLY",
+      "NOT_CONNECTED"
+    ],
+    "risk_classes": [
+      "PROCEDURAL",
+      "READ_ONLY",
+      "EXTERNAL_WRITE",
+      "PAID_ACTION",
+      "ACCOUNT_CHANGE",
+      "DESTRUCTIVE",
+      "MEMORY"
+    ],
+    "platforms": [
+      "windows",
+      "linux",
+      "macos",
+      "unspecified"
+    ]
+  },
+  "capabilities": [
+    {
+      "id": "adapter.runtime-readonly",
+      "kind": "adapter",
+      "description": "Read-only runtime adapter contract for local runtimes without granting write or dispatch authority.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled package",
+      "verification_method": "runtime-adapter positive/negative/timeout tests",
+      "artifact_ref": "packages/runtime-adapter/index.mjs"
+    },
+    {
+      "id": "ads.google.creative",
+      "kind": "adapter",
+      "description": "Google Ads creative draft/inspection",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "gugun"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.google.insights",
+      "kind": "adapter",
+      "description": "Google Ads performance insights",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "gugun"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.google.keywords",
+      "kind": "adapter",
+      "description": "Google Ads keyword/search-term operations",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "gugun"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.google.read",
+      "kind": "adapter",
+      "description": "Google Ads account/campaign read",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "gugun"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.google.verify",
+      "kind": "adapter",
+      "description": "Post-mutation Google Ads verification",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "gugun"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.google.write",
+      "kind": "adapter",
+      "description": "Google Ads mutation",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "PAID_ACTION",
+      "required_by": [],
+      "optional_for": [
+        "gugun"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.meta.creative",
+      "kind": "adapter",
+      "description": "Meta creative draft/inspection",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "maya"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.meta.insights",
+      "kind": "adapter",
+      "description": "Meta Ads performance insights",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "maya"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.meta.media",
+      "kind": "adapter",
+      "description": "Meta media upload/library bridge",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "EXTERNAL_WRITE",
+      "required_by": [],
+      "optional_for": [
+        "maya"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.meta.read",
+      "kind": "adapter",
+      "description": "Meta Ads account/campaign read",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "maya"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "ads.meta.write",
+      "kind": "adapter",
+      "description": "Meta campaign/ad mutation",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "PAID_ACTION",
+      "required_by": [],
+      "optional_for": [
+        "maya"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "browser.structured",
+      "kind": "adapter",
+      "description": "Structured browser automation through an explicitly connected browser provider. Conservatively treated as capable of external interaction/write.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "EXTERNAL_WRITE",
+      "required_by": [],
+      "optional_for": [
+        "subagjo",
+        "alex",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "caca"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "context.prompt.compress.experimental",
+      "kind": "adapter",
+      "description": "Experimental lossy prompt/context compression. Output must be checked against protected constraints and original source.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "fikri"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "context.repo.pack",
+      "kind": "adapter",
+      "description": "Pack selected local repository context into a token-aware artifact through an explicitly installed tool such as Repomix.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "subagjo",
+        "bimo",
+        "fikri"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "data.local.polars",
+      "kind": "adapter",
+      "description": "Run local structured-data transformations/analysis through an explicitly available Polars runtime.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "paijo",
+        "nara"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "documents.markdown.convert",
+      "kind": "adapter",
+      "description": "Convert trusted local/remote documents or web content into Markdown through an explicitly connected provider such as MarkItDown MCP.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "alex",
+        "siti",
+        "ratri",
+        "nara",
+        "dina",
+        "fikri"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "integration.browser-use-evaluation",
+      "kind": "tool",
+      "description": "Higher-level browser agent candidate only. Evaluate observability, auth handling, write safety, recovery, and cost before adoption.",
+      "source_refs": [
+        {
+          "source_id": "browser-use",
+          "source_commit": "4cbe921673b48a488f5415d9159249afd12a625b",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "reference-only",
+      "default_state": "REFERENCE_ONLY",
+      "risk_class": "EXTERNAL_WRITE",
+      "required_by": [],
+      "optional_for": [
+        "alex",
+        "ratri",
+        "bimo"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "reference-only; no automatic installation",
+      "verification_method": "Evaluation-only; benchmark navigation, evidence, failure recovery, auth isolation, and write safety against the same disposable tasks.",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.cognee-hermes-evaluation",
+      "kind": "memory",
+      "description": "Do not adopt as shared default memory until per-profile isolation, deletion/export, provenance, and secret-handling tests pass.",
+      "source_refs": [
+        {
+          "source_id": "cognee-integrations",
+          "source_commit": "3323e30a71564eccc1794b8c4a0bac84fc3d2b30",
+          "license": "Apache-2.0"
+        }
+      ],
+      "usage_mode": "reference-only",
+      "default_state": "REFERENCE_ONLY",
+      "risk_class": "MEMORY",
+      "required_by": [],
+      "optional_for": [
+        "fikri",
+        "praroro",
+        "bimo"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "reference-only; no automatic installation",
+      "verification_method": "Evaluation-only; prove per-profile isolation, retrieval, provenance, export, deletion, and secret handling before adoption.",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.ecc-memory-vault",
+      "kind": "memory",
+      "description": "Optional cross-harness memory; never a secret store or authorization boundary.",
+      "source_refs": [
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "optional-upstream-dependency",
+      "default_state": "NOT_INSTALLED",
+      "risk_class": "MEMORY",
+      "required_by": [],
+      "optional_for": [
+        "praroro",
+        "fikri",
+        "bimo"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "npm install -g ecc-universal",
+      "verification_method": "Verify isolated test memory write/read/delete without secrets and confirm cross-profile boundaries before operational use.",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.lighthouse-cli",
+      "kind": "tool",
+      "description": "Read-oriented website audit. Treat scores as measurements with environment variance, not absolute truth.",
+      "source_refs": [
+        {
+          "source_id": "lighthouse",
+          "source_commit": "08c05cdee7e191719480477056bd145abcb09c17",
+          "license": "Apache-2.0"
+        }
+      ],
+      "usage_mode": "optional-upstream-dependency",
+      "default_state": "NOT_INSTALLED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "ratri"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "npx lighthouse",
+      "verification_method": "prove web.audit.lighthouse CONNECTED with evidence_ref, then apply worker/approval policy",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.llmlingua-experimental",
+      "kind": "tool",
+      "description": "Lossy semantic compression. Never use as the only representation for approvals, exact numbers, legal/compliance text, credentials/security instructions, or irreversible-action instructions.",
+      "source_refs": [
+        {
+          "source_id": "llmlingua",
+          "source_commit": "5a4c78ae18ab17a98cf997e8259354e546081d64",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "optional-upstream-dependency",
+      "default_state": "NOT_INSTALLED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "fikri"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "pip install llmlingua",
+      "verification_method": "prove context.prompt.compress.experimental CONNECTED with evidence_ref, then apply worker/approval policy",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.markitdown-mcp",
+      "kind": "mcp",
+      "description": "Run locally/STDIO or localhost only; it has no authentication and inherits process file/network access.",
+      "source_refs": [
+        {
+          "source_id": "markitdown",
+          "source_commit": "b8f79c57ebc0044be41323d89b2a45d3fda8460e",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "optional-upstream-dependency",
+      "default_state": "NOT_INSTALLED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "fikri",
+        "siti",
+        "dina",
+        "alex",
+        "ratri",
+        "nara"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "pip install markitdown-mcp",
+      "verification_method": "prove documents.markdown.convert CONNECTED with evidence_ref, then apply worker/approval policy",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.mcp-memory-reference",
+      "kind": "memory",
+      "description": "Shared graph memory can cross profile boundaries; do not enable as the default per-agent memory store.",
+      "source_refs": [
+        {
+          "source_id": "mcp-reference-servers",
+          "source_commit": "f46d9578190b476b3501923ea8977d899e8db2cb",
+          "license": "MIT / repository notices"
+        }
+      ],
+      "usage_mode": "reference-only",
+      "default_state": "REFERENCE_ONLY",
+      "risk_class": "MEMORY",
+      "required_by": [],
+      "optional_for": [
+        "fikri",
+        "praroro"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "reference-only; no automatic installation",
+      "verification_method": "Reference-only; no operational verification until a concrete isolated deployment is explicitly configured.",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.playwright-mcp",
+      "kind": "mcp",
+      "description": "Browser automation may inherit authenticated sessions and can perform external writes. Read/inspect and write/interact capabilities must remain policy-separated.",
+      "source_refs": [
+        {
+          "source_id": "playwright-mcp",
+          "source_commit": "f183dad4a52965583e3cc1d59b88cdc279e2e57d",
+          "license": "Apache-2.0"
+        }
+      ],
+      "usage_mode": "optional-upstream-dependency",
+      "default_state": "NOT_INSTALLED",
+      "risk_class": "EXTERNAL_WRITE",
+      "required_by": [],
+      "optional_for": [
+        "alex",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "caca",
+        "subagjo"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "npx @playwright/mcp@latest",
+      "verification_method": "prove browser.structured CONNECTED with evidence_ref, then apply worker/approval policy",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.polars-python",
+      "kind": "tool",
+      "description": "Local data processing can expose sensitive input in generated artifacts; preserve data classification and do not publish outputs automatically.",
+      "source_refs": [
+        {
+          "source_id": "polars",
+          "source_commit": "3479b49e806d363fc45d59b387a2dd83de99fb32",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "optional-upstream-dependency",
+      "default_state": "NOT_INSTALLED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "paijo",
+        "nara"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "pip install polars",
+      "verification_method": "prove data.local.polars CONNECTED with evidence_ref, then apply worker/approval policy",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.repomix-cli",
+      "kind": "tool",
+      "description": "May read broad repository contents. Use explicit include/exclude rules and secret scanning; never assume packed context is safe to share.",
+      "source_refs": [
+        {
+          "source_id": "repomix",
+          "source_commit": "0b3f82b401bbc520fd1aca67c06d24e40a868d3e",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "optional-upstream-dependency",
+      "default_state": "NOT_INSTALLED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "fikri",
+        "subagjo",
+        "bimo"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "npx repomix",
+      "verification_method": "prove context.repo.pack CONNECTED with evidence_ref, then apply worker/approval policy",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "integration.superpowers-hermes",
+      "kind": "plugin",
+      "description": "Optional upstream workflow library with native Hermes plugin integration.",
+      "source_refs": [
+        {
+          "source_id": "superpowers",
+          "source_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "optional-upstream-dependency",
+      "default_state": "NOT_INSTALLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [],
+      "optional_for": [
+        "praroro",
+        "subagjo",
+        "alex",
+        "bimo"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "hermes plugins install obra/superpowers",
+      "verification_method": "Hermes plugin list/status plus a disposable skill discovery smoke test; plugin availability never implies task execution.",
+      "artifact_ref": "config/integrations.json"
+    },
+    {
+      "id": "policy.human-approval",
+      "kind": "policy",
+      "description": "High-impact writes, paid actions, account changes, and destructive operations require scoped human approval unless a narrower delegated envelope exists.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "built into capability router and worker SOUL contracts",
+      "verification_method": "capability-router authorization tests",
+      "artifact_ref": "packages/capability-router/index.mjs"
+    },
+    {
+      "id": "policy.profile-memory-isolation",
+      "kind": "policy",
+      "description": "Worker memory defaults to profile scope; shared promotion is explicit and canonical skill mutation remains repository-review work.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "adapted",
+      "default_state": "BUNDLED",
+      "risk_class": "MEMORY",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "built into memory policy and reflective-learning skill",
+      "verification_method": "memory policy tests",
+      "artifact_ref": "config/memory-policy.json"
+    },
+    {
+      "id": "reference.gemini-cli-extension",
+      "kind": "extension",
+      "description": "Reference architecture for packaging skills, MCP servers, hooks, and sub-agents as a host extension.",
+      "source_refs": [
+        {
+          "source_id": "gemini-cli",
+          "source_commit": "fe6350238c1862dade66a9dea9080c6508475bec",
+          "license": "Apache-2.0"
+        }
+      ],
+      "usage_mode": "reference-only",
+      "default_state": "REFERENCE_ONLY",
+      "risk_class": "PROCEDURAL",
+      "required_by": [],
+      "optional_for": [
+        "bimo"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "reference-only; not installed by nyobakantorai",
+      "verification_method": "architecture review only; no runtime compatibility claim",
+      "artifact_ref": "config/upstream-sources.json"
+    },
+    {
+      "id": "reference.gemini-cli-hooks",
+      "kind": "hook",
+      "description": "Reference lifecycle-hook patterns for future pre/post tool policy enforcement.",
+      "source_refs": [
+        {
+          "source_id": "gemini-cli",
+          "source_commit": "fe6350238c1862dade66a9dea9080c6508475bec",
+          "license": "Apache-2.0"
+        }
+      ],
+      "usage_mode": "reference-only",
+      "default_state": "REFERENCE_ONLY",
+      "risk_class": "PROCEDURAL",
+      "required_by": [],
+      "optional_for": [
+        "bimo",
+        "siti"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "reference-only; not installed by nyobakantorai",
+      "verification_method": "architecture review only; no runtime hook claim",
+      "artifact_ref": "config/upstream-sources.json"
+    },
+    {
+      "id": "skill.nyoba-approval-and-evidence",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-approval-and-evidence",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-approval-and-evidence/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-automation-queue",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-automation-queue",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "bimo",
+        "bambang"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-automation-queue/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-brainstorming-discovery",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-brainstorming-discovery",
+      "source_refs": [
+        {
+          "source_id": "superpowers",
+          "source_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "alex",
+        "sumiati",
+        "maya",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-brainstorming-discovery/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-brand-copy-qa",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-brand-copy-qa",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "sumiati",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-brand-copy-qa/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-chief-of-staff",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-chief-of-staff",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-chief-of-staff/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-client-operations",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-client-operations",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "dina",
+        "tari"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-client-operations/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-codebase-verification",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-codebase-verification",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "subagjo",
+        "bimo"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-codebase-verification/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-community-partnerships",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-community-partnerships",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "sumiati",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-community-partnerships/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-context-prompt-compiler",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-context-prompt-compiler",
+      "source_refs": [
+        {
+          "source_id": "agent-skills",
+          "source_commit": "69ef37e9424c0a7ea9dd2293b559e43ec8176379",
+          "license": "Apache-2.0"
+        },
+        {
+          "source_id": "markitdown",
+          "source_commit": "b8f79c57ebc0044be41323d89b2a45d3fda8460e",
+          "license": "MIT"
+        },
+        {
+          "source_id": "docling",
+          "source_commit": "98d78ef87bbe4eb88b3212e3ef2a5cbe4dd4729c",
+          "license": "MIT"
+        },
+        {
+          "source_id": "repomix",
+          "source_commit": "0b3f82b401bbc520fd1aca67c06d24e40a868d3e",
+          "license": "MIT"
+        },
+        {
+          "source_id": "llmlingua",
+          "source_commit": "5a4c78ae18ab17a98cf997e8259354e546081d64",
+          "license": "MIT"
+        },
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "fikri"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-context-prompt-compiler/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-creative-brief",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-creative-brief",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "sumiati",
+        "maya",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-creative-brief/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-cross-team-briefing",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-cross-team-briefing",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "dina",
+        "tari"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-cross-team-briefing/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-data-analysis",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-data-analysis",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "paijo",
+        "alex",
+        "ratri",
+        "nara"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-data-analysis/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-deep-research-open",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-deep-research-open",
+      "source_refs": [
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "paijo",
+        "alex",
+        "gugun",
+        "ratri",
+        "nara",
+        "fikri"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-deep-research-open/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-delegation-routing",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-delegation-routing",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-delegation-routing/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-experiment-design",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-experiment-design",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "alex",
+        "nara"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-experiment-design/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-finance-scenario",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-finance-scenario",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "paijo"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-finance-scenario/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-follow-up",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-follow-up",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "dina",
+        "bambang",
+        "tari"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-follow-up/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-github-readonly",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-github-readonly",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "subagjo"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-github-readonly/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-google-ads-operations",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-google-ads-operations",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "gugun"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-google-ads-operations/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-independent-qa",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-independent-qa",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "siti",
+        "fikri"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-independent-qa/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-knowledge-stewardship",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-knowledge-stewardship",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "siti",
+        "fikri"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-knowledge-stewardship/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-kpi-analysis",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-kpi-analysis",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "paijo",
+        "gugun",
+        "ratri",
+        "nara"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-kpi-analysis/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-manual-chatgpt-handoff",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-manual-chatgpt-handoff",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-manual-chatgpt-handoff/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-markdown-knowledge-compaction",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-markdown-knowledge-compaction",
+      "source_refs": [
+        {
+          "source_id": "markitdown",
+          "source_commit": "b8f79c57ebc0044be41323d89b2a45d3fda8460e",
+          "license": "MIT"
+        },
+        {
+          "source_id": "docling",
+          "source_commit": "98d78ef87bbe4eb88b3212e3ef2a5cbe4dd4729c",
+          "license": "MIT"
+        },
+        {
+          "source_id": "jina-reader",
+          "source_commit": "1574bfd380d249c86c82db4dace0d9c8fe17e2b1",
+          "license": "Apache-2.0"
+        },
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "siti",
+        "ratri",
+        "nara",
+        "dina",
+        "fikri"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-markdown-knowledge-compaction/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-mcp-builder",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-mcp-builder",
+      "source_refs": [
+        {
+          "source_id": "anthropic-mcp-builder",
+          "source_commit": "33375500bcea98d610eb30ce10ac4e59b89c390d",
+          "license": "Apache-2.0"
+        },
+        {
+          "source_id": "mcp-reference-servers",
+          "source_commit": "f46d9578190b476b3501923ea8977d899e8db2cb",
+          "license": "MIT / repository notices"
+        },
+        {
+          "source_id": "superpowers",
+          "source_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "subagjo",
+        "bimo"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-mcp-builder/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-mcp-integration",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-mcp-integration",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "subagjo",
+        "bimo",
+        "bambang"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-mcp-integration/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-meta-ads-operations",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-meta-ads-operations",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "maya"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-meta-ads-operations/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-paid-media-safety",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-paid-media-safety",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "maya",
+        "gugun"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-paid-media-safety/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-plan-execute-review",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-plan-execute-review",
+      "source_refs": [
+        {
+          "source_id": "superpowers",
+          "source_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "subagjo",
+        "bimo",
+        "dina",
+        "bambang",
+        "tari"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-plan-execute-review/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-reflective-memory-learning",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-reflective-memory-learning",
+      "source_refs": [
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        },
+        {
+          "source_id": "mem0",
+          "source_commit": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "license": "Apache-2.0"
+        },
+        {
+          "source_id": "letta",
+          "source_commit": "5bcdd177d70fa2b31a754cfcd801e77b2e1ab16a",
+          "license": "Apache-2.0"
+        },
+        {
+          "source_id": "mcp-reference-servers",
+          "source_commit": "f46d9578190b476b3501923ea8977d899e8db2cb",
+          "license": "MIT / repository notices"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-reflective-memory-learning/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-research-synthesis",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-research-synthesis",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "alex"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-research-synthesis/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-safe-tool-use",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-safe-tool-use",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-safe-tool-use/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-seo-cro-audit",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-seo-cro-audit",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "ratri"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-seo-cro-audit/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-skill-engineering",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-skill-engineering",
+      "source_refs": [
+        {
+          "source_id": "superpowers",
+          "source_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+          "license": "MIT"
+        },
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "subagjo",
+        "bimo",
+        "fikri"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-skill-engineering/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-source-provenance",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-source-provenance",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "siti",
+        "fikri"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-source-provenance/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-strategic-context-compaction",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-strategic-context-compaction",
+      "source_refs": [
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "alex",
+        "siti",
+        "dina",
+        "fikri",
+        "tari"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-strategic-context-compaction/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-systematic-debugging",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-systematic-debugging",
+      "source_refs": [
+        {
+          "source_id": "superpowers",
+          "source_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+          "license": "MIT"
+        },
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "subagjo",
+        "bimo",
+        "bambang"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-systematic-debugging/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-task-truth",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-task-truth",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-task-truth/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-test-driven-delivery",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-test-driven-delivery",
+      "source_refs": [
+        {
+          "source_id": "superpowers",
+          "source_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+          "license": "MIT"
+        },
+        {
+          "source_id": "ecc",
+          "source_commit": "d3b8a3e908904e242ed2dbe66af62cca71131419",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "subagjo",
+        "bimo"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-test-driven-delivery/SKILL.md"
+    },
+    {
+      "id": "skill.nyoba-verification-before-completion",
+      "kind": "skill",
+      "description": "Canonical procedural skill: nyoba-verification-before-completion",
+      "source_refs": [
+        {
+          "source_id": "superpowers",
+          "source_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "recreated-concepts",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "nara",
+        "tari"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled-with-employee-profile",
+      "verification_method": "workforce:check + packaged-skill parity",
+      "artifact_ref": "skills/hermes-custom/nyoba-verification-before-completion/SKILL.md"
+    },
+    {
+      "id": "web.audit.lighthouse",
+      "kind": "adapter",
+      "description": "Run a Lighthouse-style website audit and capture machine-readable performance/SEO/accessibility evidence.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [
+        "ratri"
+      ],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "workflow.employee-pack-build",
+      "kind": "workflow",
+      "description": "Build deterministic standalone employee distributions from canonical workforce data.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [],
+      "optional_for": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "npm run employee:pack",
+      "verification_method": "pack tests + SHA-256 manifest verification",
+      "artifact_ref": "scripts/employee-pack.mjs"
+    },
+    {
+      "id": "workflow.fikri-context-compile",
+      "kind": "workflow",
+      "description": "Compile source-preserving L2/L1/L0 context with deterministic protected-atom guards.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "adapted",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "fikri"
+      ],
+      "optional_for": [
+        "siti",
+        "alex",
+        "dina"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled local module + Fikri skill",
+      "verification_method": "context-guard tests + synthetic compaction benchmark",
+      "artifact_ref": "packages/context-guard/index.mjs"
+    }
+  ]
+}
