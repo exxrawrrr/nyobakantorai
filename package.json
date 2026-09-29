@@ -11,7 +11,7 @@
     "start": "npm --prefix office run dev",
     "build": "npm --prefix office run build",
     "test": "npm run test:core && npm run test:python && npm run test:demo && npm run test:hermes",
-    "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs packages/runtime-adapter/cli-readonly.test.mjs packages/runtime-adapter/policy.test.mjs && npm run test:workforce && npm run test:packs && npm run test:remove && npm run test:memory && npm run test:memory-learning && npm run test:memory-isolation && npm run test:context && npm run test:context-benchmark && npm run test:fikri-live-evidence && npm run test:adversarial && npm run test:personality-invariance && npm run test:receipts && npm run test:verifier && npm run test:provider-evaluation && npm run test:real-tasks && npm run test:real-task-recorder && npm run test:provider-doctor && npm run test:self-service-tools-cli && npm run test:evaluation-doctor && npm run test:release-claims && npm run test:release-manifest && npm run capability-catalog:check && npm run test:capability-catalog && npm run test:capabilities && npm run test:skill-format && npm run test:cross-harness && npm run test:provenance",
+    "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs packages/runtime-adapter/cli-readonly.test.mjs packages/runtime-adapter/policy.test.mjs && npm run test:workforce && npm run test:packs && npm run test:remove && npm run test:memory && npm run test:memory-learning && npm run test:memory-isolation && npm run test:context && npm run test:context-benchmark && npm run test:fikri-live-evidence && npm run test:adversarial && npm run test:personality-invariance && npm run test:receipts && npm run test:verifier && npm run test:provider-evaluation && npm run test:real-tasks && npm run test:real-task-recorder && npm run test:provider-doctor && npm run test:browser-self-test && npm run test:self-service-tools-cli && npm run test:evaluation-doctor && npm run test:release-claims && npm run test:release-manifest && npm run capability-catalog:check && npm run test:capability-catalog && npm run test:capabilities && npm run test:skill-format && npm run test:cross-harness && npm run test:provenance",
     "test:python": "python scripts/run-python-tests.py",
     "doctor": "node scripts/preflight.mjs",
     "doctor:json": "node scripts/preflight.mjs --json",
@@ -79,6 +79,9 @@
     "real-task:recorder": "node scripts/real-task-recorder.mjs",
     "provider:doctor": "node scripts/provider-doctor.mjs",
     "provider:doctor:json": "node scripts/provider-doctor.mjs --json",
-    "test:self-service-tools-cli": "node --test scripts/self-service-tools-cli.test.mjs"
+    "test:self-service-tools-cli": "node --test scripts/self-service-tools-cli.test.mjs",
+    "test:browser-self-test": "node --test packages/browser-self-test/index.test.mjs",
+    "browser:self-test:plan": "node scripts/browser-self-test.mjs plan",
+    "browser:self-test": "node scripts/browser-self-test.mjs run"
   }
 }
