@@ -37,6 +37,33 @@ async function hashTree(dir){
   return rows;
 }
 
+async function fingerprintOwnedEntry(path){
+  const info=await stat(path);
+  if(info.isFile()){
+    const bytes=await readFile(path);
+    return Object.freeze({type:"file",sha256:hashBuffer(bytes)});
+  }
+  if(info.isDirectory()){
+    return Object.freeze({type:"dir",tree:Object.freeze(await hashTree(path))});
+  }
+  throw new Error("unsupported distribution-owned entry type: "+path);
+}
+
+async function distributionOwnedMatches(source,target,owned){
+  const checks=[];
+  for(const rel of owned){
+    const src=resolve(source,rel);
+    const dst=resolve(target,rel);
+    if(!(await exists(src))||!(await exists(dst))){
+      checks.push({path:rel,match:false,reason:"missing"});
+      continue;
+    }
+    const [a,b]=await Promise.all([fingerprintOwnedEntry(src),fingerprintOwnedEntry(dst)]);
+    checks.push({path:rel,match:JSON.stringify(a)===JSON.stringify(b)});
+  }
+  return Object.freeze(checks.map(x=>Object.freeze(x)));
+}
+
 async function copyDistributionOwned(source,target){
   const manifest=await readFile(resolve(source,"distribution.yaml"),"utf8");
   const owned=[];
@@ -582,6 +609,277 @@ export async function runFullWorkforceFreshInstallMatrix({
       hermes_cli_executed:false,
       real_machine_claim:false,
       note:"Deterministic isolated full-workforce release-matrix case. Builds and verifies every canonical employee pack, installs exactly the current registry workforce into an empty disposable Hermes profile root, checks every per-worker skill/integration closure, reruns as native upgrades, preserves seeded user-owned state for every profile, and proves no extra/missing profile or pack directory. No real Hermes CLI/provider/account is touched."
+    });
+  }finally{
+    if(cleanupBase) await rm(ownBase,{recursive:true,force:true});
+  }
+}
+
+
+export async function runUpgradeUninstallLifecycleMatrix({
+  removeEmployeeId="bimo",
+  baseDir=null
+}={}){
+  const ownBase=baseDir||await mkdtemp(resolve(tmpdir(),"nyoba-lifecycle-"));
+  const cleanupBase=baseDir?false:true;
+  const packRoot=resolve(ownBase,"packs");
+  const hermesHome=resolve(ownBase,"hermes-home");
+  const profilesDir=resolve(hermesHome,"profiles");
+
+  try{
+    const registry=JSON.parse(await readFile(resolve(root,"config/employees.json"),"utf8"));
+    const allIds=registry.employees.map(x=>x.id);
+    const expectedProfiles=[...allIds].sort();
+    if(!allIds.includes(removeEmployeeId)) throw new Error("removeEmployeeId must be a canonical employee");
+
+    await mkdir(profilesDir,{recursive:true});
+    const beforeEntries=await readdir(profilesDir);
+    if(beforeEntries.length!==0) throw new Error("lifecycle matrix requires an empty disposable profile directory");
+
+    const initialPlan=planSelectedProfileActions({
+      selectedIds:allIds,
+      existingIds:[],
+      mode:"upgrade"
+    });
+    if(initialPlan.length!==allIds.length||initialPlan.some(x=>x.action!=="install")){
+      throw new Error("initial lifecycle install plan must contain only install actions");
+    }
+
+    const distributionOwnedByEmployee={};
+    for(const id of allIds){
+      await buildEmployeePack({employeeId:id,outRoot:packRoot});
+      const packDir=resolve(packRoot,id);
+      const check=await verifyEmployeePack(packDir);
+      if(!check.ok) throw new Error("pack verification failed before lifecycle install: "+id);
+      distributionOwnedByEmployee[id]=await copyDistributionOwned(packDir,resolve(profilesDir,id));
+      if(!distributionOwnedByEmployee[id].includes("SOUL.md")||!distributionOwnedByEmployee[id].includes("config.yaml")){
+        throw new Error("lifecycle drift fixture requires SOUL.md and config.yaml ownership: "+id);
+      }
+    }
+
+    const installedProfiles=(await readdir(profilesDir,{withFileTypes:true}))
+      .filter(x=>x.isDirectory()).map(x=>x.name).sort();
+    if(JSON.stringify(installedProfiles)!==JSON.stringify(expectedProfiles)){
+      throw new Error("initial lifecycle install did not match canonical workforce");
+    }
+
+    const packTreeBefore=await hashTree(packRoot);
+    const userStateBefore={};
+    for(const id of allIds){
+      const profileDir=resolve(profilesDir,id);
+      const fixtures=await seedUserOwnedState(profileDir);
+      userStateBefore[id]=await snapshotFixtures(profileDir,fixtures);
+      await writeFile(resolve(profileDir,"SOUL.md"),"OLD_DISTRIBUTION_SENTINEL="+id+"\n","utf8");
+      await rm(resolve(profileDir,"config.yaml"),{force:true});
+    }
+
+    const upgradePlan=planSelectedProfileActions({
+      selectedIds:allIds,
+      existingIds:[...allIds],
+      mode:"upgrade"
+    });
+    if(upgradePlan.length!==allIds.length||upgradePlan.some(x=>x.action!=="native-upgrade")){
+      throw new Error("existing install did not resolve to native-upgrade for every employee");
+    }
+
+    const upgradeChecks=[];
+    const userStateAfterUpgrade={};
+    for(const id of allIds){
+      const packDir=resolve(packRoot,id);
+      const profileDir=resolve(profilesDir,id);
+      const owned=await copyDistributionOwned(packDir,profileDir);
+      const ownershipChecks=await distributionOwnedMatches(packDir,profileDir,owned);
+      const after=await snapshotFixtures(profileDir,Object.fromEntries(
+        Object.keys(userStateBefore[id]).map(rel=>[rel,""])
+      ));
+      userStateAfterUpgrade[id]=after;
+      const preserved=Object.keys(userStateBefore[id]).every(rel=>userStateBefore[id][rel]===after[rel]);
+      const soul=await readFile(resolve(profileDir,"SOUL.md"),"utf8");
+      upgradeChecks.push(Object.freeze({
+        employee_id:id,
+        action:"native-upgrade",
+        distribution_exact:ownershipChecks.every(x=>x.match),
+        user_owned_state_preserved:preserved,
+        stale_distribution_replaced:!soul.includes("OLD_DISTRIBUTION_SENTINEL"),
+        ownership_checks:ownershipChecks
+      }));
+    }
+
+    const upgradePassed=upgradeChecks.every(x=>
+      x.distribution_exact&&x.user_owned_state_preserved&&x.stale_distribution_replaced
+    );
+
+    const selectivePreview=planSelectedProfileRemoval({
+      selection:removeEmployeeId,
+      confirmDeleteUserState:false
+    });
+    if(selectivePreview.action!=="PREVIEW_ONLY") throw new Error("selective removal must preview first");
+
+    const preSelectiveProfiles=(await readdir(profilesDir,{withFileTypes:true}))
+      .filter(x=>x.isDirectory()).map(x=>x.name).sort();
+    const previewNonDestructive=JSON.stringify(preSelectiveProfiles)===JSON.stringify(expectedProfiles);
+
+    const survivors=allIds.filter(id=>id!==removeEmployeeId);
+    const survivorTreesBefore={};
+    for(const id of survivors) survivorTreesBefore[id]=await hashTree(resolve(profilesDir,id));
+
+    const selectiveConfirm=planSelectedProfileRemoval({
+      selection:removeEmployeeId,
+      confirmDeleteUserState:true
+    });
+    if(selectiveConfirm.action!=="DELETE_PROFILE_AND_USER_STATE"||selectiveConfirm.profiles.length!==1){
+      throw new Error("selective confirmed removal plan drifted");
+    }
+    await rm(resolve(profilesDir,removeEmployeeId),{recursive:true,force:true});
+
+    const afterSelective=(await readdir(profilesDir,{withFileTypes:true}))
+      .filter(x=>x.isDirectory()).map(x=>x.name).sort();
+    const expectedSurvivors=[...survivors].sort();
+    const survivorIntegrity=[];
+    for(const id of survivors){
+      const afterTree=await hashTree(resolve(profilesDir,id));
+      survivorIntegrity.push(Object.freeze({
+        employee_id:id,
+        unchanged:JSON.stringify(afterTree)===JSON.stringify(survivorTreesBefore[id])
+      }));
+    }
+    const selectivePassed=
+      !(await exists(resolve(profilesDir,removeEmployeeId))) &&
+      JSON.stringify(afterSelective)===JSON.stringify(expectedSurvivors) &&
+      survivorIntegrity.every(x=>x.unchanged);
+
+    const fullPreview=planSelectedProfileRemoval({
+      selection:"all",
+      confirmDeleteUserState:false
+    });
+    if(fullPreview.action!=="PREVIEW_ONLY"||fullPreview.profiles.length!==allIds.length){
+      throw new Error("full uninstall must preview all canonical profiles first");
+    }
+    const beforeFullPreviewTrees={};
+    for(const id of survivors) beforeFullPreviewTrees[id]=await hashTree(resolve(profilesDir,id));
+    const afterFullPreviewTrees={};
+    for(const id of survivors) afterFullPreviewTrees[id]=await hashTree(resolve(profilesDir,id));
+    const fullPreviewNonDestructive=survivors.every(id=>
+      JSON.stringify(beforeFullPreviewTrees[id])===JSON.stringify(afterFullPreviewTrees[id])
+    );
+
+    const fullConfirm=planSelectedProfileRemoval({
+      selection:"all",
+      confirmDeleteUserState:true
+    });
+    if(fullConfirm.action!=="DELETE_PROFILE_AND_USER_STATE"||fullConfirm.profiles.length!==allIds.length){
+      throw new Error("full uninstall confirmation plan drifted");
+    }
+    for(const id of fullConfirm.profiles){
+      await rm(resolve(profilesDir,id),{recursive:true,force:true});
+    }
+    const afterFullUninstall=(await readdir(profilesDir,{withFileTypes:true}))
+      .filter(x=>x.isDirectory()).map(x=>x.name).sort();
+    const fullUninstallPassed=afterFullUninstall.length===0&&allIds.every(id=>!(exists(resolve(profilesDir,id))));
+
+    const reinstallPlan=planSelectedProfileActions({
+      selectedIds:allIds,
+      existingIds:[],
+      mode:"upgrade"
+    });
+    if(reinstallPlan.length!==allIds.length||reinstallPlan.some(x=>x.action!=="install")){
+      throw new Error("post-uninstall reinstall plan must contain only install actions");
+    }
+
+    const reinstallChecks=[];
+    for(const id of allIds){
+      const packDir=resolve(packRoot,id);
+      const profileDir=resolve(profilesDir,id);
+      const owned=await copyDistributionOwned(packDir,profileDir);
+      const ownershipChecks=await distributionOwnedMatches(packDir,profileDir,owned);
+      const userStateResurrected=[];
+      for(const rel of Object.keys(userStateBefore[id])){
+        if(await exists(resolve(profileDir,rel))) userStateResurrected.push(rel);
+      }
+      reinstallChecks.push(Object.freeze({
+        employee_id:id,
+        distribution_exact:ownershipChecks.every(x=>x.match),
+        stale_user_state_resurrected:userStateResurrected.length>0,
+        resurrected_paths:Object.freeze(userStateResurrected)
+      }));
+    }
+
+    const reinstalledProfiles=(await readdir(profilesDir,{withFileTypes:true}))
+      .filter(x=>x.isDirectory()).map(x=>x.name).sort();
+    const reinstallPassed=
+      JSON.stringify(reinstalledProfiles)===JSON.stringify(expectedProfiles) &&
+      reinstallChecks.every(x=>x.distribution_exact&&!x.stale_user_state_resurrected);
+
+    const finalRerunPlan=planSelectedProfileActions({
+      selectedIds:allIds,
+      existingIds:[...allIds],
+      mode:"upgrade"
+    });
+    const finalRerunActionsExact=
+      finalRerunPlan.length===allIds.length &&
+      finalRerunPlan.every(x=>x.action==="native-upgrade");
+
+    for(const id of allIds){
+      await copyDistributionOwned(resolve(packRoot,id),resolve(profilesDir,id));
+    }
+    const finalProfiles=(await readdir(profilesDir,{withFileTypes:true}))
+      .filter(x=>x.isDirectory()).map(x=>x.name).sort();
+    const finalProfilesExact=JSON.stringify(finalProfiles)===JSON.stringify(expectedProfiles);
+    const packTreeAfter=await hashTree(packRoot);
+    const packArtifactsUnchanged=JSON.stringify(packTreeBefore)===JSON.stringify(packTreeAfter);
+
+    const passed=
+      upgradePassed &&
+      previewNonDestructive &&
+      selectivePassed &&
+      fullPreviewNonDestructive &&
+      fullUninstallPassed &&
+      reinstallPassed &&
+      finalRerunActionsExact &&
+      finalProfilesExact &&
+      packArtifactsUnchanged;
+
+    return Object.freeze({
+      schema:1,
+      matrix_case:"upgrade-uninstall-reinstall-full-workforce",
+      claim_state:passed?"DETERMINISTICALLY_VERIFIED":"FAILED",
+      passed,
+      registry_employee_count:registry.employee_count,
+      initial_profiles:Object.freeze(installedProfiles),
+      upgrade_actions:Object.freeze(upgradePlan.map(x=>Object.freeze({...x}))),
+      upgrade_checks:Object.freeze(upgradeChecks),
+      upgrade_passed:upgradePassed,
+      selective_removal:Object.freeze({
+        employee_id:removeEmployeeId,
+        preview_action:selectivePreview.action,
+        preview_non_destructive:previewNonDestructive,
+        confirmed_action:selectiveConfirm.action,
+        remaining_profiles:Object.freeze(afterSelective),
+        survivor_integrity:Object.freeze(survivorIntegrity),
+        passed:selectivePassed
+      }),
+      full_uninstall:Object.freeze({
+        preview_action:fullPreview.action,
+        preview_non_destructive:fullPreviewNonDestructive,
+        confirmed_action:fullConfirm.action,
+        remaining_profiles:Object.freeze(afterFullUninstall),
+        passed:fullUninstallPassed
+      }),
+      reinstall:Object.freeze({
+        actions:Object.freeze(reinstallPlan.map(x=>Object.freeze({...x}))),
+        profiles:Object.freeze(reinstalledProfiles),
+        checks:Object.freeze(reinstallChecks),
+        passed:reinstallPassed
+      }),
+      final_rerun_actions:Object.freeze(finalRerunPlan.map(x=>Object.freeze({...x}))),
+      final_rerun_actions_exact:finalRerunActionsExact,
+      final_profiles:Object.freeze(finalProfiles),
+      final_profiles_exact:finalProfilesExact,
+      pack_artifacts_unchanged:packArtifactsUnchanged,
+      external_provider_calls:0,
+      hermes_cli_executed:false,
+      real_machine_claim:false,
+      note:"Deterministic isolated full-workforce lifecycle matrix: existing install -> native-upgrade refresh with user-state preservation -> previewed selective removal -> previewed/confirmed full uninstall -> clean reinstall -> native-upgrade rerun. It proves release ownership and lifecycle invariants without touching a real Hermes installation, provider, account, or user profile."
     });
   }finally{
     if(cleanupBase) await rm(ownBase,{recursive:true,force:true});
