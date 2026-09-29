@@ -603,3 +603,45 @@ SELF_TEST_FAILED
 A self-test pass proves only that the user's installed Browser Use CLI adapter completed the disposable local contract. It does **not** automatically promote `benchmarks/provider-evaluations/browser-results.json`, prove model/agent quality, or close the Playwright-vs-Browser-Use head-to-head evaluation.
 
 Core CI does not install Browser Use. The runner architecture is tested with injected provider fixtures plus a real loopback target, including a lying-provider mutation test.
+
+
+## Cognee self-service memory adapter
+
+The repository now ships a provider-optional Cognee/Hermes eight-case runner:
+
+- `config/cognee-self-test.json`;
+- `packages/cognee-self-test/`;
+- `scripts/cognee-self-test.mjs`;
+- `docs/COGNEE-SELF-TEST.md`.
+
+It is pinned to `topoteretes/cognee-integrations@3323e30a...`, `cognee-integration-hermes-agent` 1.3.1, and Cognee 1.6.0.
+
+The runner intentionally targets the HTTP contract used by the pinned Hermes integration rather than auto-installing or bootstrapping embedded Cognee. A user supplies a compatible local or remote endpoint. Remote execution requires both explicit `--allow-remote` and `COGNEE_API_KEY`; the runner never logs in or mints a key.
+
+Every run creates random `nyoba_eval_*` datasets and refuses to reuse a pre-existing generated dataset name. The runner never intentionally targets the user's normal datasets. Cleanup is attempted and verified for every run-owned dataset; incomplete cleanup prevents a green result.
+
+The same eight memory case IDs are exercised:
+
+```text
+profile-isolation
+cross-profile-contamination-negative
+write-read-roundtrip
+provenance
+export
+delete
+secret-rejection
+shared-promotion-boundary
+```
+
+Secret-like material is rejected before a provider write. Shared memory stays empty until an explicit promotion write. Cross-profile leakage, failed deletion, failed cleanup, or evidence gaps force a truthful failure.
+
+The self-service result states are deliberately separate from canonical provider-evaluation claims:
+
+```text
+SELF_TEST_PASSED
+SELF_TEST_FAILED
+```
+
+A self-test pass proves only the configured endpoint's isolated storage/isolation/export/delete behavior under this runner. It does not prove Hermes lifecycle integration, semantic recall quality, LLM quality, or production reliability, and it does not mutate `benchmarks/provider-evaluations/memory-results.json`.
+
+Core CI installs no Cognee package and contacts no external memory service. Instead it runs the eight-case harness against a disposable local Cognee-compatible HTTP target and includes adversarial contamination, deletion failure, cleanup failure, dataset-reuse refusal, wire-contract, and credential non-disclosure tests.
