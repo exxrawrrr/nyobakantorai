@@ -227,6 +227,10 @@ export function attachExecutionReceipt(registry, taskId, receipt, clock = defaul
   assert(task, "Tugas tidak ditemukan.");
   const receiptRef = clean(receipt?.receipt_ref, 1000);
   assert(/^receipt:sha256:[a-f0-9]{64}$/.test(receiptRef), "Execution receipt reference tidak valid.");
+  assert(
+    !next.events.some((event) => event.action === "EXECUTION_RECEIPT_ATTACHED" && event.evidence_ref === receiptRef),
+    "Execution receipt reference sudah pernah digunakan."
+  );
   assert(task.lifecycle_status !== "VERIFIED", "Execution receipt tidak boleh ditempel setelah task VERIFIED tanpa reopen.");
   const actor = clean(receipt?.actor, 80).toLowerCase();
   assert(actor, "Execution receipt actor wajib diisi.");
@@ -279,6 +283,16 @@ export function validateRegistry(registry) {
   assert(registry && typeof registry === "object", "Registry harus berupa object.");
   assert(registry.version === 1, "Versi registry tidak didukung.");
   assert(Array.isArray(registry.tasks) && Array.isArray(registry.events), "Registry tidak lengkap.");
+
+  const seenReceiptRefs = new Set();
+  for (const event of registry.events) {
+    if (event?.action !== "EXECUTION_RECEIPT_ATTACHED") continue;
+    const ref = clean(event.evidence_ref, 1000);
+    assert(/^receipt:sha256:[a-f0-9]{64}$/.test(ref), "Execution receipt attachment event memiliki reference tidak valid.");
+    assert(!seenReceiptRefs.has(ref), "Execution receipt reference replay terdeteksi di event history.");
+    seenReceiptRefs.add(ref);
+  }
+
   for (const task of registry.tasks) {
     assert(clean(task.id), "Task ID kosong.");
     assert(clean(task.title), "Judul task kosong.");

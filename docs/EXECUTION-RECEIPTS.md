@@ -159,6 +159,8 @@ receipt:sha256:<64 lowercase hex chars>
 
 and records an append-only `EXECUTION_RECEIPT_ATTACHED` event.
 
+Receipt references are single-use inside the registry event history. Reattaching the same `receipt:sha256:...` to the same task or a different task is rejected, and imported histories containing duplicate attachment refs fail validation. This gives the local registry a durable replay boundary without pretending the signature itself can detect reuse.
+
 A registry import containing a receipt ref without its attachment event fails validation.
 
 Cryptographic verification stays in the evidence layer. The registry intentionally does not become a trust store.

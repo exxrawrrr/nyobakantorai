@@ -249,3 +249,80 @@ test("execution receipt cannot be attached after verification without reopening"
     /setelah task VERIFIED/
   );
 });
+
+
+test("execution receipt reference cannot be replayed on the same task", () => {
+  let registry = oneTask();
+  const id = registry.tasks[0].id;
+  const ref = "receipt:sha256:" + "f".repeat(64);
+  registry = attachExecutionReceipt(registry, id, {
+    receipt_ref:ref,
+    actor:"subagjo",
+  }, clock, ids);
+
+  assert.throws(
+    () => attachExecutionReceipt(registry, id, {
+      receipt_ref:ref,
+      actor:"subagjo",
+    }, clock, ids),
+    /sudah pernah digunakan/
+  );
+});
+
+test("execution receipt reference cannot be reused across tasks", () => {
+  let registry = oneTask();
+  const firstId = registry.tasks[0].id;
+  registry = createTask(registry, {
+    title:"Second dummy task",
+    assignee_id:"maya",
+    requester:"the owner",
+  }, clock, ids);
+  const secondId = registry.tasks.find((task) => task.id !== firstId).id;
+  const ref = "receipt:sha256:" + "1".repeat(64);
+
+  registry = attachExecutionReceipt(registry, firstId, {
+    receipt_ref:ref,
+    actor:"subagjo",
+  }, clock, ids);
+
+  assert.throws(
+    () => attachExecutionReceipt(registry, secondId, {
+      receipt_ref:ref,
+      actor:"maya",
+    }, clock, ids),
+    /sudah pernah digunakan/
+  );
+});
+
+test("registry import rejects duplicate execution receipt attachment refs", () => {
+  const registry = oneTask();
+  const forged = structuredClone(registry);
+  const ref = "receipt:sha256:" + "2".repeat(64);
+  forged.events.push({
+    event_id:"event-replay-a",
+    task_id:forged.tasks[0].id,
+    at:"2026-09-19T13:59:00.000Z",
+    actor:"subagjo",
+    action:"EXECUTION_RECEIPT_ATTACHED",
+    old_status:"PLANNED",
+    new_status:"PLANNED",
+    source:"signed execution receipt",
+    evidence_ref:ref,
+  });
+  forged.events.push({
+    event_id:"event-replay-b",
+    task_id:forged.tasks[0].id,
+    at:"2026-09-19T13:59:01.000Z",
+    actor:"subagjo",
+    action:"EXECUTION_RECEIPT_ATTACHED",
+    old_status:"PLANNED",
+    new_status:"PLANNED",
+    source:"signed execution receipt",
+    evidence_ref:ref,
+  });
+
+  assert.throws(
+    () => importRegistry(JSON.stringify(forged)),
+    /replay terdeteksi/
+  );
+});
