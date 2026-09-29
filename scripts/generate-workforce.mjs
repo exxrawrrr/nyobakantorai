@@ -6,7 +6,7 @@ const check=process.argv.includes("--check");
 const registry=JSON.parse(await readFile(resolve(root,"config/employees.json"),"utf8"));
 const capabilities=JSON.parse(await readFile(resolve(root,"config/capabilities.json"),"utf8"));
 const ids=new Set(), capabilityIds=new Set(capabilities.capabilities.map(x=>x.id));
-const required=["id","name","role","department","summary","aliases","personality","habits","work_style","expertise","skills","preferred_toolsets","external_capabilities","approval_policy","verification_policy","memory_boundary","routing","visual","profile"];
+const required=["id","name","role","department","summary","aliases","personality","habits","work_style","reasoning_profile","learning_profile","expertise","skills","preferred_toolsets","external_capabilities","optional_integrations","approval_policy","verification_policy","memory_boundary","routing","visual","profile"];
 const findings=[];
 if(registry.schema!==1||registry.version!=="0.3.0"||!Array.isArray(registry.employees)||registry.employees.length<16)findings.push("registry must contain at least 16 v0.3 employees");
 for(const e of registry.employees){
@@ -16,6 +16,9 @@ for(const e of registry.employees){
  if(!Array.isArray(e.personality?.traits)||!e.personality?.communication_style)findings.push(`${e.id}: incomplete personality`);
  for(const k of ["idle_habit","thinking_habit","working_habit","stress_habit","success_habit"])if(!e.habits?.[k])findings.push(`${e.id}: missing habit ${k}`);
  if(!Array.isArray(e.skills)||e.skills.length<4)findings.push(`${e.id}: insufficient skills`);
+ if(!Array.isArray(e.reasoning_profile?.mental_models)||e.reasoning_profile.mental_models.length<3||!Array.isArray(e.reasoning_profile?.default_questions)||!Array.isArray(e.reasoning_profile?.failure_modes))findings.push(`${e.id}: incomplete reasoning profile`);
+ if(!e.learning_profile?.memory_mode||!e.learning_profile?.focus||!Array.isArray(e.learning_profile?.reflection_questions))findings.push(`${e.id}: incomplete learning profile`);
+ if(!Array.isArray(e.optional_integrations))findings.push(`${e.id}: optional_integrations must be an array`);
  for(const skill of e.skills)if(!existsSync(resolve(root,"skills/hermes-custom",skill,"SKILL.md")))findings.push(`${e.id}: missing canonical skill ${skill}`);
  for(const cap of e.external_capabilities||[])if(!capabilityIds.has(cap))findings.push(`${e.id}: unknown capability ${cap}`);
  if(e.verification_policy?.self_verify!==false)findings.push(`${e.id}: self verification must be false`);
@@ -36,6 +39,21 @@ ${e.personality.communication_style}
 
 ## Reasoning style
 ${e.work_style.decision_style}
+
+## Mental models
+${e.reasoning_profile.mental_models.map(x=>`- ${x}`).join("\n")}
+
+## Default questions
+${e.reasoning_profile.default_questions.map(x=>`- ${x}`).join("\n")}
+
+## Failure modes to guard against
+${e.reasoning_profile.failure_modes.map(x=>`- ${x}`).join("\n")}
+
+## Learning loop
+- Memory mode: ${e.learning_profile.memory_mode}
+- Focus: ${e.learning_profile.focus}
+${e.learning_profile.reflection_questions.map(x=>`- Reflect: ${x}`).join("\n")}
+- Promotion: ${e.learning_profile.promotion_rule}
 
 ## Working style
 ${e.habits.working_habit} ${e.work_style.handoff}
@@ -58,6 +76,9 @@ ${e.preferred_toolsets.join(", ")}. These are preferences, not proof that a tool
 
 ## External capabilities
 ${e.external_capabilities?.length?e.external_capabilities.map(x=>`- ${x}: requires runtime/provider evidence; default NOT_CONNECTED.`).join("\n"):"- None required for the core role."}
+
+## Optional upstream integrations
+${e.optional_integrations?.length?e.optional_integrations.map(x=>`- ${x}: optional, not bundled or auto-enabled.`).join("\n"):"- None recommended by default."}
 
 ## Approval and escalation
 Default autonomy: ${e.approval_policy.autonomy}. Escalate: ${e.work_style.escalation}

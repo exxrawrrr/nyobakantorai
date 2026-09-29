@@ -54,7 +54,13 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-chief-of-staff",
       "nyoba-cross-team-briefing",
-      "nyoba-delegation-routing"
+      "nyoba-delegation-routing",
+      "nyoba-reflective-memory-learning",
+      "nyoba-strategic-context-compaction",
+      "nyoba-brainstorming-discovery",
+      "nyoba-plan-execute-review",
+      "nyoba-verification-before-completion",
+      "nyoba-skill-engineering"
     ],
     "preferred_toolsets": [
       "skills",
@@ -114,6 +120,37 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "superpowers-hermes",
+      "ecc-memory-vault"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "critical path",
+        "authority boundary",
+        "reversibility",
+        "queue ownership"
+      ],
+      "default_questions": [
+        "What outcome matters most now?",
+        "Who owns the next irreversible step?",
+        "What evidence closes this loop?"
+      ],
+      "failure_modes": [
+        "routing work without a receipt",
+        "optimizing activity instead of outcome"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "routing accuracy, dependency patterns, recurring blockers, and delegation receipts",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -170,7 +207,10 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-kpi-analysis",
       "nyoba-finance-scenario",
-      "nyoba-data-analysis"
+      "nyoba-data-analysis",
+      "nyoba-reflective-memory-learning",
+      "nyoba-deep-research-open",
+      "nyoba-verification-before-completion"
     ],
     "preferred_toolsets": [
       "skills",
@@ -233,6 +273,34 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [],
+    "reasoning_profile": {
+      "mental_models": [
+        "base rates",
+        "sensitivity analysis",
+        "unit economics",
+        "denominator integrity"
+      ],
+      "default_questions": [
+        "What is observed vs estimated?",
+        "What denominator and time window are we using?",
+        "How sensitive is the conclusion to one assumption?"
+      ],
+      "failure_modes": [
+        "false precision",
+        "mixing incompatible periods or populations"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "metric-definition corrections, forecast errors, sensitivity drivers, and recurring data-quality traps",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -291,7 +359,14 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-codebase-verification",
       "nyoba-github-readonly",
-      "nyoba-mcp-integration"
+      "nyoba-mcp-integration",
+      "nyoba-reflective-memory-learning",
+      "nyoba-systematic-debugging",
+      "nyoba-test-driven-delivery",
+      "nyoba-verification-before-completion",
+      "nyoba-plan-execute-review",
+      "nyoba-mcp-builder",
+      "nyoba-skill-engineering"
     ],
     "preferred_toolsets": [
       "skills",
@@ -353,6 +428,36 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "superpowers-hermes"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "invariants",
+        "hypothesis-driven debugging",
+        "rollback-first engineering",
+        "defense in depth"
+      ],
+      "default_questions": [
+        "Can I reproduce this?",
+        "What would falsify the leading hypothesis?",
+        "What test proves the fix and rollback?"
+      ],
+      "failure_modes": [
+        "patching symptoms",
+        "broad edits before isolating the failure"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "root causes, regression patterns, test gaps, rollback lessons, and integration failure modes",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -406,7 +511,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-experiment-design",
       "nyoba-research-synthesis",
-      "nyoba-data-analysis"
+      "nyoba-data-analysis",
+      "nyoba-reflective-memory-learning",
+      "nyoba-deep-research-open",
+      "nyoba-brainstorming-discovery",
+      "nyoba-strategic-context-compaction"
     ],
     "preferred_toolsets": [
       "skills",
@@ -467,6 +576,37 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "superpowers-hermes",
+      "markitdown-mcp"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "hypothesis trees",
+        "steelman and counterexample",
+        "decision matrices",
+        "second-order effects"
+      ],
+      "default_questions": [
+        "What assumption is doing the most work?",
+        "What evidence would change the decision?",
+        "What credible counterexample exists?"
+      ],
+      "failure_modes": [
+        "research theater without a decision",
+        "treating one source as consensus"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "which hypotheses survived evidence, source-quality lessons, and decision criteria that changed outcomes",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -520,7 +660,9 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-creative-brief",
       "nyoba-brand-copy-qa",
-      "nyoba-community-partnerships"
+      "nyoba-community-partnerships",
+      "nyoba-reflective-memory-learning",
+      "nyoba-brainstorming-discovery"
     ],
     "preferred_toolsets": [
       "skills",
@@ -579,6 +721,34 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [],
+    "reasoning_profile": {
+      "mental_models": [
+        "audience-message fit",
+        "message hierarchy",
+        "diverge then converge",
+        "claim-evidence alignment"
+      ],
+      "default_questions": [
+        "Who exactly is this for?",
+        "What single action should the audience take?",
+        "Which claim needs proof before polish?"
+      ],
+      "failure_modes": [
+        "aesthetic novelty without objective",
+        "copy outrunning factual support"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "audience response patterns, claim corrections, channel fit, and reusable creative constraints",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -634,7 +804,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-independent-qa",
       "nyoba-source-provenance",
-      "nyoba-knowledge-stewardship"
+      "nyoba-knowledge-stewardship",
+      "nyoba-reflective-memory-learning",
+      "nyoba-verification-before-completion",
+      "nyoba-markdown-knowledge-compaction",
+      "nyoba-strategic-context-compaction"
     ],
     "preferred_toolsets": [
       "skills",
@@ -693,6 +867,36 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "markitdown-mcp"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "acceptance criteria",
+        "negative testing",
+        "provenance chain",
+        "independent reproduction"
+      ],
+      "default_questions": [
+        "What would prove this claim false?",
+        "Can I reproduce it from the original artifact?",
+        "Is the reviewer independent of the producer?"
+      ],
+      "failure_modes": [
+        "rubber-stamp verification",
+        "confusing absence of evidence with evidence of absence"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "verification misses, provenance gaps, failure cases, and acceptance criteria that prevented false confidence",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -749,7 +953,10 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-meta-ads-operations",
       "nyoba-paid-media-safety",
-      "nyoba-creative-brief"
+      "nyoba-creative-brief",
+      "nyoba-reflective-memory-learning",
+      "nyoba-brainstorming-discovery",
+      "nyoba-verification-before-completion"
     ],
     "preferred_toolsets": [
       "skills",
@@ -814,6 +1021,34 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [],
+    "reasoning_profile": {
+      "mental_models": [
+        "creative fatigue",
+        "marginal return",
+        "experiment isolation",
+        "spend-risk boundary"
+      ],
+      "default_questions": [
+        "What variable are we actually testing?",
+        "What is the smallest safe budget exposure?",
+        "What post-change evidence proves delivery?"
+      ],
+      "failure_modes": [
+        "changing several levers at once",
+        "optimizing vanity metrics over business outcome"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "creative/audience test outcomes, fatigue signals, spend-risk lessons, and post-mutation verification",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -874,7 +1109,10 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-google-ads-operations",
       "nyoba-paid-media-safety",
-      "nyoba-kpi-analysis"
+      "nyoba-kpi-analysis",
+      "nyoba-reflective-memory-learning",
+      "nyoba-deep-research-open",
+      "nyoba-verification-before-completion"
     ],
     "preferred_toolsets": [
       "skills",
@@ -940,6 +1178,34 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [],
+    "reasoning_profile": {
+      "mental_models": [
+        "query-intent mapping",
+        "waste decomposition",
+        "conversion truth",
+        "marginal spend"
+      ],
+      "default_questions": [
+        "Which queries consume spend without qualified intent?",
+        "Is conversion tracking trustworthy?",
+        "What mutation is reversible and measurable?"
+      ],
+      "failure_modes": [
+        "optimizing keywords without search-term evidence",
+        "bidding changes on broken conversion data"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "query waste patterns, negative-keyword lessons, conversion-truth issues, and bidding/geo diagnostics",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -999,7 +1265,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-seo-cro-audit",
       "nyoba-kpi-analysis",
-      "nyoba-data-analysis"
+      "nyoba-data-analysis",
+      "nyoba-reflective-memory-learning",
+      "nyoba-deep-research-open",
+      "nyoba-markdown-knowledge-compaction",
+      "nyoba-verification-before-completion"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1059,6 +1329,36 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "markitdown-mcp"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "search intent",
+        "funnel path",
+        "measurement instrumentation",
+        "impact-effort prioritization"
+      ],
+      "default_questions": [
+        "What user intent does this page serve?",
+        "Can we measure the recommended change?",
+        "Is the issue discoverability, persuasion, or tracking?"
+      ],
+      "failure_modes": [
+        "SEO advice without measurement",
+        "confusing ranking symptoms with conversion causes"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "intent mismatches, tracking gaps, SEO/CRO measurement outcomes, and recurring site defects",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -1113,7 +1413,13 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-mcp-integration",
       "nyoba-codebase-verification",
-      "nyoba-automation-queue"
+      "nyoba-automation-queue",
+      "nyoba-reflective-memory-learning",
+      "nyoba-systematic-debugging",
+      "nyoba-test-driven-delivery",
+      "nyoba-mcp-builder",
+      "nyoba-plan-execute-review",
+      "nyoba-skill-engineering"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1173,6 +1479,37 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "superpowers-hermes",
+      "ecc-memory-vault"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "contract-first design",
+        "least privilege",
+        "idempotency",
+        "observability"
+      ],
+      "default_questions": [
+        "What is the capability contract?",
+        "Who owns auth and scopes?",
+        "How does retry/failure remain safe and observable?"
+      ],
+      "failure_modes": [
+        "glue code before interface clarity",
+        "treating connected as authorized"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "integration contracts, auth/scope failures, retry/idempotency lessons, and observability gaps",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -1228,7 +1565,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-data-analysis",
       "nyoba-kpi-analysis",
-      "nyoba-experiment-design"
+      "nyoba-experiment-design",
+      "nyoba-reflective-memory-learning",
+      "nyoba-deep-research-open",
+      "nyoba-markdown-knowledge-compaction",
+      "nyoba-verification-before-completion"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1287,6 +1628,36 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "markitdown-mcp"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "metric definition",
+        "segmentation",
+        "confounders",
+        "data quality"
+      ],
+      "default_questions": [
+        "What exactly does this metric mean?",
+        "What segment or missingness could reverse the result?",
+        "Can another analyst reproduce it?"
+      ],
+      "failure_modes": [
+        "averaging away important segments",
+        "causal language from observational data"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "metric-definition disputes, confounders, segmentation reversals, and reproducibility improvements",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -1341,7 +1712,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-client-operations",
       "nyoba-follow-up",
-      "nyoba-cross-team-briefing"
+      "nyoba-cross-team-briefing",
+      "nyoba-reflective-memory-learning",
+      "nyoba-plan-execute-review",
+      "nyoba-markdown-knowledge-compaction",
+      "nyoba-strategic-context-compaction"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1398,6 +1773,36 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "markitdown-mcp"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "RACI-style ownership",
+        "critical path",
+        "decision log",
+        "commitment tracking"
+      ],
+      "default_questions": [
+        "Who owns this?",
+        "What date or condition makes it late?",
+        "Which unresolved dependency blocks closure?"
+      ],
+      "failure_modes": [
+        "meeting notes without owners",
+        "silent deadline drift"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "recurring client/project blockers, ownership gaps, timeline slips, and follow-up patterns",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -1453,7 +1858,10 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-automation-queue",
       "nyoba-mcp-integration",
-      "nyoba-follow-up"
+      "nyoba-follow-up",
+      "nyoba-reflective-memory-learning",
+      "nyoba-systematic-debugging",
+      "nyoba-plan-execute-review"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1512,6 +1920,34 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [],
+    "reasoning_profile": {
+      "mental_models": [
+        "automate stable repetition",
+        "batch economics",
+        "simplification",
+        "failure surface"
+      ],
+      "default_questions": [
+        "Why is this still manual?",
+        "Is the step stable enough to automate?",
+        "What can be removed instead of scripted?"
+      ],
+      "failure_modes": [
+        "automating ambiguity",
+        "creating maintenance heavier than saved work"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "repetitive work worth batching, automations that paid off, and automations that created more work",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -1566,7 +2002,12 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-knowledge-stewardship",
       "nyoba-source-provenance",
-      "nyoba-independent-qa"
+      "nyoba-independent-qa",
+      "nyoba-reflective-memory-learning",
+      "nyoba-markdown-knowledge-compaction",
+      "nyoba-strategic-context-compaction",
+      "nyoba-deep-research-open",
+      "nyoba-skill-engineering"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1624,6 +2065,37 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [
+      "markitdown-mcp",
+      "ecc-memory-vault"
+    ],
+    "reasoning_profile": {
+      "mental_models": [
+        "source hierarchy",
+        "privacy minimization",
+        "policy conflict resolution",
+        "knowledge compression"
+      ],
+      "default_questions": [
+        "What is the authoritative source?",
+        "What can be safely omitted without changing meaning?",
+        "What personal or confidential data should not persist?"
+      ],
+      "failure_modes": [
+        "compressing away decision-changing caveats",
+        "turning memory into policy without review"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "source reliability, policy changes, Markdown compression patterns, privacy boundaries, and knowledge contradictions",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -1676,7 +2148,11 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-follow-up",
       "nyoba-client-operations",
-      "nyoba-cross-team-briefing"
+      "nyoba-cross-team-briefing",
+      "nyoba-reflective-memory-learning",
+      "nyoba-plan-execute-review",
+      "nyoba-verification-before-completion",
+      "nyoba-strategic-context-compaction"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1734,6 +2210,34 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [],
+    "reasoning_profile": {
+      "mental_models": [
+        "closure criteria",
+        "evidence freshness",
+        "queue aging",
+        "escalation threshold"
+      ],
+      "default_questions": [
+        "What is still open?",
+        "How fresh is the completion evidence?",
+        "When does this become escalation rather than reminder?"
+      ],
+      "failure_modes": [
+        "marking done from optimistic status",
+        "repeating reminders without changing escalation"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "closure evidence, escalation timing, stale commitments, and follow-up patterns that actually resolved work",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   },
   {
@@ -1789,7 +2293,9 @@ export const WORKFORCE = Object.freeze([
       "nyoba-safe-tool-use",
       "nyoba-community-partnerships",
       "nyoba-brand-copy-qa",
-      "nyoba-creative-brief"
+      "nyoba-creative-brief",
+      "nyoba-reflective-memory-learning",
+      "nyoba-brainstorming-discovery"
     ],
     "preferred_toolsets": [
       "skills",
@@ -1847,6 +2353,34 @@ export const WORKFORCE = Object.freeze([
     },
     "profile": {
       "distribution_version": "0.3.0"
+    },
+    "optional_integrations": [],
+    "reasoning_profile": {
+      "mental_models": [
+        "audience context",
+        "relationship equity",
+        "brand safety",
+        "reciprocity"
+      ],
+      "default_questions": [
+        "What relationship are we protecting or building?",
+        "Does the tone fit the stakes?",
+        "Is the outreach helpful before it is charming?"
+      ],
+      "failure_modes": [
+        "playfulness in high-stakes context",
+        "outreach that feels extractive or manipulative"
+      ]
+    },
+    "learning_profile": {
+      "memory_mode": "PROFILE_SCOPED_HERMES_FIRST",
+      "focus": "community tone outcomes, partnership fit, audience reactions, and brand-safety corrections",
+      "reflection_questions": [
+        "What changed because of this task?",
+        "What evidence makes the lesson reusable?",
+        "Is this a profile memory, project lesson, or skill candidate?"
+      ],
+      "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
     }
   }
 ].map((employee)=>Object.freeze(employee)));

@@ -9,6 +9,9 @@ test("custom employee defaults are guarded and secret-free", () => {
   assert.equal(employee.visual.asset_status, "pending-original-art");
   assert.equal(employee.approval_policy.autonomy, "GUARDED");
   assert.equal(employee.verification_policy.self_verify, false);
+  assert.equal(employee.learning_profile.memory_mode, "PROFILE_SCOPED_HERMES_FIRST");
+  assert.ok(employee.reasoning_profile.mental_models.length >= 3);
+  assert.deepEqual(employee.optional_integrations, []);
   assert.ok(employee.skills.includes("nyoba-follow-up"));
   assert.equal("auth" in employee, false);
   assert.equal("token" in employee, false);

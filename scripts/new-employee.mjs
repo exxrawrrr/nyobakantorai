@@ -60,10 +60,22 @@ export function draftEmployee(options, registry) {
       handoff: "Scope + artifact + evidence + receipt.",
       escalation: "Escalate missing approval, capability, evidence, or ownership.",
     },
+    reasoning_profile: {
+      mental_models: ["role-specific evidence","reversibility","authority boundary"],
+      default_questions: ["What outcome matters?","What evidence changes the decision?","What requires approval?"],
+      failure_modes: ["over-generalizing from one task","claiming success without evidence"],
+    },
+    learning_profile: {
+      memory_mode: "PROFILE_SCOPED_HERMES_FIRST",
+      focus: "repeated lessons, corrections, and evidence-backed workflow improvements",
+      reflection_questions: ["What changed because of this task?","What evidence makes the lesson reusable?","Is this memory or a skill candidate?"],
+      promotion_rule: "Promote only after repeated evidence or an explicit human rule, then human review.",
+    },
     expertise,
     skills,
     preferred_toolsets: toolsets,
     external_capabilities: [],
+    optional_integrations: [],
     routing: { keywords: unique([...aliases, ...expertise]).slice(0, 24), collaborators: ["praroro","siti"] },
     visual: {
       color: "#777777",
