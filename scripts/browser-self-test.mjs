@@ -30,23 +30,23 @@ const noSandbox=has("--browser-no-sandbox");
 
 function printHumanPlan(plan) {
   console.log("Browser Use self-service six-case runner");
-  console.log(\`  pinned package  \${plan.pinned_package_version}\`);
-  console.log(\`  CLI detected    \${plan.command_detected?"YES":"NO"}\`);
-  console.log(\`  browser detected \${plan.isolated_browser_detected?"YES":"NO"}\`);
-  console.log(\`  executable now  \${plan.executable_now?"YES":"NO"}\`);
-  console.log(\`  next            \${plan.next}\`);
+  console.log(`  pinned package  ${plan.pinned_package_version}`);
+  console.log(`  CLI detected    ${plan.command_detected?"YES":"NO"}`);
+  console.log(`  browser detected ${plan.isolated_browser_detected?"YES":"NO"}`);
+  console.log(`  executable now  ${plan.executable_now?"YES":"NO"}`);
+  console.log(`  next            ${plan.next}`);
   console.log("");
   console.log("Safety: loopback target only · disposable browser profile · no login · no writes · no auto-install");
   console.log("Claim limit: "+plan.claim_limit);
 }
 
 function printHumanReport(report) {
-  console.log(\`Browser Use self-test: \${report.claim_state}\`);
+  console.log(`Browser Use self-test: ${report.claim_state}`);
   for(const item of report.cases) {
-    console.log(\`  \${item.metrics.success?"PASS":"FAIL"}  \${item.case_id} — \${item.note}\`);
+    console.log(`  ${item.metrics.success?"PASS":"FAIL"}  ${item.case_id} — ${item.note}`);
   }
   console.log("");
-  console.log(\`Server evidence: mutations=\${report.server_evidence.mutation_post_count} · auth_cookie=\${report.server_evidence.auth_cookie_observed?"YES":"NO"}\`);
+  console.log(`Server evidence: mutations=${report.server_evidence.mutation_post_count} · auth_cookie=${report.server_evidence.auth_cookie_observed?"YES":"NO"}`);
   console.log("Claim limit: "+report.claim_limit);
 }
 
