@@ -60,7 +60,7 @@
 - [ ] live cross-harness activation/execution parity before claiming broad behavioral portability
 - [x] local profile learning read/export/delete isolation with explicit M3 scope + cross-profile contamination guards
 - [x] fail-closed provider evaluation contracts for browser + memory candidates
-- [ ] Cognee memory-provider isolation/export/deletion evaluation
+- [ ] Cognee memory-provider isolation/export/deletion evaluation — live readiness checked 2026-09-29; provider package/config/credentials absent on GROWTH, so status remains NOT_RUN / UNPROVEN
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
 - [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
 - [x] deterministic adversarial policy/recovery benchmark with zero-false-success gate
