@@ -1,12 +1,13 @@
 ---
 name: nyoba-google-ads-operations
-description: Analyze and operate Google Ads through provider-neutral capabilities with preview, approval, and verification.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Analyze and operate Google Ads through provider-neutral capabilities with preview, approval, and verification."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, workforce, v0.3]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,workforce,v0.3"
 ---
 
 # Google Ads operations

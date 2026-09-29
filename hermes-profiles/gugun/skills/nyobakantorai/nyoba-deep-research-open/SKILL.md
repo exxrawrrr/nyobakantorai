@@ -1,13 +1,12 @@
 ---
 name: nyoba-deep-research-open
-description: Use when a decision requires current multi-source research, competitive or market intelligence, technology evaluation, or evidence beyond a single page or search result.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when a decision requires current multi-source research, competitive or market intelligence, technology evaluation, or evidence beyond a single page or search result."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [ecc]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
 ---
 
 # Open Deep Research
