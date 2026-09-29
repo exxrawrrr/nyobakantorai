@@ -283,6 +283,7 @@ Yang sudah ada di kandidat v0.4 antara lain:
 - isolated Browser Use self-service six-case runner with disposable loopback target, temporary browser profile, server-side mutation/auth evidence, and no automatic install/login;
 - isolated Cognee self-service eight-case memory runner with random run-owned datasets, secret pre-write rejection, scoped deletion, cleanup verification, and remote opt-in;
 - cross-harness self-service parity runner for Hermes/Codex/Gemini/Copilot with one disposable skill, exact protected-atom contract, temporary workspaces, and no auto-install/login;
+- isolated release matrices for one worker, arbitrary subset, full workforce, and full upgrade/uninstall/reinstall lifecycle with user-state preservation and byte-integrity checks;
 - Linux + Windows + minimum-version CI.
 
 Yang **belum** boleh dianggap proven/stable:
@@ -291,6 +292,7 @@ Yang **belum** boleh dianggap proven/stable:
 - canonical live Cognee/Hermes provider-lifecycle evaluation;
 - Browser Use side of the browser comparison;
 - real-task baseline, saat ini baru **1/20 eligible cases**;
+- final real clean-machine Hermes lifecycle coverage on intended release platforms;
 - live ads provider adapters;
 - finished original art untuk 10 worker baru;
 - complete office/UI storage migration.
