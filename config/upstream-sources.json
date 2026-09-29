@@ -135,6 +135,131 @@
         "license boundary only"
       ],
       "note": "Not copied, vendored, or used to create derivative document skills."
+    },
+    {
+      "id": "agent-skills",
+      "name": "Agent Skills open standard",
+      "repo": "https://github.com/agentskills/agentskills",
+      "commit": "69ef37e9424c0a7ea9dd2293b559e43ec8176379",
+      "license": "Apache-2.0",
+      "usage_mode": "standards-reference",
+      "used_for": [
+        "portable skill packaging",
+        "SKILL.md conventions",
+        "progressive disclosure"
+      ]
+    },
+    {
+      "id": "awesome-copilot",
+      "name": "GitHub awesome-copilot",
+      "repo": "https://github.com/github/awesome-copilot",
+      "commit": "6efe0d035a6415137153bb9b3959589191b7afbe",
+      "license": "MIT",
+      "usage_mode": "discovery-reference",
+      "used_for": [
+        "skill/agent discovery patterns",
+        "hook/plugin examples",
+        "cross-harness quality patterns"
+      ]
+    },
+    {
+      "id": "gemini-cli",
+      "name": "Google Gemini CLI",
+      "repo": "https://github.com/google-gemini/gemini-cli",
+      "commit": "fe6350238c1862dade66a9dea9080c6508475bec",
+      "license": "Apache-2.0",
+      "usage_mode": "architecture-reference",
+      "used_for": [
+        "extension architecture",
+        "skills + MCP + hooks composition",
+        "lifecycle hook patterns"
+      ]
+    },
+    {
+      "id": "llmlingua",
+      "name": "Microsoft LLMLingua",
+      "repo": "https://github.com/microsoft/LLMLingua",
+      "commit": "5a4c78ae18ab17a98cf997e8259354e546081d64",
+      "license": "MIT",
+      "usage_mode": "experimental-optional-integration-and-concept-reference",
+      "used_for": [
+        "prompt compression research",
+        "token reduction benchmark"
+      ]
+    },
+    {
+      "id": "repomix",
+      "name": "Repomix",
+      "repo": "https://github.com/yamadashy/repomix",
+      "commit": "0b3f82b401bbc520fd1aca67c06d24e40a868d3e",
+      "license": "MIT",
+      "usage_mode": "optional-integration-and-concept-reference",
+      "used_for": [
+        "codebase context packing",
+        "token counting",
+        "include/exclude context rules"
+      ]
+    },
+    {
+      "id": "cognee-integrations",
+      "name": "Cognee Integrations",
+      "repo": "https://github.com/topoteretes/cognee-integrations",
+      "commit": "3323e30a71564eccc1794b8c4a0bac84fc3d2b30",
+      "license": "Apache-2.0",
+      "usage_mode": "evaluation-candidate",
+      "used_for": [
+        "Hermes memory integration research",
+        "persistent memory evaluation"
+      ]
+    },
+    {
+      "id": "playwright-mcp",
+      "name": "Microsoft Playwright MCP",
+      "repo": "https://github.com/microsoft/playwright-mcp",
+      "commit": "f183dad4a52965583e3cc1d59b88cdc279e2e57d",
+      "license": "Apache-2.0",
+      "usage_mode": "optional-integration-candidate",
+      "used_for": [
+        "structured browser operation",
+        "browser evidence",
+        "browser verification"
+      ]
+    },
+    {
+      "id": "browser-use",
+      "name": "Browser Use",
+      "repo": "https://github.com/browser-use/browser-use",
+      "commit": "4cbe921673b48a488f5415d9159249afd12a625b",
+      "license": "MIT",
+      "usage_mode": "evaluation-candidate",
+      "used_for": [
+        "higher-level browser agent evaluation",
+        "browser failure-recovery comparison"
+      ]
+    },
+    {
+      "id": "lighthouse",
+      "name": "GoogleChrome Lighthouse",
+      "repo": "https://github.com/GoogleChrome/lighthouse",
+      "commit": "08c05cdee7e191719480477056bd145abcb09c17",
+      "license": "Apache-2.0",
+      "usage_mode": "optional-tool-reference",
+      "used_for": [
+        "web performance audit",
+        "SEO/accessibility/best-practice evidence"
+      ]
+    },
+    {
+      "id": "polars",
+      "name": "Polars",
+      "repo": "https://github.com/pola-rs/polars",
+      "commit": "3479b49e806d363fc45d59b387a2dd83de99fb32",
+      "license": "MIT",
+      "usage_mode": "optional-tool-reference",
+      "used_for": [
+        "local structured-data analysis",
+        "reproducible transformations"
+      ]
     }
   ]
 }
