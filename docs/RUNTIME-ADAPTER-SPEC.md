@@ -44,7 +44,11 @@ console.log(await snapshotRuntime(adapter));
 
 ## Current runtime integration
 
-The existing Hermes integration predates the generic SDK and remains read-only/fail-closed. Migrating it onto this adapter interface is tracked separately so the public release does not silently change the working Hermes behavior.
+Hermes is now encapsulated behind `office/hermes-runtime-adapter.mjs`.
+
+The office server no longer imports `node:child_process` or executes Hermes commands directly. The Hermes adapter owns executable invocation, bounded environment, profile/version parsing, and board access. Board/task reads pass through the generic `snapshotRuntime()` normalization and fail-closed behavior.
+
+The public `/api/runtime` response remains Hermes-aware for compatibility, while command execution stays behind the adapter boundary.
 
 The discovery endpoint is:
 
