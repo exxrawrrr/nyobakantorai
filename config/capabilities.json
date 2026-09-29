@@ -97,6 +97,41 @@
       "risk_class": "READ_ONLY",
       "default_state": "NOT_CONNECTED",
       "requires_human_approval": false
+    },
+    {
+      "id": "context.repo.pack",
+      "description": "Pack selected local repository context into a token-aware artifact through an explicitly installed tool such as Repomix.",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "context.prompt.compress.experimental",
+      "description": "Experimental lossy prompt/context compression. Output must be checked against protected constraints and original source.",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "browser.structured",
+      "description": "Structured browser automation through an explicitly connected browser provider. Conservatively treated as capable of external interaction/write.",
+      "risk_class": "EXTERNAL_WRITE",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "web.audit.lighthouse",
+      "description": "Run a Lighthouse-style website audit and capture machine-readable performance/SEO/accessibility evidence.",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
+    },
+    {
+      "id": "data.local.polars",
+      "description": "Run local structured-data transformations/analysis through an explicitly available Polars runtime.",
+      "risk_class": "READ_ONLY",
+      "default_state": "NOT_CONNECTED",
+      "requires_human_approval": false
     }
   ]
 }
