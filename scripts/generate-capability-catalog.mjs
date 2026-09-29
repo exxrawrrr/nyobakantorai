@@ -149,6 +149,14 @@ export async function buildCapabilityCatalog() {
       artifact_ref:"packages/evidence-verifier/index.mjs",
     },
     {
+      id:"workflow.profile-learning-portability", kind:"workflow",
+      description:"Export or delete profile-scoped learning state without leaking into unrelated workers; shared M3 knowledge and merged canonical skill history are preserved by default.",
+      source_refs:[projectSource()], usage_mode:"original", default_state:"BUNDLED", risk_class:"MEMORY",
+      required_by:workers.map((worker)=>worker.id), optional_for:[], platforms:["windows","linux","macos"],
+      install_method:"bundled memory-learning module", verification_method:"profile export/delete isolation tests",
+      artifact_ref:"packages/memory-learning/index.mjs",
+    },
+    {
       id:"policy.human-approval", kind:"policy",
       description:"High-impact writes, paid actions, account changes, and destructive operations require scoped human approval unless a narrower delegated envelope exists.",
       source_refs:[projectSource()], usage_mode:"original", default_state:"BUNDLED", risk_class:"PROCEDURAL",
