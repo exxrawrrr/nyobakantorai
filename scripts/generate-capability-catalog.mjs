@@ -141,6 +141,14 @@ export async function buildCapabilityCatalog() {
       artifact_ref:"packages/context-guard/index.mjs",
     },
     {
+      id:"workflow.siti-evidence-verification", kind:"workflow",
+      description:"Deterministically reject evidence packets with wrong facts, stale/fabricated evidence, partial completion, unauthorized verification/execution claims, or prompt-injection signals.",
+      source_refs:[projectSource()], usage_mode:"original", default_state:"BUNDLED", risk_class:"PROCEDURAL",
+      required_by:["siti"], optional_for:["praroro","fikri"], platforms:["windows","linux","macos"],
+      install_method:"bundled local module + Siti verification procedure", verification_method:"evidence-verifier unit tests + adversarial policy benchmark",
+      artifact_ref:"packages/evidence-verifier/index.mjs",
+    },
+    {
       id:"policy.human-approval", kind:"policy",
       description:"High-impact writes, paid actions, account changes, and destructive operations require scoped human approval unless a narrower delegated envelope exists.",
       source_refs:[projectSource()], usage_mode:"original", default_state:"BUNDLED", risk_class:"PROCEDURAL",
