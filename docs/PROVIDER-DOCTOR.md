@@ -143,3 +143,19 @@ npm run browser:self-test -- --json --out browser-use-self-test.json
 See `docs/BROWSER-SELF-TEST.md`.
 
 This preserves the separation between **detection** and **execution**: Provider Doctor remains read-only, while the user explicitly chooses whether to launch the isolated disposable browser self-test.
+
+
+## Cognee next step
+
+Cognee has a dedicated self-service memory runner. Provider Doctor remains detection-only and never executes it automatically.
+
+```bash
+npm run memory:self-test:plan
+npm run memory:self-test -- --json --out cognee-self-test.json
+```
+
+For a remote endpoint, the user must additionally provide `--allow-remote` and their own `COGNEE_API_KEY`.
+
+See `docs/COGNEE-SELF-TEST.md`.
+
+This keeps detection, execution, and canonical live-evaluation claims separate.
