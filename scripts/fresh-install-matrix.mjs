@@ -1,4 +1,4 @@
-import { runFullWorkforceFreshInstallMatrix, runOneWorkerFreshInstallMatrix, runSubsetFreshInstallMatrix } from "../packages/fresh-install-matrix/index.mjs";
+import { runFullWorkforceFreshInstallMatrix, runOneWorkerFreshInstallMatrix, runSubsetFreshInstallMatrix, runUpgradeUninstallLifecycleMatrix } from "../packages/fresh-install-matrix/index.mjs";
 
 const argv=process.argv.slice(2);
 const modeArg=argv.find((x)=>x.startsWith("--mode="));
@@ -35,10 +35,20 @@ if(mode==="subset"){
   result=await runSubsetFreshInstallMatrix({selection,removeEmployeeId});
 }else if(mode==="full"){
   result=await runFullWorkforceFreshInstallMatrix();
+}else if(mode==="lifecycle"){
+  const removeEq=argv.find((x)=>x.startsWith("--remove="));
+  const removeIndex=argv.indexOf("--remove");
+  let removeEmployeeId=removeEq?removeEq.slice("--remove=".length):"bimo";
+  if(removeIndex>=0){
+    const next=argv[removeIndex+1];
+    if(!next||next.startsWith("--")) throw new Error("--remove requires an employee id");
+    removeEmployeeId=next;
+  }
+  result=await runUpgradeUninstallLifecycleMatrix({removeEmployeeId});
 }else if(mode==="one-worker"){
   result=await runOneWorkerFreshInstallMatrix({employeeId});
 }else{
-  throw new Error("Unknown --mode. Use one-worker, subset, or full.");
+  throw new Error("Unknown --mode. Use one-worker, subset, full, or lifecycle.");
 }
 
 if(json) process.stdout.write(JSON.stringify(result,null,2)+"\n");
@@ -51,6 +61,18 @@ else if(mode==="full"){
   console.log("All packs verified: "+(result.all_packs_verified?"YES":"NO"));
   console.log("Rerun profiles exact: "+(result.rerun_profiles_exact?"YES":"NO"));
   console.log("User-owned state preserved: "+(result.all_user_owned_state_preserved?"YES":"NO"));
+  console.log("Claim: "+result.claim_state);
+  console.log(result.note);
+}else if(mode==="lifecycle"){
+  console.log("Release matrix: upgrade / uninstall / reinstall lifecycle");
+  console.log("Initial profiles: "+result.initial_profiles.length);
+  console.log("Upgrade: "+(result.upgrade_passed?"PASS":"FAIL"));
+  console.log("Selective removal: "+result.selective_removal.employee_id+" -> "+(result.selective_removal.passed?"PASS":"FAIL"));
+  console.log("Full uninstall: "+(result.full_uninstall.passed?"PASS":"FAIL"));
+  console.log("Reinstall profiles: "+result.reinstall.profiles.length);
+  console.log("Reinstall: "+(result.reinstall.passed?"PASS":"FAIL"));
+  console.log("Final native-upgrade rerun: "+(result.final_rerun_actions_exact?"PASS":"FAIL"));
+  console.log("Pack artifacts unchanged: "+(result.pack_artifacts_unchanged?"YES":"NO"));
   console.log("Claim: "+result.claim_state);
   console.log(result.note);
 }else if(mode==="subset"){
