@@ -297,7 +297,7 @@ Yang **belum** boleh dianggap proven/stable:
 
 Stable promotion saat ini **HOLD**. Lihat [docs/V0.4-RELEASE-DECISION.md](docs/V0.4-RELEASE-DECISION.md), [docs/V0.4-REVIEW-MAP.md](docs/V0.4-REVIEW-MAP.md), dan [ROADMAP.md](ROADMAP.md).
 
-Self-service evidence/setup surfaces: [Real Task Recorder](docs/REAL-TASK-RECORDER.md), [Unified Provider Doctor](docs/PROVIDER-DOCTOR.md), [Browser Use Self-Test](docs/BROWSER-SELF-TEST.md), [Cognee Memory Self-Test](docs/COGNEE-SELF-TEST.md), dan [Cross-Harness Self-Test](docs/CROSS-HARNESS-SELF-TEST.md).
+Self-service evidence/setup surfaces: [Real Task Recorder](docs/REAL-TASK-RECORDER.md), [Real-Task Baseline Collection](docs/REAL-TASK-BASELINE.md), [Unified Provider Doctor](docs/PROVIDER-DOCTOR.md), [Browser Use Self-Test](docs/BROWSER-SELF-TEST.md), [Cognee Memory Self-Test](docs/COGNEE-SELF-TEST.md), dan [Cross-Harness Self-Test](docs/CROSS-HARNESS-SELF-TEST.md).
 
 ---
 
