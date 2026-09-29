@@ -343,6 +343,44 @@ The deterministic benchmark does not claim those semantic qualities. Personality
 
 Token reduction is secondary. A live Fikri benchmark succeeds only when downstream task quality and semantic/source fidelity remain acceptable after compilation. Report original-vs-compiled task success together with token reduction; a large reduction with degraded task success is a failure.
 
+### Controlled live Fikri result — 2026-09-29
+
+The first live-model attempt exposed a real regression: the compiler expanded the five fixtures by about 43.5% on average and paraphrased protected constraints. The benchmark was treated as failed, and the compiler/guard were hardened before rerunning.
+
+The accepted controlled run is recorded in:
+
+- `benchmarks/fikri-live/run-2026-09-29.json`
+- `benchmarks/fikri-live/README.md`
+- `benchmarks/fikri-live/validate.mjs`
+
+Final controlled metrics:
+
+- 5/5 cases pass;
+- average estimated token reduction: 41.10%;
+- worst case reduction: 32.56%;
+- strict protected-atom and exact source/numeric fidelity: 100%;
+- compiled required-fact recall: 100%;
+- blind original-context downstream pass: 5/5;
+- blind compiled-context downstream pass: 5/5;
+- compiled-context critical losses: 0.
+
+The blind review was run in a separate isolated live-model session with the two downstream arms labeled only A/B. Model-based review supplements deterministic exact-atom/source checks; it does not replace the future real-task baseline.
+
+This evidence supports only a controlled live-model Fikri claim. The fixtures are synthetic, so the >=20 eligible real-task baseline remains open and must not inherit this result.
+
+### Cross-harness live readiness — 2026-09-29
+
+The machine-level readiness record is `benchmarks/cross-harness/run-2026-09-29.json`.
+
+On the evaluated GROWTH machine:
+
+- Hermes 0.21.3 is installed, but no model/provider credential or active OAuth session is configured;
+- Gemini CLI is not installed;
+- GitHub Copilot CLI is not installed;
+- Codex CLI 0.154.0 was authenticated and used only as the live-model evaluation runtime.
+
+Therefore static packaging claims remain intact, but live Hermes/Gemini/Copilot behavioral parity remains `UNPROVEN`. No target is promoted to runtime parity from this readiness check.
+
 ### Real-task baseline interpretation
 
 Twenty eligible cases are an initial baseline, not statistical proof of general reliability. The dataset must include failures and difficult cases, not only tasks selected because the system is likely to win. Keep false-success rate as a separate safety KPI from task success rate.
