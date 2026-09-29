@@ -87,12 +87,12 @@ const readEmployees = createRuntimeSnapshotCache(employeeSnapshot, {
 
 async function runtimeSnapshot() {
   const employeesPending = readEmployees();
-  const [runtime, descriptor, employeesReading] = await Promise.all([
-    hermesRuntime.runtimeSnapshot({ timeoutMs: 2_000, maxTasks: 500 }),
-    hermesRuntime.describe(),
+  const [runtime, employeesReading] = await Promise.all([
+    hermesRuntime.runtimeSnapshot({ timeoutMs: 10_000, maxTasks: 500 }),
     employeesPending,
   ]);
   const { profiles, version } = employeesReading.snapshot;
+  const descriptor = await hermesRuntime.describe(version);
   const employeeAgeMs = Math.max(0, Date.now() - Date.parse(employeesReading.snapshot.checked_at));
   const boardConnected = runtime.connected === true && Array.isArray(runtime.tasks);
   return {
