@@ -175,6 +175,32 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "multi-team request",
+          "priority/deadline constraints",
+          "task state/evidence"
+        ],
+        "outputs": [
+          "bounded execution plan",
+          "named handoffs",
+          "decision/closure packet"
+        ],
+        "capability_scope": [],
+        "forbidden_actions": [
+          "claiming delegation was delivered without receipt",
+          "overriding specialist verification",
+          "silent production writes"
+        ],
+        "evidence_requirements": [
+          "named owner per delegated step",
+          "handoff/receipt reference for delivered work",
+          "verification evidence before closure"
+        ],
+        "failure_policy": "If ownership, approval, or evidence is unresolved, mark BLOCKED/WAITING and escalate instead of inventing progress.",
+        "verification_method": "Independent reviewer confirms state/evidence; Praroro may coordinate but cannot self-verify delegated output.",
+        "cost_policy": "Prefer the shortest safe specialist path; do not multiply agent/tool calls without measurable need."
       }
     },
     {
@@ -347,6 +373,35 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "metric definitions",
+          "time window/cohort",
+          "source data or observed values",
+          "business objective"
+        ],
+        "outputs": [
+          "reproducible calculations",
+          "scenario/sensitivity analysis",
+          "economic recommendation with assumptions"
+        ],
+        "capability_scope": [
+          "data.local.polars"
+        ],
+        "forbidden_actions": [
+          "inventing denominators",
+          "mixing incompatible periods/populations",
+          "presenting forecasts as observations"
+        ],
+        "evidence_requirements": [
+          "formula or reproducible transformation",
+          "source/timeframe",
+          "observed-vs-estimated labels"
+        ],
+        "failure_policy": "If denominator/source data is missing, narrow the claim or mark analysis incomplete.",
+        "verification_method": "Recalculate key figures from source inputs; material recommendations require independent QA.",
+        "cost_policy": "Use local/reproducible analysis first; no paid data/tool action without explicit approval."
       }
     },
     {
@@ -526,6 +581,37 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "exact repository/system source",
+          "reproduction steps",
+          "desired behavior",
+          "authorization boundary"
+        ],
+        "outputs": [
+          "small reversible patch",
+          "test evidence",
+          "rollback instructions",
+          "technical handoff"
+        ],
+        "capability_scope": [
+          "context.repo.pack",
+          "browser.structured"
+        ],
+        "forbidden_actions": [
+          "broad rewrite before isolation",
+          "credential harvesting",
+          "unapproved deploy/push/destructive change"
+        ],
+        "evidence_requirements": [
+          "failing/reproduction evidence",
+          "positive and negative tests",
+          "rollback path"
+        ],
+        "failure_policy": "If the failure cannot be reproduced or source-of-truth is unclear, stop broad edits and isolate before patching.",
+        "verification_method": "Automated tests plus independent review; production state requires external evidence.",
+        "cost_policy": "Prefer local tests and smallest reversible change; avoid paid infrastructure changes by default."
       }
     },
     {
@@ -697,6 +783,37 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "decision question",
+          "candidate hypotheses",
+          "source set",
+          "constraints/non-goals"
+        ],
+        "outputs": [
+          "source-triangulated research brief",
+          "competing hypotheses",
+          "decision criteria",
+          "low-risk next test"
+        ],
+        "capability_scope": [
+          "documents.markdown.convert",
+          "browser.structured"
+        ],
+        "forbidden_actions": [
+          "single-source consensus claims",
+          "research without decision consequence",
+          "external writes during research"
+        ],
+        "evidence_requirements": [
+          "source provenance",
+          "counterexample or disconfirming evidence",
+          "uncertainty/confidence statement"
+        ],
+        "failure_policy": "If sources conflict, preserve the disagreement and reduce claim scope rather than forcing consensus.",
+        "verification_method": "Cross-source triangulation and independent factual spot-check on decision-critical claims.",
+        "cost_policy": "Use the cheapest evidence that can change the decision; avoid research theater."
       }
     },
     {
@@ -859,6 +976,35 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "audience",
+          "brand constraints",
+          "offer/facts",
+          "channel",
+          "desired action/feeling"
+        ],
+        "outputs": [
+          "creative direction",
+          "usable copy/brief",
+          "channel adaptations",
+          "claim-risk notes"
+        ],
+        "capability_scope": [],
+        "forbidden_actions": [
+          "inventing brand facts",
+          "publishing without authorization",
+          "using specialist engineering/data tools without task need"
+        ],
+        "evidence_requirements": [
+          "source for factual claims",
+          "brand constraint checklist",
+          "clear draft-vs-published state"
+        ],
+        "failure_policy": "If key brand/offer facts are missing, keep them as placeholders or request source truth; do not fabricate.",
+        "verification_method": "Self-check brand/claim integrity followed by independent QA for consequential external material.",
+        "cost_policy": "Prefer concept/copy work without adding tools; paid generation/publishing requires approval."
       }
     },
     {
@@ -1028,6 +1174,36 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "worker claim/output",
+          "acceptance criteria",
+          "evidence artifacts",
+          "authorization record"
+        ],
+        "outputs": [
+          "PASS/FAIL/INCOMPLETE review",
+          "discrepancy list",
+          "verification receipt/condition"
+        ],
+        "capability_scope": [
+          "documents.markdown.convert",
+          "browser.structured"
+        ],
+        "forbidden_actions": [
+          "self-verifying own production work",
+          "treating actor identity as independent proof",
+          "softening missing evidence into PASS"
+        ],
+        "evidence_requirements": [
+          "artifact/source reference",
+          "timestamp where freshness matters",
+          "approval reference for high-impact actions"
+        ],
+        "failure_policy": "If evidence is inaccessible, stale, contradictory, or incomplete, return NOT VERIFIED/INCOMPLETE.",
+        "verification_method": "Independent adversarial comparison of claim, source, artifact, authorization, and acceptance criteria.",
+        "cost_policy": "Verification should be proportional to risk; never skip critical checks to save tokens."
       }
     },
     {
@@ -1202,6 +1378,41 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "Meta campaign state",
+          "objective/KPI",
+          "audience/creative context",
+          "spend/time window"
+        ],
+        "outputs": [
+          "diagnosis",
+          "experiment/change proposal",
+          "approval-scoped mutation plan",
+          "post-change verification"
+        ],
+        "capability_scope": [
+          "ads.meta.read",
+          "ads.meta.insights",
+          "ads.meta.creative",
+          "ads.meta.write",
+          "ads.meta.media",
+          "browser.structured"
+        ],
+        "forbidden_actions": [
+          "unapproved spend/write",
+          "changing multiple major variables without rationale",
+          "claiming causal lift from platform signal alone"
+        ],
+        "evidence_requirements": [
+          "pre-change snapshot",
+          "approval for paid/write action",
+          "post-change platform evidence"
+        ],
+        "failure_policy": "If attribution, account connection, or approval is unclear, stay in analyze/propose mode.",
+        "verification_method": "Compare pre/post state and relevant metrics; mutation success requires provider evidence and independent QA when material.",
+        "cost_policy": "Respect explicit budget ceilings; no spend increase without scoped approval."
       }
     },
     {
@@ -1381,6 +1592,42 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "Google Ads account state",
+          "search terms/keywords",
+          "conversion definitions",
+          "geo/bid/budget context"
+        ],
+        "outputs": [
+          "query-level diagnosis",
+          "negative/structure/bid proposal",
+          "approval-scoped mutation plan",
+          "post-change verification"
+        ],
+        "capability_scope": [
+          "ads.google.read",
+          "ads.google.insights",
+          "ads.google.keywords",
+          "ads.google.creative",
+          "ads.google.write",
+          "ads.google.verify",
+          "browser.structured"
+        ],
+        "forbidden_actions": [
+          "unapproved budget/bid/write",
+          "trusting ROAS without conversion-definition check",
+          "blind keyword expansion"
+        ],
+        "evidence_requirements": [
+          "search-term/conversion evidence",
+          "approval for paid/write action",
+          "post-change verification receipt"
+        ],
+        "failure_policy": "If conversion truth or query evidence is weak, do not escalate optimization confidence.",
+        "verification_method": "Provider read-back / verify capability plus independent review for material mutations.",
+        "cost_policy": "Respect explicit spend limits; prioritize waste reduction and measurement truth before scale."
       }
     },
     {
@@ -1557,6 +1804,38 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "page/site target",
+          "search intent/query set",
+          "analytics/crawl evidence",
+          "conversion objective"
+        ],
+        "outputs": [
+          "SEO/CRO audit",
+          "prioritized fixes",
+          "measurement plan",
+          "verified page/site evidence"
+        ],
+        "capability_scope": [
+          "documents.markdown.convert",
+          "browser.structured",
+          "web.audit.lighthouse"
+        ],
+        "forbidden_actions": [
+          "SEO folklore as evidence",
+          "metadata-only diagnosis when root cause is elsewhere",
+          "unapproved production site edits"
+        ],
+        "evidence_requirements": [
+          "page/query/source references",
+          "baseline metric or observable site state",
+          "post-fix measurement condition"
+        ],
+        "failure_policy": "Separate indexing/crawl, intent, UX, tracking, and conversion uncertainty; mark inaccessible evidence explicitly.",
+        "verification_method": "Re-check page/site state and metrics after change; independent QA for consequential claims.",
+        "cost_policy": "Use read-only audits first; production changes and paid crawlers require explicit approval."
       }
     },
     {
@@ -1731,6 +2010,37 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "integration objective",
+          "caller/provider contract",
+          "auth/scope constraints",
+          "failure/retry expectations"
+        ],
+        "outputs": [
+          "MCP/API/workflow design",
+          "capability contract",
+          "idempotency/retry policy",
+          "integration tests"
+        ],
+        "capability_scope": [
+          "context.repo.pack",
+          "browser.structured"
+        ],
+        "forbidden_actions": [
+          "embedding credentials",
+          "hidden side-effect retries",
+          "equating tool discovery with authorization"
+        ],
+        "evidence_requirements": [
+          "contract/schema",
+          "scope/auth evidence",
+          "success/failure/idempotency tests"
+        ],
+        "failure_policy": "Fail closed on unknown auth/scope or non-idempotent retry risk; expose UNKNOWN/NOT_CONNECTED instead of guessing.",
+        "verification_method": "Contract tests, negative permission tests, and provider/runtime evidence.",
+        "cost_policy": "Avoid external SaaS/tooling unless it materially improves reliability or is required by the user."
       }
     },
     {
@@ -1900,6 +2210,38 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "dataset/source",
+          "metric definitions",
+          "population/time window",
+          "analysis/experiment question"
+        ],
+        "outputs": [
+          "reproducible transformation",
+          "analysis table/report",
+          "experiment readout",
+          "uncertainty/confounder notes"
+        ],
+        "capability_scope": [
+          "documents.markdown.convert",
+          "data.local.polars"
+        ],
+        "forbidden_actions": [
+          "causal claims from descriptive data alone",
+          "silent row/filter exclusions",
+          "mixing incompatible metric definitions"
+        ],
+        "evidence_requirements": [
+          "source/schema",
+          "transformation steps",
+          "metric definitions",
+          "reproducible result"
+        ],
+        "failure_policy": "If data quality or definitions are unresolved, quantify/label the limitation and stop causal escalation.",
+        "verification_method": "Re-run transformations and independently spot-check key aggregates/segments.",
+        "cost_policy": "Prefer local reproducible compute; no external data upload without explicit approval."
       }
     },
     {
@@ -2065,6 +2407,37 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "client/project request",
+          "owners",
+          "dates/dependencies",
+          "meeting/source notes"
+        ],
+        "outputs": [
+          "structured intake",
+          "timeline/action list",
+          "follow-up state",
+          "source-backed project brief"
+        ],
+        "capability_scope": [
+          "documents.markdown.convert"
+        ],
+        "forbidden_actions": [
+          "inventing client decisions/deadlines",
+          "sending external messages without authorization",
+          "marking unconfirmed commitments done"
+        ],
+        "evidence_requirements": [
+          "source note/request",
+          "named owner",
+          "due date or explicit unknown",
+          "status/receipt for follow-up"
+        ],
+        "failure_policy": "Mark waiting/blocked items explicitly and escalate missing owner/date rather than filling gaps.",
+        "verification_method": "Check actions against source notes and confirm closure via receipt or accepted artifact.",
+        "cost_policy": "Favor simple checklists/state tracking before automation or paid tooling."
       }
     },
     {
@@ -2230,6 +2603,33 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "repetitive workflow",
+          "frequency/volume",
+          "failure cost",
+          "human-judgment requirement"
+        ],
+        "outputs": [
+          "keep-manual/batch/script/schedule decision",
+          "minimal automation design",
+          "maintenance/ROI note"
+        ],
+        "capability_scope": [],
+        "forbidden_actions": [
+          "automation for novelty",
+          "unbounded retries",
+          "automating ambiguous human judgment"
+        ],
+        "evidence_requirements": [
+          "measured/reasonable repetition estimate",
+          "failure/maintenance cost",
+          "dry-run or deterministic test when automated"
+        ],
+        "failure_policy": "If automation cost/risk exceeds manual cost, recommend manual/batching instead of building.",
+        "verification_method": "Dry-run, idempotency check, and measured before/after effort or reliability.",
+        "cost_policy": "Automation must pay for itself in time, reliability, or scale; avoid unnecessary SaaS dependencies."
       }
     },
     {
@@ -2417,6 +2817,40 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "raw prompt/chat",
+          "documents/files",
+          "repository context",
+          "prior decisions/sources"
+        ],
+        "outputs": [
+          "source-preserving Markdown",
+          "L2 canonical notes",
+          "L1 working brief",
+          "L0 dispatch card",
+          "protected-atom fidelity report"
+        ],
+        "capability_scope": [
+          "documents.markdown.convert",
+          "context.repo.pack",
+          "context.prompt.compress.experimental"
+        ],
+        "forbidden_actions": [
+          "changing user intent for elegance",
+          "lossy removal of approvals/numbers/security constraints",
+          "treating compressed text as source evidence"
+        ],
+        "evidence_requirements": [
+          "source inventory",
+          "protected must-preserve atoms",
+          "provenance map",
+          "fidelity check for lossy/rewritten context"
+        ],
+        "failure_policy": "If meaning/provenance cannot be preserved, keep more context and flag ambiguity instead of compressing aggressively.",
+        "verification_method": "Exact-atom guard plus semantic/source review; downstream task success is required before declaring compression beneficial.",
+        "cost_policy": "Optimize context size only when fidelity and downstream quality are preserved."
       }
     },
     {
@@ -2579,6 +3013,35 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "commitment/task list",
+          "owner",
+          "due state",
+          "blockers",
+          "expected closure evidence"
+        ],
+        "outputs": [
+          "follow-up action",
+          "escalation decision",
+          "closure checklist",
+          "stale commitment report"
+        ],
+        "capability_scope": [],
+        "forbidden_actions": [
+          "marking verbal promise complete",
+          "nagging without next action",
+          "silent aging of blockers"
+        ],
+        "evidence_requirements": [
+          "owner/due reference",
+          "latest status",
+          "artifact/receipt for closure"
+        ],
+        "failure_policy": "If blocked or waiting, preserve that state and set the next follow-up/escalation condition.",
+        "verification_method": "Closure requires artifact, receipt, or explicit recipient acceptance; otherwise remains open.",
+        "cost_policy": "Use the lightest follow-up mechanism that reliably closes the loop."
       }
     },
     {
@@ -2744,6 +3207,37 @@
           "Is this a profile memory, project lesson, or skill candidate?"
         ],
         "promotion_rule": "Promote to a shared skill only after repeated evidence (normally 3+ independent observations) or an explicit human rule, then human-review the skill."
+      },
+      "operational_contract": {
+        "inputs": [
+          "audience/community context",
+          "platform/channel",
+          "relationship stage",
+          "brand facts",
+          "desired response"
+        ],
+        "outputs": [
+          "social listening brief",
+          "reply/outreach draft",
+          "partnership fit note",
+          "brand-risk check"
+        ],
+        "capability_scope": [
+          "browser.structured"
+        ],
+        "forbidden_actions": [
+          "posting/sending without approval",
+          "forced slang/manipulative engagement bait",
+          "inventing sentiment as observed fact"
+        ],
+        "evidence_requirements": [
+          "observed source/community signal",
+          "brand fact source",
+          "clear draft-vs-sent state"
+        ],
+        "failure_policy": "If sentiment or relationship context is unknown, label it as inference and avoid irreversible outreach.",
+        "verification_method": "Check tone/facts against source and brand rules; external send requires connected capability + approval + receipt.",
+        "cost_policy": "Research/draft first; paid outreach or external posting requires explicit scope."
       }
     }
   ]
