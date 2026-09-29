@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "audit": "repository-history-real-task-eligibility",
+  "observed_on": "2026-09-29",
+  "repository": "exxrawrrr/nyobakantorai",
+  "reviewed_pull_requests": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "eligible_cases_added": 0,
+  "decision": "Repository activity is not sufficient direct-source evidence for the real-task baseline.",
+  "reasons": [
+    "A pull request or commit proves repository activity, not that its source request was a direct non-generated human/external request.",
+    "Repository metadata alone does not prove that a named canonical workforce employee executed the task.",
+    "Repository metadata alone does not supply the required task lifecycle metrics and independent verification result.",
+    "PR descriptions and checkpoint comments may themselves be generated or derivative documentation, so they cannot be relabeled as direct owner source evidence without a separate attestation chain."
+  ],
+  "reviewed_items": [
+    {
+      "type": "pull_request",
+      "number": 6,
+      "title": "Hermes-first setup and one-command installers",
+      "counted": false,
+      "reason": "No direct-source attestation + named employee execution lifecycle bound to this PR."
+    },
+    {
+      "type": "pull_request",
+      "number": 7,
+      "title": "v0.3 — Real AI Workforce (16-worker baseline, extensible)",
+      "counted": false,
+      "reason": "Product implementation PR; repository record alone does not prove one eligible workforce real-task lifecycle."
+    },
+    {
+      "type": "pull_request",
+      "number": 8,
+      "title": "v0.3 — Memory, learning loop, and role skill upgrade",
+      "counted": false,
+      "reason": "Implementation/review artifact without direct-source + execution + independent verification chain required by the baseline."
+    },
+    {
+      "type": "pull_request",
+      "number": 9,
+      "title": "v0.3 — Workforce reasoning, memory & upstream skill enrichment",
+      "counted": false,
+      "reason": "Implementation artifact; cannot infer direct owner provenance or employee execution from PR text."
+    },
+    {
+      "type": "pull_request",
+      "number": 10,
+      "title": "docs: PRD for modular employee packs and capability growth",
+      "counted": false,
+      "reason": "Design/research PR and not an independently evidenced workforce execution case."
+    },
+    {
+      "type": "pull_request",
+      "number": 11,
+      "title": "v0.4: modular employee packs, selective install, and distinct personalities",
+      "counted": false,
+      "reason": "Contains many generated implementation checkpoints; not a direct-source task ledger and therefore not bulk-counted."
+    }
+  ],
+  "conclusion": "Historical repository review adds zero eligible cases. Canonical collection remains 1/20. Future cases should enter through the direct-source recorder or an equivalent evidence chain."
+}
