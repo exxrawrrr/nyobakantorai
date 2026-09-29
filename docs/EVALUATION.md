@@ -565,3 +565,41 @@ SUPPORTED
 ```
 
 Credential values are never emitted. OAuth-capable providers without an environment-variable signal remain `UNKNOWN`, rather than being falsely labeled unconfigured. Optional provider absence does not fail core CI unless a caller explicitly uses `--require-installed` or `--require-ready`.
+
+
+## Browser Use self-service adapter
+
+The repository now ships a provider-optional six-case Browser Use runner:
+
+- `config/browser-self-test.json`;
+- `packages/browser-self-test/`;
+- `scripts/browser-self-test.mjs`;
+- `docs/BROWSER-SELF-TEST.md`.
+
+The adapter is pinned to the repository's Browser Use source commit and package version `0.13.10`.
+
+The self-test intentionally uses the Browser Use CLI's direct browser-control surface rather than requiring an LLM. It launches Chrome/Chromium/Edge with a temporary isolated user-data directory, connects through a loopback CDP endpoint, and navigates only to a disposable loopback target.
+
+The same six contract case IDs are exercised:
+
+```text
+read-navigation
+structured-evidence
+write-guard
+auth-isolation
+timeout-recovery
+partial-result-recovery
+```
+
+Server-side evidence independently records requests, cookie presence, and mutation POST count. A provider-side claim cannot override contradictory server evidence.
+
+The self-service result states are deliberately separate from canonical provider-evaluation claims:
+
+```text
+SELF_TEST_PASSED
+SELF_TEST_FAILED
+```
+
+A self-test pass proves only that the user's installed Browser Use CLI adapter completed the disposable local contract. It does **not** automatically promote `benchmarks/provider-evaluations/browser-results.json`, prove model/agent quality, or close the Playwright-vs-Browser-Use head-to-head evaluation.
+
+Core CI does not install Browser Use. The runner architecture is tested with injected provider fixtures plus a real loopback target, including a lying-provider mutation test.
