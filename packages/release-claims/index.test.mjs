@@ -19,8 +19,8 @@ test("release claims preserve mixed evaluated and UNPROVEN provider state", asyn
   );
   assert.ok(snapshot.memory.length >= 1);
   assert.ok(snapshot.memory.every((item) => item.status === "NOT_RUN" && item.acceptance_passed === false));
-  assert.equal(snapshot.real_tasks.status, "NOT_READY");
-  assert.equal(snapshot.real_tasks.cases, 0);
+  assert.equal(snapshot.real_tasks.status, "COLLECTING");
+  assert.equal(snapshot.real_tasks.cases, 1);
   assert.equal(snapshot.real_tasks.acceptance_passed, false);
 });
 
