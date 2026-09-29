@@ -35,12 +35,13 @@
     "workforce:check": "node scripts/generate-workforce.mjs --check",
     "workforce:doctor": "node scripts/workforce-doctor.mjs",
     "employee:new": "node scripts/new-employee.mjs",
-    "test:workforce": "node --test lib/routing.test.mjs scripts/new-employee.test.mjs scripts/personality-contract.test.mjs scripts/employee-selection.test.mjs",
+    "test:workforce": "node --test lib/routing.test.mjs scripts/new-employee.test.mjs scripts/personality-contract.test.mjs scripts/employee-contract.test.mjs scripts/employee-selection.test.mjs",
     "test:capabilities": "node --test packages/capability-router/index.test.mjs",
     "test:provenance": "node --test scripts/upstream-provenance.test.mjs",
     "employee:pack": "node scripts/employee-pack.mjs",
     "test:packs": "node --test scripts/employee-pack.test.mjs",
     "test:memory": "node --test scripts/memory-policy.test.mjs",
-    "test:context": "node --test packages/context-guard/index.test.mjs"
+    "test:context": "node --test packages/context-guard/index.test.mjs",
+    "test:contracts": "node --test scripts/employee-contract.test.mjs"
   }
 }
