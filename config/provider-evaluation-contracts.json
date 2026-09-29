@@ -59,7 +59,8 @@
       "auth_isolation_pass": true,
       "write_guard_pass": true,
       "timeout_recovery_pass": true,
-      "evidence_complete_rate_min": 1
+      "evidence_complete_rate_min": 1,
+      "success_rate_min": 1
     }
   },
   "memory": {
@@ -95,7 +96,9 @@
       "secret_persistence": 0,
       "delete_verified": true,
       "export_verified": true,
-      "provenance_verified": true
+      "provenance_verified": true,
+      "success_rate_min": 1,
+      "evidence_complete_rate_min": 1
     }
   }
 }
