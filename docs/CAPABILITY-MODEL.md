@@ -57,3 +57,55 @@ This prevents role drift. Examples:
 - Sumiati, Bambang, and Tari have empty external capability scopes by default.
 
 Worker scope is **eligibility**, not permission. An eligible write still needs connected-provider evidence and the relevant approval/delegated policy.
+
+
+## Machine-readable taxonomy
+
+The capability vocabulary is centralized in `config/capability-taxonomy.json`.
+
+Kinds:
+
+```text
+skill
+tool
+mcp
+plugin
+extension
+workflow
+memory
+hook
+adapter
+policy
+```
+
+The generated inventory is `config/capability-catalog.json`.
+
+Run:
+
+```bash
+npm run capability-catalog:generate
+npm run capability-catalog:check
+```
+
+The catalog is generated from the employee registry, provider-neutral capability contracts, optional integrations, upstream source registry, skill provenance, and canonical skill directories. It is not a second editing surface.
+
+Each catalog entry records:
+
+- kind;
+- origin/usage mode;
+- default state;
+- risk class;
+- required/optional workers;
+- platforms;
+- install method;
+- verification method;
+- source commit/license snapshot where external;
+- canonical artifact reference.
+
+The current catalog intentionally distinguishes:
+
+```text
+cataloged != installed != connected != authorized != executed != verified
+```
+
+CI rejects catalog drift, unknown workers/sources, source commit/license drift, invalid kinds/states/risks, missing verification/install methods, and unsafe bundled high-impact capabilities.
