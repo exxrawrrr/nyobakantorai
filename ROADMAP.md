@@ -59,7 +59,8 @@
 - [ ] cross-harness Agent Skills compatibility tests before claiming broad portability
 - [ ] Cognee memory-provider isolation/export/deletion evaluation
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
-- [ ] Fikri context-compaction benchmark: token reduction + instruction/numeric/source fidelity + downstream task success
+- [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
+- [ ] live Fikri context-compaction benchmark: token reduction + semantic/source fidelity + downstream task success
 - [ ] real-task evaluation dataset and published baseline comparison
 
 ## Non-goals
