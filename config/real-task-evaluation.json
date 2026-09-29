@@ -35,7 +35,12 @@
     "require_all_non_synthetic": true,
     "require_evidence_refs": true,
     "require_environment": true,
-    "require_redaction_review": true
+    "require_redaction_review": true,
+    "require_direct_non_generated_source": true
   },
-  "privacy": "Store references/redacted task summaries, not unnecessary raw client/user secrets or full private transcripts."
+  "privacy": "Store references/redacted task summaries, not unnecessary raw client/user secrets or full private transcripts.",
+  "required_source_fields": [
+    "source_ref",
+    "source_generated"
+  ]
 }
