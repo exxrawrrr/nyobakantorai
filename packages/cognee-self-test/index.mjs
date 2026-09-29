@@ -338,17 +338,38 @@ export async function executeCogneeSelfTest({config,client,runId=randomUUID()}={
   const markerShared=markerBase+"_SHARED";
   const forbiddenSecret="api_key=NYOBA_SHOULD_NEVER_PERSIST_"+safeName(runId);
 
-  async function ensure(name){
-    if(!owned.has(name)) throw new Error("refusing to create non-owned dataset");
-    const existing=await client.resolveDataset(name);
-    if(existing) throw new Error("evaluation dataset already exists; refusing reuse");
-    const result=await client.ensureDataset(name);
-    created.add(name);
-    return result;
+  async function cleanupCreatedBestEffort(){
+    const results=[];
+    for(const name of created){
+      try{
+        await client.forgetDataset(name);
+        const after=await client.exportDataset(name);
+        results.push({dataset:name,verified_empty:after.items.length===0});
+      }catch(error){
+        results.push({dataset:name,verified_empty:false,error:redactText(error?.message||error)});
+      }
+    }
+    return results;
   }
 
   await client.health();
-  for(const name of owned) await ensure(name);
+
+  for(const name of owned){
+    if(!owned.has(name)) throw new Error("refusing to inspect non-owned dataset");
+    const existing=await client.resolveDataset(name);
+    if(existing) throw new Error("evaluation dataset already exists; refusing reuse");
+  }
+
+  try{
+    for(const name of owned){
+      await client.ensureDataset(name);
+      created.add(name);
+    }
+  }catch(error){
+    const cleanup=await cleanupCreatedBestEffort();
+    const dirty=cleanup.filter((x)=>!x.verified_empty).length;
+    throw new Error("Cognee evaluation dataset setup failed; cleanup attempted for "+created.size+" created dataset(s), unverified="+dirty+". Cause: "+redactText(error?.message||error));
+  }
 
   cases.push(await safeCase("profile-isolation",async(started)=>{
     await guardedRemember(client,datasets.profile_a,markerA);
