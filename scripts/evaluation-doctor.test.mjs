@@ -17,8 +17,8 @@ test("mixed provider evidence is valid while unresolved live gaps remain blocked
   assert.ok(memory.length >= 1);
   assert.ok(memory.every((item) => item.status === "NOT_RUN" && item.acceptance_passed === false));
 
-  assert.equal(report.real_tasks.status, "NOT_READY");
-  assert.equal(report.real_tasks.cases, 0);
+  assert.equal(report.real_tasks.status, "COLLECTING");
+  assert.equal(report.real_tasks.cases, 1);
   assert.equal(report.real_tasks.acceptance_passed, false);
   assert.ok(report.blockers.some((item) => item.area === "browser"));
   assert.ok(report.blockers.some((item) => item.area === "memory"));
