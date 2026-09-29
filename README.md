@@ -278,6 +278,8 @@ Yang sudah ada di kandidat v0.4 antara lain:
 - controlled live-model Fikri evaluation;
 - provider evaluation contracts + Playwright MCP controlled-live candidate evidence;
 - anti-synthetic real-task collection gate;
+- local hash-chained Real Task Recorder with independent verification + export;
+- side-effect-free Unified Provider Doctor for user-owned Hermes/Codex/Gemini/Copilot/Cognee/Browser Use/Playwright setup;
 - Linux + Windows + minimum-version CI.
 
 Yang **belum** boleh dianggap proven/stable:
@@ -291,6 +293,8 @@ Yang **belum** boleh dianggap proven/stable:
 - complete office/UI storage migration.
 
 Stable promotion saat ini **HOLD**. Lihat [docs/V0.4-RELEASE-DECISION.md](docs/V0.4-RELEASE-DECISION.md), [docs/V0.4-REVIEW-MAP.md](docs/V0.4-REVIEW-MAP.md), dan [ROADMAP.md](ROADMAP.md).
+
+Self-service evidence/setup surfaces: [Real Task Recorder](docs/REAL-TASK-RECORDER.md) dan [Unified Provider Doctor](docs/PROVIDER-DOCTOR.md).
 
 ---
 
