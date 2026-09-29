@@ -108,3 +108,10 @@ test("L1 stays source-traceable when semantic working fields are absent", () => 
   assert.match(packet.l1,/Rp1\.500\.000/);
   assert.doesNotMatch(packet.l1,/invented background/i);
 });
+
+
+test("constraint extraction does not promote incidental modal prose into verbatim atoms", () => {
+  const text = `Background explains what evidence must be checked later.\nHarus pertahankan angka persis.\nThis paragraph says repeated details are not required for the short brief.`;
+  const atoms = extractProtectedAtoms(text);
+  assert.deepEqual(atoms.constraints, ["Harus pertahankan angka persis."]);
+});
