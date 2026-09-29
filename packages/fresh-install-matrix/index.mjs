@@ -369,3 +369,221 @@ export async function runSubsetFreshInstallMatrix({
     if(cleanupBase) await rm(ownBase,{recursive:true,force:true});
   }
 }
+
+
+export async function runFullWorkforceFreshInstallMatrix({
+  baseDir=null
+}={}){
+  const ownBase=baseDir||await mkdtemp(resolve(tmpdir(),"nyoba-fresh-full-"));
+  const cleanupBase=baseDir?false:true;
+  const packRoot=resolve(ownBase,"packs");
+  const hermesHome=resolve(ownBase,"hermes-home");
+  const profilesDir=resolve(hermesHome,"profiles");
+
+  try{
+    const registry=JSON.parse(await readFile(resolve(root,"config/employees.json"),"utf8"));
+    const allIds=registry.employees.map(x=>x.id);
+    const selectedIds=resolveEmployeeSelection("all",allIds);
+    const expectedProfiles=[...allIds].sort();
+
+    if(selectedIds.length!==allIds.length){
+      throw new Error("full workforce selection did not match the canonical registry");
+    }
+    if(new Set(allIds).size!==allIds.length){
+      throw new Error("canonical employee registry contains duplicate ids");
+    }
+
+    await mkdir(profilesDir,{recursive:true});
+    const beforeEntries=await readdir(profilesDir);
+    if(beforeEntries.length!==0){
+      throw new Error("full fresh-install matrix requires an empty profile directory");
+    }
+
+    const installPlan=planSelectedProfileActions({
+      selectedIds,
+      existingIds:[],
+      mode:"upgrade"
+    });
+    if(installPlan.length!==selectedIds.length||installPlan.some(x=>x.action!=="install")){
+      throw new Error("full fresh install plan must contain one install action per employee");
+    }
+
+    const packResults=[];
+    const capabilityIsolation=[];
+    const distributionOwnedByEmployee={};
+    for(const employeeId of selectedIds){
+      const employee=registry.employees.find(x=>x.id===employeeId);
+      if(!employee) throw new Error("employee disappeared from canonical registry: "+employeeId);
+
+      const built=await buildEmployeePack({employeeId,outRoot:packRoot});
+      const packDir=resolve(packRoot,employeeId);
+      const packCheck=await verifyEmployeePack(packDir);
+      if(!packCheck.ok){
+        throw new Error("employee pack failed verification before full install: "+employeeId);
+      }
+
+      const manifest=JSON.parse(await readFile(resolve(packDir,"employee-pack.json"),"utf8"));
+      const expectedSkills=[...employee.skills].sort();
+      const declaredSkills=[...(manifest.skills||[])].sort();
+      const expectedIntegrations=[...(employee.optional_integrations||[])].sort();
+      const declaredIntegrations=[...(manifest.optional_integrations||[])].sort();
+
+      const distributionOwned=await copyDistributionOwned(packDir,resolve(profilesDir,employeeId));
+      distributionOwnedByEmployee[employeeId]=distributionOwned;
+
+      const installedSkillEntries=(await readdir(resolve(profilesDir,employeeId,"skills","nyobakantorai"),{withFileTypes:true}))
+        .filter(x=>x.isDirectory())
+        .map(x=>x.name)
+        .sort();
+
+      const forbiddenGenerated=USER_OWNED_HERMES_STATE.filter(pattern=>{
+        const literal=pattern.replace(/[/*]/g,"");
+        return distributionOwned.some(x=>x===literal||x.startsWith(literal+"/"));
+      });
+
+      capabilityIsolation.push(Object.freeze({
+        employee_id:employeeId,
+        installed_skills:Object.freeze(installedSkillEntries),
+        expected_skills:Object.freeze(expectedSkills),
+        skills_exact:JSON.stringify(installedSkillEntries)===JSON.stringify(expectedSkills),
+        manifest_skills_exact:JSON.stringify(declaredSkills)===JSON.stringify(expectedSkills),
+        optional_integrations_exact:JSON.stringify(declaredIntegrations)===JSON.stringify(expectedIntegrations),
+        distribution_contains_user_owned_state:forbiddenGenerated.length>0
+      }));
+      packResults.push(Object.freeze({
+        employee_id:employeeId,
+        pack_verified:true,
+        manifest_employee_exact:manifest.employee_id===employeeId,
+        files:built.files
+      }));
+    }
+
+    const installedProfiles=(await readdir(profilesDir,{withFileTypes:true}))
+      .filter(x=>x.isDirectory())
+      .map(x=>x.name)
+      .sort();
+    const installedAllExactly=JSON.stringify(installedProfiles)===JSON.stringify(expectedProfiles);
+
+    const packEntries=(await readdir(packRoot,{withFileTypes:true}))
+      .filter(x=>x.isDirectory())
+      .map(x=>x.name)
+      .sort();
+    const packSetExact=JSON.stringify(packEntries)===JSON.stringify(expectedProfiles);
+
+    const userStateBefore={};
+    for(const employeeId of selectedIds){
+      const profileDir=resolve(profilesDir,employeeId);
+      const fixtures=await seedUserOwnedState(profileDir);
+      userStateBefore[employeeId]=await snapshotFixtures(profileDir,fixtures);
+    }
+
+    const rerunPlan=planSelectedProfileActions({
+      selectedIds,
+      existingIds:[...selectedIds],
+      mode:"upgrade"
+    });
+    if(rerunPlan.length!==selectedIds.length||rerunPlan.some(x=>x.action!=="native-upgrade")){
+      throw new Error("full rerun plan must contain one native-upgrade per employee");
+    }
+
+    const rerunDistributionChecks=[];
+    const userStatePreservation=[];
+    for(const employeeId of selectedIds){
+      const packDir=resolve(packRoot,employeeId);
+      const profileDir=resolve(profilesDir,employeeId);
+      const distributionOwned=await copyDistributionOwned(packDir,profileDir);
+      const after=await snapshotFixtures(profileDir,Object.fromEntries(
+        Object.keys(userStateBefore[employeeId]).map(rel=>[rel,""])
+      ));
+      const before=userStateBefore[employeeId];
+      const preserved=Object.keys(before).every(rel=>before[rel]===after[rel]);
+      const packCheck=await verifyEmployeePack(packDir);
+
+      userStatePreservation.push(Object.freeze({
+        employee_id:employeeId,
+        preserved
+      }));
+      rerunDistributionChecks.push(Object.freeze({
+        employee_id:employeeId,
+        pack_verified:packCheck.ok,
+        distribution_owned_stable:
+          JSON.stringify(distributionOwned)===JSON.stringify(distributionOwnedByEmployee[employeeId])
+      }));
+    }
+
+    const rerunProfiles=(await readdir(profilesDir,{withFileTypes:true}))
+      .filter(x=>x.isDirectory())
+      .map(x=>x.name)
+      .sort();
+    const rerunProfilesExact=JSON.stringify(rerunProfiles)===JSON.stringify(expectedProfiles);
+
+    const capabilityIsolationPassed=capabilityIsolation.every(x=>
+      x.skills_exact &&
+      x.manifest_skills_exact &&
+      x.optional_integrations_exact &&
+      !x.distribution_contains_user_owned_state
+    );
+    const allPacksVerified=
+      packResults.length===selectedIds.length &&
+      packResults.every(x=>x.pack_verified&&x.manifest_employee_exact) &&
+      rerunDistributionChecks.every(x=>x.pack_verified&&x.distribution_owned_stable);
+    const allUserOwnedStatePreserved=
+      userStatePreservation.length===selectedIds.length &&
+      userStatePreservation.every(x=>x.preserved);
+
+    const profileFileCounts=[];
+    for(const employeeId of selectedIds){
+      profileFileCounts.push(Object.freeze({
+        employee_id:employeeId,
+        file_count:(await hashTree(resolve(profilesDir,employeeId))).length
+      }));
+    }
+    const allProfilesNonEmpty=profileFileCounts.every(x=>x.file_count>0);
+
+    const passed=
+      registry.employee_count===registry.employees.length &&
+      selectedIds.length===registry.employee_count &&
+      installedAllExactly &&
+      packSetExact &&
+      capabilityIsolationPassed &&
+      allPacksVerified &&
+      rerunProfilesExact &&
+      allUserOwnedStatePreserved &&
+      allProfilesNonEmpty;
+
+    return Object.freeze({
+      schema:1,
+      matrix_case:"fresh-install-full-workforce",
+      claim_state:passed?"DETERMINISTICALLY_VERIFIED":"FAILED",
+      passed,
+      registry_employee_count:registry.employee_count,
+      selected_employee_count:selectedIds.length,
+      initial_profile_count:beforeEntries.length,
+      selected_profiles:Object.freeze([...selectedIds]),
+      expected_profiles:Object.freeze(expectedProfiles),
+      installed_profiles:Object.freeze(installedProfiles),
+      installed_all_profiles_exactly:installedAllExactly,
+      pack_directories:Object.freeze(packEntries),
+      pack_set_exact:packSetExact,
+      install_actions:Object.freeze(installPlan.map(x=>Object.freeze({...x}))),
+      rerun_actions:Object.freeze(rerunPlan.map(x=>Object.freeze({...x}))),
+      rerun_profiles:Object.freeze(rerunProfiles),
+      rerun_profiles_exact:rerunProfilesExact,
+      pack_results:Object.freeze(packResults),
+      capability_isolation:Object.freeze(capabilityIsolation),
+      capability_isolation_passed:capabilityIsolationPassed,
+      rerun_distribution_checks:Object.freeze(rerunDistributionChecks),
+      all_packs_verified:allPacksVerified,
+      user_owned_state_preservation:Object.freeze(userStatePreservation),
+      all_user_owned_state_preserved:allUserOwnedStatePreserved,
+      profile_file_counts:Object.freeze(profileFileCounts),
+      all_profiles_non_empty:allProfilesNonEmpty,
+      external_provider_calls:0,
+      hermes_cli_executed:false,
+      real_machine_claim:false,
+      note:"Deterministic isolated full-workforce release-matrix case. Builds and verifies every canonical employee pack, installs exactly the current registry workforce into an empty disposable Hermes profile root, checks every per-worker skill/integration closure, reruns as native upgrades, preserves seeded user-owned state for every profile, and proves no extra/missing profile or pack directory. No real Hermes CLI/provider/account is touched."
+    });
+  }finally{
+    if(cleanupBase) await rm(ownBase,{recursive:true,force:true});
+  }
+}
