@@ -60,7 +60,8 @@
 - [ ] live cross-harness activation/execution parity before claiming broad behavioral portability
 - [x] local profile learning read/export/delete isolation with explicit M3 scope + cross-profile contamination guards
 - [x] fail-closed provider evaluation contracts for browser + memory candidates
-- [ ] Cognee memory-provider isolation/export/deletion evaluation — live readiness checked 2026-09-29; provider package/config/credentials absent on GROWTH, so status remains NOT_RUN / UNPROVEN
+- [x] Cognee self-service HTTP adapter + isolated eight-case memory runner: random run-owned datasets, profile isolation/negative contamination, exact roundtrip/provenance/export/delete checks, secret pre-write rejection, explicit shared promotion boundary, verified cleanup, no auto-install/login/key mint
+- [ ] Cognee canonical live memory-provider evaluation — self-service runner is implemented and deterministically verified, but no reviewed user/provider live result has been committed; canonical status remains NOT_RUN / UNPROVEN
 - [x] Browser Use self-service adapter + isolated six-case runner: pinned CLI contract, disposable loopback target, temporary CDP profile, server-side mutation/auth evidence, timeout/partial recovery, zero auto-install/login
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark — Playwright MCP controlled live run is EVALUATED_CANDIDATE (6/6, zero false-success, no writes/auth leakage, truthful timeout/partial recovery); Browser Use canonical live provider/agent result remains NOT_RUN / UNPROVEN until a user intentionally runs and commits reviewed evidence, so head-to-head comparison stays open
 - [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
