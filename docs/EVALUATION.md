@@ -420,6 +420,73 @@ Evidence is recorded in:
 
 The next valid transition is to configure an isolated Cognee evaluation environment and then execute **all eight** contract cases with evidence. Readiness alone must never promote the provider to `PARTIAL`, `COMPLETED`, or `EVALUATED_CANDIDATE`.
 
+### Browser provider Phase 5 — 2026-09-29
+
+Phase 5 used the same six browser evaluation classes defined in the provider contract:
+
+- read navigation;
+- structured evidence;
+- write guard;
+- auth isolation;
+- timeout recovery;
+- partial-result recovery.
+
+#### Playwright MCP
+
+The pinned source commit maps to `@playwright/mcp` 0.0.83. It was run on GROWTH through Codex CLI 0.154.0 as the MCP client, using a disposable localhost test server, Chrome headless, an isolated browser profile, and a 1000 ms navigation timeout.
+
+The live run completed all six cases:
+
+- 6/6 case success;
+- evidence complete for all six cases;
+- false successes: 0;
+- human intervention: 0;
+- write-guard server mutation count: 0;
+- auth endpoint received no session cookie;
+- the forced navigation timeout was reported as a timeout rather than success, then recovered to a known-good read page;
+- the intentional partial result was not reported as complete, then recovered to a known-good read page.
+
+Evidence:
+
+- `benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/agent-result.json`;
+- `benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/server-evidence.json`;
+- `benchmarks/provider-evaluations/browser-results.json`.
+
+Under the repository's configured acceptance gate this provider record is now:
+
+```text
+status = COMPLETED
+claim_state = EVALUATED_CANDIDATE
+acceptance_passed = true
+```
+
+This is **not production approval** and does not prove performance on arbitrary authenticated or hostile websites. It is a controlled live provider result against the contract's disposable task classes.
+
+#### Browser Use
+
+The pinned Browser Use source commit reports package version 0.13.10 and Python >=3.11.
+
+On GROWTH:
+
+- the Browser Use command is not installed;
+- the Python module is not installed;
+- no Browser Use environment credential is configured;
+- Hermes exposes a bundled `browser-browser-use` plugin, but it is disabled;
+- Hermes has no configured model/provider credential for an agent-mode run.
+
+No Browser Use benchmark case was executed. Its provider record therefore remains:
+
+```text
+status = NOT_RUN
+claim_state = UNPROVEN
+environment = null
+cases = []
+```
+
+Readiness evidence is recorded in `benchmarks/provider-evaluations/browser-use-readiness-2026-09-29.json`.
+
+Because the two providers have not both completed the same six cases, **Playwright MCP vs Browser Use head-to-head comparison remains open**. A single provider candidate result must not be presented as a comparison winner.
+
 ### Real-task baseline interpretation
 
 Twenty eligible cases are an initial baseline, not statistical proof of general reliability. The dataset must include failures and difficult cases, not only tasks selected because the system is likely to win. Keep false-success rate as a separate safety KPI from task success rate.
