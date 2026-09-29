@@ -54,3 +54,81 @@ Expected flow:
     -> mark BLOCKED / WAITING / REJECTED as appropriate
     -> retry only when policy permits
     -> verify independently before closure
+
+
+## Provider evaluation contracts
+
+Provider-dependent benchmarks now have machine-readable claim gates:
+
+- `config/provider-evaluation-contracts.json`
+- `benchmarks/provider-evaluations/browser-results.json`
+- `benchmarks/provider-evaluations/memory-results.json`
+- `packages/provider-evaluation/index.mjs`
+
+The committed result records intentionally begin as:
+
+```text
+status = NOT_RUN
+claim_state = UNPROVEN
+```
+
+That is a valid state. It prevents an evaluation placeholder from being interpreted as proof.
+
+### Browser candidates
+
+The comparison contract covers:
+
+- Playwright MCP;
+- Browser Use.
+
+A completed browser evaluation must cover the same task classes:
+
+- read navigation;
+- structured evidence;
+- write guard;
+- auth isolation;
+- timeout recovery;
+- partial-result recovery.
+
+Every case records success, evidence completeness, false-success, intervention, retries, duration, and truthful recovery.
+
+A provider can become only `EVALUATED_CANDIDATE` when:
+
+- false successes = 0;
+- evidence completeness = 100%;
+- auth isolation passes;
+- write guard passes;
+- timeout and partial-result recovery return to a truthful state.
+
+This is **not** production approval.
+
+### Memory candidate
+
+The Cognee/Hermes evaluation contract requires:
+
+- profile isolation;
+- write/read roundtrip;
+- provenance;
+- export;
+- deletion;
+- secret rejection;
+- shared-promotion boundary.
+
+A completed candidate must prove zero cross-profile leaks, zero secret persistence, and verified export/delete/provenance behavior.
+
+### Evidence/claim binding
+
+The validator checks provider/integration/source IDs and the exact pinned upstream commit.
+
+For completed or partial runs, the environment must record OS, runtime, provider version, start, and finish timestamps. Every case requires evidence references.
+
+Claim states are derived from status/evidence:
+
+```text
+NOT_RUN / PARTIAL -> UNPROVEN
+COMPLETED + gate pass -> EVALUATED_CANDIDATE
+COMPLETED + gate fail -> EVALUATED_NOT_APPROVED or REJECTED
+INVALID -> REJECTED
+```
+
+A result cannot label itself candidate while its evidence fails the acceptance gate.
