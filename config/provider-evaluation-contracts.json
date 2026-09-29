@@ -86,7 +86,8 @@
       "cross_profile_leak",
       "delete_verified",
       "export_verified",
-      "provenance_verified"
+      "provenance_verified",
+      "secret_persistence"
     ],
     "acceptance": {
       "false_successes": 0,
