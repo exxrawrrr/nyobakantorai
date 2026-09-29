@@ -43,10 +43,11 @@ function parseMultipart(buffer,contentType){
   return out;
 }
 
-async function startFakeCognee({deleteWorks=true,contaminateProfileB=false}={}){
+async function startFakeCognee({deleteWorks=true,contaminateProfileB=false,failDatasetCreateAt=0}={}){
   const datasets=new Map();
   const requests=[];
   let secretLikeWriteCount=0;
+  let datasetCreateCount=0;
 
   function datasetById(id){
     return [...datasets.values()].find((x)=>x.id===id)||null;
@@ -77,6 +78,10 @@ async function startFakeCognee({deleteWorks=true,contaminateProfileB=false}={}){
     }
 
     if(req.method==="POST"&&(req.url==="/api/v1/datasets"||req.url==="/api/v1/datasets/")){
+      datasetCreateCount+=1;
+      if(failDatasetCreateAt&&datasetCreateCount===failDatasetCreateAt){
+        return send(res,500,{detail:"intentional create failure"});
+      }
       const data=parseJsonBody(body);
       const ds=ensure(String(data.name||""));
       return send(res,200,{id:ds.id,name:ds.name});
@@ -298,6 +303,26 @@ test("pre-existing generated dataset name is never reused",async()=>{
       ()=>executeCogneeSelfTest({config,client,runId}),
       /already exists; refusing reuse/
     );
+  }finally{
+    await server.stop();
+  }
+});
+
+
+test("partial dataset setup failure triggers best-effort cleanup",async()=>{
+  const server=await startFakeCognee({failDatasetCreateAt:4});
+  try{
+    const client=createCogneeHttpClient({baseUrl:server.baseUrl,timeoutMs:3000});
+    await assert.rejects(
+      ()=>executeCogneeSelfTest({
+        config,client,runId:"ffffffff-ffff-4fff-8fff-ffffffffffff"
+      }),
+      /setup failed; cleanup attempted/
+    );
+    for(const dataset of server.datasets.values()){
+      assert.equal(dataset.docs.length,0);
+    }
+    assert.ok(server.requests.some((r)=>r.path==="/api/v1/forget"));
   }finally{
     await server.stop();
   }
