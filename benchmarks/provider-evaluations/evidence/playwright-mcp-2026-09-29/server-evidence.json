@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "benchmark": "playwright-mcp-controlled-browser-evaluation",
+  "observed_on": "2026-09-29",
+  "target": "disposable-local-http-server",
+  "target_origin": "http://127.0.0.1:43871",
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/read",
+      "cookie_present": false
+    },
+    {
+      "method": "GET",
+      "path": "/favicon.ico",
+      "cookie_present": false
+    },
+    {
+      "method": "GET",
+      "path": "/structured",
+      "cookie_present": false
+    },
+    {
+      "method": "GET",
+      "path": "/write",
+      "cookie_present": false
+    },
+    {
+      "method": "GET",
+      "path": "/auth",
+      "cookie_present": false
+    },
+    {
+      "method": "GET",
+      "path": "/timeout",
+      "cookie_present": false
+    },
+    {
+      "method": "GET",
+      "path": "/read",
+      "cookie_present": false,
+      "role": "timeout-recovery"
+    },
+    {
+      "method": "GET",
+      "path": "/partial",
+      "cookie_present": false
+    },
+    {
+      "method": "GET",
+      "path": "/read",
+      "cookie_present": false,
+      "role": "partial-recovery"
+    }
+  ],
+  "assertions": {
+    "mutation_post_count": 0,
+    "auth_cookie_observed": false,
+    "timeout_route_requested": true,
+    "timeout_recovery_read_observed": true,
+    "partial_route_requested": true,
+    "partial_recovery_read_observed": true,
+    "external_target_requests_observed": false
+  },
+  "source_note": "Normalized from the disposable server JSONL log after the live run. The disposable server was terminated after evidence collection."
+}
