@@ -4,18 +4,27 @@ import { readFile } from "node:fs/promises";
 import { validateRealTaskDataset } from "./index.mjs";
 
 const readJson = async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), "utf8"));
-const [policy,dataset,employees] = await Promise.all([
+const [policy,dataset,employees,sourceAudit,firstEvidence] = await Promise.all([
   readJson("../../config/real-task-evaluation.json"),
   readJson("../../benchmarks/real-tasks/dataset.json"),
   readJson("../../config/employees.json"),
+  readJson("../../benchmarks/real-tasks/source-audit-2026-09-29.json"),
+  readJson("../../benchmarks/real-tasks/evidence/2026-09-22-p122.json"),
 ]);
 const ids=employees.employees.map((e)=>e.id);
 
-test("empty real-task dataset is valid only as NOT_READY/UNPROVEN",()=>{
+test("committed real-task dataset is valid while collecting and remains unpublished",()=>{
   const result=validateRealTaskDataset({dataset,policy,employeeIds:ids});
   assert.equal(result.ok,true,result.errors.join("\n"));
-  assert.equal(result.cases,0);
+  assert.equal(dataset.status,"COLLECTING");
+  assert.equal(dataset.claim_state,"COLLECTING");
+  assert.equal(result.cases,1);
+  assert.equal(result.false_successes,0);
+  assert.equal(result.generated_or_unbound_sources,0);
   assert.equal(result.acceptance_passed,false);
+  assert.equal(dataset.cases[0].source_generated,false);
+  assert.equal(dataset.cases[0].metrics.success,false);
+  assert.equal(dataset.cases[0].metrics.verification_passed,false);
 });
 
 function makeCase(index, overrides={}) {
@@ -130,4 +139,18 @@ test("real-task metrics must use typed non-negative values",()=>{
   assert.ok(result.errors.some((e)=>/human_intervention must be a non-negative integer/.test(e)));
   assert.ok(result.errors.some((e)=>/retries must be a non-negative integer/.test(e)));
   assert.ok(result.errors.some((e)=>/duration_ms must be a non-negative integer/.test(e)));
+});
+
+
+test("historical source audit excludes sandbox and generated derivative records",()=>{
+  assert.equal(sourceAudit.total_records,24);
+  assert.equal(sourceAudit.eligible_real_task_records,1);
+  assert.equal(sourceAudit.rejected_records,23);
+  assert.equal(sourceAudit.categories.explicit_sandbox_or_fictional.count,22);
+  assert.equal(sourceAudit.categories.generated_pipeline_derivative.count,1);
+  assert.equal(sourceAudit.preserved_failures.count,5);
+  assert.equal(firstEvidence.task.source_generated,false);
+  assert.equal(firstEvidence.verification.reviewer_prompt_generated_by_pipeline,true);
+  assert.equal(firstEvidence.verification.final_truth_state,"NEEDS_EVIDENCE");
+  assert.equal(firstEvidence.verification.verification_passed,false);
 });
