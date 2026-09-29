@@ -5,12 +5,12 @@ import { pathToFileURL } from "node:url";
 const root = resolve(import.meta.dirname, "..");
 const outputPath = resolve(root, "config/capability-catalog.json");
 
-const KINDS = Object.freeze(["skill","tool","mcp","plugin","extension","workflow","memory","hook","adapter","policy"]);
-const DEFAULT_STATES = Object.freeze(["BUNDLED","NOT_INSTALLED","REFERENCE_ONLY","NOT_CONNECTED"]);
-const RISK_CLASSES = Object.freeze(["PROCEDURAL","READ_ONLY","EXTERNAL_WRITE","PAID_ACTION","ACCOUNT_CHANGE","DESTRUCTIVE","MEMORY"]);
-const PLATFORMS = Object.freeze(["windows","linux","macos","unspecified"]);
-
 const readJson = async (path) => JSON.parse(await readFile(resolve(root, path), "utf8"));
+const taxonomy = await readJson("config/capability-taxonomy.json");
+const KINDS = Object.freeze([...taxonomy.kinds]);
+const DEFAULT_STATES = Object.freeze([...taxonomy.default_states]);
+const RISK_CLASSES = Object.freeze([...taxonomy.inventory_risk_classes]);
+const PLATFORMS = Object.freeze([...taxonomy.platforms]);
 const uniq = (items) => [...new Set(items)];
 
 function sourceRef(source) {
@@ -26,10 +26,9 @@ function projectSource() {
 }
 
 function integrationKind(type) {
-  if (type === "hermes-plugin") return "plugin";
-  if (type.startsWith("mcp-") || type === "mcp-browser") return "mcp";
-  if (type.includes("memory")) return "memory";
-  return "tool";
+  const kind = taxonomy.integration_type_kind_map[type];
+  if (!kind) throw new Error(`Unknown integration type in capability taxonomy: ${type}`);
+  return kind;
 }
 
 function integrationRisk(item, runtimeById) {
@@ -69,7 +68,7 @@ export async function buildCapabilityCatalog() {
       : [projectSource()];
     capabilities.push({
       id:`skill.${skill}`,
-      kind:"skill",
+      kind:taxonomy.canonical_skill_kind,
       description:`Canonical procedural skill: ${skill}`,
       source_refs:refs,
       usage_mode:provenance ? "recreated-concepts" : "original",
@@ -87,7 +86,7 @@ export async function buildCapabilityCatalog() {
   for (const capability of runtime.capabilities) {
     capabilities.push({
       id:capability.id,
-      kind:"adapter",
+      kind:taxonomy.provider_contract_kind,
       description:capability.description,
       source_refs:[projectSource()],
       usage_mode:"provider-neutral-contract",
@@ -193,6 +192,7 @@ export async function buildCapabilityCatalog() {
     schema:1,
     generated:true,
     generated_from:[
+      "config/capability-taxonomy.json",
       "config/employees.json",
       "config/capabilities.json",
       "config/integrations.json",
@@ -202,6 +202,7 @@ export async function buildCapabilityCatalog() {
     ],
     taxonomy:{
       kinds:[...KINDS],
+      usage_modes:[...taxonomy.usage_modes],
       default_states:[...DEFAULT_STATES],
       risk_classes:[...RISK_CLASSES],
       platforms:[...PLATFORMS],
@@ -220,6 +221,7 @@ export function validateCapabilityCatalog(catalog, { employees, sources, runtime
     if (!item.id || ids.has(item.id)) errors.push(`duplicate/empty capability id: ${item.id}`);
     ids.add(item.id);
     if (!KINDS.includes(item.kind)) errors.push(`${item.id}: invalid kind ${item.kind}`);
+    if (!taxonomy.usage_modes.includes(item.usage_mode)) errors.push(`${item.id}: invalid usage_mode ${item.usage_mode}`);
     if (!DEFAULT_STATES.includes(item.default_state)) errors.push(`${item.id}: invalid default_state ${item.default_state}`);
     if (!RISK_CLASSES.includes(item.risk_class)) errors.push(`${item.id}: invalid risk_class ${item.risk_class}`);
     if (!Array.isArray(item.platforms) || !item.platforms.length || item.platforms.some((p)=>!PLATFORMS.includes(p))) errors.push(`${item.id}: invalid platforms`);
