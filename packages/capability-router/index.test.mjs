@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs";
 import { createCapabilityRouter } from "./index.mjs";
 
 const config = JSON.parse(readFileSync(new URL("../../config/capabilities.json", import.meta.url), "utf8"));
+const employees = JSON.parse(readFileSync(new URL("../../config/employees.json", import.meta.url), "utf8"));
+const employee = (id) => employees.employees.find((item) => item.id === id);
 const router = createCapabilityRouter({
   catalog: config.capabilities,
   states: config.states,
@@ -67,4 +69,72 @@ test("resolution prefers a proven connected provider over weaker states", () => 
   ]);
   assert.equal(result.state, "CONNECTED");
   assert.equal(result.evidence_ref, "receipt://provider/test");
+});
+
+
+test("employee authorization blocks out-of-role capability before provider resolution", () => {
+  const result = router.authorizeForEmployee({
+    employee: employee("fikri"),
+    capabilityId:"ads.meta.write",
+    snapshots:[snapshot("ads.meta.write")],
+    autonomy:"GUARDED",
+    approvalStatus:"APPROVED",
+  });
+  assert.equal(result.allowed, false);
+  assert.equal(result.reason, "WORKER_CAPABILITY_OUT_OF_SCOPE");
+  assert.equal(result.employee_id, "fikri");
+  assert.equal(result.connection, null);
+});
+
+test("employee authorization fails closed when the worker contract is malformed", () => {
+  const result = router.authorizeForEmployee({
+    employee:{ id:"ghost" },
+    capabilityId:"ads.meta.read",
+    snapshots:[snapshot("ads.meta.read")],
+  });
+  assert.equal(result.allowed, false);
+  assert.equal(result.reason, "WORKER_CONTRACT_INVALID");
+  assert.equal(result.connection, null);
+});
+
+test("eligible worker still needs normal approval and provider evidence", () => {
+  const waiting = router.authorizeForEmployee({
+    employee: employee("maya"),
+    capabilityId:"ads.meta.write",
+    snapshots:[snapshot("ads.meta.write")],
+    autonomy:"GUARDED",
+    approvalStatus:"PENDING",
+  });
+  assert.equal(waiting.allowed, false);
+  assert.equal(waiting.reason, "OWNER_APPROVAL_REQUIRED");
+  assert.equal(waiting.employee_id, "maya");
+
+  const approved = router.authorizeForEmployee({
+    employee: employee("maya"),
+    capabilityId:"ads.meta.write",
+    snapshots:[snapshot("ads.meta.write")],
+    autonomy:"GUARDED",
+    approvalStatus:"APPROVED",
+  });
+  assert.equal(approved.allowed, true);
+  assert.equal(approved.decision, "AUTHORIZED_GUARDED");
+  assert.equal(approved.employee_id, "maya");
+});
+
+test("read-only capability is allowed only for a worker whose contract includes it", () => {
+  const maya = router.authorizeForEmployee({
+    employee: employee("maya"),
+    capabilityId:"ads.meta.read",
+    snapshots:[snapshot("ads.meta.read")],
+  });
+  assert.equal(maya.allowed, true);
+  assert.equal(maya.decision, "ALLOWED_READ_ONLY");
+
+  const sumiati = router.authorizeForEmployee({
+    employee: employee("sumiati"),
+    capabilityId:"ads.meta.read",
+    snapshots:[snapshot("ads.meta.read")],
+  });
+  assert.equal(sumiati.allowed, false);
+  assert.equal(sumiati.reason, "WORKER_CAPABILITY_OUT_OF_SCOPE");
 });
