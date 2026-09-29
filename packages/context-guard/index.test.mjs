@@ -93,7 +93,8 @@ test("L1 and execution brief include supplied semantic fields without inventing 
   assert.match(packet.l1,/Campaign is in review/);
   assert.match(packet.l1,/Owner approval/);
   assert.match(packet.l1,/Which creative variant/);
-  assert.ok(packet.token_budget.l1_estimate > 0);\n  assert.equal(packet.execution_brief.token_budget, packet.token_budget);
+  assert.ok(packet.token_budget.l1_estimate > 0);
+  assert.equal(packet.execution_brief.token_budget, packet.token_budget);
 });
 
 test("L1 stays source-traceable when semantic working fields are absent", () => {
