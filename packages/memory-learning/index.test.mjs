@@ -8,6 +8,8 @@ import {
   validateSkillCandidate,
   markSkillCandidateForReview,
   markSkillCandidateMerged,
+  exportProfileLearningState,
+  deleteProfileLearningState,
 } from "./index.mjs";
 
 const employees=JSON.parse(readFileSync(new URL("../../config/employees.json", import.meta.url),"utf8"));
@@ -83,4 +85,45 @@ test("candidate cannot become canonical without review and repository PR",()=>{
   const merged=markSkillCandidateMerged(reviewing,{repositoryPr:"https://github.com/exxrawrrr/nyobakantorai/pull/99",approved:true});
   assert.equal(merged.status,"MERGED_VIA_REPOSITORY_PR");
   assert.match(merged.repository_pr,/pull\/99/);
+});
+
+
+test("profile learning export stays scoped and excludes shared memory by default",()=>{
+  const fikri=event();
+  const maya={...event(),event_id:"evt.maya.0001",employee_id:"maya"};
+  const shared={...event(),event_id:"evt.fikri.shared1",layer:"M3",shared_scope:"project-alpha",human_review:true};
+  const bundle=exportProfileLearningState({
+    events:[fikri,maya,shared],
+    candidates:[candidate()],
+    employeeId:"fikri",
+  });
+  assert.deepEqual(bundle.events.map((item)=>item.event_id),["evt.fikri.0001"]);
+  assert.equal(bundle.skill_candidates.length,1);
+  const withShared=exportProfileLearningState({events:[fikri,maya,shared],candidates:[],employeeId:"fikri",includeShared:true});
+  assert.deepEqual(withShared.events.map((item)=>item.event_id).sort(),["evt.fikri.0001","evt.fikri.shared1"]);
+});
+
+test("profile deletion removes private learning but preserves promoted shared knowledge and merged canonical history",()=>{
+  const privateEvent=event();
+  const shared={...event(),event_id:"evt.fikri.shared2",layer:"M3",shared_scope:"project-alpha",human_review:true};
+  const other={...event(),event_id:"evt.maya.0002",employee_id:"maya"};
+  const reviewing={...candidate(),status:"REVIEW_REQUIRED",reviewed_by:"owner"};
+  const merged={...candidate(),candidate_id:"skillcand.fikri.0002",status:"MERGED_VIA_REPOSITORY_PR",repository_pr:"https://github.com/exxrawrrr/nyobakantorai/pull/99"};
+  const result=deleteProfileLearningState({
+    events:[privateEvent,shared,other],
+    candidates:[reviewing,merged],
+    employeeId:"fikri",
+  });
+  assert.deepEqual(result.deleted.events.map((item)=>item.event_id),["evt.fikri.0001"]);
+  assert.deepEqual(result.preserved.shared_events.map((item)=>item.event_id),["evt.fikri.shared2"]);
+  assert.deepEqual(result.deleted.skill_candidates.map((item)=>item.candidate_id),["skillcand.fikri.0001"]);
+  assert.deepEqual(result.preserved.merged_skill_candidates.map((item)=>item.candidate_id),["skillcand.fikri.0002"]);
+  assert.ok(result.remaining.events.some((item)=>item.employee_id==="maya"));
+});
+
+test("shared profile memory deletion requires explicit deleteShared opt-in",()=>{
+  const shared={...event(),event_id:"evt.fikri.shared3",layer:"M3",shared_scope:"project-alpha",human_review:true};
+  const result=deleteProfileLearningState({events:[shared],candidates:[],employeeId:"fikri",deleteShared:true});
+  assert.equal(result.remaining.events.length,0);
+  assert.deepEqual(result.deleted.events.map((item)=>item.event_id),["evt.fikri.shared3"]);
 });
