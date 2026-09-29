@@ -261,26 +261,36 @@ itu belum kemenangan.
 
 ## Current state
 
-Release publik terakhir tetap **v0.2 Public Preview**. Branch/PR ini adalah kandidat **v0.3.0 — Real AI Workforce** dan belum boleh ditag sampai seluruh CI/release gate hijau.
+Release bertag terbaru tetap **v0.2.0 — Public Preview**. Branch `main` sudah memuat baseline **v0.3 Real AI Workforce**, tetapi belum ada tag/release v0.3 terpisah.
 
-Yang sudah ada di kandidat v0.3 termasuk:
+PR #11 di branch `v0.4/modular-workforce` adalah **kandidat v0.4 Modular Workforce** dan masih **Draft**. PR ini menargetkan `prd/next-modular-workforce` sebagai staging/design base; merge ke staging **bukan** berarti v0.4 sudah shipped.
 
-- localhost-only visual office;
+Yang sudah ada di kandidat v0.4 antara lain:
+
 - 16 specialized Hermes employee profiles dari satu canonical registry;
-- reusable canonical skills + role-specific toolset preferences;
-- evidence-gated task state;
-- explicit human approval gate;
-- manual handoff + receipt protocol;
-- read-only optional runtime adapter;
-- portable diagnostics;
-- public-release guardrails;
-- Linux + Windows CI;
-- deterministic demo;
-- machine-readable capability contract.
+- standalone one/subset/preset/all employee packs;
+- selective installer + reproducible pack/checksum pipeline;
+- signed Ed25519 execution receipts + evidence-verifier integration;
+- evidence-gated task state + explicit human approval gate;
+- application-level runtime permission policy (bukan OS/container isolation);
+- M0–M4 memory/learning policy + deterministic cross-profile isolation;
+- Fikri L0/L1/L2 context compiler;
+- controlled live-model Fikri evaluation;
+- provider evaluation contracts + Playwright MCP controlled-live candidate evidence;
+- anti-synthetic real-task collection gate;
+- Linux + Windows + minimum-version CI.
 
-Fokus v0.3 adalah workforce yang benar-benar installable, registry-driven, capability-honest, upgrade-safe, dan tetap human-governed. Live ads provider adapters, signed execution receipts, dan finished original art untuk 10 worker baru tetap pekerjaan lanjutan.
+Yang **belum** boleh dianggap proven/stable:
 
-Roadmap canonical ada di [ROADMAP.md](ROADMAP.md).
+- live cross-harness behavioral parity;
+- Cognee live memory-provider evaluation;
+- Browser Use side of the browser comparison;
+- real-task baseline, saat ini baru **1/20 eligible cases**;
+- live ads provider adapters;
+- finished original art untuk 10 worker baru;
+- complete office/UI storage migration.
+
+Stable promotion saat ini **HOLD**. Lihat [docs/V0.4-RELEASE-DECISION.md](docs/V0.4-RELEASE-DECISION.md), [docs/V0.4-REVIEW-MAP.md](docs/V0.4-REVIEW-MAP.md), dan [ROADMAP.md](ROADMAP.md).
 
 ---
 
@@ -354,7 +364,7 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 - **Public-release guardrails** for tests, builds, private-path leakage, sensitive filenames, and credential-shaped strings.
 - **Zero npm runtime dependencies** for the main office server.
 
-## v0.3 workforce
+## Workforce baseline (v0.3, extended by the v0.4 candidate)
 
 ```text
 SOUL    = who the employee is
@@ -393,6 +403,8 @@ The workforce uses recreated/adapted workflow concepts with explicit provenance 
 
 **Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
 ## Install
+
+> **Release topology note:** the commands below use `main`, so they install the current public-main code, **not** the Draft v0.4 candidate in PR #11. Reviewers evaluating v0.4 should clone the repository and explicitly checkout `v0.4/modular-workforce` rather than treating the raw-`main` installer as v0.4 evidence.
 
 ### Hermes-first — recommended
 
