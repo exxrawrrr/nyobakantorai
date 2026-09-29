@@ -64,6 +64,12 @@ npm run employee:pack -- --employee=siti
 npm run employee:pack -- --employees=praroro,siti
 npm run employee:pack -- --employees=growth
 npm run employee:pack -- --employees=all
+
+# rebuild selected packs twice in temp directories and compare checksum manifests
+npm run employee:pack -- --employees=siti --check
+
+# full 16-worker determinism gate
+npm run employee:pack:check
 ```
 
 Default output:
@@ -106,6 +112,7 @@ nyobakantorai-praroro.zip
 nyobakantorai-paijo.zip
 ...
 nyobakantorai-caca.zip
+nyobakantorai-full-workforce.zip
 SHA256SUMS.txt
 ```
 
@@ -143,3 +150,21 @@ The release workflow also emits `SHA256SUMS.txt` for the ZIP files.
 A standalone employee keeps the same canonical `dialogue_profile` as the office workforce. Installing one worker does not flatten the employee into a generic assistant.
 
 Personality is a style/interaction contract, not an authority boundary. Approval, evidence, safety, and verification policies always win.
+
+
+## Reproducible release ZIPs
+
+Folder-level pack determinism is checked before tagged release packaging.
+
+The release workflow then normalizes file timestamps to a fixed ZIP-safe time, sorts file order, removes nonessential ZIP metadata with `zip -X`, and sorts `SHA256SUMS.txt`.
+
+This is intended to make ZIP bytes reproducible from the same tagged source and release workflow environment, instead of letting archive timestamps/order change the checksum.
+
+The release job publishes:
+
+- one ZIP per employee;
+- one `nyobakantorai-full-workforce.zip`;
+- `SHA256SUMS.txt`;
+- the release manifest.
+
+An arbitrary two-worker setup can still use the two individual employee ZIPs; no unrelated employee pack is required.
