@@ -22,6 +22,7 @@ export function validateRealTaskDataset({ dataset, policy, employeeIds = [] }) {
   if (!Array.isArray(dataset?.cases)) errors.push("cases must be an array");
   const cases = Array.isArray(dataset?.cases) ? dataset.cases : [];
   const ids = new Set();
+  const sourceRefs = new Set();
 
   for (const item of cases) {
     if (!nonEmpty(item?.case_id)) {
@@ -38,6 +39,11 @@ export function validateRealTaskDataset({ dataset, policy, employeeIds = [] }) {
       errors.push(`${item.case_id}: synthetic/demo source type forbidden`);
     }
     if (!nonEmpty(item.source_ref)) errors.push(`${item.case_id}: source_ref required`);
+    else {
+      if (sourceRefs.has(item.source_ref)) errors.push(`${item.case_id}: duplicate source_ref ${item.source_ref}`);
+      sourceRefs.add(item.source_ref);
+      if (containsSecretLike(item.source_ref)) errors.push(`${item.case_id}: source_ref contains secret-like material`);
+    }
     if (item.source_generated !== false) errors.push(`${item.case_id}: source_generated must be false for real-task baseline`);
     if (!nonEmpty(item.employee_id) || (employeeIds.length && !employeeIds.includes(item.employee_id))) {
       errors.push(`${item.case_id}: unknown employee_id`);
@@ -61,6 +67,15 @@ export function validateRealTaskDataset({ dataset, policy, employeeIds = [] }) {
       for (const metric of ["human_intervention","retries","duration_ms"]) {
         if (!nonNegativeInteger(item.metrics[metric])) errors.push(`${item.case_id}: ${metric} must be a non-negative integer`);
       }
+      if (item.metrics.verification_passed === true && item.metrics.evidence_complete !== true) {
+        errors.push(`${item.case_id}: verification_passed requires evidence_complete`);
+      }
+      if (item.metrics.false_success === true && item.metrics.success !== true) {
+        errors.push(`${item.case_id}: false_success requires an earlier success claim`);
+      }
+      if (item.metrics.false_success === true && item.metrics.verification_passed === true) {
+        errors.push(`${item.case_id}: false_success cannot also be verification_passed`);
+      }
     }
     if (item.redaction_reviewed !== true) errors.push(`${item.case_id}: redaction_reviewed must be true`);
     if (!nonEmpty(item.started_at) || Number.isNaN(Date.parse(item.started_at))) errors.push(`${item.case_id}: invalid started_at`);
@@ -76,6 +91,7 @@ export function validateRealTaskDataset({ dataset, policy, employeeIds = [] }) {
   const enough = cases.length >= policy.publication_gate.minimum_cases;
   const falseSuccesses = cases.filter((item) => item?.metrics?.false_success === true).length;
   const evidenceComplete = cases.every((item) => item?.metrics?.evidence_complete === true);
+  const uniqueSources = sourceRefs.size === cases.length;
   const directSourcesOk = cases.every((item) => nonEmpty(item?.source_ref) && item?.source_generated === false);
   const environmentOk = dataset?.environment && typeof dataset.environment === "object" && !Array.isArray(dataset.environment);
   const acceptancePassed =
@@ -84,7 +100,8 @@ export function validateRealTaskDataset({ dataset, policy, employeeIds = [] }) {
     evidenceComplete &&
     Boolean(environmentOk) &&
     cases.every((item) => item.redaction_reviewed === true) &&
-    (!policy.publication_gate.require_direct_non_generated_source || directSourcesOk);
+    (!policy.publication_gate.require_direct_non_generated_source || directSourcesOk) &&
+    uniqueSources;
 
   if (publishLike && !acceptancePassed) {
     errors.push("dataset cannot be READY_FOR_REPORT/PUBLISHED before publication gate passes");
@@ -112,5 +129,6 @@ export function validateRealTaskDataset({ dataset, policy, employeeIds = [] }) {
     false_successes: falseSuccesses,
     generated_or_unbound_sources: cases.filter((item) => !nonEmpty(item?.source_ref) || item?.source_generated !== false).length,
     acceptance_passed: acceptancePassed,
+    unique_sources: uniqueSources,
   });
 }
