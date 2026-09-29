@@ -88,6 +88,8 @@ export function buildCogneeSelfTestPlan({config,baseUrl,apiKeyPresent=false,allo
     target_scope:loopback?"LOOPBACK":"REMOTE",
     api_key_present:Boolean(apiKeyPresent),
     remote_opt_in:Boolean(allowRemote),
+    configuration_ready:Boolean(executable),
+    endpoint_reachability:"NOT_CHECKED",
     executable_now:Boolean(executable),
     provider_call_performed:false,
     writes_existing_dataset:false,
