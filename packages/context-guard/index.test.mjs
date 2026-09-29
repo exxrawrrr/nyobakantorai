@@ -115,3 +115,9 @@ test("constraint extraction does not promote incidental modal prose into verbati
   const atoms = extractProtectedAtoms(text);
   assert.deepEqual(atoms.constraints, ["Harus pertahankan angka persis."]);
 });
+
+
+test("rupiah extraction trims sentence punctuation without changing the amount", () => {
+  const atoms = extractProtectedAtoms("Session reference value Rp12.500.000.");
+  assert.deepEqual(atoms.amounts, ["Rp12.500.000"]);
+});
