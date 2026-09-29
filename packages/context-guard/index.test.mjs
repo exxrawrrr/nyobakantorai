@@ -27,6 +27,8 @@ test("guard packet preserves the original source as L2 and exposes a compact L0"
     targetTokens: 250,
   });
   assert.match(packet.l0, /Protected atoms/);
+  assert.match(packet.l1, /Source pointers/);
+  assert.match(packet.l1, /26 September 2026/);
   assert.match(packet.l2, /26 September 2026/);
   assert.match(packet.l2, /Rp1\.500\.000/);
   assert.equal(packet.token_budget.target, 250);
@@ -62,4 +64,46 @@ test("Windows path and URL extraction does not swallow sentence tails", () => {
   assert.equal(atoms.windows_paths.some((value) => value.includes("Health")), false);
   assert.ok(atoms.urls.includes("http://127.0.0.1:4322"));
   assert.equal(atoms.urls.some((value) => value.endsWith(".")), false);
+});
+
+
+test("L1 and execution brief include supplied semantic fields without inventing missing ones", () => {
+  const packet = compileGuardPacket({
+    objective:"Prepare approval brief.",
+    sources:[{id:"owner-request",type:"chat",text:sample}],
+    working:{
+      owner:"maya",
+      background:["Campaign is in review."],
+      decisions:["Keep budget unchanged."],
+      dependencies:["Owner approval."],
+      requested_actions:["Prepare change proposal."],
+      prohibited_actions:["Do not publish."],
+      expected_artifacts:["Approval brief."],
+      acceptance_criteria:["Exact budget and date preserved."],
+      verification:["Independent read-back after any approved mutation."],
+      risk_classes:["PAID_ACTION"],
+      open_questions:["Which creative variant?"],
+      next_action:"Send draft for owner approval.",
+    },
+  });
+  assert.equal(packet.execution_brief.owner,"maya");
+  assert.ok(packet.execution_brief.must_preserve.includes("Rp1.500.000"));
+  assert.ok(packet.execution_brief.prohibited_actions.some((value)=>/Jangan publish/.test(value)));
+  assert.ok(packet.execution_brief.prohibited_actions.includes("Do not publish."));
+  assert.match(packet.l1,/Campaign is in review/);
+  assert.match(packet.l1,/Owner approval/);
+  assert.match(packet.l1,/Which creative variant/);
+  assert.ok(packet.token_budget.l1_estimate > 0);
+});
+
+test("L1 stays source-traceable when semantic working fields are absent", () => {
+  const packet = compileGuardPacket({
+    objective:"Preserve source truth.",
+    sources:[{id:"source-a",type:"chat",text:sample}],
+  });
+  assert.deepEqual(packet.execution_brief.requested_actions,[]);
+  assert.deepEqual(packet.execution_brief.open_questions,[]);
+  assert.match(packet.l1,/source-a \(chat\)/);
+  assert.match(packet.l1,/Rp1\.500\.000/);
+  assert.doesNotMatch(packet.l1,/invented background/i);
 });

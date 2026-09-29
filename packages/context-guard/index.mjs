@@ -13,6 +13,11 @@ const PATTERNS = Object.freeze({
 });
 
 const uniq = (items) => [...new Set(items.filter(Boolean))];
+const NEGATIVE_CONSTRAINT_RE = /\b(jangan|tidak boleh|dilarang|must not|do not|don't|never|forbidden)\b/i;
+const asList = (value) => Object.freeze((Array.isArray(value) ? value : value == null ? [] : [value])
+  .map((item) => String(item).trim())
+  .filter(Boolean));
+
 
 export function normalizeContextText(value) {
   return String(value ?? "")
@@ -110,7 +115,7 @@ function renderAtomSection(atoms) {
     : "- none detected; semantic constraints still require review";
 }
 
-export function compileGuardPacket({ sources, objective = "", targetTokens = null } = {}) {
+export function compileGuardPacket({ sources, objective = "", working = {}, targetTokens = null } = {}) {
   if (!Array.isArray(sources) || sources.length === 0) throw new Error("sources must be a non-empty array");
   const normalized = sources.map((source, index) => {
     const id = String(source?.id || `source-${index + 1}`).trim();
@@ -131,20 +136,76 @@ export function compileGuardPacket({ sources, objective = "", targetTokens = nul
     percentages: uniq(normalized.flatMap((source) => source.atoms.percentages)),
     explicit_numbers: uniq(normalized.flatMap((source) => source.atoms.explicit_numbers)),
   };
+  const protectedValues = compactProtectedValues(combinedAtoms);
   const protectedSection = renderAtomSection(combinedAtoms);
-  const l0 = `Objective: ${normalizeContextText(objective) || "(derive from source; do not invent)"}\nSource: ${sourceIndex}\nProtected atoms:\n${protectedSection}\n`;
+  const normalizedObjective = normalizeContextText(objective);
+  const workingState = Object.freeze({
+    owner: typeof working?.owner === "string" && working.owner.trim() ? working.owner.trim() : null,
+    background: asList(working?.background),
+    decisions: asList(working?.decisions),
+    dependencies: asList(working?.dependencies),
+    acceptance_criteria: asList(working?.acceptance_criteria),
+    requested_actions: asList(working?.requested_actions),
+    prohibited_actions: asList(working?.prohibited_actions),
+    expected_artifacts: asList(working?.expected_artifacts),
+    verification: asList(working?.verification),
+    risk_classes: asList(working?.risk_classes),
+    open_questions: asList(working?.open_questions),
+    next_action: typeof working?.next_action === "string" && working.next_action.trim() ? working.next_action.trim() : null,
+  });
+  const sourceRefs = Object.freeze(normalized.map((source) => Object.freeze({ id:source.id, type:source.type })));
+  const inferredProhibited = combinedAtoms.constraints.filter((line) => NEGATIVE_CONSTRAINT_RE.test(line));
+  const executionBrief = Object.freeze({
+    schema:1,
+    objective:normalizedObjective,
+    owner:workingState.owner,
+    must_preserve:Object.freeze([...protectedValues]),
+    constraints:Object.freeze([...combinedAtoms.constraints]),
+    inputs:sourceRefs,
+    sources:sourceRefs,
+    requested_actions:workingState.requested_actions,
+    prohibited_actions:Object.freeze(uniq([...workingState.prohibited_actions, ...inferredProhibited])),
+    risk_classes:workingState.risk_classes,
+    expected_artifacts:workingState.expected_artifacts,
+    verification:workingState.verification,
+    open_questions:workingState.open_questions,
+    acceptance_criteria:workingState.acceptance_criteria,
+    dependencies:workingState.dependencies,
+    next_action:workingState.next_action,
+  });
+  const l0 = `Objective: ${normalizedObjective || "(derive from source; do not invent)"}\nSource: ${sourceIndex}\nProtected atoms:\n${protectedSection}\n`;
+  const l1Sections = [
+    ["Objective", normalizedObjective ? [normalizedObjective] : []],
+    ["Owner", workingState.owner ? [workingState.owner] : []],
+    ["Source pointers", normalized.map((source) => `${source.id} (${source.type})`)],
+    ["Background", workingState.background],
+    ["Decisions", workingState.decisions],
+    ["Dependencies", workingState.dependencies],
+    ["Requested actions", workingState.requested_actions],
+    ["Prohibited actions", executionBrief.prohibited_actions],
+    ["Expected artifacts", workingState.expected_artifacts],
+    ["Acceptance criteria", workingState.acceptance_criteria],
+    ["Verification", workingState.verification],
+    ["Open questions", workingState.open_questions],
+    ["Protected exact facts", protectedValues],
+    ["Next action", workingState.next_action ? [workingState.next_action] : []],
+  ].filter(([, values]) => values.length);
+  const l1 = `# L1 Working Brief\n\n${l1Sections.map(([name, values]) => `## ${name}\n${values.map((value) => `- ${value}`).join("\n")}`).join("\n\n")}\n`;
   const l2 = `# L2 Canonical Source Packet\n\n${normalized.map((source) => `## Source: ${source.id}\nType: ${source.type}\n\n${source.text}`).join("\n\n---\n\n")}\n`;
   const originalText = normalized.map((source) => source.text).join("\n\n");
   return Object.freeze({
     schema: 1,
-    objective: normalizeContextText(objective),
+    objective: normalizedObjective,
     sources: Object.freeze(normalized),
     protected_atoms: Object.freeze(combinedAtoms),
+    execution_brief: executionBrief,
     l0,
+    l1,
     l2,
     token_budget: Object.freeze({
       original_estimate: estimateTokens(originalText),
       l0_estimate: estimateTokens(l0),
+      l1_estimate: estimateTokens(l1),
       l2_estimate: estimateTokens(l2),
       target: Number.isFinite(targetTokens) ? targetTokens : null,
     }),
