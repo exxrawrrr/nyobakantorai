@@ -166,3 +166,22 @@ test("explicit cross-profile contamination case blocks memory candidate on leak"
   assert.equal(validated.ok,false);
   assert.ok(validated.errors.some((error)=>/claim_state|acceptance_passed/.test(error)));
 });
+
+
+test("Cognee readiness evidence cannot promote an unrun provider", async () => {
+  const readiness=await readJson("../../benchmarks/provider-evaluations/memory-readiness-2026-09-29.json");
+  assert.equal(readiness.provider_id,"cognee-hermes");
+  assert.equal(readiness.evaluation_status,"NOT_RUN");
+  assert.equal(readiness.claim_state,"UNPROVEN");
+  assert.equal(readiness.live_checks.cognee_command,"NOT_FOUND");
+  assert.equal(readiness.live_checks.cognee_python_module,"NOT_FOUND");
+  assert.ok(readiness.required_cases_not_executed.includes("cross-profile-contamination-negative"));
+  assert.equal(memoryBaseline.providers[0].status,"NOT_RUN");
+  assert.equal(memoryBaseline.providers[0].claim_state,"UNPROVEN");
+  assert.equal(memoryBaseline.providers[0].environment,null);
+  assert.deepEqual(memoryBaseline.providers[0].cases,[]);
+  assert.equal(
+    memoryBaseline.providers[0].summary.readiness_evidence_ref,
+    "benchmarks/provider-evaluations/memory-readiness-2026-09-29.json"
+  );
+});
