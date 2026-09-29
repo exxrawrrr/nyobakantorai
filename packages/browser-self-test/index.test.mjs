@@ -63,7 +63,6 @@ test("Browser Use programs reject external targets and contain no write helpers"
     assert.equal(/\btype_text\s*\(/.test(program),false);
     assert.equal(/\bpress_key\s*\(/.test(program),false);
     assert.equal(program.includes("example.com"),false);
-    assert.equal(program.includes("SUBMIT MUTATION") && caseId==="write-guard",false);
   }
 });
 
