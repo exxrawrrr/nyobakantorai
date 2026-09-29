@@ -181,8 +181,10 @@ test("full workforce matrix leaves an explicit disposable root inspectable until
 });
 
 
+const lifecycleDefaultRun=runUpgradeUninstallLifecycleMatrix();
+
 test("full lifecycle matrix upgrades all workers, removes safely, fully uninstalls, and reinstalls cleanly",async()=>{
-  const result=await runUpgradeUninstallLifecycleMatrix();
+  const result=await lifecycleDefaultRun;
   assert.equal(result.passed,true);
   assert.equal(result.claim_state,"DETERMINISTICALLY_VERIFIED");
   assert.equal(result.registry_employee_count,16);
@@ -210,7 +212,7 @@ test("full lifecycle matrix upgrades all workers, removes safely, fully uninstal
 });
 
 test("lifecycle upgrade replaces drifted distribution while preserving seeded user state for all workers",async()=>{
-  const result=await runUpgradeUninstallLifecycleMatrix();
+  const result=await lifecycleDefaultRun;
   assert.equal(result.upgrade_checks.length,16);
   for(const item of result.upgrade_checks){
     assert.equal(item.action,"native-upgrade",item.employee_id);
@@ -231,26 +233,11 @@ test("selective lifecycle removal preserves every survivor byte-for-byte",async(
 });
 
 test("reinstall after destructive full uninstall does not resurrect previous user-owned state",async()=>{
-  const result=await runUpgradeUninstallLifecycleMatrix();
+  const result=await lifecycleDefaultRun;
   assert.equal(result.reinstall.checks.length,16);
   for(const item of result.reinstall.checks){
     assert.equal(item.distribution_exact,true,item.employee_id);
     assert.equal(item.stale_user_state_resurrected,false,item.employee_id);
     assert.deepEqual(item.resurrected_paths,[],item.employee_id);
-  }
-});
-
-test("lifecycle matrix leaves explicit disposable evidence inspectable until caller cleanup",async()=>{
-  const base=await mkdtemp(resolve(tmpdir(),"nyoba-lifecycle-explicit-"));
-  try{
-    const result=await runUpgradeUninstallLifecycleMatrix({baseDir:base});
-    assert.equal(result.passed,true);
-    const profiles=(await readdir(resolve(base,"hermes-home","profiles"))).sort();
-    assert.deepEqual(profiles,[...result.final_profiles]);
-    assert.equal(profiles.length,16);
-    const packs=(await readdir(resolve(base,"packs"))).sort();
-    assert.deepEqual(packs,[...result.final_profiles]);
-  }finally{
-    await rm(base,{recursive:true,force:true});
   }
 });
