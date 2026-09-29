@@ -124,3 +124,28 @@ test("source commit drift invalidates provider evaluation evidence", () => {
   assert.equal(validated.ok,false);
   assert.ok(validated.errors.some((error)=>/source_commit drift/.test(error)));
 });
+
+
+test("incomplete memory evidence cannot be candidate", () => {
+  const result=structuredClone(memoryBaseline);
+  const rec=result.providers[0];
+  rec.status="COMPLETED";
+  rec.claim_state="EVALUATED_CANDIDATE";
+  rec.environment=env();
+  rec.cases=contracts.memory.required_case_ids.map((id)=>memoryCase(
+    id,
+    id==="write-read-roundtrip"?{success:false,evidence_complete:false}:{}
+  ));
+  rec.summary={acceptance_passed:true};
+  const validated=validateProviderEvaluationSet({domain:"memory",result,contracts,sources,integrations});
+  assert.equal(validated.ok,false);
+  assert.ok(validated.errors.some((error)=>/claim_state|acceptance_passed/.test(error)));
+});
+
+test("missing required provider record fields are rejected", () => {
+  const result=structuredClone(browserBaseline);
+  delete result.providers[0].summary;
+  const validated=validateProviderEvaluationSet({domain:"browser",result,contracts,sources,integrations});
+  assert.equal(validated.ok,false);
+  assert.ok(validated.errors.some((error)=>/missing required field summary|summary must be an object/.test(error)));
+});
