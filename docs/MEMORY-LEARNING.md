@@ -27,6 +27,15 @@ A worker does not get access to another worker's memory just because the context
 
 Cross-profile knowledge requires an explicit handoff or M3 promotion.
 
+The runtime-facing helper `buildProfileMemoryView(...)` enforces the local visibility boundary:
+
+- M1/M2 are visible only to their owning employee profile;
+- M3 is visible only when its exact shared scope is explicitly authorized for the read;
+- malformed/forged M3 records fail closed;
+- M4 repository candidates are not injected into runtime memory context.
+
+The deterministic benchmark at `benchmarks/memory-isolation/` includes negative contamination cases. This local policy proof does not substitute for a live provider isolation test.
+
 ## Memory is not authority
 
 Remembered information may be useful context, but it is not proof that:

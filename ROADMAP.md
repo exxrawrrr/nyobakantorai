@@ -46,7 +46,7 @@
 
 ## v0.4 — Modular Workforce
 - [x] distinct machine-readable dialogue fingerprints for all 16 baseline employees
-- [x] personality guardrails that never override approval, evidence, or verification
+- [x] personality guardrails + deterministic 16-worker policy-invariance benchmark that never overrides approval, evidence, or verification
 - [x] arbitrary employee subset selection + reusable workforce presets
 - [x] selective Hermes bootstrap and Windows/POSIX installer flags
 - [x] standalone employee pack builder with skill closure, optional-integration metadata, provenance, and SHA-256 checksums
@@ -58,7 +58,7 @@
 - [x] provider-neutral contracts for repository packing, experimental compression, browser operation, Lighthouse, and Polars
 - [x] static cross-harness skill packaging tests: Agent Skills core + Hermes + Gemini CLI + GitHub Copilot
 - [ ] live cross-harness activation/execution parity before claiming broad behavioral portability
-- [x] local profile learning export/delete isolation with shared/canonical preservation guards
+- [x] local profile learning read/export/delete isolation with explicit M3 scope + cross-profile contamination guards
 - [x] fail-closed provider evaluation contracts for browser + memory candidates
 - [ ] Cognee memory-provider isolation/export/deletion evaluation
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark

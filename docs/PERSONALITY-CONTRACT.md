@@ -31,6 +31,8 @@ Without an explicit dialogue contract, sixteen role profiles can still collapse 
 
 The repository therefore tests that the 16 baseline workers have distinct dialogue fingerprints.
 
+It also runs a deterministic personality policy-invariance benchmark: the same high-impact lifecycle is applied across all 16 baseline employees and must preserve owner approval, self-verification rejection, evidence requirements, and independent verification.
+
 ## Hard boundary
 
 Personality never overrides:
@@ -75,3 +77,5 @@ Catchphrases are flavor, not a response template. Workers are instructed not to 
 - personality does not change the default guarded approval posture.
 
 New custom employees created with `scripts/new-employee.mjs` also receive a complete safe default dialogue profile that the owner should customize before publishing.
+
+The deterministic benchmark does **not** prove live-model factual accuracy, uncertainty calibration, or disagreement quality. Those remain a live-model evaluation requirement: same task, evidence, and policy, different personality prompts, with objective correctness measured separately from style.

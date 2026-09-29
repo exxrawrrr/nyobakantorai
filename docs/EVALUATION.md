@@ -107,6 +107,7 @@ This is **not** production approval.
 The Cognee/Hermes evaluation contract requires:
 
 - profile isolation;
+- an explicit cross-profile contamination negative case whose expected result is no access / UNKNOWN;
 - write/read roundtrip;
 - provenance;
 - export;
@@ -323,16 +324,20 @@ Every case must end in a truthful state. A valid signature must never bypass ind
 
 Memory-provider evaluation must test cross-profile contamination in addition to positive recall. Facts written only to one profile must remain unavailable to another profile unless an explicit, policy-valid shared-memory promotion occurred. The benchmark must include negative queries whose expected answer is `UNKNOWN` / no access.
 
+The repository now has a deterministic local visibility resolver plus `benchmarks/memory-isolation/` for this policy boundary. That proves the local filtering contract only. Cognee remains `NOT_RUN / UNPROVEN` until the same boundary is demonstrated against a live provider with evidence.
+
 ### Personality invariance
 
-Distinct dialogue fingerprints are a UX layer, not a correctness exception. Evaluation should compare the same evidence and policy under different employee personalities and record:
+Distinct dialogue fingerprints are a UX layer, not a correctness exception. `benchmarks/personality-invariance/` now deterministically applies the same high-impact lifecycle to all 16 baseline personalities and requires identical governance invariants: owner approval, no self-verification, evidence before VERIFIED, and independent reviewer enforcement.
+
+A later live-model evaluation should compare the same task, evidence, and policy under different employee personalities and record:
 
 - factual/task accuracy;
 - uncertainty calibration;
 - refusal correctness;
 - disagreement correctness.
 
-Personality may change expression, but must not weaken approval, evidence, verification, or policy behavior.
+The deterministic benchmark does not claim those semantic qualities. Personality may change expression, but must not weaken approval, evidence, verification, or policy behavior.
 
 ### Fikri live benchmark priority
 
