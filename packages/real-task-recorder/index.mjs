@@ -6,6 +6,8 @@ const SECRET_PATTERNS = [
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/i,
   /\b(?:sk-|ghp_|github_pat_|xox[baprs]-)[A-Za-z0-9_-]{12,}\b/,
   /\b(?:password|passwd|api[_ -]?key|secret|token|cookie)\s*[:=]\s*\S+/i,
+  /[?&](?:access_token|api[_-]?key|apikey|token|secret|password|passwd|cookie|key)=[^&#\s]+/i,
+  /:\/\/[^/\s:@]+:[^@\s/]+@/,
 ];
 
 const nonEmpty = (value) => typeof value === "string" && value.trim().length > 0;
@@ -48,8 +50,24 @@ function assertSafeRefs(refs, label = "evidence_refs") {
   if (!Array.isArray(refs)) throw new Error(`${label} must be an array`);
   for (const ref of refs) {
     if (!nonEmpty(ref)) throw new Error(`${label} must contain non-empty strings`);
+    if (ref.length > 2048) throw new Error(`${label} entry exceeds 2048 characters`);
+    if (/\r|\n/.test(ref)) throw new Error(`${label} entry contains a newline`);
     if (containsSecretLike(ref)) throw new Error(`${label} contains secret-like material`);
   }
+}
+
+function assertCaseId(value) {
+  if (!nonEmpty(value)) throw new Error("case_id required");
+  if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(value)) {
+    throw new Error("case_id must be 1-128 safe identifier characters");
+  }
+}
+
+function assertSafeSourceRef(value) {
+  if (!nonEmpty(value)) throw new Error("source_ref required");
+  if (value.length > 2048) throw new Error("source_ref exceeds 2048 characters");
+  if (/\r|\n/.test(value)) throw new Error("source_ref contains a newline");
+  if (containsSecretLike(value)) throw new Error("source_ref contains secret-like material");
 }
 
 function assertTimestamp(label, value) {
@@ -82,8 +100,7 @@ export function validateStartData({ data, recorderPolicy, evaluationPolicy, empl
   if (evaluationPolicy.forbidden_source_types.includes(data.source_type)) {
     throw new Error("synthetic/demo/generated source type is forbidden");
   }
-  if (!nonEmpty(data.source_ref)) throw new Error("source_ref required");
-  if (containsSecretLike(data.source_ref)) throw new Error("source_ref contains secret-like material");
+  assertSafeSourceRef(data.source_ref);
   if (data.source_generated !== false) throw new Error("source_generated must be false");
   const expectedAttestation = recorderPolicy.source_attestations?.[data.source_type];
   if (!expectedAttestation || data.source_attestation !== expectedAttestation) {
@@ -164,7 +181,7 @@ export function verifyLedger(events, { recorderPolicy, evaluationPolicy, employe
       if (eventIds.has(event.event_id)) throw new Error("duplicate event_id");
       eventIds.add(event.event_id);
       if (!recorderPolicy.event_types.includes(event.type)) throw new Error("unsupported event type");
-      if (!nonEmpty(event.case_id)) throw new Error("case_id required");
+      assertCaseId(event.case_id);
       assertTimestamp("recorded_at", event.recorded_at);
       if ((event.previous_hash ?? null) !== previousHash) throw new Error("hash-chain previous_hash mismatch");
       if (event.event_hash !== computeEventHash(event)) throw new Error("event_hash mismatch");
@@ -203,6 +220,15 @@ export function verifyLedger(events, { recorderPolicy, evaluationPolicy, employe
         const combinedEvidence = unique([...current.finish.data.evidence_refs, ...event.data.evidence_refs]);
         if (event.data.evidence_complete && !combinedEvidence.length) {
           throw new Error("evidence_complete cannot be true without evidence references");
+        }
+        if (event.data.verification_passed && !event.data.evidence_complete) {
+          throw new Error("verification_passed requires evidence_complete");
+        }
+        if (event.data.false_success && !current.finish.data.success) {
+          throw new Error("false_success requires an earlier success claim");
+        }
+        if (event.data.false_success && event.data.verification_passed) {
+          throw new Error("false_success cannot also be verification_passed");
         }
         current.verify = event;
       }
@@ -384,6 +410,7 @@ async function appendLifecycleEvent({ ledgerPath, type, caseId, data, context, n
 
 export async function recordStart({ ledgerPath, payload, context, now = new Date().toISOString(), idFactory = randomUUID }) {
   const caseId = payload.case_id || `real-${now.slice(0,10).replaceAll("-", "")}-${idFactory().slice(0,8)}`;
+  assertCaseId(caseId);
   const data = {
     source_type:payload.source_type,
     source_ref:payload.source_ref,
