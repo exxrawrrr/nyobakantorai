@@ -164,3 +164,18 @@ test("Cognee self-test plan CLI is side-effect free, key-safe, and remote-fail-c
   assert.equal(remoteData.api_key_present,true);
   assert.equal(remoteData.remote_opt_in,false);
 });
+
+
+test("cross-harness plan CLI is side-effect free and never upgrades detection into parity proof",()=>{
+  const result=run(["scripts/cross-harness-self-test.mjs","plan","--json","--target","hermes,codex,gemini-cli,github-copilot-cli"]);
+  assert.equal(result.status,0,result.stderr);
+  const data=JSON.parse(result.stdout);
+  assert.equal(data.side_effect_free,true);
+  assert.equal(data.provider_calls,0);
+  assert.equal(data.auto_install,false);
+  assert.equal(data.auto_login,false);
+  assert.equal(data.targets.length,4);
+  assert.ok(data.targets.every((x)=>x.provider_call_performed===false));
+  assert.ok(data.targets.every((x)=>["READY_FOR_SELF_TEST","NOT_INSTALLED"].includes(x.status)));
+  assert.match(data.claim_limit,/does not prove all canonical skills/i);
+});
