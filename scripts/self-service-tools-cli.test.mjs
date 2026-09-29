@@ -6,7 +6,12 @@ import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root=resolve(import.meta.dirname,"..");
-const run=(args,env={})=>spawnSync(process.execPath,args,{cwd:root,encoding:"utf8",windowsHide:true,env:{...process.env,...env}});
+const run=(args,options={})=>{
+  const structured=Object.prototype.hasOwnProperty.call(options,"env") || Object.prototype.hasOwnProperty.call(options,"input");
+  const env=structured?(options.env||{}):options;
+  const input=structured?options.input:undefined;
+  return spawnSync(process.execPath,args,{cwd:root,encoding:"utf8",windowsHide:true,input,env:{...process.env,...env}});
+};
 
 test("provider doctor JSON CLI is parseable and side-effect-free",()=>{
   const result=run(["scripts/provider-doctor.mjs","--json","--provider","playwright-mcp"]);
@@ -45,4 +50,78 @@ test("real-task recorder status CLI initializes no provider or network side effe
   assert.equal(data.cases,0);
   assert.equal(data.verified,0);
   assert.equal(data.ledger,resolve(ledger));
+});
+
+
+test("provider doctor CLI never prints credential values",()=>{
+  const secret="CLI-SECRET-MUST-NOT-LEAK-123456";
+  const result=run(["scripts/provider-doctor.mjs","--json","--provider","cognee"],{
+    env:{COGNEE_API_KEY:secret}
+  });
+  assert.equal(result.status,0,result.stderr);
+  assert.equal(result.stdout.includes(secret),false);
+  assert.equal(result.stderr.includes(secret),false);
+  const data=JSON.parse(result.stdout);
+  assert.equal(data.catalog_valid,true);
+  assert.equal(data.credentials_exposed,false);
+  assert.equal(data.providers[0].evidence.configuration_signal_count,1);
+});
+
+test("real-task recorder CLI completes a full verified lifecycle and exports one case",async()=>{
+  const dir=await mkdtemp(join(tmpdir(),"nyoba-recorder-e2e-"));
+  const ledger=join(dir,"ledger.jsonl");
+  const out=join(dir,"dataset.json");
+
+  const start=run(["scripts/real-task-recorder.mjs","start","--ledger",ledger,"--stdin"],{
+    input:JSON.stringify({
+      case_id:"cli-real-001",
+      source_type:"owner_real_task",
+      source_ref:"owner-task://cli/001",
+      source_generated:false,
+      source_attestation:"OWNER_DIRECT",
+      employee_id:"subagjo",
+      task_summary:"Implement and verify a real repository change with redacted evidence.",
+      redaction_reviewed:true
+    })
+  });
+  assert.equal(start.status,0,start.stderr);
+  assert.equal(JSON.parse(start.stdout).case_id,"cli-real-001");
+
+  const finish=run(["scripts/real-task-recorder.mjs","finish","--ledger",ledger,"--stdin"],{
+    input:JSON.stringify({
+      case_id:"cli-real-001",
+      success:true,
+      evidence_refs:["commit://cli-real-001"],
+      human_intervention:0,
+      retries:0,
+      cost_known:false,
+      recovered_after_failure:false,
+      outcome_note:"Implementation completed and deterministic checks passed."
+    })
+  });
+  assert.equal(finish.status,0,finish.stderr);
+
+  const verify=run(["scripts/real-task-recorder.mjs","verify","--ledger",ledger,"--stdin"],{
+    input:JSON.stringify({
+      case_id:"cli-real-001",
+      reviewer_employee_id:"siti",
+      verification_passed:true,
+      false_success:false,
+      evidence_complete:true,
+      evidence_refs:["ci://cli-real-001"],
+      verification_note:"Independent verification accepted the evidence."
+    })
+  });
+  assert.equal(verify.status,0,verify.stderr);
+
+  const validate=run(["scripts/real-task-recorder.mjs","validate","--ledger",ledger]);
+  assert.equal(validate.status,0,validate.stderr);
+  assert.equal(JSON.parse(validate.stdout).events,3);
+
+  const exported=run(["scripts/real-task-recorder.mjs","export","--ledger",ledger,"--out",out]);
+  assert.equal(exported.status,0,exported.stderr);
+  const exportSummary=JSON.parse(exported.stdout);
+  assert.equal(exportSummary.cases,1);
+  assert.equal(exportSummary.false_successes,0);
+  assert.equal(exportSummary.acceptance_passed,false);
 });
