@@ -15,6 +15,7 @@ All notable public changes to nyobakantorai are documented here.
 - Hash-chained Real Task Recorder / Collector and read-only Unified Provider Doctor.
 - Browser Use self-service six-case runner with isolated disposable browser profile and server-side write/auth evidence.
 - Cognee self-service eight-case memory runner with run-owned datasets, profile-isolation/contamination guards, provenance/export/delete verification, secret pre-write rejection, explicit shared promotion, remote opt-in, and cleanup verification.
+- Cross-harness self-service parity runner for Hermes/Codex/Gemini/Copilot plus Codex static skill export target.
 
 ### Evaluation
 - Fikri controlled live-model run: 5/5 compiled-context downstream pass, zero critical losses, 41.10% average estimated token reduction, and 100% protected/source fidelity on the recorded synthetic fixture set.
