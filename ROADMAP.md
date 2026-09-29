@@ -60,6 +60,7 @@
 - [ ] Cognee memory-provider isolation/export/deletion evaluation
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
 - [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
+- [x] deterministic adversarial policy/recovery benchmark with zero-false-success gate
 - [ ] live Fikri context-compaction benchmark: token reduction + semantic/source fidelity + downstream task success
 - [ ] real-task evaluation dataset and published baseline comparison
 
