@@ -271,3 +271,75 @@ independent verification
 ```
 
 A signed receipt proves that a trusted key signed an exact payload. The evidence verifier still evaluates facts, artifacts, completion, freshness, authorization, and reviewer policy.
+
+
+## Review-driven evidence gates
+
+These gates exist to prevent implementation work from being mistaken for real-world proof.
+
+### Claim maturity
+
+Use three distinct claim levels:
+
+```text
+IMPLEMENTED
+-> DETERMINISTICALLY_VERIFIED
+-> REAL_WORLD_EVALUATED
+```
+
+A structural validator, static export, passing unit test, or signed receipt can move an item through the first two levels only when the relevant deterministic evidence exists. It does not by itself create a real-world evaluation claim. `NOT_RUN / UNPROVEN` is an acceptable truthful state for provider-dependent work.
+
+### Cross-harness behavioral parity
+
+Static export validity is not behavioral portability. A live cross-harness comparison must use the same task, input, constraints, and intended skill across the compared harnesses, then record:
+
+- output/task success;
+- evidence completeness;
+- tool behavior;
+- policy/refusal behavior;
+- failure recovery;
+- environment and version metadata.
+
+Material differences are reportable findings, not results to hide.
+
+### Signed-receipt adversarial matrix
+
+Cryptographic validity proves payload authenticity, not external-world correctness. Receipt evaluation should explicitly cover:
+
+- valid receipt;
+- tampered receipt;
+- replayed receipt;
+- wrong task binding;
+- wrong employee binding;
+- wrong capability binding;
+- stale receipt;
+- receipt from an unauthorized or untrusted runtime/key.
+
+Every case must end in a truthful state. A valid signature must never bypass independent evidence verification.
+
+### Memory contamination
+
+Memory-provider evaluation must test cross-profile contamination in addition to positive recall. Facts written only to one profile must remain unavailable to another profile unless an explicit, policy-valid shared-memory promotion occurred. The benchmark must include negative queries whose expected answer is `UNKNOWN` / no access.
+
+### Personality invariance
+
+Distinct dialogue fingerprints are a UX layer, not a correctness exception. Evaluation should compare the same evidence and policy under different employee personalities and record:
+
+- factual/task accuracy;
+- uncertainty calibration;
+- refusal correctness;
+- disagreement correctness.
+
+Personality may change expression, but must not weaken approval, evidence, verification, or policy behavior.
+
+### Fikri live benchmark priority
+
+Token reduction is secondary. A live Fikri benchmark succeeds only when downstream task quality and semantic/source fidelity remain acceptable after compilation. Report original-vs-compiled task success together with token reduction; a large reduction with degraded task success is a failure.
+
+### Real-task baseline interpretation
+
+Twenty eligible cases are an initial baseline, not statistical proof of general reliability. The dataset must include failures and difficult cases, not only tasks selected because the system is likely to win. Keep false-success rate as a separate safety KPI from task success rate.
+
+### Runtime isolation claim limit
+
+Runtime adapter permission policies are application-level configuration sandboxing. They are not OS process isolation, container isolation, filesystem ACL isolation, or a general-purpose security sandbox. Any future expansion into broader write/network authority must revisit process-level isolation explicitly.

@@ -40,7 +40,7 @@
 - [x] signed/verifiable execution receipts
 - [ ] live provider adapters for ads capabilities
 - [ ] original character art for the ten v0.3 workers
-- [ ] pluggable storage with export/import
+- [ ] pluggable storage with export/import — adapter + integrity-checked portable bundle core implemented; office/UI wiring and migration path still pending
 - [x] application-level adapter sandboxing and permission-policy extensions (not OS isolation)
 
 
