@@ -108,9 +108,11 @@
           "COGNEE_BASE_URL",
           "COGNEE_API_KEY"
         ],
-        "config_requirement": "provider"
+        "config_requirement": "provider",
+        "self_test_install_required": false,
+        "self_test_default_local": true
       },
-      "setup_hint": "Install the pinned-compatible Cognee/Hermes integration and configure either local model access or user-owned remote Cognee credentials.",
+      "setup_hint": "For the self-test, a compatible user-owned Cognee HTTP endpoint is sufficient; a local Cognee package is not required in this repository. Full Hermes integration still requires the user's chosen pinned-compatible Cognee/Hermes setup.",
       "self_test_hint": "Run `npm run memory:self-test:plan` first. When a user-owned compatible Cognee HTTP endpoint is configured, run `npm run memory:self-test -- --json --out cognee-self-test.json`. Remote targets require explicit --allow-remote and COGNEE_API_KEY; the runner never installs, logs in, or mints keys."
     },
     {
