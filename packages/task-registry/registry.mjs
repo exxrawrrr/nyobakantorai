@@ -228,7 +228,8 @@ export function attachExecutionReceipt(registry, taskId, receipt, clock = defaul
   const receiptRef = clean(receipt?.receipt_ref, 1000);
   assert(/^receipt:sha256:[a-f0-9]{64}$/.test(receiptRef), "Execution receipt reference tidak valid.");
   assert(task.lifecycle_status !== "VERIFIED", "Execution receipt tidak boleh ditempel setelah task VERIFIED tanpa reopen.");
-  const actor = clean(receipt?.actor, 80).toLowerCase() || task.assignee_id;
+  const actor = clean(receipt?.actor, 80).toLowerCase();
+  assert(actor, "Execution receipt actor wajib diisi.");
   assert(actor === task.assignee_id || actor === "adapter:runtime", "Execution receipt hanya boleh direkam oleh assignee atau runtime adapter.");
   const at = clock();
   task.execution_receipt_ref = receiptRef;
