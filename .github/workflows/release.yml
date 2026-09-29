@@ -7,12 +7,12 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   release-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
         with:
@@ -25,9 +25,44 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install -r requirements-dev.txt
       - run: npm run release:check
+
+      - name: Build standalone employee packs
+        run: |
+          npm run employee:pack -- --employees=all --out=dist/employees
+          mkdir -p dist/employee-zips
+          for dir in dist/employees/*; do
+            id="$(basename "$dir")"
+            (
+              cd "$dir"
+              zip -qr "../../employee-zips/nyobakantorai-${id}.zip" .
+            )
+          done
+          (
+            cd dist/employee-zips
+            sha256sum *.zip > SHA256SUMS.txt
+          )
+
       - uses: actions/upload-artifact@v7
         with:
           name: nyobakantorai-manifest
           path: release/manifest.json
           if-no-files-found: error
           retention-days: 30
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: nyobakantorai-employee-packs
+          path: |
+            dist/employee-zips/*.zip
+            dist/employee-zips/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish employee packs on tagged releases
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "$tag" --generate-notes
+          gh release upload "$tag" dist/employee-zips/*.zip dist/employee-zips/SHA256SUMS.txt release/manifest.json --clobber
