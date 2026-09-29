@@ -17,6 +17,8 @@ For the current v0.4 Draft candidate, stable promotion is **HOLD**. See `docs/V0
 - [ ] `npm run ready` passes from the canonical worktree.
 - [ ] `npm run verify` passes from the canonical worktree.
 - [ ] A fresh clone passes `npm run ready`.
+- [x] One-worker isolated fresh-install matrix passes with an empty temporary profile home (`npm run release:matrix:one-worker`). This is deterministic release-matrix evidence, not a real Hermes/provider machine claim.
+- [ ] Subset/full/upgrade/uninstall clean-install matrix is complete across the intended release platforms.
 - [ ] Linux and Windows CI are green.
 - [ ] Minimum-version CI is green.
 - [ ] Manual `release-gate` passes from the final promoted commit.
