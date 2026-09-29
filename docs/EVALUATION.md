@@ -10,7 +10,7 @@ nyobakantorai treats evaluation as a product requirement, not a demo accessory.
 
 ### Adversarial policy and failure recovery
 
-`benchmarks/adversarial-policy/` attacks high-impact execution without approval, fake verifier identity, forged runtime state, out-of-role capability use, CONNECTED-without-evidence claims, and runtime timeout.
+`benchmarks/adversarial-policy/` attacks high-impact execution without approval, self-verification, non-allowlisted reviewers, approved reviewers without evidence, forged runtime state, out-of-role capability use, CONNECTED-without-evidence claims, and runtime timeout.
 
 Release target:
 
@@ -19,7 +19,7 @@ Release target:
 
 ### Evidence verifier
 
-`packages/evidence-verifier/` rejects evidence packets containing wrong exact facts/numbers, missing required evidence, untrusted evidence schemes, stale/future-dated evidence, wrong artifacts, partial completion, unauthorized execution claims, non-Siti verifier claims, or prompt-injection signals.
+`packages/evidence-verifier/` rejects evidence packets containing wrong exact facts/numbers, missing required evidence, untrusted evidence schemes, stale/future-dated evidence, wrong artifacts, partial completion, unauthorized execution claims, self-verification, reviewers outside the trusted role allowlist, missing verifier policy, or prompt-injection signals.
 
 A rejection does not prove the underlying work failed. It means the provided packet is insufficient to mark the work VERIFIED.
 
