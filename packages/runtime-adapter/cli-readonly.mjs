@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { defineRuntimeAdapter } from "./index.mjs";
-import { authorizeCliAdapterConfig } from "./policy.mjs";
+import { authorizeCliAdapterConfig, defineAdapterPermissionPolicy } from "./policy.mjs";
 
 const execFileAsync = promisify(execFile);
 const BASE_ENV_KEYS = Object.freeze([
@@ -90,21 +90,28 @@ export function createCliJsonAdapter({
 
   const health = normalizeArgs(healthArgs, "healthArgs");
   const tasks = normalizeArgs(tasksArgs, "tasksArgs");
-  const env = buildEnv({ extraEnv, allowedExtraEnvKeys });
+  const rawEnv = buildEnv({ extraEnv, allowedExtraEnvKeys });
+  const normalizedPermissionPolicy = permissionPolicy ? defineAdapterPermissionPolicy(permissionPolicy) : null;
 
   assert(Number.isInteger(commandTimeoutMs) && commandTimeoutMs > 0 && commandTimeoutMs <= 10_000, "commandTimeoutMs must be 1..10000");
   assert(Number.isInteger(maxBufferBytes) && maxBufferBytes >= 1024 && maxBufferBytes <= 4 * 1024 * 1024, "maxBufferBytes must be 1024..4194304");
 
-  if (permissionPolicy) {
-    authorizeCliAdapterConfig(permissionPolicy, {
+  if (normalizedPermissionPolicy) {
+    authorizeCliAdapterConfig(normalizedPermissionPolicy, {
       adapterId:id,
       executable:exe,
-      envKeys:Object.keys(env),
+      envKeys:Object.keys(extraEnv),
       timeoutMs:commandTimeoutMs,
       maxBufferBytes,
       shell:false,
     });
   }
+
+  const env = normalizedPermissionPolicy
+    ? Object.freeze(Object.fromEntries(
+        Object.entries(rawEnv).filter(([key]) => normalizedPermissionPolicy.allowed_env_keys.includes(key))
+      ))
+    : rawEnv;
 
   const runJson = async (args, purpose) => {
     const result = await execFileImpl(exe, [...args], {
