@@ -381,6 +381,45 @@ On the evaluated GROWTH machine:
 
 Therefore static packaging claims remain intact, but live Hermes/Gemini/Copilot behavioral parity remains `UNPROVEN`. No target is promoted to runtime parity from this readiness check.
 
+### Cognee/Hermes live readiness — 2026-09-29
+
+Phase 4 performed a live readiness check on GROWTH against the pinned Cognee integration source (`topoteretes/cognee-integrations@3323e30a...`).
+
+Pinned integration requirements:
+
+- `cognee-integration-hermes-agent` 1.3.1;
+- `cognee==1.6.0`;
+- Python >= 3.10;
+- local mode requires an LLM API key and Hermes memory setup;
+- remote mode requires `COGNEE_BASE_URL` plus `COGNEE_API_KEY`.
+
+Observed state on GROWTH:
+
+- Hermes 0.21.3 and Python 3.11.16 are available;
+- no `cognee` command is installed;
+- the Cognee Python module is not installed;
+- no Cognee-related environment configuration was detected;
+- no local Cognee integration directory was found;
+- Hermes has no configured model/provider credential, no active OAuth session, and no `.env` file.
+
+Therefore **none of the eight required memory-provider cases were executed**. The provider record intentionally remains:
+
+```text
+status = NOT_RUN
+claim_state = UNPROVEN
+environment = null
+cases = []
+```
+
+This is not an evaluation failure. It is a truthful precondition failure. No package was installed and no credential was created during the check.
+
+Evidence is recorded in:
+
+- `benchmarks/provider-evaluations/memory-readiness-2026-09-29.json`;
+- `benchmarks/provider-evaluations/memory-results.json`.
+
+The next valid transition is to configure an isolated Cognee evaluation environment and then execute **all eight** contract cases with evidence. Readiness alone must never promote the provider to `PARTIAL`, `COMPLETED`, or `EVALUATED_CANDIDATE`.
+
 ### Real-task baseline interpretation
 
 Twenty eligible cases are an initial baseline, not statistical proof of general reliability. The dataset must include failures and difficult cases, not only tasks selected because the system is likely to win. Keep false-success rate as a separate safety KPI from task success rate.
