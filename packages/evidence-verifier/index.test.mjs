@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { detectPromptInjection, verifyEvidencePacket } from "./index.mjs";
+import { createExecutionReceiptPayload, executionReceiptRef, generateReceiptKeyPair, signExecutionReceipt } from "../execution-receipt/index.mjs";
 
 const now = new Date("2026-09-29T03:20:00.000Z");
 const base = () => ({
@@ -133,4 +134,128 @@ test("VERIFIED claim fails closed when trusted reviewer policy is missing", () =
   const result = verifyEvidencePacket(input);
   assert.equal(result.ok, false);
   assert.ok(result.reasons.some((item) => item.code === "VERIFIER_POLICY_MISSING"));
+});
+
+
+function signedReceiptFixture() {
+  const keys = generateReceiptKeyPair();
+  const payload = createExecutionReceiptPayload({
+    receipt_id:"receipt.maya.0042",
+    task_id:"task-42",
+    employee_id:"maya",
+    action:"Apply approved Meta campaign change",
+    capability_id:"ads.meta.write",
+    risk_class:"PAID_ACTION",
+    autonomy:"GUARDED",
+    authorization:{
+      allowed:true,
+      reason:"CONNECTED_AND_OWNER_APPROVED",
+      approval_ref:"approval://task-42/owner",
+    },
+    started_at:"2026-09-29T03:12:00.000Z",
+    finished_at:"2026-09-29T03:14:00.000Z",
+    result:{
+      state:"SUCCEEDED",
+      summary:"Approved mutation completed and read-back matched.",
+      artifact_refs:["artifact://report.pdf"],
+      evidence_refs:["runtime://meta/change-42"],
+    },
+    runtime:{
+      provider:"meta-ads",
+      runtime_ref:"runtime://meta/change-42",
+      provider_version:"test-fixture",
+    },
+    usage:{
+      input_tokens:100,
+      output_tokens:20,
+      cost_known:true,
+      cost_amount:0.01,
+      currency:"USD",
+    },
+  });
+  const envelope = signExecutionReceipt(payload, {
+    privateKeyPem:keys.private_key_pem,
+    keyId:"local:evidence-test",
+  });
+  return { keys, envelope, ref:executionReceiptRef(envelope) };
+}
+
+test("signed execution receipt is cryptographically verified when required", () => {
+  const input = base();
+  const signed = signedReceiptFixture();
+  input.expected.task_id = "task-42";
+  input.expected.capability_id = "ads.meta.write";
+  input.expected.require_signed_execution_receipt = true;
+  input.expected.required_receipt_result_states = ["SUCCEEDED"];
+  input.expected.receipt_public_keys = { "local:evidence-test":signed.keys.public_key_pem };
+  input.evidence.signed_receipts = [signed.envelope];
+  input.evidence.refs.push(signed.ref);
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, true);
+  assert.equal(result.metrics.signed_receipts_valid, 1);
+  assert.equal(result.metrics.signed_receipts_invalid, 0);
+});
+
+test("tampered signed receipt is rejected by evidence verifier", () => {
+  const input = base();
+  const signed = signedReceiptFixture();
+  const tampered = structuredClone(signed.envelope);
+  tampered.payload.result.summary = "tampered after signing";
+
+  input.expected.task_id = "task-42";
+  input.expected.capability_id = "ads.meta.write";
+  input.expected.require_signed_execution_receipt = true;
+  input.expected.required_receipt_result_states = ["SUCCEEDED"];
+  input.expected.receipt_public_keys = { "local:evidence-test":signed.keys.public_key_pem };
+  input.evidence.signed_receipts = [tampered];
+  input.evidence.refs.push(signed.ref);
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  assert.ok(result.reasons.some((item) => item.code === "SIGNED_EXECUTION_RECEIPT_INVALID"));
+  assert.ok(result.reasons.some((item) => item.code === "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"));
+});
+
+test("signed receipt binding rejects wrong task or worker", () => {
+  const input = base();
+  const signed = signedReceiptFixture();
+  input.expected.task_id = "task-other";
+  input.expected.capability_id = "ads.meta.write";
+  input.expected.require_signed_execution_receipt = true;
+  input.expected.required_receipt_result_states = ["SUCCEEDED"];
+  input.expected.receipt_public_keys = { "local:evidence-test":signed.keys.public_key_pem };
+  input.evidence.signed_receipts = [signed.envelope];
+  input.evidence.refs.push(signed.ref);
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  const invalid = result.reasons.find((item) => item.code === "SIGNED_EXECUTION_RECEIPT_INVALID");
+  assert.ok(invalid);
+  assert.ok(invalid.details.includes("TASK_BINDING_MISMATCH"));
+});
+
+test("valid signed receipt must be referenced by the evidence packet", () => {
+  const input = base();
+  const signed = signedReceiptFixture();
+  input.expected.task_id = "task-42";
+  input.expected.capability_id = "ads.meta.write";
+  input.expected.require_signed_execution_receipt = true;
+  input.expected.required_receipt_result_states = ["SUCCEEDED"];
+  input.expected.receipt_public_keys = { "local:evidence-test":signed.keys.public_key_pem };
+  input.evidence.signed_receipts = [signed.envelope];
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  assert.ok(result.reasons.some((item) => item.code === "SIGNED_RECEIPT_REFERENCE_MISSING"));
+});
+
+test("signed receipt requirement fails closed when no receipt is supplied", () => {
+  const input = base();
+  input.expected.task_id = "task-42";
+  input.expected.require_signed_execution_receipt = true;
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  assert.ok(result.reasons.some((item) => item.code === "SIGNED_EXECUTION_RECEIPT_REQUIRED"));
 });
