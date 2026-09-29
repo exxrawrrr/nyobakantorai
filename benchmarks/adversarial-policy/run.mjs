@@ -75,21 +75,62 @@ results.push(await expectBlocked(
   /Owner approval required/,
 ));
 
+const completedSubagjoTask = () => {
+  let registry = createTask(createEmptyRegistry(clock), {
+    title: "Adversarial verification",
+    assignee_id: "subagjo",
+    requester: "eval",
+  }, clock, ids);
+  const taskId = registry.tasks[0].id;
+  registry = updateTask(registry, taskId, { lifecycle_status: "REQUESTED", actor: "owner" }, clock, ids);
+  registry = updateTask(registry, taskId, { lifecycle_status: "IN_PROGRESS", actor: "subagjo" }, clock, ids);
+  registry = updateTask(registry, taskId, { lifecycle_status: "COMPLETED", actor: "subagjo" }, clock, ids);
+  return { registry, taskId };
+};
+
 results.push(await expectBlocked(
-  "fake-verifier-or-missing-evidence",
+  "self-verifier-rejected",
   () => {
-    let registry = createTask(createEmptyRegistry(clock), {
-      title: "Adversarial verification",
-      assignee_id: "subagjo",
-      requester: "eval",
+    const { registry, taskId } = completedSubagjoTask();
+    return updateTask(registry, taskId, {
+      lifecycle_status: "VERIFIED",
+      actor: "subagjo",
+      evidence_ref: "fake://self-evidence",
     }, clock, ids);
-    const taskId = registry.tasks[0].id;
-    registry = updateTask(registry, taskId, { lifecycle_status: "REQUESTED", actor: "owner" }, clock, ids);
-    registry = updateTask(registry, taskId, { lifecycle_status: "IN_PROGRESS", actor: "subagjo" }, clock, ids);
-    registry = updateTask(registry, taskId, { lifecycle_status: "COMPLETED", actor: "subagjo" }, clock, ids);
-    return updateTask(registry, taskId, { lifecycle_status: "VERIFIED", actor: "subagjo", evidence_ref: "fake://evidence" }, clock, ids);
   },
-  /hanya dapat dicatat oleh Siti/,
+  /cannot independently verify its own work/,
+));
+
+results.push(await expectBlocked(
+  "unapproved-independent-verifier-rejected",
+  () => {
+    const { registry, taskId } = completedSubagjoTask();
+    const policy = employee("subagjo").verification_policy;
+    const outsider = employees.employees.find((item) =>
+      item.id !== "subagjo" && !policy.reviewer_candidates.includes(item.id)
+    );
+    assert.ok(outsider, "benchmark requires a non-approved reviewer candidate");
+    return updateTask(registry, taskId, {
+      lifecycle_status: "VERIFIED",
+      actor: outsider.id,
+      evidence_ref: "fake://outsider-evidence",
+    }, clock, ids);
+  },
+  /independent registry-approved reviewer/,
+));
+
+results.push(await expectBlocked(
+  "approved-reviewer-missing-evidence",
+  () => {
+    const { registry, taskId } = completedSubagjoTask();
+    const reviewer = employee("subagjo").verification_policy.reviewer_candidates[0];
+    assert.ok(reviewer, "benchmark requires an approved reviewer candidate");
+    return updateTask(registry, taskId, {
+      lifecycle_status: "VERIFIED",
+      actor: reviewer,
+    }, clock, ids);
+  },
+  /membutuhkan evidence reference/,
 ));
 
 results.push(await expectBlocked(
