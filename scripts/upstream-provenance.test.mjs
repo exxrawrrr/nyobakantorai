@@ -7,11 +7,12 @@ const root=resolve(import.meta.dirname,"..");
 const readJson=async(rel)=>JSON.parse(await readFile(resolve(root,rel),"utf8"));
 
 test("upstream-derived skills and integrations have explicit provenance",async()=>{
-  const [sources,integrations,employees,capabilities]=await Promise.all([
+  const [sources,integrations,employees,capabilities,skillProvenance]=await Promise.all([
     readJson("config/upstream-sources.json"),
     readJson("config/integrations.json"),
     readJson("config/employees.json"),
     readJson("config/capabilities.json"),
+    readJson("config/skill-provenance.json"),
   ]);
   const sourceIds=new Set(sources.sources.map(s=>s.id));
   assert.equal(sourceIds.size,sources.sources.length);
@@ -29,19 +30,31 @@ test("upstream-derived skills and integrations have explicit provenance",async()
     if(item.capability) assert.ok(capabilityIds.has(item.capability),item.id+" references unknown capability "+item.capability);
   }
   const skillDirs=(await readdir(resolve(root,"skills/hermes-custom"),{withFileTypes:true})).filter(x=>x.isDirectory()).map(x=>x.name);
+  const declaredDerived=new Set();
   for(const name of skillDirs){
     const text=await readFile(resolve(root,"skills/hermes-custom",name,"SKILL.md"),"utf8");
-    if(!/provenance_mode:\s*recreated/.test(text)) continue;
-    const match=text.match(/source_ids:\s*\[([^\]]+)\]/);
-    assert.ok(match,name+" missing source_ids");
-    const ids=match[1].split(",").map(x=>x.trim()).filter(Boolean);
-    assert.ok(ids.length,name+" has empty source_ids");
+    const modeMatch=text.match(/^\s*nyoba-provenance-mode:\s*["']?([^"'\n]+)["']?\s*$/m);
+    const idsMatch=text.match(/^\s*nyoba-source-ids:\s*["']([^"']+)["']\s*$/m);
+    if(modeMatch||idsMatch) declaredDerived.add(name);
+    const expected=skillProvenance.skills[name];
+    if(!expected){
+      assert.equal(modeMatch,null,name+" declares provenance but is missing from config/skill-provenance.json");
+      assert.equal(idsMatch,null,name+" declares source IDs but is missing from config/skill-provenance.json");
+      continue;
+    }
+    assert.ok(modeMatch,name+" missing nyoba-provenance-mode");
+    assert.equal(modeMatch[1].trim(),expected.mode,name+" provenance mode drift");
+    assert.ok(idsMatch,name+" missing nyoba-source-ids");
+    const ids=idsMatch[1].split(",").map(x=>x.trim()).filter(Boolean);
+    assert.deepEqual(ids,expected.source_ids,name+" source provenance drift");
     for(const id of ids){
       assert.ok(sourceIds.has(id),name+" references unknown source "+id);
       const source=sources.sources.find(s=>s.id===id);
       assert.notEqual(source.usage_mode,"excluded-from-copy-or-derivation",name+" may not derive from excluded "+id);
     }
   }
+  const expectedDerived=Object.keys(skillProvenance.skills).sort();
+  assert.deepEqual([...declaredDerived].sort(),expectedDerived,"recreated-skill provenance catalog and frontmatter must match exactly");
   for(const e of employees.employees){
     assert.ok(e.skills.includes("nyoba-reflective-memory-learning"),e.id+" missing reflective memory");
     assert.equal(e.learning_profile.memory_mode,"PROFILE_SCOPED_HERMES_FIRST");
