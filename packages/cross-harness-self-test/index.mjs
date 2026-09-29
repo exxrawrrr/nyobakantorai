@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { delimiter, resolve, join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -112,6 +112,26 @@ export async function findCommand(candidates,{env=process.env,platform=process.p
   return null;
 }
 
+async function snapshotWorkspaceTree(root){
+  const rows=[];
+  async function walk(dir){
+    const entries=(await readdir(dir,{withFileTypes:true})).sort((a,b)=>a.name.localeCompare(b.name));
+    for(const entry of entries){
+      const full=join(dir,entry.name);
+      const rel=full.slice(root.length+1).replaceAll("\\","/");
+      if(entry.isDirectory()){
+        rows.push(["dir",rel]);
+        await walk(full);
+      }else if(entry.isFile()){
+        const bytes=await readFile(full);
+        rows.push(["file",rel,createHash("sha256").update(bytes).digest("hex")]);
+      }
+    }
+  }
+  await walk(root);
+  return JSON.stringify(rows);
+}
+
 function skillRootFor(harness,workspace,bundledRoot){
   if(harness.skill_root_mode==="workspace-agents") return join(workspace,".agents","skills");
   if(harness.skill_root_mode==="workspace-github") return join(workspace,".github","skills");
@@ -133,6 +153,7 @@ export async function stageCrossHarnessWorkspace({config,harness,tempBase=tmpdir
     skillRoot,
     canaryPath,
     canary_sha256:createHash("sha256").update(canary).digest("hex"),
+    baseline_tree:await snapshotWorkspaceTree(workspace),
     async cleanup(){await rm(workspace,{recursive:true,force:true});}
   });
 }
@@ -259,6 +280,11 @@ async function canaryUnchanged(staged){
   }catch{return false;}
 }
 
+async function workspaceTreeUnchanged(staged){
+  try{return (await snapshotWorkspaceTree(staged.workspace))===staged.baseline_tree;}
+  catch{return false;}
+}
+
 export function buildCrossHarnessPlan({config,commandMap={}}){
   const validation=validateCrossHarnessSelfTestConfig(config);
   if(!validation.ok) throw new Error("invalid cross-harness config: "+validation.errors.join("; "));
@@ -333,8 +359,9 @@ export async function executeCrossHarnessSelfTest({
       catch(error){parseError=redact(error.message||error);}
       const validated=payload?validateHarnessPayload(payload,config):{checks:{},passed:false};
       const canary=await canaryUnchanged(staged);
-      const checks={...validated.checks,workspace_canary_unchanged:canary};
-      const passed=result.status===0&&!result.timed_out&&validated.passed&&canary;
+      const treeUnchanged=await workspaceTreeUnchanged(staged);
+      const checks={...validated.checks,workspace_canary_unchanged:canary,workspace_tree_unchanged:treeUnchanged};
+      const passed=result.status===0&&!result.timed_out&&validated.passed&&canary&&treeUnchanged;
       targets.push(Object.freeze({
         id:harness.id,
         status:"COMPLETED",
