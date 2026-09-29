@@ -100,3 +100,44 @@ console.log(await snapshotRuntime(adapter));
 ```
 
 This adapter does not scrape credentials or infer authorization. If a runtime requires environment configuration, the caller must explicitly pass and allowlist only the required environment keys.
+
+
+## Adapter permission policy
+
+Machine-readable policy lives in:
+
+`config/runtime-adapter-policy.json`
+
+Enforcement primitives live in:
+
+`packages/runtime-adapter/policy.mjs`
+
+Policies can constrain:
+
+- allowed adapter IDs;
+- executable basenames;
+- environment keys;
+- maximum command timeout;
+- maximum process buffer;
+- maximum task count;
+- shell prohibition;
+- loopback-only host lists;
+- allowed URL protocols;
+- redirect behavior.
+
+Known Hermes runtime reads are automatically checked against the canonical `hermes-readonly` policy before any command is executed.
+
+The generic CLI and loopback HTTP adapters also accept an optional `permissionPolicy` argument. This lets callers bind custom adapters to an explicit project or deployment policy without weakening the hardcoded v1 read-only capability boundary.
+
+Example failure modes:
+
+```text
+wrong executable -> reject before spawn
+non-allowlisted env -> reject before spawn
+timeout > policy -> reject
+remote HTTP host under loopback policy -> reject
+HTTPS when only http: is allowed -> reject
+redirect-follow under no-redirect policy -> reject
+```
+
+This is an **application-level configuration sandbox**, not OS process isolation.
