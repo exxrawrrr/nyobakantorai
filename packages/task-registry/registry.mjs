@@ -33,6 +33,16 @@ const ALLOWED_TRANSITIONS = Object.freeze({
 });
 
 const employeeIds = new Set(EMPLOYEES.map(({ id }) => id));
+const employeePolicy = new Map(WORKFORCE.map((employee) => [employee.id, employee]));
+
+function mayVerify(assigneeId, actorId) {
+  if (!employeeIds.has(actorId) || actorId === assigneeId) return false;
+  const policy = employeePolicy.get(assigneeId)?.verification_policy;
+  return policy?.independent_required === true
+    && policy?.self_verify === false
+    && Array.isArray(policy.reviewer_candidates)
+    && policy.reviewer_candidates.includes(actorId);
+}
 
 const clean = (value, max = 4000) => String(value ?? "").trim().slice(0, max);
 const clone = (value) => structuredClone(value);
@@ -183,7 +193,9 @@ export function updateTask(registry, taskId, patch, clock = defaultClock, idFact
   const actor = clean(patch.actor, 80) || "manual:owner";
   const evidence = clean(patch.evidence_ref ?? task.evidence_ref, 1000);
   if (newStatus === "VERIFIED") {
-    assert(actor.toLowerCase() === "siti", "Status VERIFIED hanya dapat dicatat oleh Siti.");
+    const verifier = actor.toLowerCase();
+    assert(verifier !== task.assignee_id, "A worker cannot independently verify its own work.");
+    assert(mayVerify(task.assignee_id, verifier), "Status VERIFIED membutuhkan independent registry-approved reviewer.");
     assert(evidence, "Status VERIFIED membutuhkan evidence reference.");
   }
   if (oldStatus === "VERIFIED" && newStatus === "IN_PROGRESS") {
@@ -250,6 +262,16 @@ export function validateRegistry(registry) {
     if (AUTO_APPROVAL_RISKS.has(task.risk_class)) assert(task.approval_required === true, "High-impact task wajib membutuhkan approval.");
     if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(task.lifecycle_status)) {
       assert(task.approval_status === "APPROVED", "Task berisiko tinggi tidak boleh berjalan tanpa approval.");
+    }
+    if (task.lifecycle_status === "VERIFIED") {
+      const verified = registry.events.find((event) =>
+        event.task_id === task.id
+        && event.action === "STATUS_CHANGED"
+        && event.new_status === "VERIFIED"
+        && clean(event.evidence_ref, 1000)
+        && mayVerify(task.assignee_id, String(event.actor || "").toLowerCase())
+      );
+      assert(verified, "VERIFIED requires an independent reviewer evidence event.");
     }
     if (task.execution_mode === "HERMES") {
       assert(clean(task.runtime_ref, 200).startsWith("hermes-kanban:"), "Task Hermes tidak memiliki runtime reference valid.");
