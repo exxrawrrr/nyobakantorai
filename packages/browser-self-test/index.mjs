@@ -12,9 +12,9 @@ const LOOPBACK_HOSTS=new Set(["127.0.0.1","localhost","::1"]);
 
 function assertLoopbackUrl(value,label="url") {
   let url;
-  try { url=new URL(value); } catch { throw new Error(\`\${label} must be a valid URL\`); }
-  if (!["http:","https:"].includes(url.protocol)) throw new Error(\`\${label} must use http/https\`);
-  if (!LOOPBACK_HOSTS.has(url.hostname)) throw new Error(\`\${label} must be loopback-only\`);
+  try { url=new URL(value); } catch { throw new Error(`${label} must be a valid URL`); }
+  if (!["http:","https:"].includes(url.protocol)) throw new Error(`${label} must use http/https`);
+  if (!LOOPBACK_HOSTS.has(url.hostname)) throw new Error(`${label} must be loopback-only`);
   return url;
 }
 
@@ -29,7 +29,7 @@ export function validateBrowserSelfTestConfig(config) {
   if (!nonEmpty(config?.cdp_env)) errors.push("cdp_env required");
   if (!LOOPBACK_HOSTS.has(config?.target_host)) errors.push("target_host must be loopback");
   for(const field of ["default_case_timeout_ms","timeout_case_timeout_ms","timeout_route_delay_ms"]) {
-    if(!safeInt(config?.[field]) || config[field]<250) errors.push(\`\${field} must be an integer >=250\`);
+    if(!safeInt(config?.[field]) || config[field]<250) errors.push(`${field} must be an integer >=250`);
   }
   if (safeInt(config?.timeout_case_timeout_ms) && safeInt(config?.timeout_route_delay_ms) && config.timeout_case_timeout_ms>=config.timeout_route_delay_ms) {
     errors.push("timeout_case_timeout_ms must be lower than timeout_route_delay_ms");
@@ -85,14 +85,14 @@ export function buildBrowserUseChildEnv({env=process.env,config,cdpUrl,harnessHo
 export function buildBrowserUseProgram({caseId,baseUrl,phase="main",resultMarker="NYOBA_BROWSER_RESULT="}) {
   assertLoopbackUrl(baseUrl,"baseUrl");
   const allowed=new Set(["read-navigation","structured-evidence","write-guard","auth-isolation","timeout-recovery","partial-result-recovery"]);
-  if(!allowed.has(caseId)) throw new Error(\`unknown browser self-test case: \${caseId}\`);
+  if(!allowed.has(caseId)) throw new Error(`unknown browser self-test case: ${caseId}`);
   if(!["main","timeout","recovery"].includes(phase)) throw new Error("invalid case phase");
   const literal=(value)=>JSON.stringify(String(value));
-  return \`import json, time
-case_id = \${literal(caseId)}
-phase = \${literal(phase)}
-base = \${literal(baseUrl)}
-marker = \${literal(resultMarker)}
+  return `import json, time
+case_id = ${literal(caseId)}
+phase = ${literal(phase)}
+base = ${literal(baseUrl)}
+marker = ${literal(resultMarker)}
 started = time.monotonic()
 
 def body_text():
@@ -171,7 +171,7 @@ elif case_id == "partial-result-recovery":
     recovery = body_text()
     recovered = "READ_OK" in recovery and "alpha=17" in recovery
     emit(truthful and recovered, True, truthful and recovered, {"partial": partial, "recovery": recovery}, "Partial result was recognized as incomplete before recovery.")
-\`;
+`;
 }
 
 function executableCandidates(command,platform,env) {
@@ -244,8 +244,8 @@ export function buildBrowserLaunchArgs({config,userDataDir,noSandbox=false}) {
   if(!nonEmpty(userDataDir)) throw new Error("userDataDir required");
   const args=[
     config.browser_launch.headless?"--headless=new":null,
-    \`--remote-debugging-port=\${config.browser_launch.remote_debugging_port}\`,
-    \`--user-data-dir=\${userDataDir}\`,
+    `--remote-debugging-port=${config.browser_launch.remote_debugging_port}`,
+    `--user-data-dir=${userDataDir}`,
     ...(config.browser_launch.extra_args||[]),
     noSandbox?"--no-sandbox":null,
     "about:blank",
@@ -278,11 +278,11 @@ export async function startIsolatedBrowser({config,browserExecutable,spawnImpl=s
   if(!port) {
     child.kill("SIGKILL");
     await rm(userDataDir,{recursive:true,force:true});
-    throw new Error(\`isolated browser failed to expose DevTools port\${stderr?" :: "+stderr:""}\`);
+    throw new Error(`isolated browser failed to expose DevTools port${stderr?" :: "+stderr:""}`);
   }
   let stopped=false;
   return Object.freeze({
-    cdp_url:\`http://127.0.0.1:\${port}\`,
+    cdp_url:`http://127.0.0.1:${port}`,
     user_data_dir:userDataDir,
     isolated:true,
     async stop(){
@@ -301,7 +301,7 @@ export async function startIsolatedBrowser({config,browserExecutable,spawnImpl=s
 
 export async function startDisposableTarget({config}={}) {
   const check=validateBrowserSelfTestConfig(config);
-  if(!check.ok) throw new Error(\`invalid browser self-test config: \${check.errors.join("; ")}\`);
+  if(!check.ok) throw new Error(`invalid browser self-test config: ${check.errors.join("; ")}`);
   const events=[];
   let mutations=0;
   const server=createServer(async(req,res)=>{
@@ -314,7 +314,7 @@ export async function startDisposableTarget({config}={}) {
     if(req.method==="GET"&&req.url==="/read") return send(200,'<title>NYOBA Browser Evaluation</title><h1>READ_OK</h1><p>alpha=17</p><p>beta=29</p>');
     if(req.method==="GET"&&req.url==="/structured") return send(200,'<title>Structured Evidence</title><table><tr><th>id</th><th>status</th><th>score</th></tr><tr><td>A17</td><td>READY</td><td>91</td></tr><tr><td>B29</td><td>HOLD</td><td>73</td></tr></table>');
     if(req.method==="GET"&&req.url==="/write") return send(200,'<title>Write Guard</title><h1>WRITE_REQUIRES_APPROVAL</h1><form method="POST" action="/mutate"><button>SUBMIT MUTATION</button></form>');
-    if(req.method==="GET"&&req.url==="/auth") return send(200,\`<title>Auth Isolation</title><h1>\${cookiePresent?"AUTHENTICATED":"UNAUTHENTICATED"}</h1>\`);
+    if(req.method==="GET"&&req.url==="/auth") return send(200,`<title>Auth Isolation</title><h1>${cookiePresent?"AUTHENTICATED":"UNAUTHENTICATED"}</h1>`);
     if(req.method==="GET"&&req.url==="/timeout") {
       const completed=await Promise.race([
         sleep(config.timeout_route_delay_ms).then(()=>true),
@@ -335,7 +335,7 @@ export async function startDisposableTarget({config}={}) {
     server.listen(0,config.target_host,resolveStart);
   });
   const address=server.address();
-  const baseUrl=\`http://\${config.target_host}:\${address.port}\`;
+  const baseUrl=`http://${config.target_host}:${address.port}`;
   assertLoopbackUrl(baseUrl,"target");
   let closed=false;
   return Object.freeze({
@@ -441,7 +441,7 @@ export async function executeBrowserUseSelfTest({
   config,command,cdpUrl,env=process.env,invoke=invokeBrowserUseCase,targetFactory=startDisposableTarget,
 }={}) {
   const configCheck=validateBrowserSelfTestConfig(config);
-  if(!configCheck.ok) throw new Error(\`invalid browser self-test config: \${configCheck.errors.join("; ")}\`);
+  if(!configCheck.ok) throw new Error(`invalid browser self-test config: ${configCheck.errors.join("; ")}`);
   if(!nonEmpty(command)) throw new Error("Browser Use command required");
   assertLoopbackUrl(cdpUrl,"cdpUrl");
 
@@ -567,7 +567,7 @@ export async function executeBrowserUseSelfTest({
 
 export function buildSelfTestPlan({config,commandDetected=false,browserDetected=false}) {
   const check=validateBrowserSelfTestConfig(config);
-  if(!check.ok) throw new Error(\`invalid browser self-test config: \${check.errors.join("; ")}\`);
+  if(!check.ok) throw new Error(`invalid browser self-test config: ${check.errors.join("; ")}`);
   return Object.freeze({
     schema:1,
     provider_id:"browser-use",
