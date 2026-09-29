@@ -150,6 +150,7 @@ test("four injected harnesses can satisfy the same probe contract without raw-ou
     assert.equal(report.summary.complete_selected_set,true);
     assert.ok(report.targets.every(x=>x.claim_state==="SELF_TEST_PASSED"));
     assert.ok(report.targets.every(x=>x.checks.workspace_canary_unchanged));
+    assert.ok(report.targets.every(x=>x.checks.workspace_tree_unchanged));
     assert.equal(JSON.stringify(report).includes("SHOULD-NOT-BE-PERSISTED"),false);
     assert.ok(report.targets.every(x=>x.evidence.raw_stdout_persisted===false));
     assert.ok(report.targets.every(x=>x.evidence.raw_stderr_persisted===false));
@@ -238,6 +239,28 @@ test("non-zero process or missing marker cannot be greenwashed",async()=>{
     assert.equal(report.summary.failed,2);
     assert.equal(report.claim_state,"UNPROVEN");
     assert.ok(report.targets.every(x=>x.claim_state==="SELF_TEST_FAILED"));
+  }finally{
+    await rm(base,{recursive:true,force:true});
+  }
+});
+
+
+test("new workspace file also forces SELF_TEST_FAILED",async()=>{
+  const base=await mkdtemp(join(tmpdir(),"nyoba-xh-newfile-"));
+  try{
+    const report=await executeCrossHarnessSelfTest({
+      config,
+      selectedIds:["codex"],
+      commandMap:{codex:"/fake/codex"},
+      tempBase:base,
+      invoke:async({cwd})=>{
+        await writeFile(join(cwd,"UNEXPECTED.txt"),"tool side effect\n","utf8");
+        return {status:0,signal:null,timed_out:false,duration_ms:5,stdout:marker(),stderr:"",error:null};
+      }
+    });
+    assert.equal(report.targets[0].checks.workspace_canary_unchanged,true);
+    assert.equal(report.targets[0].checks.workspace_tree_unchanged,false);
+    assert.equal(report.targets[0].claim_state,"SELF_TEST_FAILED");
   }finally{
     await rm(base,{recursive:true,force:true});
   }
