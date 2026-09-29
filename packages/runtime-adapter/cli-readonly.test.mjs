@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { snapshotRuntime } from "./index.mjs";
 import { createCliJsonAdapter } from "./cli-readonly.mjs";
+import { defineAdapterPermissionPolicy } from "./policy.mjs";
 
 test("CLI adapter rejects unsafe configuration before execution", () => {
   assert.throws(() => createCliJsonAdapter({ executable:"" }), /executable is required/);
@@ -133,4 +134,34 @@ test("CLI adapter does not treat stderr as structured runtime evidence", async (
   const snapshot = await snapshotRuntime(adapter);
   assert.equal(snapshot.connected, true);
   assert.deepEqual(snapshot.tasks, []);
+});
+
+
+test("CLI adapter enforces supplied permission policy before execution", () => {
+  const policy = defineAdapterPermissionPolicy({
+    id:"test-cli",
+    adapter_ids:["cli-test"],
+    executable_basenames:["allowed-runtime"],
+    allowed_env_keys:["PATH"],
+    max_timeout_ms:1000,
+    max_buffer_bytes:2048,
+    max_tasks:10,
+    require_shell_false:true,
+  });
+
+  assert.throws(() => createCliJsonAdapter({
+    id:"cli-test",
+    executable:"forbidden-runtime",
+    commandTimeoutMs:500,
+    maxBufferBytes:1024,
+    permissionPolicy:policy,
+  }), /executable .* not allowed/);
+
+  assert.throws(() => createCliJsonAdapter({
+    id:"cli-test",
+    executable:"allowed-runtime",
+    commandTimeoutMs:1500,
+    maxBufferBytes:1024,
+    permissionPolicy:policy,
+  }), /timeout exceeds policy/);
 });
