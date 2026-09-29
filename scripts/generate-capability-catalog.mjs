@@ -13,12 +13,6 @@ const PLATFORMS = Object.freeze(["windows","linux","macos","unspecified"]);
 const readJson = async (path) => JSON.parse(await readFile(resolve(root, path), "utf8"));
 const uniq = (items) => [...new Set(items)];
 
-function parseDescription(text, fallback) {
-  const raw = text.match(/^description:\s*(.+)$/m)?.[1]?.trim();
-  if (!raw) return fallback;
-  try { return JSON.parse(raw); } catch { return raw.replace(/^["']|["']$/g, ""); }
-}
-
 function sourceRef(source) {
   return {
     source_id: source.id,
@@ -65,7 +59,6 @@ export async function buildCapabilityCatalog() {
   const capabilities = [];
 
   for (const skill of skillDirs) {
-    const text = await readFile(resolve(root, "skills/hermes-custom", skill, "SKILL.md"), "utf8");
     const provenance = skillProvenance.skills[skill];
     const refs = provenance
       ? provenance.source_ids.map((id) => {
@@ -77,7 +70,7 @@ export async function buildCapabilityCatalog() {
     capabilities.push({
       id:`skill.${skill}`,
       kind:"skill",
-      description:parseDescription(text, skill),
+      description:`Canonical procedural skill: ${skill}`,
       source_refs:refs,
       usage_mode:provenance ? "recreated-concepts" : "original",
       default_state:"BUNDLED",
