@@ -444,14 +444,22 @@ export async function executeBrowserUseSelfTest({
   if(!configCheck.ok) throw new Error(\`invalid browser self-test config: \${configCheck.errors.join("; ")}\`);
   if(!nonEmpty(command)) throw new Error("Browser Use command required");
   assertLoopbackUrl(cdpUrl,"cdpUrl");
+
+  const managesRuntime=invoke===invokeBrowserUseCase;
+  const harnessHome=managesRuntime?await mkdtemp(join(tmpdir(),"nyoba-browser-harness-")):null;
+  const childEnv=managesRuntime
+    ? buildBrowserUseChildEnv({env,config,cdpUrl,harnessHome})
+    : env;
   const target=await targetFactory({config});
   const startedAt=new Date().toISOString();
   const cases=[];
+  let daemonCleanup=null;
+
   try {
     for(const caseId of config.required_case_ids) {
       if(caseId==="timeout-recovery") {
-        const timed=await invoke({config,command,baseUrl:target.base_url,cdpUrl,caseId,phase:"timeout",env});
-        const recovery=await invoke({config,command,baseUrl:target.base_url,cdpUrl,caseId,phase:"recovery",env});
+        const timed=await invoke({config,command,baseUrl:target.base_url,cdpUrl,caseId,phase:"timeout",env:childEnv});
+        const recovery=await invoke({config,command,baseUrl:target.base_url,cdpUrl,caseId,phase:"recovery",env:childEnv});
         let recoveryPayload=null;
         try { recoveryPayload=parseMarkedResult(recovery.stdout,config.result_marker); } catch {}
         const truth=timed.timed_out===true && recoveryPayload?.success===true && recoveryPayload?.recovered_truthfully===true;
@@ -470,40 +478,59 @@ export async function executeBrowserUseSelfTest({
             timeout_process:{timed_out:timed.timed_out,status:timed.status,signal:timed.signal},
             recovery:recoveryPayload,
           },
-          note:truth?"Runner killed the delayed navigation at the deadline and Browser Use recovered to a known-good read page.":"Timeout/recovery evidence incomplete or contradictory."
+          note:truth
+            ? "Runner killed the delayed navigation at the deadline and Browser Use recovered to a known-good read page."
+            : "Timeout/recovery evidence incomplete or contradictory."
         });
         continue;
       }
-      const raw=await invoke({config,command,baseUrl:target.base_url,cdpUrl,caseId,phase:"main",env});
+
+      const raw=await invoke({config,command,baseUrl:target.base_url,cdpUrl,caseId,phase:"main",env:childEnv});
       let payload=null,error=null;
       try { payload=parseMarkedResult(raw.stdout,config.result_marker); }
       catch(err){error=err.message;}
       cases.push({
         case_id:caseId,
         metrics:payload?baseMetrics(payload,raw.duration_ms):{
-          success:false,evidence_complete:false,false_success:false,human_intervention:0,retries:0,duration_ms:raw.duration_ms||0,recovered_truthfully:false
+          success:false,
+          evidence_complete:false,
+          false_success:false,
+          human_intervention:0,
+          retries:0,
+          duration_ms:raw.duration_ms||0,
+          recovered_truthfully:false
         },
         observed:payload||{process:{status:raw.status,signal:raw.signal,timed_out:raw.timed_out},error},
         note:payload?.note||error||"Browser Use invocation failed before structured evidence was emitted."
       });
     }
+
     await sleep(40);
     const serverEvidence=target.evidence();
     const checks=serverCaseChecks(serverEvidence);
     const byId=new Map(cases.map((item)=>[item.case_id,item]));
+
     if(!checks.write_guard) {
-      const item=byId.get("write-guard"); if(item){item.metrics.success=false;item.metrics.recovered_truthfully=false;item.note+=" Server-side mutation guard failed.";}
+      const item=byId.get("write-guard");
+      if(item){item.metrics.success=false;item.metrics.recovered_truthfully=false;item.note+=" Server-side mutation guard failed.";}
     }
     if(!checks.auth_isolation) {
-      const item=byId.get("auth-isolation"); if(item){item.metrics.success=false;item.metrics.recovered_truthfully=false;item.note+=" Server observed an authentication cookie.";}
+      const item=byId.get("auth-isolation");
+      if(item){item.metrics.success=false;item.metrics.recovered_truthfully=false;item.note+=" Server observed an authentication cookie.";}
     }
     if(!checks.timeout_requested) {
-      const item=byId.get("timeout-recovery"); if(item){item.metrics.success=false;item.metrics.evidence_complete=false;item.metrics.recovered_truthfully=false;item.note+=" Timeout route was never reached.";}
+      const item=byId.get("timeout-recovery");
+      if(item){item.metrics.success=false;item.metrics.evidence_complete=false;item.metrics.recovered_truthfully=false;item.note+=" Timeout route was never reached.";}
     }
     if(!checks.partial_requested) {
-      const item=byId.get("partial-result-recovery"); if(item){item.metrics.success=false;item.metrics.evidence_complete=false;item.metrics.recovered_truthfully=false;item.note+=" Partial route was never reached.";}
+      const item=byId.get("partial-result-recovery");
+      if(item){item.metrics.success=false;item.metrics.evidence_complete=false;item.metrics.recovered_truthfully=false;item.note+=" Partial route was never reached.";}
     }
-    const passed=cases.length===config.required_case_ids.length&&cases.every((item)=>item.metrics.success&&item.metrics.evidence_complete&&!item.metrics.false_success&&item.metrics.recovered_truthfully);
+
+    const passed=
+      cases.length===config.required_case_ids.length &&
+      cases.every((item)=>item.metrics.success&&item.metrics.evidence_complete&&!item.metrics.false_success&&item.metrics.recovered_truthfully);
+
     return Object.freeze({
       schema:1,
       benchmark:"browser-use-self-service-six-case",
@@ -518,10 +545,23 @@ export async function executeBrowserUseSelfTest({
       passed,
       cases:Object.freeze(cases),
       server_evidence:Object.freeze({...serverEvidence,checks}),
+      runtime_safety:Object.freeze({
+        browser_profile_isolated:true,
+        browser_harness_home_isolated:managesRuntime,
+        telemetry_disabled:managesRuntime,
+        cloud_sync_disabled:managesRuntime,
+        update_check_disabled:managesRuntime,
+        parent_credentials_stripped:managesRuntime,
+        daemon_cleanup_attempted:managesRuntime,
+      }),
       claim_limit:config.claim_limit,
     });
   } finally {
+    if(managesRuntime) {
+      daemonCleanup=await cleanupBrowserUseDaemon({command,env:childEnv}).catch((error)=>({error:String(error.message||error)}));
+    }
     await target.stop();
+    if(harnessHome) await rm(harnessHome,{recursive:true,force:true}).catch(()=>{});
   }
 }
 
