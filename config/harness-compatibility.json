@@ -21,6 +21,15 @@
       "claim": "Canonical skills are generated into Hermes employee distributions and checked for byte-for-byte drift."
     },
     {
+      "id": "codex-cli",
+      "source_id": "codex-cli",
+      "discovery_root": ".agents/skills",
+      "export_mode": "minimal-frontmatter-adapter",
+      "frontmatter_policy": "name-description-only",
+      "runtime_tested": false,
+      "claim": "Static package export matches pinned Codex project .agents/skills discovery and conservative name/description-only frontmatter."
+    },
+    {
       "id": "gemini-cli",
       "source_id": "gemini-cli",
       "discovery_root": ".agents/skills",
