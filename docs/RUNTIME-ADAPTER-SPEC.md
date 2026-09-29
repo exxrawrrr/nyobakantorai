@@ -59,3 +59,40 @@ It is localhost-only and reports the active adapter label, Runtime Adapter API v
 `packages/runtime-adapter/http-readonly.mjs` provides a strict local HTTP bridge for runtimes that expose a health endpoint and a task-list endpoint. It accepts only loopback HTTP origins, performs GET requests only, refuses embedded credentials and redirects, and returns data through the same bounded v1 snapshot normalization.
 
 The bridge does not make a runtime trusted. Runtime-specific provenance and identity reconciliation still apply before any claim can be treated as authoritative.
+
+
+## Read-only JSON CLI adapter
+
+`packages/runtime-adapter/cli-readonly.mjs` provides a generic CLI bridge for local runtimes that can expose health and task data as JSON.
+
+Safety properties:
+
+- uses `execFile`, never a shell command string;
+- `shell:false`;
+- health/task arguments must be explicit arrays;
+- control characters are rejected from executable/args;
+- child environment is allowlisted instead of inheriting all process variables;
+- extra environment variables must be explicitly allowlisted;
+- stdout must be JSON;
+- stderr is never treated as runtime evidence;
+- command timeout and max-buffer limits are bounded;
+- raw child errors/stdout/stderr are not copied into public snapshots;
+- write/dispatch/paid/account/destructive capabilities remain false.
+
+Example:
+
+```js
+import { snapshotRuntime } from "../packages/runtime-adapter/index.mjs";
+import { createCliJsonAdapter } from "../packages/runtime-adapter/cli-readonly.mjs";
+
+const adapter = createCliJsonAdapter({
+  id: "my-runtime",
+  executable: "my-runtime",
+  healthArgs: ["health", "--json"],
+  tasksArgs: ["tasks", "--json"],
+});
+
+console.log(await snapshotRuntime(adapter));
+```
+
+This adapter does not scrape credentials or infer authorization. If a runtime requires environment configuration, the caller must explicitly pass and allowlist only the required environment keys.
