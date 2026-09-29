@@ -146,7 +146,8 @@
       },
       "optional_integrations": [
         "superpowers-hermes",
-        "ecc-memory-vault"
+        "ecc-memory-vault",
+        "cognee-hermes-evaluation"
       ],
       "reasoning_profile": {
         "mental_models": [
@@ -317,7 +318,9 @@
       "profile": {
         "distribution_version": "0.3.0"
       },
-      "optional_integrations": [],
+      "optional_integrations": [
+        "polars-python"
+      ],
       "reasoning_profile": {
         "mental_models": [
           "base rates",
@@ -493,7 +496,9 @@
         "distribution_version": "0.3.0"
       },
       "optional_integrations": [
-        "superpowers-hermes"
+        "superpowers-hermes",
+        "repomix-cli",
+        "playwright-mcp"
       ],
       "reasoning_profile": {
         "mental_models": [
@@ -662,7 +667,9 @@
       },
       "optional_integrations": [
         "superpowers-hermes",
-        "markitdown-mcp"
+        "markitdown-mcp",
+        "playwright-mcp",
+        "browser-use-evaluation"
       ],
       "reasoning_profile": {
         "mental_models": [
@@ -992,7 +999,8 @@
         "distribution_version": "0.3.0"
       },
       "optional_integrations": [
-        "markitdown-mcp"
+        "markitdown-mcp",
+        "playwright-mcp"
       ],
       "reasoning_profile": {
         "mental_models": [
@@ -1165,7 +1173,9 @@
       "profile": {
         "distribution_version": "0.3.0"
       },
-      "optional_integrations": [],
+      "optional_integrations": [
+        "playwright-mcp"
+      ],
       "reasoning_profile": {
         "mental_models": [
           "creative fatigue",
@@ -1342,7 +1352,9 @@
       "profile": {
         "distribution_version": "0.3.0"
       },
-      "optional_integrations": [],
+      "optional_integrations": [
+        "playwright-mcp"
+      ],
       "reasoning_profile": {
         "mental_models": [
           "query-intent mapping",
@@ -1514,7 +1526,10 @@
         "distribution_version": "0.3.0"
       },
       "optional_integrations": [
-        "markitdown-mcp"
+        "markitdown-mcp",
+        "playwright-mcp",
+        "browser-use-evaluation",
+        "lighthouse-cli"
       ],
       "reasoning_profile": {
         "mental_models": [
@@ -1685,7 +1700,10 @@
       },
       "optional_integrations": [
         "superpowers-hermes",
-        "ecc-memory-vault"
+        "ecc-memory-vault",
+        "repomix-cli",
+        "cognee-hermes-evaluation",
+        "browser-use-evaluation"
       ],
       "reasoning_profile": {
         "mental_models": [
@@ -1853,7 +1871,8 @@
         "distribution_version": "0.3.0"
       },
       "optional_integrations": [
-        "markitdown-mcp"
+        "markitdown-mcp",
+        "polars-python"
       ],
       "reasoning_profile": {
         "mental_models": [
@@ -2216,7 +2235,7 @@
     {
       "id": "fikri",
       "name": "Fikri",
-      "role": "Knowledge / Context / Prompt Engineer",
+      "role": "Knowledge / Markdown / Context / Prompt Engineer",
       "department": "QA / Governance",
       "summary": "Turns messy prompts, documents, and project knowledge into source-preserving, token-efficient execution context without changing user intent.",
       "aliases": [
@@ -2303,7 +2322,8 @@
         "nyoba-markdown-knowledge-compaction",
         "nyoba-strategic-context-compaction",
         "nyoba-deep-research-open",
-        "nyoba-skill-engineering"
+        "nyoba-skill-engineering",
+        "nyoba-context-prompt-compiler"
       ],
       "preferred_toolsets": [
         "skills",
@@ -2366,7 +2386,10 @@
       },
       "optional_integrations": [
         "markitdown-mcp",
-        "ecc-memory-vault"
+        "ecc-memory-vault",
+        "repomix-cli",
+        "llmlingua-experimental",
+        "cognee-hermes-evaluation"
       ],
       "reasoning_profile": {
         "mental_models": [
@@ -2692,7 +2715,9 @@
       "profile": {
         "distribution_version": "0.3.0"
       },
-      "optional_integrations": [],
+      "optional_integrations": [
+        "playwright-mcp"
+      ],
       "reasoning_profile": {
         "mental_models": [
           "audience context",
