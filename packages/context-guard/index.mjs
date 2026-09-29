@@ -113,7 +113,7 @@ export function compileGuardPacket({ sources, objective = "", targetTokens = nul
     if (!text) throw new Error(`source ${id} is empty`);
     return Object.freeze({ id, type, text, atoms: extractProtectedAtoms(text) });
   });
-  const sourceIndex = normalized.map((source) => `- ${source.id} (${source.type})`).join("\n");
+  const sourceIndex = normalized.map((source) => `${source.id} (${source.type})`).join("; ");
   const combinedAtoms = {
     constraints: uniq(normalized.flatMap((source) => source.atoms.constraints)),
     urls: uniq(normalized.flatMap((source) => source.atoms.urls)),
@@ -126,7 +126,7 @@ export function compileGuardPacket({ sources, objective = "", targetTokens = nul
     explicit_numbers: uniq(normalized.flatMap((source) => source.atoms.explicit_numbers)),
   };
   const protectedSection = renderAtomSection(combinedAtoms);
-  const l0 = `# L0 Dispatch Guard\nObjective: ${normalizeContextText(objective) || "(derive from source; do not invent)"}\nSources: ${sourceIndex.replaceAll("\n- ", "; ").replace(/^- /, "")}\nProtected atoms:\n${protectedSection}\nGuard: preserve exact items; resolve semantics against L2/original source.\n`;
+  const l0 = `Objective: ${normalizeContextText(objective) || "(derive from source; do not invent)"}\nSource: ${sourceIndex}\nProtected atoms:\n${protectedSection}\n`;
   const l2 = `# L2 Canonical Source Packet\n\n${normalized.map((source) => `## Source: ${source.id}\nType: ${source.type}\n\n${source.text}`).join("\n\n---\n\n")}\n`;
   const originalText = normalized.map((source) => source.text).join("\n\n");
   return Object.freeze({
