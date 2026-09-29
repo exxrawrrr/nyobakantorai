@@ -323,3 +323,29 @@ test("full-workforce fresh-install CLI covers all canonical employees",()=>{
   assert.equal(data.hermes_cli_executed,false);
   assert.equal(data.real_machine_claim,false);
 });
+
+
+test("lifecycle release-matrix CLI completes upgrade selective removal full uninstall and reinstall",()=>{
+  const result=run(["scripts/fresh-install-matrix.mjs","--mode=lifecycle","--remove=bimo","--json"]);
+  assert.equal(result.status,0,result.stderr);
+  const data=JSON.parse(result.stdout);
+  assert.equal(data.matrix_case,"upgrade-uninstall-reinstall-full-workforce");
+  assert.equal(data.claim_state,"DETERMINISTICALLY_VERIFIED");
+  assert.equal(data.passed,true);
+  assert.equal(data.registry_employee_count,16);
+  assert.equal(data.upgrade_passed,true);
+  assert.equal(data.selective_removal.preview_non_destructive,true);
+  assert.equal(data.selective_removal.employee_id,"bimo");
+  assert.equal(data.selective_removal.passed,true);
+  assert.equal(data.full_uninstall.preview_non_destructive,true);
+  assert.deepEqual(data.full_uninstall.remaining_profiles,[]);
+  assert.equal(data.full_uninstall.passed,true);
+  assert.equal(data.reinstall.profiles.length,16);
+  assert.equal(data.reinstall.passed,true);
+  assert.equal(data.final_rerun_actions_exact,true);
+  assert.equal(data.final_profiles_exact,true);
+  assert.equal(data.pack_artifacts_unchanged,true);
+  assert.equal(data.external_provider_calls,0);
+  assert.equal(data.hermes_cli_executed,false);
+  assert.equal(data.real_machine_claim,false);
+});
