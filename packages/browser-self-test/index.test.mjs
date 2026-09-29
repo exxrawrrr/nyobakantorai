@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
   buildBrowserLaunchArgs,
+  buildBrowserUseChildEnv,
   buildBrowserUseProgram,
   buildSelfTestPlan,
   executeBrowserUseSelfTest,
@@ -40,6 +41,12 @@ test("self-test config is pinned and safety defaults fail closed",()=>{
   assert.equal(config.safety.reuse_user_profile_forbidden,true);
   assert.equal(config.safety.auto_install_forbidden,true);
   assert.equal(config.safety.auto_login_forbidden,true);
+  assert.equal(config.safety.telemetry_disabled,true);
+  assert.equal(config.safety.cloud_sync_disabled,true);
+  assert.equal(config.safety.update_check_disabled,true);
+  assert.equal(config.safety.strip_parent_credentials,true);
+  assert.equal(config.safety.isolate_browser_harness_home,true);
+  assert.equal(config.safety.cleanup_browser_harness_daemon,true);
 
   const bad=structuredClone(config);
   bad.timeout_case_timeout_ms=bad.timeout_route_delay_ms;
@@ -186,4 +193,66 @@ test("plan remains install-optional and claim-limited",()=>{
   assert.match(plan.next,/install/i);
   assert.ok(plan.forbidden.includes("automatic package installation"));
   assert.match(plan.claim_limit,/not agent-mode\/model quality proof/i);
+});
+
+
+test("child environment strips provider credentials and disables upstream outbound services",()=>{
+  const secret="MUST-NOT-SURVIVE-123456";
+  const env=buildBrowserUseChildEnv({
+    env:{
+      PATH:"/safe/bin",
+      OPENAI_API_KEY:secret,
+      BROWSER_USE_API_KEY:secret,
+      GH_TOKEN:secret,
+      AWS_SECRET_ACCESS_KEY:secret,
+      SAFE_FLAG:"kept",
+      BH_UPDATE_CHECK:"1",
+      ANONYMIZED_TELEMETRY:"true",
+      BROWSER_USE_CLOUD_SYNC:"true",
+      BU_AUTOSPAWN:"1",
+    },
+    config,
+    cdpUrl:"http://127.0.0.1:9222",
+    harnessHome:"/tmp/isolated-browser-harness",
+  });
+  const serialized=JSON.stringify(env);
+  assert.equal(serialized.includes(secret),false);
+  assert.equal(env.SAFE_FLAG,"kept");
+  assert.equal(env.BU_CDP_URL,"http://127.0.0.1:9222");
+  assert.equal(env.ANONYMIZED_TELEMETRY,"false");
+  assert.equal(env.BH_TELEMETRY,"0");
+  assert.equal(env.BROWSER_HARNESS_TELEMETRY,"0");
+  assert.equal(env.BROWSER_USE_CLOUD_SYNC,"false");
+  assert.equal(env.BH_UPDATE_CHECK,"0");
+  assert.equal(env.BU_AUTOSPAWN,"");
+  assert.equal(env.BH_HOME,"/tmp/isolated-browser-harness");
+  assert.equal(env.BROWSER_HARNESS_HOME,"/tmp/isolated-browser-harness");
+  assert.equal(env.BROWSER_USE_CLOUD_API_URL,"http://127.0.0.1:1");
+});
+
+test("injected orchestration stays deterministic while real runtime safety is explicitly distinguished",async()=>{
+  const invoke=async({baseUrl,caseId,phase})=>{
+    if(caseId==="timeout-recovery"&&phase==="timeout"){
+      const controller=new AbortController();
+      setTimeout(()=>controller.abort(),20);
+      await fetch(baseUrl+"/timeout",{signal:controller.signal}).catch(()=>{});
+      return {status:null,signal:"SIGKILL",timed_out:true,stdout:"",stderr:"",duration_ms:25};
+    }
+    if(caseId==="timeout-recovery"){
+      await fetch(baseUrl+"/read");
+      return {status:0,timed_out:false,stdout:marker(payload(caseId)),stderr:"",duration_ms:3};
+    }
+    if(caseId==="partial-result-recovery"){
+      await fetch(baseUrl+"/partial"); await fetch(baseUrl+"/read");
+      return {status:0,timed_out:false,stdout:marker(payload(caseId)),stderr:"",duration_ms:3};
+    }
+    const route={"read-navigation":"/read","structured-evidence":"/structured","write-guard":"/write","auth-isolation":"/auth"}[caseId];
+    await fetch(baseUrl+route);
+    return {status:0,timed_out:false,stdout:marker(payload(caseId)),stderr:"",duration_ms:3};
+  };
+  const report=await executeBrowserUseSelfTest({config,command:"fixture",cdpUrl:"http://127.0.0.1:9222",invoke});
+  assert.equal(report.passed,true);
+  assert.equal(report.runtime_safety.browser_profile_isolated,true);
+  assert.equal(report.runtime_safety.browser_harness_home_isolated,false);
+  assert.equal(report.runtime_safety.telemetry_disabled,false);
 });
