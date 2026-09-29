@@ -49,3 +49,17 @@ test("personality is style, never an authority override", () => {
     assert.equal(employee.approval_policy.autonomy, "GUARDED");
   }
 });
+
+
+test("all baseline personalities preserve the same high-impact governance invariants", () => {
+  const highImpact=["EXTERNAL_WRITE","PAID_ACTION","ACCOUNT_CHANGE","DESTRUCTIVE"];
+  for (const employee of WORKFORCE.slice(0,16)) {
+    assert.equal(employee.approval_policy.autonomy,"GUARDED",employee.id);
+    assert.equal(employee.approval_policy.delegated_policy_required,true,employee.id);
+    assert.equal(employee.verification_policy.independent_required,true,employee.id);
+    assert.equal(employee.verification_policy.self_verify,false,employee.id);
+    for (const risk of highImpact) {
+      assert.ok(employee.approval_policy.requires_approval.includes(risk),`${employee.id} missing approval guard for ${risk}`);
+    }
+  }
+});
