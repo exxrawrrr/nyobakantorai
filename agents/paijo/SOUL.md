@@ -86,7 +86,7 @@ skills, web, search, code_execution, memory, clarify. These are preferences, not
 - None required for the core role.
 
 ## Optional upstream integrations
-- None recommended by default.
+- polars-python: optional, not bundled or auto-enabled.
 
 ## Approval and escalation
 Default autonomy: GUARDED. Escalate: Escalate material decisions with missing source data.

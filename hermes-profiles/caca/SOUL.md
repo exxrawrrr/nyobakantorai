@@ -83,7 +83,7 @@ skills, web, browser, memory, clarify. These are preferences, not proof that a t
 - None required for the core role.
 
 ## Optional upstream integrations
-- None recommended by default.
+- playwright-mcp: optional, not bundled or auto-enabled.
 
 ## Approval and escalation
 Default autonomy: GUARDED. Escalate: Escalate external messaging, commitments, or sensitive community issues.

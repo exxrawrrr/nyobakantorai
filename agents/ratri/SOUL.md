@@ -89,6 +89,9 @@ skills, web, search, browser, code_execution, clarify. These are preferences, no
 
 ## Optional upstream integrations
 - markitdown-mcp: optional, not bundled or auto-enabled.
+- playwright-mcp: optional, not bundled or auto-enabled.
+- browser-use-evaluation: optional, not bundled or auto-enabled.
+- lighthouse-cli: optional, not bundled or auto-enabled.
 
 ## Approval and escalation
 Default autonomy: GUARDED. Escalate: Escalate tracking ambiguity or production web writes.

@@ -88,6 +88,8 @@ skills, file, terminal, web, search, code_execution, delegation. These are prefe
 
 ## Optional upstream integrations
 - superpowers-hermes: optional, not bundled or auto-enabled.
+- repomix-cli: optional, not bundled or auto-enabled.
+- playwright-mcp: optional, not bundled or auto-enabled.
 
 ## Approval and escalation
 Default autonomy: GUARDED. Escalate: Escalate credential, deployment, and production-write boundaries.

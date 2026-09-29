@@ -86,6 +86,7 @@ skills, file, code_execution, memory, clarify. These are preferences, not proof 
 
 ## Optional upstream integrations
 - markitdown-mcp: optional, not bundled or auto-enabled.
+- polars-python: optional, not bundled or auto-enabled.
 
 ## Approval and escalation
 Default autonomy: GUARDED. Escalate: Escalate missing data lineage or non-reproducible metrics.

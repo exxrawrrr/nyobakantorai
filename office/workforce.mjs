@@ -143,7 +143,8 @@ export const WORKFORCE = Object.freeze([
     },
     "optional_integrations": [
       "superpowers-hermes",
-      "ecc-memory-vault"
+      "ecc-memory-vault",
+      "cognee-hermes-evaluation"
     ],
     "reasoning_profile": {
       "mental_models": [
@@ -314,7 +315,9 @@ export const WORKFORCE = Object.freeze([
     "profile": {
       "distribution_version": "0.3.0"
     },
-    "optional_integrations": [],
+    "optional_integrations": [
+      "polars-python"
+    ],
     "reasoning_profile": {
       "mental_models": [
         "base rates",
@@ -490,7 +493,9 @@ export const WORKFORCE = Object.freeze([
       "distribution_version": "0.3.0"
     },
     "optional_integrations": [
-      "superpowers-hermes"
+      "superpowers-hermes",
+      "repomix-cli",
+      "playwright-mcp"
     ],
     "reasoning_profile": {
       "mental_models": [
@@ -659,7 +664,9 @@ export const WORKFORCE = Object.freeze([
     },
     "optional_integrations": [
       "superpowers-hermes",
-      "markitdown-mcp"
+      "markitdown-mcp",
+      "playwright-mcp",
+      "browser-use-evaluation"
     ],
     "reasoning_profile": {
       "mental_models": [
@@ -989,7 +996,8 @@ export const WORKFORCE = Object.freeze([
       "distribution_version": "0.3.0"
     },
     "optional_integrations": [
-      "markitdown-mcp"
+      "markitdown-mcp",
+      "playwright-mcp"
     ],
     "reasoning_profile": {
       "mental_models": [
@@ -1162,7 +1170,9 @@ export const WORKFORCE = Object.freeze([
     "profile": {
       "distribution_version": "0.3.0"
     },
-    "optional_integrations": [],
+    "optional_integrations": [
+      "playwright-mcp"
+    ],
     "reasoning_profile": {
       "mental_models": [
         "creative fatigue",
@@ -1339,7 +1349,9 @@ export const WORKFORCE = Object.freeze([
     "profile": {
       "distribution_version": "0.3.0"
     },
-    "optional_integrations": [],
+    "optional_integrations": [
+      "playwright-mcp"
+    ],
     "reasoning_profile": {
       "mental_models": [
         "query-intent mapping",
@@ -1511,7 +1523,10 @@ export const WORKFORCE = Object.freeze([
       "distribution_version": "0.3.0"
     },
     "optional_integrations": [
-      "markitdown-mcp"
+      "markitdown-mcp",
+      "playwright-mcp",
+      "browser-use-evaluation",
+      "lighthouse-cli"
     ],
     "reasoning_profile": {
       "mental_models": [
@@ -1682,7 +1697,10 @@ export const WORKFORCE = Object.freeze([
     },
     "optional_integrations": [
       "superpowers-hermes",
-      "ecc-memory-vault"
+      "ecc-memory-vault",
+      "repomix-cli",
+      "cognee-hermes-evaluation",
+      "browser-use-evaluation"
     ],
     "reasoning_profile": {
       "mental_models": [
@@ -1850,7 +1868,8 @@ export const WORKFORCE = Object.freeze([
       "distribution_version": "0.3.0"
     },
     "optional_integrations": [
-      "markitdown-mcp"
+      "markitdown-mcp",
+      "polars-python"
     ],
     "reasoning_profile": {
       "mental_models": [
@@ -2213,7 +2232,7 @@ export const WORKFORCE = Object.freeze([
   {
     "id": "fikri",
     "name": "Fikri",
-    "role": "Knowledge / Context / Prompt Engineer",
+    "role": "Knowledge / Markdown / Context / Prompt Engineer",
     "department": "QA / Governance",
     "summary": "Turns messy prompts, documents, and project knowledge into source-preserving, token-efficient execution context without changing user intent.",
     "aliases": [
@@ -2300,7 +2319,8 @@ export const WORKFORCE = Object.freeze([
       "nyoba-markdown-knowledge-compaction",
       "nyoba-strategic-context-compaction",
       "nyoba-deep-research-open",
-      "nyoba-skill-engineering"
+      "nyoba-skill-engineering",
+      "nyoba-context-prompt-compiler"
     ],
     "preferred_toolsets": [
       "skills",
@@ -2363,7 +2383,10 @@ export const WORKFORCE = Object.freeze([
     },
     "optional_integrations": [
       "markitdown-mcp",
-      "ecc-memory-vault"
+      "ecc-memory-vault",
+      "repomix-cli",
+      "llmlingua-experimental",
+      "cognee-hermes-evaluation"
     ],
     "reasoning_profile": {
       "mental_models": [
@@ -2689,7 +2712,9 @@ export const WORKFORCE = Object.freeze([
     "profile": {
       "distribution_version": "0.3.0"
     },
-    "optional_integrations": [],
+    "optional_integrations": [
+      "playwright-mcp"
+    ],
     "reasoning_profile": {
       "mental_models": [
         "audience context",
@@ -2805,6 +2830,41 @@ export const CAPABILITY_CATALOG = Object.freeze([
   {
     "id": "documents.markdown.convert",
     "description": "Convert trusted local/remote documents or web content into Markdown through an explicitly connected provider such as MarkItDown MCP.",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "context.repo.pack",
+    "description": "Pack selected local repository context into a token-aware artifact through an explicitly installed tool such as Repomix.",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "context.prompt.compress.experimental",
+    "description": "Experimental lossy prompt/context compression. Output must be checked against protected constraints and original source.",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "browser.structured",
+    "description": "Structured browser automation through an explicitly connected browser provider. Conservatively treated as capable of external interaction/write.",
+    "risk_class": "EXTERNAL_WRITE",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": true
+  },
+  {
+    "id": "web.audit.lighthouse",
+    "description": "Run a Lighthouse-style website audit and capture machine-readable performance/SEO/accessibility evidence.",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "data.local.polars",
+    "description": "Run local structured-data transformations/analysis through an explicitly available Polars runtime.",
     "risk_class": "READ_ONLY",
     "default_state": "NOT_CONNECTED",
     "requires_human_approval": false

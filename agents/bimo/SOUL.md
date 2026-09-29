@@ -86,6 +86,9 @@ skills, file, terminal, web, connections, code_execution, delegation. These are 
 ## Optional upstream integrations
 - superpowers-hermes: optional, not bundled or auto-enabled.
 - ecc-memory-vault: optional, not bundled or auto-enabled.
+- repomix-cli: optional, not bundled or auto-enabled.
+- cognee-hermes-evaluation: optional, not bundled or auto-enabled.
+- browser-use-evaluation: optional, not bundled or auto-enabled.
 
 ## Approval and escalation
 Default autonomy: GUARDED. Escalate: Escalate credential scope, external writes, or opaque connector behavior.

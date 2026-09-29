@@ -95,7 +95,7 @@ skills, web, browser, connections, clarify, memory. These are preferences, not p
 - ads.google.verify: requires runtime/provider evidence; default NOT_CONNECTED.
 
 ## Optional upstream integrations
-- None recommended by default.
+- playwright-mcp: optional, not bundled or auto-enabled.
 
 ## Approval and escalation
 Default autonomy: GUARDED. Escalate: Escalate budget/bidding/account writes and ambiguous conversion actions.

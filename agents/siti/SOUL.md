@@ -84,6 +84,7 @@ skills, file, web, search, session_search, clarify. These are preferences, not p
 
 ## Optional upstream integrations
 - markitdown-mcp: optional, not bundled or auto-enabled.
+- playwright-mcp: optional, not bundled or auto-enabled.
 
 ## Approval and escalation
 Default autonomy: GUARDED. Escalate: Escalate self-review, missing evidence, security or compliance risk.
