@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { tmpdir } from "node:os";
-import { runFullWorkforceFreshInstallMatrix, runOneWorkerFreshInstallMatrix, runSubsetFreshInstallMatrix } from "./index.mjs";
+import { runFullWorkforceFreshInstallMatrix, runOneWorkerFreshInstallMatrix, runSubsetFreshInstallMatrix, runUpgradeUninstallLifecycleMatrix } from "./index.mjs";
 
 test("fresh install from an empty Hermes home installs exactly one selected worker",async()=>{
   const result=await runOneWorkerFreshInstallMatrix({employeeId:"siti"});
@@ -175,6 +175,81 @@ test("full workforce matrix leaves an explicit disposable root inspectable until
     assert.deepEqual(packs,[...result.expected_profiles]);
     const manifest=await readFile(resolve(base,"packs","praroro","employee-pack.json"),"utf8");
     assert.match(manifest,/"employee_id": "praroro"/);
+  }finally{
+    await rm(base,{recursive:true,force:true});
+  }
+});
+
+
+test("full lifecycle matrix upgrades all workers, removes safely, fully uninstalls, and reinstalls cleanly",async()=>{
+  const result=await runUpgradeUninstallLifecycleMatrix();
+  assert.equal(result.passed,true);
+  assert.equal(result.claim_state,"DETERMINISTICALLY_VERIFIED");
+  assert.equal(result.registry_employee_count,16);
+  assert.equal(result.initial_profiles.length,16);
+  assert.ok(result.upgrade_actions.every(x=>x.action==="native-upgrade"));
+  assert.equal(result.upgrade_passed,true);
+  assert.equal(result.selective_removal.employee_id,"bimo");
+  assert.equal(result.selective_removal.preview_action,"PREVIEW_ONLY");
+  assert.equal(result.selective_removal.preview_non_destructive,true);
+  assert.equal(result.selective_removal.confirmed_action,"DELETE_PROFILE_AND_USER_STATE");
+  assert.equal(result.selective_removal.passed,true);
+  assert.equal(result.full_uninstall.preview_action,"PREVIEW_ONLY");
+  assert.equal(result.full_uninstall.preview_non_destructive,true);
+  assert.equal(result.full_uninstall.confirmed_action,"DELETE_PROFILE_AND_USER_STATE");
+  assert.deepEqual(result.full_uninstall.remaining_profiles,[]);
+  assert.equal(result.full_uninstall.passed,true);
+  assert.equal(result.reinstall.profiles.length,16);
+  assert.equal(result.reinstall.passed,true);
+  assert.equal(result.final_rerun_actions_exact,true);
+  assert.equal(result.final_profiles_exact,true);
+  assert.equal(result.pack_artifacts_unchanged,true);
+  assert.equal(result.external_provider_calls,0);
+  assert.equal(result.hermes_cli_executed,false);
+  assert.equal(result.real_machine_claim,false);
+});
+
+test("lifecycle upgrade replaces drifted distribution while preserving seeded user state for all workers",async()=>{
+  const result=await runUpgradeUninstallLifecycleMatrix();
+  assert.equal(result.upgrade_checks.length,16);
+  for(const item of result.upgrade_checks){
+    assert.equal(item.action,"native-upgrade",item.employee_id);
+    assert.equal(item.distribution_exact,true,item.employee_id);
+    assert.equal(item.user_owned_state_preserved,true,item.employee_id);
+    assert.equal(item.stale_distribution_replaced,true,item.employee_id);
+    assert.ok(item.ownership_checks.every(x=>x.match),item.employee_id);
+  }
+});
+
+test("selective lifecycle removal preserves every survivor byte-for-byte",async()=>{
+  const result=await runUpgradeUninstallLifecycleMatrix({removeEmployeeId:"siti"});
+  assert.equal(result.passed,true);
+  assert.equal(result.selective_removal.employee_id,"siti");
+  assert.equal(result.selective_removal.remaining_profiles.includes("siti"),false);
+  assert.equal(result.selective_removal.survivor_integrity.length,15);
+  assert.ok(result.selective_removal.survivor_integrity.every(x=>x.unchanged));
+});
+
+test("reinstall after destructive full uninstall does not resurrect previous user-owned state",async()=>{
+  const result=await runUpgradeUninstallLifecycleMatrix();
+  assert.equal(result.reinstall.checks.length,16);
+  for(const item of result.reinstall.checks){
+    assert.equal(item.distribution_exact,true,item.employee_id);
+    assert.equal(item.stale_user_state_resurrected,false,item.employee_id);
+    assert.deepEqual(item.resurrected_paths,[],item.employee_id);
+  }
+});
+
+test("lifecycle matrix leaves explicit disposable evidence inspectable until caller cleanup",async()=>{
+  const base=await mkdtemp(resolve(tmpdir(),"nyoba-lifecycle-explicit-"));
+  try{
+    const result=await runUpgradeUninstallLifecycleMatrix({baseDir:base});
+    assert.equal(result.passed,true);
+    const profiles=(await readdir(resolve(base,"hermes-home","profiles"))).sort();
+    assert.deepEqual(profiles,[...result.final_profiles]);
+    assert.equal(profiles.length,16);
+    const packs=(await readdir(resolve(base,"packs"))).sort();
+    assert.deepEqual(packs,[...result.final_profiles]);
   }finally{
     await rm(base,{recursive:true,force:true});
   }
