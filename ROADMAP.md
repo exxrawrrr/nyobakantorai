@@ -23,7 +23,7 @@
 - [x] one-command Hermes-first installers for Windows and POSIX
 - [ ] migrate the office's direct Hermes reader fully onto the generic adapter interface
 - [x] add strict loopback HTTP read-only adapter
-- [ ] add CLI-agent adapter
+- [x] add CLI-agent adapter
 - [x] normalized execution and cost receipts
 
 ## v0.3 — Real AI Workforce
