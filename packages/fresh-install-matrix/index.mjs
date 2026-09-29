@@ -60,8 +60,8 @@ async function copyDistributionOwned(source,target){
 
 async function seedUserOwnedState(profileDir){
   const fixtures={
-    ".env":"MODEL_PROVIDER=user-owned\nAPI_KEY=[placeholder-not-a-real-key]\n",
-    "auth.json":JSON.stringify({owner:"user",token:"placeholder-not-a-real-token"},null,2)+"\n",
+    ".env":"USER_OWNED_SENTINEL=preserve-me\n",
+    "auth.json":JSON.stringify({owner:"user",fixture:"preserve-me"},null,2)+"\n",
     "memories/owner-note.md":"user-owned memory sentinel\n",
     "sessions/session-001.json":JSON.stringify({session:"owner-sentinel"})+"\n",
     "state.db":"not-a-real-db; user-owned state sentinel\n",
