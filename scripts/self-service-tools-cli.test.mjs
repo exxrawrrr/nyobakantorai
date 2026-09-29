@@ -260,3 +260,22 @@ test("real-task baseline CLI audits and merges a valid recorder snapshot only to
   assert.equal(candidate.claim_state,"COLLECTING");
   assert.equal(candidate.cases.length,2);
 });
+
+
+test("fresh-install one-worker CLI reports deterministic isolated success",()=>{
+  const result=run(["scripts/fresh-install-matrix.mjs","--employee=siti","--json"]);
+  assert.equal(result.status,0,result.stderr);
+  const data=JSON.parse(result.stdout);
+  assert.equal(data.matrix_case,"fresh-install-one-worker");
+  assert.equal(data.claim_state,"DETERMINISTICALLY_VERIFIED");
+  assert.equal(data.passed,true);
+  assert.deepEqual(data.installed_profiles,["siti"]);
+  assert.deepEqual(data.rerun_profiles,["siti"]);
+  assert.equal(data.first_action,"install");
+  assert.equal(data.rerun_action,"native-upgrade");
+  assert.equal(data.user_owned_state_preserved,true);
+  assert.equal(data.unrelated_profiles_installed,false);
+  assert.equal(data.external_provider_calls,0);
+  assert.equal(data.hermes_cli_executed,false);
+  assert.equal(data.real_machine_claim,false);
+});
