@@ -126,7 +126,7 @@ Durable learning events require:
 
 Secret-like content is rejected. `SECRET_PROHIBITED` cannot be persisted.
 
-M3 shared knowledge requires an explicit shared scope and human review. Profile memory does not become shared merely because another worker could benefit from it.
+M3 shared knowledge requires an explicit shared scope, human review, and a non-empty reviewer identity (`reviewed_by`). Profile memory does not become shared merely because another worker could benefit from it.
 
 ### Skill candidates
 
