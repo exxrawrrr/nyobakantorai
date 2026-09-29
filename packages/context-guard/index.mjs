@@ -63,7 +63,7 @@ export function extractProtectedAtoms(value) {
     posix_paths: Object.freeze(uniq(matches(text, PATTERNS.posix_path, 1))),
     dates: Object.freeze(uniq([...matches(text, PATTERNS.iso_date), ...matches(text, PATTERNS.named_date)])),
     times: Object.freeze(uniq(matches(text, PATTERNS.time))),
-    amounts: Object.freeze(uniq(matches(text, PATTERNS.rupiah))),
+    amounts: Object.freeze(uniq(matches(text, PATTERNS.rupiah, 0, { trimTerminalPunctuation: true }))),
     percentages: Object.freeze(uniq(matches(text, PATTERNS.percentage))),
     explicit_numbers: Object.freeze(uniq(matches(text, PATTERNS.explicit_number))),
   });
