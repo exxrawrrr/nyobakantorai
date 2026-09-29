@@ -1,11 +1,12 @@
-export const EMPLOYEES = Object.freeze([
-  { id: "praroro", name: "Praroro", role: "COO / Chief of Staff", focus: "Prioritas, delegasi, dan executive brief", accent: "amber" },
-  { id: "paijo", name: "Paijo", role: "Quant, Growth & Finance", focus: "Angka, growth, spreadsheet, dan skenario", accent: "emerald" },
-  { id: "subagjo", name: "Subagjo", role: "Engineering & Operations", focus: "Engineering, integrasi, dan bukti test", accent: "cyan" },
-  { id: "alex", name: "Alex", role: "Strategy & Rapid Execution", focus: "Strategi, opsi, dan quick win", accent: "violet" },
-  { id: "sumiati", name: "Sumiati", role: "Creative & Communications", focus: "Creative direction, copy, dan komunikasi", accent: "rose", pashmina: true },
-  { id: "siti", name: "Siti", role: "QA, Compliance & Knowledge", focus: "QA independen, bukti, dan konsistensi", accent: "blue" },
-]);
+import { WORKFORCE } from "../../lib/workforce.mjs";
+
+export const EMPLOYEES = Object.freeze(WORKFORCE.map((person) => Object.freeze({
+  id: person.id,
+  name: person.name,
+  role: person.role,
+  focus: person.summary,
+  accent: person.visual?.color || "slate",
+})));
 
 export const RISK_CLASSES = Object.freeze(["READ_ONLY", "LOCAL_WRITE", "EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
 export const APPROVAL_STATUSES = Object.freeze(["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED"]);
