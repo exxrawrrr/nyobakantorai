@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "statuses": {
+    "support": [
+      "SUPPORTED"
+    ],
+    "install": [
+      "INSTALLED",
+      "AVAILABLE_ON_DEMAND",
+      "NOT_INSTALLED"
+    ],
+    "configuration": [
+      "NOT_REQUIRED",
+      "CONFIG_SIGNAL_PRESENT",
+      "UNKNOWN"
+    ],
+    "self_test": [
+      "NOT_RUN"
+    ]
+  },
+  "privacy": "Detection is read-only. Credential values are never printed or persisted; only boolean configuration signals are reported.",
+  "providers": [
+    {
+      "id": "hermes",
+      "label": "Hermes Agent",
+      "category": "runtime",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "hermes"
+        ],
+        "env_any": [
+          "NYOBAKANTORAI_HERMES_EXE",
+          "NYOBAKANTORAI_HERMES_HOME"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install Hermes if needed, then configure a user-owned model/provider with `hermes setup --portal`.",
+      "self_test_hint": "Run `hermes status` and an isolated disposable task before making live-execution claims."
+    },
+    {
+      "id": "codex",
+      "label": "Codex CLI",
+      "category": "harness",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "codex"
+        ],
+        "env_any": [
+          "OPENAI_API_KEY"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install/authenticate Codex using the user's own OpenAI account or supported credential flow.",
+      "self_test_hint": "Run an isolated read-only task and capture environment/model/evidence before using it in parity claims."
+    },
+    {
+      "id": "gemini-cli",
+      "label": "Gemini CLI",
+      "category": "harness",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "gemini"
+        ],
+        "env_any": [
+          "GEMINI_API_KEY",
+          "GOOGLE_API_KEY"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install Gemini CLI and authenticate with the user's own supported OAuth/API-key flow.",
+      "self_test_hint": "Run the same disposable parity task used by other harnesses before claiming behavioral portability."
+    },
+    {
+      "id": "github-copilot-cli",
+      "label": "GitHub Copilot CLI",
+      "category": "harness",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "copilot",
+          "github-copilot-cli"
+        ],
+        "env_any": [
+          "GH_TOKEN",
+          "GITHUB_TOKEN"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install GitHub Copilot CLI and authenticate through the user's own GitHub/Copilot account.",
+      "self_test_hint": "Run the same disposable parity task used by other harnesses before claiming behavioral portability."
+    },
+    {
+      "id": "cognee",
+      "label": "Cognee / Hermes memory integration",
+      "category": "memory",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "cognee"
+        ],
+        "python_modules": [
+          "cognee"
+        ],
+        "env_any": [
+          "COGNEE_BASE_URL",
+          "COGNEE_API_KEY"
+        ],
+        "config_requirement": "provider"
+      },
+      "setup_hint": "Install the pinned-compatible Cognee/Hermes integration and configure either local model access or user-owned remote Cognee credentials.",
+      "self_test_hint": "Execute the repository's eight-case memory-provider contract before changing NOT_RUN/UNPROVEN claims."
+    },
+    {
+      "id": "browser-use",
+      "label": "Browser Use",
+      "category": "browser",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "browser-use"
+        ],
+        "python_modules": [
+          "browser_use"
+        ],
+        "env_any": [
+          "BROWSER_USE_API_KEY"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install Browser Use and configure a user-owned supported model/provider path.",
+      "self_test_hint": "Execute the same six disposable browser cases as Playwright MCP before comparing providers."
+    },
+    {
+      "id": "playwright-mcp",
+      "label": "Playwright MCP",
+      "category": "browser",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "playwright-mcp"
+        ],
+        "node_modules": [
+          "@playwright/mcp"
+        ],
+        "on_demand_commands": [
+          "npm"
+        ],
+        "config_requirement": "none"
+      },
+      "setup_hint": "Use a pinned Playwright MCP package version. On-demand npx availability is reported without downloading anything.",
+      "self_test_hint": "Run the disposable six-case browser contract in an isolated browser profile."
+    }
+  ]
+}
