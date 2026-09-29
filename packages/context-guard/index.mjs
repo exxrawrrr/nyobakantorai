@@ -31,12 +31,18 @@ export function estimateTokens(value) {
   return Math.max(1, Math.ceil(text.length / 4));
 }
 
-function matches(text, regex, capture = 0) {
+function cleanTerminalPunctuation(value) {
+  return String(value).replace(/[.,;:!?]+$/g, "");
+}
+
+function matches(text, regex, capture = 0, { trimTerminalPunctuation = false } = {}) {
   const values = [];
   regex.lastIndex = 0;
   let match;
   while ((match = regex.exec(text)) !== null) {
-    values.push((match[capture] ?? match[0]).trim());
+    let value = (match[capture] ?? match[0]).trim();
+    if (trimTerminalPunctuation) value = cleanTerminalPunctuation(value);
+    values.push(value);
     if (match.index === regex.lastIndex) regex.lastIndex += 1;
   }
   return values;
@@ -47,8 +53,8 @@ export function extractProtectedAtoms(value) {
   const constraints = text.split("\n").map((line) => line.trim()).filter((line) => line && CONSTRAINT_RE.test(line));
   return Object.freeze({
     constraints: Object.freeze(uniq(constraints)),
-    urls: Object.freeze(uniq(matches(text, PATTERNS.url))),
-    windows_paths: Object.freeze(uniq(matches(text, PATTERNS.windows_path))),
+    urls: Object.freeze(uniq(matches(text, PATTERNS.url, 0, { trimTerminalPunctuation: true }))),
+    windows_paths: Object.freeze(uniq(matches(text, PATTERNS.windows_path, 0, { trimTerminalPunctuation: true }))),
     posix_paths: Object.freeze(uniq(matches(text, PATTERNS.posix_path, 1))),
     dates: Object.freeze(uniq([...matches(text, PATTERNS.iso_date), ...matches(text, PATTERNS.named_date)])),
     times: Object.freeze(uniq(matches(text, PATTERNS.time))),
