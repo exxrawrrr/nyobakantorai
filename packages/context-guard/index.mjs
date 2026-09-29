@@ -77,18 +77,31 @@ export function verifyProtectedAtoms({ original, compiled }) {
   });
 }
 
+function compactProtectedValues(atoms) {
+  const ordered = uniq([
+    ...atoms.constraints,
+    ...atoms.urls,
+    ...atoms.windows_paths,
+    ...atoms.posix_paths,
+    ...atoms.dates,
+    ...atoms.times,
+    ...atoms.amounts,
+    ...atoms.percentages,
+    ...atoms.explicit_numbers,
+  ]);
+  const kept = [];
+  for (const value of ordered) {
+    if (kept.some((existing) => existing.includes(value))) continue;
+    kept.push(value);
+  }
+  return kept;
+}
+
 function renderAtomSection(atoms) {
-  const groups = [
-    ["Constraints / exact instruction lines", atoms.constraints],
-    ["URLs", atoms.urls],
-    ["Paths", [...atoms.windows_paths, ...atoms.posix_paths]],
-    ["Dates / times", [...atoms.dates, ...atoms.times]],
-    ["Amounts / percentages / explicit numeric forms", [...atoms.amounts, ...atoms.percentages, ...atoms.explicit_numbers]],
-  ];
-  return groups
-    .filter(([, values]) => values.length)
-    .map(([name, values]) => `### ${name}\n${values.map((value) => `- ${value}`).join("\n")}`)
-    .join("\n\n");
+  const values = compactProtectedValues(atoms);
+  return values.length
+    ? values.map((value) => `- ${value}`).join("\n")
+    : "- none detected; semantic constraints still require review";
 }
 
 export function compileGuardPacket({ sources, objective = "", targetTokens = null } = {}) {
@@ -112,8 +125,8 @@ export function compileGuardPacket({ sources, objective = "", targetTokens = nul
     percentages: uniq(normalized.flatMap((source) => source.atoms.percentages)),
     explicit_numbers: uniq(normalized.flatMap((source) => source.atoms.explicit_numbers)),
   };
-  const protectedSection = renderAtomSection(combinedAtoms) || "No machine-detected protected atoms; semantic constraints still require model/human review.";
-  const l0 = `# L0 Dispatch Guard\n\n## Objective\n${normalizeContextText(objective) || "(derive from source; do not invent)"}\n\n## Source index\n${sourceIndex}\n\n## Protected atoms\n${protectedSection}\n\n## Guard\nDo not drop or reinterpret protected atoms without explicit review. This packet is a guardrail, not a semantic summary.\n`;
+  const protectedSection = renderAtomSection(combinedAtoms);
+  const l0 = `# L0 Dispatch Guard\nObjective: ${normalizeContextText(objective) || "(derive from source; do not invent)"}\nSources: ${sourceIndex.replaceAll("\n- ", "; ").replace(/^- /, "")}\nProtected atoms:\n${protectedSection}\nGuard: preserve exact items; resolve semantics against L2/original source.\n`;
   const l2 = `# L2 Canonical Source Packet\n\n${normalized.map((source) => `## Source: ${source.id}\nType: ${source.type}\n\n${source.text}`).join("\n\n---\n\n")}\n`;
   const originalText = normalized.map((source) => source.text).join("\n\n");
   return Object.freeze({
