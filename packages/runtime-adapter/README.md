@@ -62,3 +62,26 @@ console.log(await snapshotRuntime(adapter));
 ```
 
 This adapter is for observation, not control. A runtime that needs writes must use a separate, explicitly reviewed capability model rather than weakening the v1 read-only contract.
+
+
+## Strict JSON CLI adapter
+
+Use `createCliJsonAdapter()` from `cli-readonly.mjs` for local runtimes that expose JSON via CLI commands.
+
+The adapter never invokes a shell. Health and task commands are passed as executable + argv arrays through `execFile`, stdout must parse as JSON, stderr is ignored as evidence, environment inheritance is minimized, and raw process errors are normalized by `snapshotRuntime()`.
+
+```js
+import { snapshotRuntime } from "./index.mjs";
+import { createCliJsonAdapter } from "./cli-readonly.mjs";
+
+const adapter = createCliJsonAdapter({
+  id: "local-cli",
+  executable: "runtime-cli",
+  healthArgs: ["health", "--json"],
+  tasksArgs: ["tasks", "--json"],
+});
+
+console.log(await snapshotRuntime(adapter));
+```
+
+Use `allowedExtraEnvKeys` + `extraEnv` only for explicit runtime configuration. Do not pass the whole process environment.
