@@ -2,6 +2,8 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { inspectEvaluationReadiness } from "./evaluation-doctor.mjs";
+import { buildReleaseClaimSnapshot } from "../packages/release-claims/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const outPath = resolve(root, "release", "manifest.json");
@@ -25,11 +27,14 @@ try {
 } catch {}
 
 const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
+const evaluationReport = await inspectEvaluationReadiness();
+const claims = buildReleaseClaimSnapshot(evaluationReport);
 const manifest = {
   schema: 1,
   project: pkg.name,
   version: pkg.version,
   commit,
+  claims,
   tracked_files: files.length,
   files,
 };
