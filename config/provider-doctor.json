@@ -111,7 +111,7 @@
         "config_requirement": "provider"
       },
       "setup_hint": "Install the pinned-compatible Cognee/Hermes integration and configure either local model access or user-owned remote Cognee credentials.",
-      "self_test_hint": "Execute the repository's eight-case memory-provider contract before changing NOT_RUN/UNPROVEN claims."
+      "self_test_hint": "Run `npm run memory:self-test:plan` first. When a user-owned compatible Cognee HTTP endpoint is configured, run `npm run memory:self-test -- --json --out cognee-self-test.json`. Remote targets require explicit --allow-remote and COGNEE_API_KEY; the runner never installs, logs in, or mints keys."
     },
     {
       "id": "browser-use",
