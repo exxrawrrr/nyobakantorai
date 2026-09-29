@@ -401,10 +401,15 @@ export async function invokeBrowserUseCase({
   const timeoutMs=caseId==="timeout-recovery"&&phase==="timeout"?config.timeout_case_timeout_ms:config.default_case_timeout_ms;
   const program=buildBrowserUseProgram({caseId,baseUrl,phase,resultMarker:config.result_marker});
   const result=await runProcess({
-    command,args:[],input:program,timeoutMs,
-    env:{...env,[config.cdp_env]:cdpUrl}
+    command,args:[],input:program,timeoutMs,env
   });
   return Object.freeze({...result,case_id:caseId,phase});
+}
+
+export async function cleanupBrowserUseDaemon({command,env,runProcess=runProcessWithInput}) {
+  if(!nonEmpty(command)) return Object.freeze({status:null,skipped:true});
+  const result=await runProcess({command,args:["--reload"],input:"",env,timeoutMs:5000});
+  return Object.freeze({...result,skipped:false});
 }
 
 function baseMetrics(result,durationMs=0) {
