@@ -4,14 +4,14 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const required = [
-  "README.md", "SECURITY.md", "config/upstream-sources.json", "config/integrations.json", "CONTRIBUTING.md", "LICENSE", "ACKNOWLEDGEMENTS.md", "config/employees.json", "config/capabilities.json", "scripts/generate-workforce.mjs", "office/workforce.mjs", "install.ps1", "install.sh", "scripts/preflight.mjs", "scripts/hermes-bootstrap.mjs", "scripts/hermes-profile-distribution.test.mjs",
+  "README.md", "SECURITY.md", "config/upstream-sources.json", "config/integrations.json", "config/skill-provenance.json", "config/memory-policy.json", "CONTRIBUTING.md", "LICENSE", "ACKNOWLEDGEMENTS.md", "config/employees.json", "config/capabilities.json", "scripts/generate-workforce.mjs", "office/workforce.mjs", "install.ps1", "install.sh", "scripts/preflight.mjs", "scripts/hermes-bootstrap.mjs", "scripts/hermes-profile-distribution.test.mjs", "scripts/employee-selection.mjs", "scripts/employee-pack.mjs", "scripts/validate-agent-skills.py",
   ".gitignore", ".env.example", "package.json",
   "office/package.json", "office/server.mjs", "office/src/asset-manifest.json",
   "packages/runtime-adapter/index.mjs", "packages/runtime-adapter/index.test.mjs", "packages/runtime-adapter/http-readonly.mjs", "packages/runtime-adapter/http-readonly.test.mjs", "packages/runtime-adapter/README.md", "packages/capability-router/index.mjs", "packages/capability-router/index.test.mjs", "packages/capability-router/README.md",
-  "docs/MARKDOWN-KNOWLEDGE.md", "docs/UPSTREAM-SOURCE-CATALOG.md", "docs/THREAT-MODEL.md", "docs/PRIVACY.md", "docs/RUNTIME-ADAPTER-SPEC.md", "docs/APPROVAL-MODEL.md", "docs/HERMES-FIRST-SETUP.md", "docs/EMPLOYEE-ARCHITECTURE.md", "docs/CAPABILITY-MODEL.md", "docs/AUTONOMY-MODES.md", "docs/ADS-WORKERS.md", "docs/TELEGRAM-OFFICE.md", "docs/V0.3-UPGRADE.md", "docs/ADDING-EMPLOYEE.md",
+  "docs/MARKDOWN-KNOWLEDGE.md", "docs/UPSTREAM-SOURCE-CATALOG.md", "docs/EMPLOYEE-PACKS.md", "docs/PERSONALITY-CONTRACT.md", "docs/MEMORY-LEARNING.md", "docs/SKILL-PORTABILITY.md", "docs/THREAT-MODEL.md", "docs/PRIVACY.md", "docs/RUNTIME-ADAPTER-SPEC.md", "docs/APPROVAL-MODEL.md", "docs/HERMES-FIRST-SETUP.md", "docs/EMPLOYEE-ARCHITECTURE.md", "docs/CAPABILITY-MODEL.md", "docs/AUTONOMY-MODES.md", "docs/ADS-WORKERS.md", "docs/TELEGRAM-OFFICE.md", "docs/V0.3-UPGRADE.md", "docs/ADDING-EMPLOYEE.md",
   "docs/DEMO.md", "docs/RELEASE-CHECKLIST.md", "docs/PUBLICATION-RUNBOOK.md", "CHANGELOG.md", "SUPPORT.md", "CODE_OF_CONDUCT.md",
   "docs/assets/README.md", "docs/assets/office-overview.png", "docs/assets/approval-flow.png", "docs/assets/meet-the-office.gif", "docs/assets/employee-showcase.html",
-  "scripts/smoke-test.mjs", "scripts/upstream-provenance.test.mjs", "scripts/new-employee.mjs", "scripts/new-employee.test.mjs", "scripts/workforce-doctor.mjs",
+  "scripts/smoke-test.mjs", "scripts/upstream-provenance.test.mjs", "scripts/new-employee.mjs", "scripts/new-employee.test.mjs", "scripts/personality-contract.test.mjs", "scripts/employee-contract.test.mjs", "scripts/employee-selection.test.mjs", "scripts/employee-pack.test.mjs", "scripts/memory-policy.test.mjs", "packages/context-guard/index.mjs", "packages/context-guard/index.test.mjs", "scripts/workforce-doctor.mjs",
 ];
 for (const file of required) {
   if (!existsSync(resolve(root, file))) throw new Error(`Missing required public project file: ${file}`);
