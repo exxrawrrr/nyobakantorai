@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { inspectEvaluationReadiness } from "./evaluation-doctor.mjs";
 
-test("honest NOT_RUN provider baselines are valid but remain blocked", async () => {
+test("mixed provider evidence is valid while unresolved live gaps remain blocked", async () => {
   const report = await inspectEvaluationReadiness();
   assert.equal(report.valid, true, report.invalid.map((item)=>item.error).join("\n"));
   assert.equal(report.live_evaluation_complete, false);
@@ -10,7 +10,10 @@ test("honest NOT_RUN provider baselines are valid but remain blocked", async () 
   const browser = report.browser.evaluated;
   const memory = report.memory.evaluated;
   assert.ok(browser.length >= 2);
-  assert.ok(browser.every((item) => item.status === "NOT_RUN" && item.acceptance_passed === false));
+  const playwright=browser.find((item)=>item.provider_id==="playwright-mcp");
+  const browserUse=browser.find((item)=>item.provider_id==="browser-use");
+  assert.deepEqual(playwright,{provider_id:"playwright-mcp",status:"COMPLETED",acceptance_passed:true});
+  assert.deepEqual(browserUse,{provider_id:"browser-use",status:"NOT_RUN",acceptance_passed:false});
   assert.ok(memory.length >= 1);
   assert.ok(memory.every((item) => item.status === "NOT_RUN" && item.acceptance_passed === false));
 
