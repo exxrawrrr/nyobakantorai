@@ -15,6 +15,7 @@ export async function inspectEvaluationReadiness() {
     browserResult,
     memoryResult,
     realPolicy,
+    realTaskBaselinePolicy,
     realDataset,
     employees,
   ] = await Promise.all([
@@ -24,6 +25,7 @@ export async function inspectEvaluationReadiness() {
     readJson("benchmarks/provider-evaluations/browser-results.json"),
     readJson("benchmarks/provider-evaluations/memory-results.json"),
     readJson("config/real-task-evaluation.json"),
+    readJson("config/real-task-baseline.json"),
     readJson("benchmarks/real-tasks/dataset.json"),
     readJson("config/employees.json"),
   ]);
@@ -121,8 +123,13 @@ export async function inspectEvaluationReadiness() {
       status:realDataset.status,
       claim_state:realDataset.claim_state,
       cases:realTasks.cases,
+      minimum_cases_required:realPolicy.publication_gate.minimum_cases,
+      remaining_cases:Math.max(0,realPolicy.publication_gate.minimum_cases-realTasks.cases),
       false_successes:realTasks.false_successes,
+      unique_sources:realTasks.unique_sources,
       acceptance_passed:realTasks.acceptance_passed,
+      collection_tool:"npm run real-task:baseline",
+      canonical_dataset:realTaskBaselinePolicy.canonical_dataset,
     },
     blockers:Object.freeze(blockers),
     invalid:Object.freeze(invalid),
@@ -145,7 +152,7 @@ function printHuman(report) {
 
   console.log(`Browser: ${browserStates || "none"}`);
   console.log(`Memory: ${memoryStates || "none"}`);
-  console.log(`Real tasks: ${report.real_tasks.status}, cases=${report.real_tasks.cases}, acceptance=${report.real_tasks.acceptance_passed}`);
+  console.log(`Real tasks: ${report.real_tasks.status}, cases=${report.real_tasks.cases}/${report.real_tasks.minimum_cases_required}, remaining=${report.real_tasks.remaining_cases}, false_successes=${report.real_tasks.false_successes}, acceptance=${report.real_tasks.acceptance_passed}`);
 
   if (report.invalid.length) {
     console.log("");
