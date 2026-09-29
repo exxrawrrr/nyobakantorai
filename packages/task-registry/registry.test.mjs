@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { attachRuntimeTask, createEmptyRegistry, createTask, importRegistry, recordApproval, updateTask, validateRegistry } from "./registry.mjs";
+import { EMPLOYEES, attachRuntimeTask, createEmptyRegistry, createTask, importRegistry, recordApproval, updateTask, validateRegistry } from "./registry.mjs";
 
 const clock = (() => {
   let n = 0;
@@ -65,9 +65,10 @@ test("Hermes staging records a real runtime reference and blocks manual verifica
 });
 
 
-test("Hermes staging supports all six public agent roles", () => {
-  const employees = ["praroro", "paijo", "subagjo", "alex", "sumiati", "siti"];
-  for (const employee of employees) {
+test("Hermes staging supports every canonical employee", () => {
+  assert.ok(EMPLOYEES.length >= 16);
+  const employeeIds = EMPLOYEES.map((employee) => employee.id);
+  for (const employee of employeeIds) {
     let registry = createTask(createEmptyRegistry(clock), {
       title: "Runtime staging " + employee,
       assignee_id: employee,
@@ -77,6 +78,9 @@ test("Hermes staging supports all six public agent roles", () => {
     registry = attachRuntimeTask(registry, id, { task_id: "t_" + employee, assignee: employee, state: "BLOCKED" }, clock, ids);
     assert.equal(registry.tasks[0].execution_mode, "HERMES", employee);
     assert.equal(registry.tasks[0].lifecycle_status, "BLOCKED", employee);
+  }
+  for (const expected of ["maya","gugun","ratri","bimo","nara","dina","bambang","fikri","tari","caca"]) {
+    assert.ok(employeeIds.includes(expected), expected);
   }
 });
 
