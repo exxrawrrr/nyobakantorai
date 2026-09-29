@@ -1,9 +1,14 @@
 import { execFile } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { promisify } from "node:util";
 import { defineRuntimeAdapter, snapshotRuntime } from "../packages/runtime-adapter/index.mjs";
+import { authorizeCliAdapterConfig, findAdapterPermissionPolicy } from "../packages/runtime-adapter/policy.mjs";
 
 const execFileAsync = promisify(execFile);
+const ADAPTER_POLICY_CATALOG = JSON.parse(
+  readFileSync(new URL("../config/runtime-adapter-policy.json", import.meta.url), "utf8")
+);
+const HERMES_PERMISSION_POLICY = findAdapterPermissionPolicy(ADAPTER_POLICY_CATALOG, "hermes-readonly");
 
 const clean = (value, max = 500) => String(value ?? "").trim().slice(0, max);
 
@@ -51,7 +56,7 @@ export function createHermesRuntimeAdapter({
   board = "nyobakantorai",
   employeeIds = [],
   disabled = false,
-  commandTimeoutMs = 15_000,
+  commandTimeoutMs = 10_000,
   execFileImpl = execFileAsync,
   existsImpl = existsSync,
 } = {}) {
@@ -67,10 +72,20 @@ export function createHermesRuntimeAdapter({
     throw new TypeError("commandTimeoutMs must be 100..30000.");
   }
 
+  const runtimeEnv = safeEnv(hermesHome);
+  authorizeCliAdapterConfig(HERMES_PERMISSION_POLICY, {
+    adapterId:"hermes-readonly",
+    executable:exe,
+    envKeys:Object.keys(runtimeEnv).filter((key) => runtimeEnv[key] !== undefined),
+    timeoutMs:commandTimeoutMs,
+    maxBufferBytes:1024 * 1024,
+    shell:false,
+  });
+
   const run = async (args) => {
     if (!configured) throw new Error("Hermes integration is not configured");
     const { stdout } = await execFileImpl(exe, [...args], {
-      env:safeEnv(hermesHome),
+      env:runtimeEnv,
       timeout:commandTimeoutMs,
       maxBuffer:1024 * 1024,
       windowsHide:true,
