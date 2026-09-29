@@ -1,12 +1,13 @@
 ---
 name: nyoba-brand-copy-qa
-description: Self-check brand alignment, factual claims, safe margins and professional tone before independent Siti review.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Self-check brand alignment, factual claims, safe margins and professional tone before independent Siti review."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Sumiati brand copy quality

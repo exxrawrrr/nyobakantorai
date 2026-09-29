@@ -1,12 +1,13 @@
 ---
 name: nyoba-codebase-verification
-description: Inspect exact project, test an isolated patch only when authorized, and record rollback evidence.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Inspect exact project, test an isolated patch only when authorized, and record rollback evidence."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Subagjo codebase onboarding

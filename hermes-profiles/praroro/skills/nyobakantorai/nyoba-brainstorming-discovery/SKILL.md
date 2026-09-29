@@ -1,13 +1,12 @@
 ---
 name: nyoba-brainstorming-discovery
-description: Use when the problem is ambiguous, creative, product-facing, campaign-oriented, or has multiple plausible designs before committing to implementation.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when the problem is ambiguous, creative, product-facing, campaign-oriented, or has multiple plausible designs before committing to implementation."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [superpowers]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
 ---
 
 # Brainstorming & Discovery

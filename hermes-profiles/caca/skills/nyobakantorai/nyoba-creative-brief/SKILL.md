@@ -1,12 +1,13 @@
 ---
 name: nyoba-creative-brief
-description: Produce usable Indonesian copy, campaigns and image briefs; do not claim image output unless actually generated.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Produce usable Indonesian copy, campaigns and image briefs; do not claim image output unless actually generated."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Sumiati creative brief
