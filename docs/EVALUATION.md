@@ -241,3 +241,33 @@ real tasks = NOT_READY
 ```
 
 That means the release artifacts are internally consistent while optional live claims remain explicitly unproven. It is not converted into a success claim.
+
+
+## Signed execution receipt layer
+
+`packages/execution-receipt/` adds a cryptographic evidence layer between authorization and independent verification.
+
+It provides:
+
+- canonical normalized execution payloads;
+- Ed25519 signatures;
+- SHA-256 receipt references;
+- task/employee/capability/result-state binding;
+- normalized input/output token counts;
+- explicit known/unknown cost semantics;
+- tamper detection;
+- optional receipt chaining.
+
+`packages/evidence-verifier/` can require and verify signed receipts before accepting an execution claim.
+
+The truth boundary remains:
+
+```text
+valid signature
+!=
+external action correctness
+!=
+independent verification
+```
+
+A signed receipt proves that a trusted key signed an exact payload. The evidence verifier still evaluates facts, artifacts, completion, freshness, authorization, and reviewer policy.
