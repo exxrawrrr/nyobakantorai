@@ -287,7 +287,7 @@ Yang sudah ada di kandidat v0.4 antara lain:
 Yang **belum** boleh dianggap proven/stable:
 
 - live cross-harness behavioral parity;
-- Cognee live memory-provider evaluation;
+- canonical live Cognee/Hermes provider-lifecycle evaluation;
 - Browser Use side of the browser comparison;
 - real-task baseline, saat ini baru **1/20 eligible cases**;
 - live ads provider adapters;
