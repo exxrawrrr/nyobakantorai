@@ -687,3 +687,49 @@ Run-level `COMPARISON_READY` requires at least two completed passing harnesses i
 Core CI does not install/authenticate Hermes, Codex, Gemini, or Copilot. It validates the orchestration with injected harness results, temporary skill staging, exact-output parsing, forged-sentinel negatives, canary mutation, non-zero processes, missing markers, partial availability, and raw-output non-persistence.
 
 The historical machine-level record in `benchmarks/cross-harness/run-2026-09-29.json` remains `UNPROVEN` until reviewed live evidence is intentionally promoted.
+
+
+## Real-task baseline collection tooling
+
+The real-task pipeline now has two separate layers:
+
+1. **Recorder** — captures direct real work through hash-chained start/finish/independent-verification events.
+2. **Baseline collector** — audits recorder snapshots, merges only eligible direct cases into review candidates, computes the exact publication gap, and prepares `READY_FOR_REPORT` only after the canonical machine gate passes.
+
+User-facing commands:
+
+```bash
+npm run real-task:baseline -- status
+npm run real-task:baseline -- audit --snapshot recorder-snapshot.json
+npm run real-task:baseline -- merge --snapshot recorder-snapshot.json --out baseline-candidate.json
+npm run real-task:baseline -- prepare --input baseline-candidate.json --out baseline-ready.json
+```
+
+Automatic publication is intentionally unsupported.
+
+The baseline collector additionally rejects:
+
+- duplicate direct `source_ref` values across cases;
+- credential-like material in source references;
+- `verification_passed=true` with incomplete evidence;
+- false-success attached to a task that already declared failure;
+- false-success that simultaneously claims verification passed;
+- conflicting case IDs during merge;
+- canonical dataset overwrite attempts.
+
+The current machine-readable collection checkpoint is:
+
+```text
+eligible cases:         1 / 20
+remaining:              19
+successes:              0
+failures:               1
+verification passes:    0
+verification failures:  1
+false-successes:        0
+publication gate:       NOT PASSED
+```
+
+The single eligible historical failure remains preserved. Git commit/PR activity is not bulk-relabeled as real-task evidence because repository activity alone does not prove a direct human source, named workforce execution, independent verification, or complete operational metrics.
+
+This means Phase 6 **tooling is implemented**, while Phase 6 **evidence collection remains open**. The 20-case target remains an initial baseline threshold, not a general reliability claim.
