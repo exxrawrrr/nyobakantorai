@@ -1,6 +1,16 @@
 # Public release checklist
 
-A release is not ready because the UI looks good. It is ready only when the public tree, history, CI, provenance, and repository settings agree.
+A release is not ready because the UI looks good. It is ready only when the public tree, history, CI, provenance, evidence claims, and repository settings agree.
+
+The repository is **already PUBLIC**. The old private-to-public visibility transition is historical; current releases must validate the already-public repository rather than pretending publication has not happened.
+
+## Candidate decision
+- [ ] Release decision document allows stable promotion.
+- [ ] Candidate is on the intended final release branch/commit.
+- [ ] Evidence-dependent gaps are either completed for the release scope or explicitly accepted/deferred by the owner without inflating claims.
+- [ ] README, changelog, roadmap, evaluation docs, and release notes describe the same capability/evidence state.
+
+For the current v0.4 Draft candidate, stable promotion is **HOLD**. See `docs/V0.4-RELEASE-DECISION.md`.
 
 ## Code and tests
 - [ ] `npm run doctor` passes on the release machine.
@@ -8,27 +18,35 @@ A release is not ready because the UI looks good. It is ready only when the publ
 - [ ] `npm run verify` passes from the canonical worktree.
 - [ ] A fresh clone passes `npm run ready`.
 - [ ] Linux and Windows CI are green.
+- [ ] Minimum-version CI is green.
+- [ ] Manual `release-gate` passes from the final promoted commit.
 - [ ] `npm run demo` completes using synthetic data only.
 
 ## Privacy and security
 - [ ] Public-release scan reports zero findings.
 - [ ] Secret scan reports zero findings.
-- [ ] No credentials, auth state, personal/client records, runtime databases, logs, receipts, or private workstation paths are tracked.
-- [ ] No old sensitive commit SHA is reachable or directly fetchable from the repository selected for publication.
-- [ ] Runtime integrations remain read-only/fail-closed by default.
+- [ ] No credentials, auth state, personal/client records, runtime databases, logs, raw private receipts, or private workstation paths are tracked.
+- [ ] Runtime integrations remain read-only/fail-closed by default unless an explicitly reviewed capability says otherwise.
+- [ ] Application-level permission policy is not described as OS/container/process isolation.
 
-## Provenance
+## Provenance and evidence
 - [ ] All distributed visual assets have documented compatible provenance.
 - [ ] License and third-party notices match the actual public tree.
 - [ ] Examples are synthetic and clearly labeled.
+- [ ] Provider/evaluation claims include environment/evidence and do not upgrade `NOT_RUN / UNPROVEN` states.
+- [ ] Signed receipt claims do not substitute cryptographic authenticity for external-world correctness.
+- [ ] Real-task baseline claims preserve failures and synthetic/generated exclusions.
 
 ## Repository
-- [ ] Description, topics, README, changelog, security policy, support policy, and roadmap are current.
-- [ ] Required CI checks protect the default branch where the GitHub plan supports it.
+- [ ] Description, topics, README, changelog, security policy, support policy, roadmap, review map, and release decision are current.
+- [ ] Required CI checks protect `main` where the GitHub plan supports it.
 - [ ] Dependency update PRs are reviewed rather than blindly auto-merged.
-- [ ] Release tag and notes are created only after the commit is fully verified.
+- [ ] Temporary planning docs are absent from the release tree.
+- [ ] Release tag and notes are created only after the final promoted commit is fully verified.
 
-## Publication
-- [ ] Visibility remains PRIVATE until every item above is satisfied.
-- [ ] Follow `docs/PUBLICATION-RUNBOOK.md` for branch protection, code-security settings, visibility change, and public verification.
-- [ ] After changing visibility, re-check the repository from an unauthenticated/public view.
+## Publication / stable release
+- [ ] Verify the repository from an unauthenticated/public view.
+- [ ] Confirm public screenshots/assets/docs render correctly.
+- [ ] Promote the reviewed candidate to `main` through an explicit PR/merge path.
+- [ ] Rerun verification and manual release-gate from that final `main` commit.
+- [ ] Create the stable tag/release only after the final gate passes.
