@@ -4,7 +4,7 @@ description: "Use when a user prompt, pasted brief, document set, or repository 
 license: MIT
 compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  nyoba-version: "1.0.0"
+  nyoba-version: "1.1.0"
   nyoba-author: "nyobakantorai"
   nyoba-platforms: "windows,linux,macos"
   nyoba-provenance-mode: "recreated"
@@ -56,6 +56,20 @@ Create an exact list of:
 - permissions/approval limits.
 
 These atoms are protected from lossy compression.
+
+### 2.1 Live compaction invariants
+
+When producing a compact packet for another worker:
+
+- copy the supplied objective sentence verbatim when one exists;
+- copy explicit imperative constraint lines verbatim into the protected section;
+- preserve exact numbers, dates, times, paths, URLs, IDs, amounts, percentages, quoted terms, and approval wording;
+- do **not** invent an owner, requested action, risk class, approval authority, verification rule, or artifact that the source did not provide;
+- omit empty fields instead of explaining that they are empty;
+- do not include benchmark metadata, commentary about what was omitted, or editorial narration unless the downstream task needs it;
+- keep provenance compact: source ID/path/URL is enough when detail remains available in L2.
+
+The compact dispatch (L0 plus only necessary L1) should be strictly smaller than the original working source. Default target: at most 70% of the original estimated tokens. If that reduction cannot be achieved without losing protected information, return `NO_SAFE_REDUCTION` and keep the faithful source packet instead of expanding it.
 
 ### 3. Normalize
 Remove:
@@ -168,7 +182,7 @@ Measure:
 - source traceability;
 - downstream task success.
 
-A shorter prompt that causes worse execution is a regression.
+A shorter prompt that causes worse execution is a regression. A compiled packet that is not actually shorter is also a regression unless it explicitly returns `NO_SAFE_REDUCTION`.
 
 ## Handoff contract
 
