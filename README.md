@@ -599,7 +599,7 @@ The CI workflow runs the same verification on Linux and Windows.
 
 ## Project status
 
-**v0.3 development candidate — v0.2 remains the latest tagged public preview**
+**v0.4.0-rc.1 Draft candidate — `main` contains the v0.3 workforce baseline; v0.2.0 remains the latest tagged public preview. Stable v0.4 promotion is HOLD pending the explicitly deferred evidence scope.**
 
 See:
 
