@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "benchmark": "browser-provider-comparison",
+  "claim": "UNPROVEN until a provider record reaches COMPLETED with evidence and passes the configured acceptance gate.",
+  "providers": [
+    {
+      "provider_id": "playwright-mcp",
+      "integration_id": "playwright-mcp",
+      "source_id": "playwright-mcp",
+      "source_commit": "f183dad4a52965583e3cc1d59b88cdc279e2e57d",
+      "status": "NOT_RUN",
+      "claim_state": "UNPROVEN",
+      "environment": null,
+      "cases": [],
+      "summary": {
+        "note": "No live provider run recorded."
+      }
+    },
+    {
+      "provider_id": "browser-use",
+      "integration_id": "browser-use-evaluation",
+      "source_id": "browser-use",
+      "source_commit": "4cbe921673b48a488f5415d9159249afd12a625b",
+      "status": "NOT_RUN",
+      "claim_state": "UNPROVEN",
+      "environment": null,
+      "cases": [],
+      "summary": {
+        "note": "No live provider run recorded."
+      }
+    }
+  ]
+}
