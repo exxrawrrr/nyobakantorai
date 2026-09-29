@@ -1,12 +1,13 @@
 ---
 name: nyoba-source-provenance
-description: Trace source and status truth across files, runtime adapters, task registries, and external work surfaces.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Trace source and status truth across files, runtime adapters, task registries, and external work surfaces."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Siti source provenance
