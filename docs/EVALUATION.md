@@ -530,3 +530,38 @@ Twenty eligible cases are an initial baseline, not statistical proof of general 
 ### Runtime isolation claim limit
 
 Runtime adapter permission policies are application-level configuration sandboxing. They are not OS process isolation, container isolation, filesystem ACL isolation, or a general-purpose security sandbox. Any future expansion into broader write/network authority must revisit process-level isolation explicitly.
+
+
+## Self-service real-task collection
+
+`packages/real-task-recorder/` and `scripts/real-task-recorder.mjs` provide a local, append-only path for users to grow the real-task baseline from genuine work.
+
+The recorder:
+
+- uses explicit direct-source attestations;
+- rejects generated/synthetic source classes;
+- persists only redacted summaries + evidence references;
+- rejects secret-like payloads and raw transcript/credential fields;
+- hash-chains every lifecycle event;
+- rejects self-verification and enforces configured reviewer candidates;
+- preserves failures and false-success outcomes;
+- exports only completed, independently reviewed lifecycles;
+- never auto-publishes or mutates the canonical repository baseline.
+
+This changes the operational path from "the author must personally manufacture 20 tests" to "real users can accumulate eligible evidence as they use the system", without changing the >=20 publication threshold or allowing synthetic fixtures to count.
+
+## Unified provider readiness
+
+`packages/provider-doctor/` and `scripts/provider-doctor.mjs` provide read-only setup detection for optional runtimes/providers.
+
+It intentionally separates:
+
+```text
+SUPPORTED
+!= INSTALLED
+!= CONFIGURED
+!= READY_FOR_SELF_TEST
+!= LIVE_EVALUATED
+```
+
+Credential values are never emitted. OAuth-capable providers without an environment-variable signal remain `UNKNOWN`, rather than being falsely labeled unconfigured. Optional provider absence does not fail core CI unless a caller explicitly uses `--require-installed` or `--require-ready`.
