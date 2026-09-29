@@ -2,6 +2,32 @@
 
 All notable public changes to nyobakantorai are documented here.
 
+## [0.4.0-rc.1] - Unreleased
+
+### Added
+- Modular one/subset/preset/all employee packs with reproducible checksums and tagged-release packaging.
+- Typed employee capability contracts, expanded provenance catalog, and static cross-harness skill exports.
+- Ed25519 execution receipts with replay/freshness/task/worker/capability/runtime-trust hardening.
+- M0–M4 memory/learning policy, deterministic profile isolation, and personality-governance invariance.
+- Fikri L0/L1/L2 context compiler with controlled live-model evaluation evidence.
+- Browser/memory provider evaluation contracts, evaluation doctor, and release claim snapshot.
+- Anti-synthetic real-task dataset gate with direct-source provenance requirements.
+
+### Evaluation
+- Fikri controlled live-model run: 5/5 compiled-context downstream pass, zero critical losses, 41.10% average estimated token reduction, and 100% protected/source fidelity on the recorded synthetic fixture set.
+- Playwright MCP controlled live run: 6/6 required browser cases, zero false-successes, zero mutation POSTs, no auth-cookie leakage, and truthful timeout/partial recovery.
+- Real-task collection started at 1/20 eligible direct owner tasks; the first eligible case is intentionally preserved as `NEEDS_EVIDENCE`, not rewritten as success.
+- Cognee, Browser Use, and live cross-harness behavioral parity remain explicitly unproven/NOT_RUN where prerequisites were unavailable.
+
+### Changed
+- Release/documentation claims now distinguish IMPLEMENTED, DETERMINISTICALLY_VERIFIED, and REAL_WORLD_EVALUATED states.
+- Runtime permission policy is documented as application-level sandboxing rather than OS/container isolation.
+- PR #11 release topology is explicit: staging merge is not stable v0.4 shipment.
+
+### Release status
+- Stable v0.4 promotion is **HOLD** pending the deferred evidence scope recorded in `docs/V0.4-RELEASE-DECISION.md`.
+- No v0.4 stable tag should be created from the current Draft candidate.
+
 ## [0.3.0] - Unreleased
 
 ### Added
