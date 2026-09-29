@@ -16,7 +16,6 @@ const port = Number.isInteger(requestedPort) && requestedPort > 1023 && requeste
 const hermesExe = process.env.NYOBAKANTORAI_HERMES_EXE || process.env.HERMES_EXE || "hermes";
 const hermesDisabled = /^(1|true|yes)$/i.test(process.env.NYOBAKANTORAI_DISABLE_HERMES || "");
 const hermesHome = hermesDisabled ? "" : resolveHermesHome();
-const hermesEnabled = !hermesDisabled && Boolean(hermesHome);
 const board = process.env.NYOBAKANTORAI_BOARD || "nyobakantorai";
 const requestedWorkerPort = Number.parseInt(process.env.NYOBAKANTORAI_WORKER_PORT || "4333", 10);
 const workerPort = Number.isInteger(requestedWorkerPort) && requestedWorkerPort > 1023 && requestedWorkerPort < 65536 ? requestedWorkerPort : 4333;
