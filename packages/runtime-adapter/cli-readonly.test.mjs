@@ -165,3 +165,39 @@ test("CLI adapter enforces supplied permission policy before execution", () => {
     permissionPolicy:policy,
   }), /timeout exceeds policy/);
 });
+
+
+test("CLI permission policy strips inherited env outside the allowlist", async () => {
+  const calls = [];
+  const policy = defineAdapterPermissionPolicy({
+    id:"test-cli-env",
+    adapter_ids:["cli-test-env"],
+    executable_basenames:["allowed-runtime"],
+    allowed_env_keys:["PATH"],
+    max_timeout_ms:1000,
+    max_buffer_bytes:2048,
+    max_tasks:10,
+    require_shell_false:true,
+  });
+
+  const adapter = createCliJsonAdapter({
+    id:"cli-test-env",
+    executable:"allowed-runtime",
+    healthArgs:["health"],
+    tasksArgs:["tasks"],
+    commandTimeoutMs:500,
+    maxBufferBytes:1024,
+    permissionPolicy:policy,
+    execFileImpl:async (_exe, args, options) => {
+      calls.push(options);
+      return { stdout:args[0] === "health" ? '{"ok":true}' : '[]' };
+    },
+  });
+
+  const snapshot = await snapshotRuntime(adapter);
+  assert.equal(snapshot.connected, true);
+  assert.equal(calls.length, 2);
+  for (const options of calls) {
+    assert.deepEqual(Object.keys(options.env).sort(), process.env.PATH === undefined ? [] : ["PATH"]);
+  }
+});
