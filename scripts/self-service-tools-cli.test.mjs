@@ -177,5 +177,5 @@ test("cross-harness plan CLI is side-effect free and never upgrades detection in
   assert.equal(data.targets.length,4);
   assert.ok(data.targets.every((x)=>x.provider_call_performed===false));
   assert.ok(data.targets.every((x)=>["READY_FOR_SELF_TEST","NOT_INSTALLED"].includes(x.status)));
-  assert.match(data.claim_limit,/does not prove all canonical skills/i);
+  assert.match(data.claim_limit,/neither state proves all canonical skills/i);
 });
