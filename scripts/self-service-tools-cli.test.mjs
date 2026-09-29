@@ -125,3 +125,16 @@ test("real-task recorder CLI completes a full verified lifecycle and exports one
   assert.equal(exportSummary.false_successes,0);
   assert.equal(exportSummary.acceptance_passed,false);
 });
+
+
+test("browser self-test plan CLI is side-effect free and claim-limited",()=>{
+  const result=run(["scripts/browser-self-test.mjs","plan","--json"]);
+  assert.equal(result.status,0,result.stderr);
+  const data=JSON.parse(result.stdout);
+  assert.equal(data.provider_id,"browser-use");
+  assert.equal(data.pinned_package_version,"0.13.10");
+  assert.ok(Array.isArray(data.forbidden));
+  assert.ok(data.forbidden.includes("automatic package installation"));
+  assert.ok(data.forbidden.includes("reuse of the user's normal browser profile"));
+  assert.match(data.claim_limit,/not agent-mode\/model quality proof/i);
+});
