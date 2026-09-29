@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { EMPLOYEES, attachRuntimeTask, createEmptyRegistry, createTask, importRegistry, recordApproval, updateTask, validateRegistry } from "./registry.mjs";
+import { EMPLOYEES, attachExecutionReceipt, attachRuntimeTask, createEmptyRegistry, createTask, importRegistry, recordApproval, updateTask, validateRegistry } from "./registry.mjs";
 import { WORKFORCE } from "../../lib/workforce.mjs";
 
 const clock = (() => {
@@ -182,4 +182,66 @@ test("Siti cannot verify Siti's own task in package registry", () => {
   assert.equal(registry.tasks[0].lifecycle_status, "VERIFIED");
   assert.equal(registry.events.at(-1).actor, reviewer);
   assert.equal(validateRegistry(registry), true);
+});
+
+
+test("signed execution receipt reference is append-only tracked", () => {
+  let registry = oneTask();
+  const id = registry.tasks[0].id;
+  const ref = "receipt:sha256:" + "a".repeat(64);
+  registry = attachExecutionReceipt(registry, id, {
+    receipt_ref:ref,
+    actor:"subagjo",
+    source:"runtime:test",
+  }, clock, ids);
+
+  assert.equal(registry.tasks[0].execution_receipt_ref, ref);
+  assert.equal(registry.events.at(-1).action, "EXECUTION_RECEIPT_ATTACHED");
+  assert.equal(registry.events.at(-1).evidence_ref, ref);
+  assert.equal(validateRegistry(registry), true);
+});
+
+test("execution receipt attachment rejects malformed refs and unauthorized actor", () => {
+  const registry = oneTask();
+  const id = registry.tasks[0].id;
+  assert.throws(
+    () => attachExecutionReceipt(registry, id, { receipt_ref:"receipt://unsigned", actor:"subagjo" }, clock, ids),
+    /reference tidak valid/
+  );
+  assert.throws(
+    () => attachExecutionReceipt(registry, id, {
+      receipt_ref:"receipt:sha256:" + "b".repeat(64),
+      actor:"maya",
+    }, clock, ids),
+    /assignee atau runtime adapter/
+  );
+});
+
+test("import rejects forged execution receipt ref without attachment event", () => {
+  const registry = oneTask();
+  const forged = structuredClone(registry);
+  forged.tasks[0].execution_receipt_ref = "receipt:sha256:" + "c".repeat(64);
+  assert.throws(
+    () => importRegistry(JSON.stringify(forged)),
+    /append-only attachment event/
+  );
+});
+
+test("execution receipt cannot be attached after verification without reopening", () => {
+  let registry = oneTask();
+  const id = registry.tasks[0].id;
+  const subagjo = WORKFORCE.find((employee) => employee.id === "subagjo");
+  const reviewer = subagjo.verification_policy.reviewer_candidates[0];
+  registry = updateTask(registry, id, { lifecycle_status:"REQUESTED", actor:"owner" }, clock, ids);
+  registry = updateTask(registry, id, { lifecycle_status:"IN_PROGRESS", actor:"subagjo" }, clock, ids);
+  registry = updateTask(registry, id, { lifecycle_status:"COMPLETED", actor:"subagjo" }, clock, ids);
+  registry = updateTask(registry, id, { lifecycle_status:"VERIFIED", actor:reviewer, evidence_ref:"test://verified" }, clock, ids);
+
+  assert.throws(
+    () => attachExecutionReceipt(registry, id, {
+      receipt_ref:"receipt:sha256:" + "d".repeat(64),
+      actor:"subagjo",
+    }, clock, ids),
+    /setelah task VERIFIED/
+  );
 });
