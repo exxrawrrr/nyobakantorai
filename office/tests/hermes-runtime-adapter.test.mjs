@@ -157,3 +157,27 @@ test("Hermes adapter rejects malformed employee id configuration", () => {
     /employeeIds must be an array/
   );
 });
+
+
+test("Hermes adapter rejects executable outside canonical permission policy", () => {
+  assert.throws(
+    () => createHermesRuntimeAdapter({
+      executable:"powershell.exe",
+      hermesHome:"/tmp/hermes-home",
+      employeeIds:["subagjo"],
+    }),
+    /executable .* not allowed/
+  );
+});
+
+test("Hermes adapter rejects timeout above canonical permission policy", () => {
+  assert.throws(
+    () => createHermesRuntimeAdapter({
+      executable:"hermes",
+      hermesHome:"/tmp/hermes-home",
+      employeeIds:["subagjo"],
+      commandTimeoutMs:10_001,
+    }),
+    /timeout exceeds policy/
+  );
+});
