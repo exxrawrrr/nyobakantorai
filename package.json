@@ -11,7 +11,7 @@
     "start": "npm --prefix office run dev",
     "build": "npm --prefix office run build",
     "test": "npm run test:core && npm run test:python && npm run test:demo && npm run test:hermes",
-    "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs packages/runtime-adapter/cli-readonly.test.mjs packages/runtime-adapter/policy.test.mjs && npm run test:workforce && npm run test:packs && npm run test:remove && npm run test:memory && npm run test:memory-learning && npm run test:context && npm run test:context-benchmark && npm run test:adversarial && npm run test:receipts && npm run test:verifier && npm run test:provider-evaluation && npm run test:real-tasks && npm run test:evaluation-doctor && npm run test:release-claims && npm run test:release-manifest && npm run capability-catalog:check && npm run test:capability-catalog && npm run test:capabilities && npm run test:skill-format && npm run test:cross-harness && npm run test:provenance",
+    "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs packages/runtime-adapter/cli-readonly.test.mjs packages/runtime-adapter/policy.test.mjs && npm run test:workforce && npm run test:packs && npm run test:remove && npm run test:memory && npm run test:memory-learning && npm run test:memory-isolation && npm run test:context && npm run test:context-benchmark && npm run test:adversarial && npm run test:receipts && npm run test:verifier && npm run test:provider-evaluation && npm run test:real-tasks && npm run test:evaluation-doctor && npm run test:release-claims && npm run test:release-manifest && npm run capability-catalog:check && npm run test:capability-catalog && npm run test:capabilities && npm run test:skill-format && npm run test:cross-harness && npm run test:provenance",
     "test:python": "python scripts/run-python-tests.py",
     "doctor": "node scripts/preflight.mjs",
     "doctor:json": "node scripts/preflight.mjs --json",
@@ -68,6 +68,8 @@
     "test:release-manifest": "node scripts/release-manifest.mjs --check",
     "test:receipts": "node --test packages/execution-receipt/index.test.mjs",
     "test:runtime-adapters": "node --test packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs packages/runtime-adapter/cli-readonly.test.mjs",
-    "test:adapter-policy": "node --test packages/runtime-adapter/policy.test.mjs packages/runtime-adapter/cli-readonly.test.mjs packages/runtime-adapter/http-readonly.test.mjs office/tests/hermes-runtime-adapter.test.mjs"
+    "test:adapter-policy": "node --test packages/runtime-adapter/policy.test.mjs packages/runtime-adapter/cli-readonly.test.mjs packages/runtime-adapter/http-readonly.test.mjs office/tests/hermes-runtime-adapter.test.mjs",
+    "bench:memory-isolation": "node benchmarks/memory-isolation/run.mjs",
+    "test:memory-isolation": "node benchmarks/memory-isolation/run.mjs --check"
   }
 }

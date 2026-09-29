@@ -149,3 +149,20 @@ test("missing required provider record fields are rejected", () => {
   assert.equal(validated.ok,false);
   assert.ok(validated.errors.some((error)=>/missing required field summary|summary must be an object/.test(error)));
 });
+
+
+test("explicit cross-profile contamination case blocks memory candidate on leak", () => {
+  const result=structuredClone(memoryBaseline);
+  const rec=result.providers[0];
+  rec.status="COMPLETED";
+  rec.claim_state="EVALUATED_CANDIDATE";
+  rec.environment=env();
+  rec.cases=contracts.memory.required_case_ids.map((id)=>memoryCase(
+    id,
+    id==="cross-profile-contamination-negative"?{cross_profile_leak:true}:{}
+  ));
+  rec.summary={acceptance_passed:true};
+  const validated=validateProviderEvaluationSet({domain:"memory",result,contracts,sources,integrations});
+  assert.equal(validated.ok,false);
+  assert.ok(validated.errors.some((error)=>/claim_state|acceptance_passed/.test(error)));
+});

@@ -10,6 +10,7 @@ import {
   markSkillCandidateMerged,
   exportProfileLearningState,
   deleteProfileLearningState,
+  buildProfileMemoryView,
 } from "./index.mjs";
 
 const employees=JSON.parse(readFileSync(new URL("../../config/employees.json", import.meta.url),"utf8"));
@@ -126,4 +127,101 @@ test("shared profile memory deletion requires explicit deleteShared opt-in",()=>
   const result=deleteProfileLearningState({events:[shared],candidates:[],employeeId:"fikri",deleteShared:true});
   assert.equal(result.remaining.events.length,0);
   assert.deepEqual(result.deleted.events.map((item)=>item.event_id),["evt.fikri.shared3"]);
+});
+
+
+test("profile memory view blocks cross-profile private contamination",()=>{
+  const mayaPrivate={
+    ...event(),
+    event_id:"evt.maya.private1",
+    employee_id:"maya",
+    layer:"M2",
+    summary:"This account uses ROAS as its primary optimization metric.",
+  };
+  const gugunPrivate={
+    ...event(),
+    event_id:"evt.gugun.private1",
+    employee_id:"gugun",
+    layer:"M2",
+    summary:"Search account notes belong to Gugun only.",
+  };
+
+  const gugunView=buildProfileMemoryView({
+    events:[mayaPrivate,gugunPrivate],
+    employeeId:"gugun",
+    employeeIds:ids,
+  });
+
+  assert.deepEqual(gugunView.events.map((item)=>item.event_id),["evt.gugun.private1"]);
+  assert.ok(gugunView.denied.some((item)=>
+    item.event_id==="evt.maya.private1" && item.reason==="CROSS_PROFILE_PRIVATE"
+  ));
+  assert.equal(gugunView.events.some((item)=>item.summary.includes("ROAS")),false);
+});
+
+test("M3 promotion is still invisible until its shared scope is explicitly authorized",()=>{
+  const mayaPrivate={
+    ...event(),
+    event_id:"evt.maya.share-source",
+    employee_id:"maya",
+    layer:"M2",
+    summary:"Verified paid-media naming convention for project alpha.",
+  };
+  const shared=promoteToShared(mayaPrivate,{
+    sharedScope:"project-alpha",
+    approved:true,
+    reviewer:"owner",
+  });
+
+  const withoutScope=buildProfileMemoryView({
+    events:[shared],
+    employeeId:"gugun",
+    employeeIds:ids,
+  });
+  assert.equal(withoutScope.events.length,0);
+  assert.equal(withoutScope.denied[0].reason,"SHARED_SCOPE_NOT_AUTHORIZED");
+
+  const withScope=buildProfileMemoryView({
+    events:[shared],
+    employeeId:"gugun",
+    authorizedSharedScopes:["project-alpha"],
+    employeeIds:ids,
+  });
+  assert.deepEqual(withScope.events.map((item)=>item.event_id),["evt.maya.share-source"]);
+});
+
+test("forged or invalid M3 event fails closed instead of leaking into another profile",()=>{
+  const forged={
+    ...event(),
+    event_id:"evt.maya.forged-shared",
+    employee_id:"maya",
+    layer:"M3",
+    shared_scope:"project-alpha",
+    human_review:false,
+  };
+  const view=buildProfileMemoryView({
+    events:[forged],
+    employeeId:"gugun",
+    authorizedSharedScopes:["project-alpha"],
+    employeeIds:ids,
+  });
+  assert.equal(view.events.length,0);
+  assert.equal(view.denied[0].reason,"INVALID_EVENT");
+  assert.ok(view.denied[0].details.some((item)=>/human_review/.test(item)));
+});
+
+test("M4 repository candidates are not injected into runtime memory context",()=>{
+  const m4={
+    ...event(),
+    event_id:"evt.fikri.m4candidate",
+    layer:"M4",
+    human_review:true,
+  };
+  const view=buildProfileMemoryView({
+    events:[m4],
+    employeeId:"fikri",
+    employeeIds:ids,
+  });
+  assert.equal(view.events.length,0);
+  assert.equal(view.denied[0].reason,"REPOSITORY_CANDIDATE_NOT_RUNTIME_MEMORY");
 });

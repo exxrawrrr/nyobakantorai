@@ -73,6 +73,7 @@
     ],
     "required_case_ids": [
       "profile-isolation",
+      "cross-profile-contamination-negative",
       "write-read-roundtrip",
       "provenance",
       "export",

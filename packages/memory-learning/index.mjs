@@ -146,3 +146,70 @@ export function deleteProfileLearningState({ events = [], candidates = [], emplo
     }),
   });
 }
+
+
+export function buildProfileMemoryView({
+  events = [],
+  employeeId,
+  authorizedSharedScopes = [],
+  employeeIds = [],
+} = {}) {
+  const id = String(employeeId ?? "").trim().toLowerCase();
+  if (!/^[a-z][a-z0-9-]{1,39}$/.test(id)) throw new Error("valid employeeId required");
+  if (employeeIds.length && !employeeIds.includes(id)) throw new Error("unknown employeeId");
+
+  const scopes = new Set(
+    (Array.isArray(authorizedSharedScopes) ? authorizedSharedScopes : [])
+      .map((scope) => String(scope ?? "").trim())
+      .filter(Boolean)
+  );
+  const visibleEvents = [];
+  const denied = [];
+
+  for (const event of events) {
+    const eventId = String(event?.event_id ?? "").trim() || "unknown-event";
+    const errors = validateLearningEvent(event, { employeeIds });
+    if (errors.length) {
+      denied.push(Object.freeze({
+        event_id:eventId,
+        reason:"INVALID_EVENT",
+        details:Object.freeze([...errors]),
+      }));
+      continue;
+    }
+
+    if (event.layer === "M1" || event.layer === "M2") {
+      if (event.employee_id === id) visibleEvents.push(structuredClone(event));
+      else denied.push(Object.freeze({
+        event_id:eventId,
+        reason:"CROSS_PROFILE_PRIVATE",
+        details:Object.freeze([event.employee_id]),
+      }));
+      continue;
+    }
+
+    if (event.layer === "M3") {
+      if (scopes.has(event.shared_scope)) visibleEvents.push(structuredClone(event));
+      else denied.push(Object.freeze({
+        event_id:eventId,
+        reason:"SHARED_SCOPE_NOT_AUTHORIZED",
+        details:Object.freeze([event.shared_scope]),
+      }));
+      continue;
+    }
+
+    denied.push(Object.freeze({
+      event_id:eventId,
+      reason:"REPOSITORY_CANDIDATE_NOT_RUNTIME_MEMORY",
+      details:Object.freeze([event.layer]),
+    }));
+  }
+
+  return Object.freeze({
+    schema:1,
+    employee_id:id,
+    authorized_shared_scopes:Object.freeze([...scopes].sort()),
+    events:Object.freeze(visibleEvents),
+    denied:Object.freeze(denied),
+  });
+}
