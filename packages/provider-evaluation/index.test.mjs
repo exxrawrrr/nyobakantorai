@@ -83,6 +83,7 @@ function memoryCase(case_id, overrides = {}) {
       evidence_complete:true,
       false_success:false,
       cross_profile_leak:false,
+      secret_persistence:false,
       delete_verified:case_id==="delete",
       export_verified:case_id==="export",
       provenance_verified:case_id==="provenance",
