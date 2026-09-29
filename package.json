@@ -35,7 +35,7 @@
     "workforce:check": "node scripts/generate-workforce.mjs --check",
     "workforce:doctor": "node scripts/workforce-doctor.mjs",
     "employee:new": "node scripts/new-employee.mjs",
-    "test:workforce": "node --test lib/routing.test.mjs scripts/new-employee.test.mjs",
+    "test:workforce": "node --test lib/routing.test.mjs scripts/new-employee.test.mjs scripts/personality-contract.test.mjs",
     "test:capabilities": "node --test packages/capability-router/index.test.mjs",
     "test:provenance": "node --test scripts/upstream-provenance.test.mjs"
   }
