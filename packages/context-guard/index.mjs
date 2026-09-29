@@ -1,5 +1,5 @@
 const MONTHS = "januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|january|february|march|april|may|june|july|august|september|october|november|december";
-const CONSTRAINT_RE = /\b(harus|wajib|jangan|tidak boleh|dilarang|hanya|izin|approval|approve|must|must not|do not|don't|never|only|required|forbidden)\b/i;
+const CONSTRAINT_LINE_RE = /^(?:[-*]\s*)?(?:harus|wajib|jangan|tidak boleh|dilarang|hanya|izin|approval|approve|must not|must|do not|don't|never|only|required|forbidden)\b/i;
 const PATTERNS = Object.freeze({
   url: /https?:\/\/[^\s<>"')\]}]+/gi,
   windows_path: /\b[A-Za-z]:\\(?:[^\s\\/:*?"<>|\r\n]+\\)*[^\s\\/:*?"<>|\r\n]+/g,
@@ -55,7 +55,7 @@ function matches(text, regex, capture = 0, { trimTerminalPunctuation = false } =
 
 export function extractProtectedAtoms(value) {
   const text = normalizeContextText(value);
-  const constraints = text.split("\n").map((line) => line.trim()).filter((line) => line && CONSTRAINT_RE.test(line));
+  const constraints = text.split("\n").map((line) => line.trim()).filter((line) => line && CONSTRAINT_LINE_RE.test(line));
   return Object.freeze({
     constraints: Object.freeze(uniq(constraints)),
     urls: Object.freeze(uniq(matches(text, PATTERNS.url, 0, { trimTerminalPunctuation: true }))),
