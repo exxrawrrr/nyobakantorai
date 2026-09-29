@@ -57,7 +57,8 @@
 - [x] expanded pinned upstream provenance and role-scoped optional integration catalog
 - [x] provider-neutral contracts for repository packing, experimental compression, browser operation, Lighthouse, and Polars
 - [x] static cross-harness skill packaging tests: Agent Skills core + Hermes + Gemini CLI + GitHub Copilot
-- [ ] live cross-harness activation/execution parity before claiming broad behavioral portability
+- [x] cross-harness self-service activation/execution probe runner for Hermes/Codex/Gemini/Copilot: disposable probe skill, exact protected atoms, isolated temporary workspace, bounded evidence, no auto-install/login
+- [ ] canonical live cross-harness activation/execution parity before claiming broad behavioral portability — historical readiness remains UNPROVEN until reviewed live user runs are intentionally promoted
 - [x] local profile learning read/export/delete isolation with explicit M3 scope + cross-profile contamination guards
 - [x] fail-closed provider evaluation contracts for browser + memory candidates
 - [x] Cognee self-service HTTP adapter + isolated eight-case memory runner: random run-owned datasets, profile isolation/negative contamination, exact roundtrip/provenance/export/delete checks, secret pre-write rejection, explicit shared promotion boundary, verified cleanup, no auto-install/login/key mint
