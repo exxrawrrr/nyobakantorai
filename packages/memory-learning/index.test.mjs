@@ -14,6 +14,7 @@ import {
 } from "./index.mjs";
 
 const employees=JSON.parse(readFileSync(new URL("../../config/employees.json", import.meta.url),"utf8"));
+const learningEventSchema=JSON.parse(readFileSync(new URL("../../schemas/learning-event.schema.json", import.meta.url),"utf8"));
 const ids=employees.employees.map((e)=>e.id);
 
 const event=()=>({
@@ -50,6 +51,12 @@ test("shared promotion requires explicit review and scope",()=>{
   assert.equal(promoted.human_review,true);
   assert.equal(promoted.reviewed_by,"owner");
   assert.deepEqual(validateLearningEvent(promoted,{employeeIds:ids}),[]);
+  for (const key of Object.keys(promoted)) {
+    assert.ok(key in learningEventSchema.properties,`promoted M3 field missing from JSON Schema: ${key}`);
+  }
+  const m3Rule=learningEventSchema.allOf.find((rule)=>rule?.if?.properties?.layer?.const==="M3");
+  assert.ok(m3Rule?.then?.required?.includes("reviewed_by"));
+  assert.throws(()=>promoteToShared(event(),{sharedScope:"project-alpha",approved:true,reviewer:"   "}),/human review/);
 });
 
 test("M3 cannot appear without shared scope and review",()=>{
