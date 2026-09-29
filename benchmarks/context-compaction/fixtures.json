@@ -22,12 +22,12 @@
       "minimum_reduction": 0.15,
       "required_facts": [
         "reversible engineering handoff",
-        "D:\\\\WORK\\\\service\\\\config.json",
+        "D:\\WORK\\service\\config.json",
         "http://127.0.0.1:4322",
         "2026-09-29",
         "Jangan deploy"
       ],
-      "source": "A local service has accumulated debugging notes from several attempts. Most of the notes repeat that the service should remain local-first and that previous guesses did not isolate the failure. Those repeated explanations are not required in the final dispatch card.\n\nCurrent source of truth is D:\\\\WORK\\\\service\\\\config.json. Health endpoint is http://127.0.0.1:4322. The current checkpoint date is 2026-09-29.\n\nHarus buat perubahan sekecil dan reversible mungkin.\nJangan deploy ke production.\nJangan claim fixed sebelum negative test dan smoke test lulus.\n\nThe engineer needs the exact path, endpoint, restrictions, and verification rule. Historical speculation can stay in canonical notes rather than occupying the short dispatch context."
+      "source": "A local service has accumulated debugging notes from several attempts. Most of the notes repeat that the service should remain local-first and that previous guesses did not isolate the failure. Those repeated explanations are not required in the final dispatch card.\n\nCurrent source of truth is D:\\WORK\\service\\config.json. Health endpoint is http://127.0.0.1:4322. The current checkpoint date is 2026-09-29.\n\nHarus buat perubahan sekecil dan reversible mungkin.\nJangan deploy ke production.\nJangan claim fixed sebelum negative test dan smoke test lulus.\n\nThe engineer needs the exact path, endpoint, restrictions, and verification rule. Historical speculation can stay in canonical notes rather than occupying the short dispatch context."
     },
     {
       "id": "training-schedule",
@@ -60,12 +60,12 @@
       "minimum_reduction": 0.15,
       "required_facts": [
         "document-processing handoff",
-        "D:\\\\DOCS\\\\proposal.pdf",
+        "D:\\DOCS\\proposal.pdf",
         "https://example.net/reference",
         "25%",
         "Rp2.200.000"
       ],
-      "source": "A document-processing request includes many repetitions about keeping formatting clean, reducing token use, and making the next worker efficient. Those repetitions can be compacted if source fidelity remains visible.\n\nOriginal file: D:\\\\DOCS\\\\proposal.pdf\nReference page: https://example.net/reference\nComparison threshold: 25%\nQuoted project value: Rp2.200.000\n\nHarus simpan source path dan reference URL.\nJangan hilangkan angka atau approval-related wording saat compaction.\nHarus treat converted Markdown sebagai working representation, bukan original evidence.\n\nThe output should allow a downstream worker to know what to open and what must remain exact without loading all duplicated prose first."
+      "source": "A document-processing request includes many repetitions about keeping formatting clean, reducing token use, and making the next worker efficient. Those repetitions can be compacted if source fidelity remains visible.\n\nOriginal file: D:\\DOCS\\proposal.pdf\nReference page: https://example.net/reference\nComparison threshold: 25%\nQuoted project value: Rp2.200.000\n\nHarus simpan source path dan reference URL.\nJangan hilangkan angka atau approval-related wording saat compaction.\nHarus treat converted Markdown sebagai working representation, bukan original evidence.\n\nThe output should allow a downstream worker to know what to open and what must remain exact without loading all duplicated prose first."
     }
   ]
 }
