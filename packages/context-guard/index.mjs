@@ -124,7 +124,7 @@ export function compileGuardPacket({ sources, objective = "", working = {}, targ
     if (!text) throw new Error(`source ${id} is empty`);
     return Object.freeze({ id, type, text, atoms: extractProtectedAtoms(text) });
   });
-  const sourceIndex = normalized.map((source) => `${source.id} (${source.type})`).join("; ");
+  const sourceIndex = normalized.map((source) => source.id).join("; ");
   const combinedAtoms = {
     constraints: uniq(normalized.flatMap((source) => source.atoms.constraints)),
     urls: uniq(normalized.flatMap((source) => source.atoms.urls)),
@@ -193,21 +193,23 @@ export function compileGuardPacket({ sources, objective = "", working = {}, targ
   const l1 = `# L1 Working Brief\n\n${l1Sections.map(([name, values]) => `## ${name}\n${values.map((value) => `- ${value}`).join("\n")}`).join("\n\n")}\n`;
   const l2 = `# L2 Canonical Source Packet\n\n${normalized.map((source) => `## Source: ${source.id}\nType: ${source.type}\n\n${source.text}`).join("\n\n---\n\n")}\n`;
   const originalText = normalized.map((source) => source.text).join("\n\n");
+  const tokenBudget = Object.freeze({
+    original_estimate: estimateTokens(originalText),
+    l0_estimate: estimateTokens(l0),
+    l1_estimate: estimateTokens(l1),
+    l2_estimate: estimateTokens(l2),
+    target: Number.isFinite(targetTokens) ? targetTokens : null,
+  });
+  const executionBriefWithBudget = Object.freeze({ ...executionBrief, token_budget: tokenBudget });
   return Object.freeze({
     schema: 1,
     objective: normalizedObjective,
     sources: Object.freeze(normalized),
     protected_atoms: Object.freeze(combinedAtoms),
-    execution_brief: executionBrief,
+    execution_brief: executionBriefWithBudget,
     l0,
     l1,
     l2,
-    token_budget: Object.freeze({
-      original_estimate: estimateTokens(originalText),
-      l0_estimate: estimateTokens(l0),
-      l1_estimate: estimateTokens(l1),
-      l2_estimate: estimateTokens(l2),
-      target: Number.isFinite(targetTokens) ? targetTokens : null,
-    }),
+    token_budget: tokenBudget,
   });
 }
