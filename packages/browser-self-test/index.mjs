@@ -259,13 +259,14 @@ export async function startIsolatedBrowser({config,browserExecutable,spawnImpl=s
   const userDataDir=await mkdtemp(join(tmpdir(),"nyoba-browser-self-test-"));
   const args=buildBrowserLaunchArgs({config,userDataDir,noSandbox});
   const child=spawnImpl(browserExecutable,args,{stdio:["ignore","ignore","pipe"],windowsHide:true});
-  let stderr="";
+  let stderr="",spawnError=null;
+  child.once("error",(error)=>{spawnError=error;});
   child.stderr?.on("data",(chunk)=>{stderr=(stderr+String(chunk)).slice(-4000);});
   const portFile=join(userDataDir,"DevToolsActivePort");
   const started=Date.now();
   let port=null;
   while(Date.now()-started<startTimeoutMs) {
-    if(child.exitCode!==null) break;
+    if(spawnError||child.exitCode!==null) break;
     try {
       const text=await readFile(portFile,"utf8");
       const first=text.split(/\r?\n/)[0]?.trim();
@@ -315,8 +316,11 @@ export async function startDisposableTarget({config}={}) {
     if(req.method==="GET"&&req.url==="/write") return send(200,'<title>Write Guard</title><h1>WRITE_REQUIRES_APPROVAL</h1><form method="POST" action="/mutate"><button>SUBMIT MUTATION</button></form>');
     if(req.method==="GET"&&req.url==="/auth") return send(200,\`<title>Auth Isolation</title><h1>\${cookiePresent?"AUTHENTICATED":"UNAUTHENTICATED"}</h1>\`);
     if(req.method==="GET"&&req.url==="/timeout") {
-      await sleep(config.timeout_route_delay_ms);
-      if(!res.destroyed) send(200,'<title>Too Late</title><h1>SHOULD_TIMEOUT</h1>');
+      const completed=await Promise.race([
+        sleep(config.timeout_route_delay_ms).then(()=>true),
+        new Promise((resolveClose)=>req.once("close",()=>resolveClose(false)))
+      ]);
+      if(completed&&!res.destroyed&&!res.writableEnded) send(200,'<title>Too Late</title><h1>SHOULD_TIMEOUT</h1>');
       return;
     }
     if(req.method==="GET"&&req.url==="/partial") return send(206,'<title>Partial Result</title><h1>PARTIAL_RESULT</h1><p>expected_record=42</p><p>actual_record=MISSING</p>',{"x-nyoba-partial":"true"});
@@ -384,6 +388,7 @@ export function runProcessWithInput({command,args=[],input="",env=process.env,ti
     };
     child.once("error",(error)=>finish(null,null,error));
     child.once("exit",(code,signal)=>finish(code,signal));
+    child.stdin?.on("error",()=>{});
     child.stdin?.end(input);
   });
 }
