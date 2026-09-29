@@ -129,3 +129,17 @@ The provider catalog itself is validated fail-closed before detection runs. Dupl
 The doctor reports only **signal counts and states**. Credential values are never returned, and CI includes a CLI-level regression test that injects a fake credential and proves it does not appear in stdout or stderr.
 
 `READY_FOR_SELF_TEST` still does **not** mean authenticated, executed, or live-proven. It only means the local prerequisites are sufficient to attempt the provider's documented self-test.
+
+
+## Browser Use next step
+
+Browser Use has a dedicated self-service runner. The doctor does not execute it automatically.
+
+```bash
+npm run browser:self-test:plan
+npm run browser:self-test -- --json --out browser-use-self-test.json
+```
+
+See `docs/BROWSER-SELF-TEST.md`.
+
+This preserves the separation between **detection** and **execution**: Provider Doctor remains read-only, while the user explicitly chooses whether to launch the isolated disposable browser self-test.
