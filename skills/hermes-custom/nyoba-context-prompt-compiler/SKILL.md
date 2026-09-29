@@ -4,7 +4,7 @@ description: "Use when a user prompt, pasted brief, document set, or repository 
 license: MIT
 compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  nyoba-version: "1.1.0"
+  nyoba-version: "1.1.1"
   nyoba-author: "nyobakantorai"
   nyoba-platforms: "windows,linux,macos"
   nyoba-provenance-mode: "recreated"
@@ -68,6 +68,8 @@ When producing a compact packet for another worker:
 - omit empty fields instead of explaining that they are empty;
 - do not include benchmark metadata, commentary about what was omitted, or editorial narration unless the downstream task needs it;
 - keep provenance compact: source ID/path/URL is enough when detail remains available in L2.
+- preserve source-stated verification, evidence-check, and acceptance requirements even when they are written as narrative prose rather than imperative lines; normalize them concisely, but do not drop them;
+- before removing a prose sentence as background, ask whether it changes what must be verified, what evidence must be checked, or the condition for claiming success; if yes, keep that meaning in a compact `Verification:` or `Acceptance:` line.
 
 The compact dispatch (L0 plus only necessary L1) should be strictly smaller than the original working source. Default target: at most 70% of the original estimated tokens. If that reduction cannot be achieved without losing protected information, return `NO_SAFE_REDUCTION` and keep the faithful source packet instead of expanding it.
 
