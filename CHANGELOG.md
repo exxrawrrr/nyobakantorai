@@ -17,13 +17,16 @@ All notable public changes to nyobakantorai are documented here.
 - Cognee self-service eight-case memory runner with run-owned datasets, profile-isolation/contamination guards, provenance/export/delete verification, secret pre-write rejection, explicit shared promotion, remote opt-in, and cleanup verification.
 - Cross-harness self-service parity runner for Hermes/Codex/Gemini/Copilot plus Codex static skill export target.
 - Real-task baseline audit/merge/prepare tooling with duplicate-source and semantic-consistency gates, immutable canonical evidence, exact 1/20 collection status, and explicit no-auto-publish behavior.
+- One-worker and subset isolated fresh-install matrices covering exact selection, per-worker closure, safe rerun, selective uninstall preview/confirmation, and survivor integrity.
 - Full-workforce isolated fresh-install matrix covering all 16 canonical employee packs/profiles, exact per-worker skill/integration closure, all-profile native-upgrade rerun, and preservation of seeded user-owned state.
+- Full upgrade/uninstall/reinstall lifecycle matrix covering deliberate distribution drift repair, user-state preservation, selective removal, confirmed full uninstall, clean reinstall, rerun idempotency, and immutable pack artifacts.
 
 ### Evaluation
 - Fikri controlled live-model run: 5/5 compiled-context downstream pass, zero critical losses, 41.10% average estimated token reduction, and 100% protected/source fidelity on the recorded synthetic fixture set.
 - Playwright MCP controlled live run: 6/6 required browser cases, zero false-successes, zero mutation POSTs, no auth-cookie leakage, and truthful timeout/partial recovery.
 - Real-task collection started at 1/20 eligible direct owner tasks; the first eligible case is intentionally preserved as `NEEDS_EVIDENCE`, not rewritten as success.
 - Cognee, Browser Use, and live cross-harness behavioral parity remain explicitly unproven/NOT_RUN where prerequisites were unavailable.
+- Real clean-machine Hermes lifecycle coverage remains open; isolated release matrices are deterministic repository evidence, not environment-level live-machine proof.
 
 ### Changed
 - Release/documentation claims now distinguish IMPLEMENTED, DETERMINISTICALLY_VERIFIED, and REAL_WORLD_EVALUATED states.
