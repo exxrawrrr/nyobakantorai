@@ -120,3 +120,12 @@ SUPPORTED
 ```
 
 Provider-specific live evaluation remains separate and evidence-backed.
+
+
+## Catalog safety
+
+The provider catalog itself is validated fail-closed before detection runs. Duplicate provider IDs, malformed provider identifiers, invalid support states, malformed detection arrays, duplicate detection entries, invalid configuration requirements, and malformed environment-signal names cause the doctor to stop instead of producing a misleading report.
+
+The doctor reports only **signal counts and states**. Credential values are never returned, and CI includes a CLI-level regression test that injects a fake credential and proves it does not appear in stdout or stderr.
+
+`READY_FOR_SELF_TEST` still does **not** mean authenticated, executed, or live-proven. It only means the local prerequisites are sufficient to attempt the provider's documented self-test.
