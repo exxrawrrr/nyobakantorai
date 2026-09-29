@@ -2343,6 +2343,48 @@
       "artifact_ref": "packages/context-guard/index.mjs"
     },
     {
+      "id": "workflow.profile-learning-portability",
+      "kind": "workflow",
+      "description": "Export or delete profile-scoped learning state without leaking into unrelated workers; shared M3 knowledge and merged canonical skill history are preserved by default.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "MEMORY",
+      "required_by": [
+        "praroro",
+        "paijo",
+        "subagjo",
+        "alex",
+        "sumiati",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "bimo",
+        "nara",
+        "dina",
+        "bambang",
+        "fikri",
+        "tari",
+        "caca"
+      ],
+      "optional_for": [],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled memory-learning module",
+      "verification_method": "profile export/delete isolation tests",
+      "artifact_ref": "packages/memory-learning/index.mjs"
+    },
+    {
       "id": "workflow.siti-evidence-verification",
       "kind": "workflow",
       "description": "Deterministically reject evidence packets with wrong facts, stale/fabricated evidence, partial completion, unauthorized verification/execution claims, or prompt-injection signals.",
