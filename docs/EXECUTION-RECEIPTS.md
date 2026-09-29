@@ -126,7 +126,26 @@ The verifier rejects:
 - unknown key;
 - wrong task/worker/capability;
 - wrong result state;
+- stale receipts when a freshness policy is active;
+- a receipt reference that has already been consumed;
+- duplicate/replayed receipts inside one evidence packet;
+- runtime/provider identities outside the explicit allowlist;
 - a valid receipt that is not referenced by the evidence packet.
+
+### Freshness, replay, and runtime trust
+
+Cryptographic verification is intentionally not treated as replay protection.
+
+Replay is state-dependent. The receipt verifier accepts `consumedReceiptRefs`, while the evidence layer accepts `expected.consumed_receipt_refs`. Callers should populate that state from their durable receipt/event history before verification. The verifier also catches duplicate signed receipts within the same evidence packet.
+
+Receipt freshness can be bounded with `maxReceiptAgeMs` or `expected.max_execution_receipt_age_ms`. A newer evidence observation does not make an old execution receipt fresh.
+
+A trusted signing key also does not grant arbitrary runtime identity. Callers may constrain receipt payloads with:
+
+- `allowedRuntimeProviders` / `expected.allowed_receipt_runtime_providers`;
+- `allowedRuntimeRefPrefixes` / `expected.allowed_receipt_runtime_ref_prefixes`.
+
+These checks bind a trusted signature to the runtime/provider scope expected for the task.
 
 ## Task registry binding
 
@@ -168,9 +187,14 @@ Tests cover:
 - unknown-key rejection;
 - task/worker/capability binding;
 - result-state binding;
+- stale-receipt rejection;
+- consumed/duplicate receipt replay rejection;
+- runtime/provider allowlist enforcement;
 - high-impact approval reference;
 - normalized cost rules;
 - secret-like content rejection;
 - receipt-chain hash format;
 - evidence-verifier integration;
 - append-only task-registry attachment.
+
+The deterministic adversarial benchmark also contains a signed-receipt matrix covering valid, tampered, replayed, wrong task, wrong employee, wrong capability, stale, and unauthorized-runtime cases. Its release target remains zero false successes.

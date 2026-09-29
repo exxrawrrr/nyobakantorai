@@ -45,14 +45,28 @@ export function verifyEvidencePacket({ expected = {}, report = {}, evidence = {}
     ? expected.receipt_public_keys
     : {};
   const requiredReceiptStates = asList(expected.required_receipt_result_states);
-  const signedReceiptChecks = signedReceipts.map((envelope) => verifyExecutionReceipt(envelope, {
-    publicKeys:receiptPublicKeys,
-    now,
-    requiredTaskId:normalizeRef(expected.task_id) || null,
-    requiredEmployeeId:normalizeRef(expected.assignee_id).toLowerCase() || null,
-    requiredCapabilityId:Object.prototype.hasOwnProperty.call(expected, "capability_id") ? expected.capability_id : undefined,
-    requiredResultStates:requiredReceiptStates.length ? requiredReceiptStates : null,
-  }));
+  const receiptMaxAgeMs = Object.prototype.hasOwnProperty.call(expected, "max_execution_receipt_age_ms")
+    ? expected.max_execution_receipt_age_ms
+    : maxAgeMs;
+  const consumedReceiptRefs = new Set(asList(expected.consumed_receipt_refs));
+  const allowedReceiptRuntimeProviders = asList(expected.allowed_receipt_runtime_providers);
+  const allowedReceiptRuntimeRefPrefixes = asList(expected.allowed_receipt_runtime_ref_prefixes);
+  const signedReceiptChecks = signedReceipts.map((envelope) => {
+    const check = verifyExecutionReceipt(envelope, {
+      publicKeys:receiptPublicKeys,
+      now,
+      maxReceiptAgeMs:receiptMaxAgeMs,
+      consumedReceiptRefs,
+      allowedRuntimeProviders:allowedReceiptRuntimeProviders,
+      allowedRuntimeRefPrefixes:allowedReceiptRuntimeRefPrefixes,
+      requiredTaskId:normalizeRef(expected.task_id) || null,
+      requiredEmployeeId:normalizeRef(expected.assignee_id).toLowerCase() || null,
+      requiredCapabilityId:Object.prototype.hasOwnProperty.call(expected, "capability_id") ? expected.capability_id : undefined,
+      requiredResultStates:requiredReceiptStates.length ? requiredReceiptStates : null,
+    });
+    if (check.receipt_ref) consumedReceiptRefs.add(check.receipt_ref);
+    return check;
+  });
   const validSignedReceiptRefs = signedReceiptChecks.filter((item) => item.ok).map((item) => item.receipt_ref).filter(Boolean);
   const invalidSignedReceiptChecks = signedReceiptChecks.filter((item) => !item.ok);
 

@@ -10,6 +10,13 @@ import {
 } from "../../packages/task-registry/registry.mjs";
 import { createCapabilityRouter } from "../../packages/capability-router/index.mjs";
 import { defineRuntimeAdapter, snapshotRuntime } from "../../packages/runtime-adapter/index.mjs";
+import {
+  createExecutionReceiptPayload,
+  executionReceiptRef,
+  generateReceiptKeyPair,
+  signExecutionReceipt,
+  verifyExecutionReceipt,
+} from "../../packages/execution-receipt/index.mjs";
 
 const employees = JSON.parse(await readFile(new URL("../../config/employees.json", import.meta.url), "utf8"));
 const capabilities = JSON.parse(await readFile(new URL("../../config/capabilities.json", import.meta.url), "utf8"));
@@ -55,6 +62,59 @@ async function expectBlocked(id, fn, expected) {
     }
     return { id, passed: false, false_success: false, observation: { error: String(error?.message || error) } };
   }
+}
+
+async function expectAllowed(id, fn, expected = (value) => value?.ok === true) {
+  try {
+    const value = await fn();
+    if (expected(value)) return { id, passed:true, false_success:false, observation:value };
+    return { id, passed:false, false_success:false, observation:value };
+  } catch (error) {
+    return { id, passed:false, false_success:false, observation:{ error:String(error?.message || error) } };
+  }
+}
+
+function signedReceiptFixture() {
+  const keys = generateReceiptKeyPair();
+  const payload = createExecutionReceiptPayload({
+    receipt_id:"receipt.maya.adversarial.0001",
+    task_id:"task-adversarial-42",
+    employee_id:"maya",
+    action:"Apply approved Meta campaign change",
+    capability_id:"ads.meta.write",
+    risk_class:"PAID_ACTION",
+    autonomy:"GUARDED",
+    authorization:{
+      allowed:true,
+      reason:"CONNECTED_AND_OWNER_APPROVED",
+      approval_ref:"approval://task-adversarial-42/owner",
+    },
+    started_at:"2026-09-29T03:10:00.000Z",
+    finished_at:"2026-09-29T03:11:00.000Z",
+    result:{
+      state:"SUCCEEDED",
+      summary:"Approved mutation completed and provider read-back matched.",
+      artifact_refs:["artifact://meta/adversarial-42.json"],
+      evidence_refs:["runtime://meta/adversarial-42"],
+    },
+    runtime:{
+      provider:"meta-ads",
+      runtime_ref:"runtime://meta/adversarial-42",
+      provider_version:"test-fixture",
+    },
+    usage:{
+      input_tokens:100,
+      output_tokens:20,
+      cost_known:true,
+      cost_amount:0.01,
+      currency:"USD",
+    },
+  });
+  const envelope = signExecutionReceipt(payload, {
+    privateKeyPem:keys.private_key_pem,
+    keyId:"local:adversarial-receipt",
+  });
+  return { keys, envelope, ref:executionReceiptRef(envelope) };
 }
 
 const results = [];
@@ -198,6 +258,82 @@ results.push(await expectBlocked(
   },
   (value) => value?.connected === false && value?.error_category === "TIMEOUT",
 ));
+
+{
+  const signed = signedReceiptFixture();
+  const common = {
+    publicKeys:{ "local:adversarial-receipt":signed.keys.public_key_pem },
+    now:new Date("2026-09-29T03:15:00.000Z"),
+    maxReceiptAgeMs:15 * 60 * 1000,
+    allowedRuntimeProviders:["meta-ads"],
+    allowedRuntimeRefPrefixes:["runtime://meta/"],
+    requiredTaskId:"task-adversarial-42",
+    requiredEmployeeId:"maya",
+    requiredCapabilityId:"ads.meta.write",
+    requiredResultStates:["SUCCEEDED"],
+  };
+
+  results.push(await expectAllowed(
+    "signed-receipt-valid",
+    () => verifyExecutionReceipt(signed.envelope, common),
+  ));
+
+  results.push(await expectBlocked(
+    "signed-receipt-tampered",
+    () => {
+      const tampered = structuredClone(signed.envelope);
+      tampered.payload.result.summary = "tampered after signing";
+      return verifyExecutionReceipt(tampered, common);
+    },
+    (value) => value?.ok === false && value?.reasons?.includes("PAYLOAD_HASH_MISMATCH") && value?.reasons?.includes("SIGNATURE_INVALID"),
+  ));
+
+  results.push(await expectBlocked(
+    "signed-receipt-replay",
+    () => verifyExecutionReceipt(signed.envelope, { ...common, consumedReceiptRefs:[signed.ref] }),
+    (value) => value?.ok === false && value?.reasons?.includes("RECEIPT_REPLAYED"),
+  ));
+
+  results.push(await expectBlocked(
+    "signed-receipt-wrong-task-binding",
+    () => verifyExecutionReceipt(signed.envelope, { ...common, requiredTaskId:"task-other" }),
+    (value) => value?.ok === false && value?.reasons?.includes("TASK_BINDING_MISMATCH"),
+  ));
+
+  results.push(await expectBlocked(
+    "signed-receipt-wrong-employee-binding",
+    () => verifyExecutionReceipt(signed.envelope, { ...common, requiredEmployeeId:"gugun" }),
+    (value) => value?.ok === false && value?.reasons?.includes("EMPLOYEE_BINDING_MISMATCH"),
+  ));
+
+  results.push(await expectBlocked(
+    "signed-receipt-wrong-capability-binding",
+    () => verifyExecutionReceipt(signed.envelope, { ...common, requiredCapabilityId:"ads.google.write" }),
+    (value) => value?.ok === false && value?.reasons?.includes("CAPABILITY_BINDING_MISMATCH"),
+  ));
+
+  results.push(await expectBlocked(
+    "signed-receipt-stale",
+    () => verifyExecutionReceipt(signed.envelope, {
+      ...common,
+      now:new Date("2026-09-29T04:00:00.000Z"),
+      maxReceiptAgeMs:10 * 60 * 1000,
+    }),
+    (value) => value?.ok === false && value?.reasons?.includes("RECEIPT_STALE"),
+  ));
+
+  results.push(await expectBlocked(
+    "signed-receipt-unauthorized-runtime",
+    () => verifyExecutionReceipt(signed.envelope, {
+      ...common,
+      allowedRuntimeProviders:["hermes"],
+      allowedRuntimeRefPrefixes:["hermes-kanban:"],
+    }),
+    (value) => value?.ok === false
+      && value?.reasons?.includes("RUNTIME_PROVIDER_NOT_ALLOWED")
+      && value?.reasons?.includes("RUNTIME_REF_NOT_ALLOWED"),
+  ));
+}
 
 const falseSuccesses = results.filter((item) => item.false_success);
 const failures = results.filter((item) => !item.passed);

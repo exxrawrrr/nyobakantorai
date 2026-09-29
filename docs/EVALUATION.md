@@ -304,7 +304,7 @@ Material differences are reportable findings, not results to hide.
 
 ### Signed-receipt adversarial matrix
 
-Cryptographic validity proves payload authenticity, not external-world correctness. Receipt evaluation should explicitly cover:
+Cryptographic validity proves payload authenticity, not external-world correctness. The deterministic adversarial benchmark covers:
 
 - valid receipt;
 - tampered receipt;
@@ -313,7 +313,9 @@ Cryptographic validity proves payload authenticity, not external-world correctne
 - wrong employee binding;
 - wrong capability binding;
 - stale receipt;
-- receipt from an unauthorized or untrusted runtime/key.
+- receipt from an unauthorized runtime identity.
+
+Unit coverage separately rejects unknown signing keys. Replay is explicitly state-dependent: callers provide previously consumed receipt references, and duplicate receipts inside one evidence packet are treated as replay.
 
 Every case must end in a truthful state. A valid signature must never bypass independent evidence verification.
 

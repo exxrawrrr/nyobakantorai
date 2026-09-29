@@ -225,6 +225,10 @@ export function verifyExecutionReceipt(envelope, {
   publicKeys = {},
   now = new Date(),
   maxFutureSkewMs = 5 * 60 * 1000,
+  maxReceiptAgeMs = null,
+  consumedReceiptRefs = [],
+  allowedRuntimeProviders = null,
+  allowedRuntimeRefPrefixes = null,
   requiredTaskId = null,
   requiredEmployeeId = null,
   requiredCapabilityId = undefined,
@@ -267,11 +271,40 @@ export function verifyExecutionReceipt(envelope, {
   if (requiredCapabilityId !== undefined && envelope?.payload?.capability_id !== requiredCapabilityId) reasons.push("CAPABILITY_BINDING_MISMATCH");
   if (Array.isArray(requiredResultStates) && !requiredResultStates.includes(envelope?.payload?.result?.state)) reasons.push("RESULT_STATE_NOT_ALLOWED");
 
+  const receiptRef = /^[a-f0-9]{64}$/.test(envelope?.payload_sha256 || "") ? executionReceiptRef(envelope) : null;
+  if (maxReceiptAgeMs !== null && maxReceiptAgeMs !== undefined) {
+    if (typeof maxReceiptAgeMs !== "number" || !Number.isFinite(maxReceiptAgeMs) || maxReceiptAgeMs < 0) {
+      reasons.push("RECEIPT_FRESHNESS_POLICY_INVALID");
+    } else {
+      const finishedAt = Date.parse(envelope?.payload?.finished_at);
+      const nowMs = now instanceof Date ? now.getTime() : Date.parse(now);
+      if (!Number.isNaN(finishedAt) && Number.isFinite(nowMs) && nowMs - finishedAt > maxReceiptAgeMs) {
+        reasons.push("RECEIPT_STALE");
+      }
+    }
+  }
+
+  const consumed = consumedReceiptRefs instanceof Set
+    ? [...consumedReceiptRefs]
+    : (Array.isArray(consumedReceiptRefs) ? consumedReceiptRefs : []);
+  if (receiptRef && consumed.map((item) => String(item).trim()).includes(receiptRef)) reasons.push("RECEIPT_REPLAYED");
+
+  const runtimeProvider = clean(envelope?.payload?.runtime?.provider, 120);
+  const runtimeRef = clean(envelope?.payload?.runtime?.runtime_ref, 512);
+  const allowedProviders = (Array.isArray(allowedRuntimeProviders) ? allowedRuntimeProviders : [])
+    .map((item) => clean(item, 120))
+    .filter(Boolean);
+  const allowedRefPrefixes = (Array.isArray(allowedRuntimeRefPrefixes) ? allowedRuntimeRefPrefixes : [])
+    .map((item) => clean(item, 512))
+    .filter(Boolean);
+  if (allowedProviders.length && !allowedProviders.includes(runtimeProvider)) reasons.push("RUNTIME_PROVIDER_NOT_ALLOWED");
+  if (allowedRefPrefixes.length && !allowedRefPrefixes.some((prefix) => runtimeRef.startsWith(prefix))) reasons.push("RUNTIME_REF_NOT_ALLOWED");
+
   const uniqueReasons = [...new Set(reasons)];
   return Object.freeze({
     ok:uniqueReasons.length === 0,
     decision:uniqueReasons.length === 0 ? "VALID" : "INVALID",
-    receipt_ref:/^[a-f0-9]{64}$/.test(envelope?.payload_sha256 || "") ? executionReceiptRef(envelope) : null,
+    receipt_ref:receiptRef,
     reasons:Object.freeze(uniqueReasons),
     payload_sha256:envelope?.payload_sha256 || null,
     key_id:envelope?.key_id || null,

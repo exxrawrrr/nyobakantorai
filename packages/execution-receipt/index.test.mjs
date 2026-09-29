@@ -196,3 +196,52 @@ test("receipt chain pointer must be a SHA-256 digest", () => {
     /invalid previous_receipt_sha256/
   );
 });
+
+
+test("stale signed receipt fails when freshness policy is enabled", () => {
+  const keys = generateReceiptKeyPair();
+  const envelope = signExecutionReceipt(basePayload(), {
+    privateKeyPem:keys.private_key_pem,
+    keyId:"local:test-key",
+  });
+  const result = verifyExecutionReceipt(envelope, {
+    publicKeys:{ "local:test-key":keys.public_key_pem },
+    now:new Date("2026-09-29T04:30:00.000Z"),
+    maxReceiptAgeMs:15 * 60 * 1000,
+  });
+  assert.equal(result.ok, false);
+  assert.ok(result.reasons.includes("RECEIPT_STALE"));
+});
+
+test("consumed signed receipt is rejected as replay", () => {
+  const keys = generateReceiptKeyPair();
+  const envelope = signExecutionReceipt(basePayload(), {
+    privateKeyPem:keys.private_key_pem,
+    keyId:"local:test-key",
+  });
+  const ref = executionReceiptRef(envelope);
+  const result = verifyExecutionReceipt(envelope, {
+    publicKeys:{ "local:test-key":keys.public_key_pem },
+    now,
+    consumedReceiptRefs:new Set([ref]),
+  });
+  assert.equal(result.ok, false);
+  assert.ok(result.reasons.includes("RECEIPT_REPLAYED"));
+});
+
+test("trusted key cannot authorize an unexpected runtime identity", () => {
+  const keys = generateReceiptKeyPair();
+  const envelope = signExecutionReceipt(basePayload(), {
+    privateKeyPem:keys.private_key_pem,
+    keyId:"local:test-key",
+  });
+  const result = verifyExecutionReceipt(envelope, {
+    publicKeys:{ "local:test-key":keys.public_key_pem },
+    now,
+    allowedRuntimeProviders:["hermes"],
+    allowedRuntimeRefPrefixes:["hermes-kanban:"],
+  });
+  assert.equal(result.ok, false);
+  assert.ok(result.reasons.includes("RUNTIME_PROVIDER_NOT_ALLOWED"));
+  assert.ok(result.reasons.includes("RUNTIME_REF_NOT_ALLOWED"));
+});

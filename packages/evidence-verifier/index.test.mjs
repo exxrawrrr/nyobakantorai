@@ -259,3 +259,77 @@ test("signed receipt requirement fails closed when no receipt is supplied", () =
   assert.equal(result.ok, false);
   assert.ok(result.reasons.some((item) => item.code === "SIGNED_EXECUTION_RECEIPT_REQUIRED"));
 });
+
+
+test("already-consumed signed receipt is rejected as replay", () => {
+  const input = base();
+  const signed = signedReceiptFixture();
+  input.expected.task_id = "task-42";
+  input.expected.capability_id = "ads.meta.write";
+  input.expected.require_signed_execution_receipt = true;
+  input.expected.required_receipt_result_states = ["SUCCEEDED"];
+  input.expected.receipt_public_keys = { "local:evidence-test":signed.keys.public_key_pem };
+  input.expected.consumed_receipt_refs = [signed.ref];
+  input.evidence.signed_receipts = [signed.envelope];
+  input.evidence.refs.push(signed.ref);
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  const invalid = result.reasons.find((item) => item.code === "SIGNED_EXECUTION_RECEIPT_INVALID");
+  assert.ok(invalid?.details.includes("RECEIPT_REPLAYED"));
+});
+
+test("duplicate signed receipt inside one evidence packet is treated as replay", () => {
+  const input = base();
+  const signed = signedReceiptFixture();
+  input.expected.task_id = "task-42";
+  input.expected.capability_id = "ads.meta.write";
+  input.expected.require_signed_execution_receipt = true;
+  input.expected.required_receipt_result_states = ["SUCCEEDED"];
+  input.expected.receipt_public_keys = { "local:evidence-test":signed.keys.public_key_pem };
+  input.evidence.signed_receipts = [signed.envelope, signed.envelope];
+  input.evidence.refs.push(signed.ref);
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  const invalid = result.reasons.find((item) => item.code === "SIGNED_EXECUTION_RECEIPT_INVALID");
+  assert.ok(invalid?.details.includes("RECEIPT_REPLAYED"));
+});
+
+test("stale signed receipt cannot inherit freshness from newer evidence", () => {
+  const input = base();
+  const signed = signedReceiptFixture();
+  input.expected.task_id = "task-42";
+  input.expected.capability_id = "ads.meta.write";
+  input.expected.require_signed_execution_receipt = true;
+  input.expected.required_receipt_result_states = ["SUCCEEDED"];
+  input.expected.receipt_public_keys = { "local:evidence-test":signed.keys.public_key_pem };
+  input.expected.max_execution_receipt_age_ms = 60_000;
+  input.evidence.signed_receipts = [signed.envelope];
+  input.evidence.refs.push(signed.ref);
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  const invalid = result.reasons.find((item) => item.code === "SIGNED_EXECUTION_RECEIPT_INVALID");
+  assert.ok(invalid?.details.includes("RECEIPT_STALE"));
+});
+
+test("trusted signer cannot claim an unauthorized runtime provider", () => {
+  const input = base();
+  const signed = signedReceiptFixture();
+  input.expected.task_id = "task-42";
+  input.expected.capability_id = "ads.meta.write";
+  input.expected.require_signed_execution_receipt = true;
+  input.expected.required_receipt_result_states = ["SUCCEEDED"];
+  input.expected.receipt_public_keys = { "local:evidence-test":signed.keys.public_key_pem };
+  input.expected.allowed_receipt_runtime_providers = ["hermes"];
+  input.expected.allowed_receipt_runtime_ref_prefixes = ["hermes-kanban:"];
+  input.evidence.signed_receipts = [signed.envelope];
+  input.evidence.refs.push(signed.ref);
+
+  const result = verifyEvidencePacket(input);
+  assert.equal(result.ok, false);
+  const invalid = result.reasons.find((item) => item.code === "SIGNED_EXECUTION_RECEIPT_INVALID");
+  assert.ok(invalid?.details.includes("RUNTIME_PROVIDER_NOT_ALLOWED"));
+  assert.ok(invalid?.details.includes("RUNTIME_REF_NOT_ALLOWED"));
+});
