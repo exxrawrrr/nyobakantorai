@@ -11,7 +11,7 @@
     "start": "npm --prefix office run dev",
     "build": "npm --prefix office run build",
     "test": "npm run test:core && npm run test:python && npm run test:demo && npm run test:hermes",
-    "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs && npm run test:workforce && npm run test:packs && npm run test:remove && npm run test:memory && npm run test:memory-learning && npm run test:context && npm run test:context-benchmark && npm run test:adversarial && npm run test:verifier && npm run test:provider-evaluation && npm run capability-catalog:check && npm run test:capability-catalog && npm run test:capabilities && npm run test:skill-format && npm run test:cross-harness && npm run test:provenance",
+    "test:core": "npm --prefix office run check && node --test packages/task-registry/registry.test.mjs packages/runtime-adapter/index.test.mjs packages/runtime-adapter/http-readonly.test.mjs && npm run test:workforce && npm run test:packs && npm run test:remove && npm run test:memory && npm run test:memory-learning && npm run test:context && npm run test:context-benchmark && npm run test:adversarial && npm run test:verifier && npm run test:provider-evaluation && npm run test:real-tasks && npm run capability-catalog:check && npm run test:capability-catalog && npm run test:capabilities && npm run test:skill-format && npm run test:cross-harness && npm run test:provenance",
     "test:python": "python scripts/run-python-tests.py",
     "doctor": "node scripts/preflight.mjs",
     "doctor:json": "node scripts/preflight.mjs --json",
@@ -59,6 +59,7 @@
     "skills:export": "node scripts/export-skills.mjs",
     "skills:export:check": "node scripts/export-skills.mjs --check",
     "test:cross-harness": "node --test scripts/export-skills.test.mjs",
-    "test:provider-evaluation": "node --test packages/provider-evaluation/index.test.mjs"
+    "test:provider-evaluation": "node --test packages/provider-evaluation/index.test.mjs",
+    "test:real-tasks": "node --test packages/real-task-evaluation/index.test.mjs"
   }
 }
