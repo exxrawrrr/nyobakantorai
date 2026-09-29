@@ -118,7 +118,7 @@ export async function buildCapabilityCatalog() {
       install_method:item.install || "reference-only; no automatic installation",
       verification_method:item.capability
         ? `prove ${item.capability} CONNECTED with evidence_ref, then apply worker/approval policy`
-        : "explicit install/evaluation evidence; configured state alone is insufficient",
+        : (item.verification_method || "explicit install/evaluation evidence; configured state alone is insufficient"),
       artifact_ref:"config/integrations.json",
     });
   }
