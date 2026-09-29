@@ -1,4 +1,4 @@
-import { runOneWorkerFreshInstallMatrix, runSubsetFreshInstallMatrix } from "../packages/fresh-install-matrix/index.mjs";
+import { runFullWorkforceFreshInstallMatrix, runOneWorkerFreshInstallMatrix, runSubsetFreshInstallMatrix } from "../packages/fresh-install-matrix/index.mjs";
 
 const argv=process.argv.slice(2);
 const modeArg=argv.find((x)=>x.startsWith("--mode="));
@@ -33,14 +33,27 @@ if(mode==="subset"){
     removeEmployeeId=next;
   }
   result=await runSubsetFreshInstallMatrix({selection,removeEmployeeId});
+}else if(mode==="full"){
+  result=await runFullWorkforceFreshInstallMatrix();
 }else if(mode==="one-worker"){
   result=await runOneWorkerFreshInstallMatrix({employeeId});
 }else{
-  throw new Error("Unknown --mode. Use one-worker or subset.");
+  throw new Error("Unknown --mode. Use one-worker, subset, or full.");
 }
 
 if(json) process.stdout.write(JSON.stringify(result,null,2)+"\n");
-else if(mode==="subset"){
+else if(mode==="full"){
+  console.log("Fresh-install matrix: full workforce");
+  console.log("Registry employees: "+result.registry_employee_count);
+  console.log("Installed profiles: "+result.installed_profiles.length);
+  console.log("Exact workforce set: "+(result.installed_all_profiles_exactly?"PASS":"FAIL"));
+  console.log("Capability isolation: "+(result.capability_isolation_passed?"PASS":"FAIL"));
+  console.log("All packs verified: "+(result.all_packs_verified?"YES":"NO"));
+  console.log("Rerun profiles exact: "+(result.rerun_profiles_exact?"YES":"NO"));
+  console.log("User-owned state preserved: "+(result.all_user_owned_state_preserved?"YES":"NO"));
+  console.log("Claim: "+result.claim_state);
+  console.log(result.note);
+}else if(mode==="subset"){
   console.log("Fresh-install matrix: subset workers");
   console.log("Selection: "+result.selection+" -> "+result.selected_profiles.join(", "));
   console.log("Installed profiles: "+result.installed_profiles.join(", "));
