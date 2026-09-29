@@ -81,3 +81,23 @@ test("doctor reports catalog validity without converting detection into proof",(
   assert.equal(report.providers[0].self_test_state,"NOT_RUN");
   assert.notEqual(report.providers[0].readiness,"LIVE_PROVEN");
 });
+
+
+test("package-free Cognee HTTP self-test can be ready without claiming install or live proof",()=>{
+  const report=inspectProviders({catalog,env:{PATH:""},selectedIds:["cognee"],probes:probes()});
+  const item=report.providers[0];
+  assert.equal(item.install_state,"NOT_INSTALLED");
+  assert.equal(item.configuration_state,"UNKNOWN");
+  assert.equal(item.readiness,"READY_FOR_SELF_TEST");
+  assert.equal(item.evidence.self_test_install_required,false);
+  assert.equal(item.evidence.self_test_default_local,true);
+  assert.equal(item.self_test_state,"NOT_RUN");
+});
+
+test("catalog validation rejects non-boolean package-free self-test flags",()=>{
+  const malformed=structuredClone(catalog);
+  malformed.providers.find((x)=>x.id==="cognee").detection.self_test_install_required="no";
+  const result=validateProviderCatalog(malformed);
+  assert.equal(result.ok,false);
+  assert.ok(result.errors.some((x)=>/self_test_install_required must be boolean/.test(x)));
+});
