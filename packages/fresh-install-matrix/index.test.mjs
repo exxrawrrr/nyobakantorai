@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { tmpdir } from "node:os";
-import { runOneWorkerFreshInstallMatrix, runSubsetFreshInstallMatrix } from "./index.mjs";
+import { runFullWorkforceFreshInstallMatrix, runOneWorkerFreshInstallMatrix, runSubsetFreshInstallMatrix } from "./index.mjs";
 
 test("fresh install from an empty Hermes home installs exactly one selected worker",async()=>{
   const result=await runOneWorkerFreshInstallMatrix({employeeId:"siti"});
@@ -114,6 +114,67 @@ test("subset matrix leaves an explicit disposable root inspectable until caller 
     assert.deepEqual(profiles,["siti","subagjo"]);
     const bimoPack=await readFile(resolve(base,"packs","bimo","employee-pack.json"),"utf8");
     assert.match(bimoPack,/"employee_id": "bimo"/);
+  }finally{
+    await rm(base,{recursive:true,force:true});
+  }
+});
+
+
+test("full workforce fresh install covers the entire canonical registry exactly",async()=>{
+  const result=await runFullWorkforceFreshInstallMatrix();
+  assert.equal(result.passed,true);
+  assert.equal(result.claim_state,"DETERMINISTICALLY_VERIFIED");
+  assert.equal(result.registry_employee_count,16);
+  assert.equal(result.selected_employee_count,16);
+  assert.equal(result.initial_profile_count,0);
+  assert.equal(result.installed_profiles.length,16);
+  assert.equal(result.installed_all_profiles_exactly,true);
+  assert.equal(result.pack_directories.length,16);
+  assert.equal(result.pack_set_exact,true);
+  assert.ok(result.install_actions.every(x=>x.action==="install"));
+  assert.equal(result.capability_isolation_passed,true);
+  assert.equal(result.all_packs_verified,true);
+  assert.equal(result.rerun_profiles_exact,true);
+  assert.ok(result.rerun_actions.every(x=>x.action==="native-upgrade"));
+  assert.equal(result.all_user_owned_state_preserved,true);
+  assert.equal(result.all_profiles_non_empty,true);
+  assert.equal(result.external_provider_calls,0);
+  assert.equal(result.hermes_cli_executed,false);
+  assert.equal(result.real_machine_claim,false);
+});
+
+test("full workforce matrix verifies every worker's exact skill and integration closure",async()=>{
+  const result=await runFullWorkforceFreshInstallMatrix();
+  const expectedIds=[
+    "praroro","paijo","subagjo","alex","sumiati","siti","maya","gugun",
+    "ratri","bimo","nara","dina","bambang","fikri","tari","caca"
+  ].sort();
+  assert.deepEqual([...result.expected_profiles],expectedIds);
+  assert.deepEqual([...result.installed_profiles],expectedIds);
+  assert.equal(result.capability_isolation.length,16);
+  for(const item of result.capability_isolation){
+    assert.equal(item.skills_exact,true,item.employee_id);
+    assert.equal(item.manifest_skills_exact,true,item.employee_id);
+    assert.equal(item.optional_integrations_exact,true,item.employee_id);
+    assert.equal(item.distribution_contains_user_owned_state,false,item.employee_id);
+  }
+  assert.equal(result.user_owned_state_preservation.length,16);
+  assert.ok(result.user_owned_state_preservation.every(x=>x.preserved));
+  assert.equal(result.rerun_distribution_checks.length,16);
+  assert.ok(result.rerun_distribution_checks.every(x=>x.pack_verified&&x.distribution_owned_stable));
+});
+
+test("full workforce matrix leaves an explicit disposable root inspectable until caller cleanup",async()=>{
+  const base=await mkdtemp(resolve(tmpdir(),"nyoba-full-explicit-"));
+  try{
+    const result=await runFullWorkforceFreshInstallMatrix({baseDir:base});
+    assert.equal(result.passed,true);
+    const profiles=(await readdir(resolve(base,"hermes-home","profiles"))).sort();
+    assert.deepEqual(profiles,[...result.expected_profiles]);
+    const packs=(await readdir(resolve(base,"packs"))).sort();
+    assert.deepEqual(packs,[...result.expected_profiles]);
+    const manifest=await readFile(resolve(base,"packs","praroro","employee-pack.json"),"utf8");
+    assert.match(manifest,/"employee_id": "praroro"/);
   }finally{
     await rm(base,{recursive:true,force:true});
   }
