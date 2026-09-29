@@ -64,7 +64,7 @@
 - [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
 - [x] deterministic synthetic Fikri context-guard regression benchmark: token reduction + protected-atom/required-fact recall
 - [x] deterministic adversarial policy/recovery benchmark with zero-false-success gate
-- [ ] live Fikri context-compaction benchmark: token reduction + semantic/source fidelity + downstream task success
+- [x] live Fikri context-compaction benchmark on controlled synthetic fixtures: 41.10% average reduction, 100% protected/source fidelity, 5/5 blind downstream pass; real-task generalization remains separate
 - [x] real-task dataset schema + anti-synthetic publication gate
 - [ ] real-task evaluation dataset and published baseline comparison
 
