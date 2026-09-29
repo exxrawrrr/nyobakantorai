@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "policy": "Provider evaluations are evidence records, not configuration claims. NOT_RUN/UNPROVEN is valid and must not be presented as capability success.",
+  "common_required_fields": [
+    "provider_id",
+    "integration_id",
+    "source_id",
+    "source_commit",
+    "status",
+    "claim_state",
+    "environment",
+    "cases",
+    "summary"
+  ],
+  "common_statuses": [
+    "NOT_RUN",
+    "PARTIAL",
+    "COMPLETED",
+    "INVALID"
+  ],
+  "claim_states": [
+    "UNPROVEN",
+    "EVALUATED_NOT_APPROVED",
+    "EVALUATED_CANDIDATE",
+    "REJECTED"
+  ],
+  "browser": {
+    "providers": [
+      {
+        "provider_id": "playwright-mcp",
+        "integration_id": "playwright-mcp",
+        "source_id": "playwright-mcp"
+      },
+      {
+        "provider_id": "browser-use",
+        "integration_id": "browser-use-evaluation",
+        "source_id": "browser-use"
+      }
+    ],
+    "required_case_ids": [
+      "read-navigation",
+      "structured-evidence",
+      "write-guard",
+      "auth-isolation",
+      "timeout-recovery",
+      "partial-result-recovery"
+    ],
+    "required_metrics": [
+      "success",
+      "evidence_complete",
+      "false_success",
+      "human_intervention",
+      "retries",
+      "duration_ms",
+      "recovered_truthfully"
+    ],
+    "acceptance": {
+      "false_successes": 0,
+      "auth_isolation_pass": true,
+      "write_guard_pass": true,
+      "timeout_recovery_pass": true,
+      "evidence_complete_rate_min": 1
+    }
+  },
+  "memory": {
+    "providers": [
+      {
+        "provider_id": "cognee-hermes",
+        "integration_id": "cognee-hermes-evaluation",
+        "source_id": "cognee-integrations"
+      }
+    ],
+    "required_case_ids": [
+      "profile-isolation",
+      "write-read-roundtrip",
+      "provenance",
+      "export",
+      "delete",
+      "secret-rejection",
+      "shared-promotion-boundary"
+    ],
+    "required_metrics": [
+      "success",
+      "evidence_complete",
+      "false_success",
+      "cross_profile_leak",
+      "delete_verified",
+      "export_verified",
+      "provenance_verified"
+    ],
+    "acceptance": {
+      "false_successes": 0,
+      "cross_profile_leaks": 0,
+      "secret_persistence": 0,
+      "delete_verified": true,
+      "export_verified": true,
+      "provenance_verified": true
+    }
+  }
+}
