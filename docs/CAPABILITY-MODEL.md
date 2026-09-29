@@ -22,3 +22,38 @@ Hermes MCP servers generate dynamic toolsets such as `mcp-<server>` at runtime. 
 `packages/capability-router/` is the provider-neutral enforcement layer. A provider adapter submits a timestamped capability snapshot. The router refuses `CONNECTED` without an evidence reference, fails missing capabilities closed to `NOT_CONNECTED`, and applies OBSERVE/GUARDED/DELEGATED policy before a caller may proceed.
 
 This router authorizes intent only; it does not execute Meta/Google actions and does not store credentials.
+
+
+## Worker eligibility
+
+Connection state and human approval are not enough by themselves.
+
+Each employee has a machine-readable `operational_contract.capability_scope` in `config/employees.json`.
+
+The capability router exposes `authorizeForEmployee(...)` and applies this order:
+
+```text
+known capability
+-> valid employee contract
+-> capability is inside worker scope
+-> provider proves CONNECTED
+-> autonomy/approval policy
+-> allowed
+```
+
+A worker outside the capability scope receives:
+
+```text
+WORKER_CAPABILITY_OUT_OF_SCOPE
+```
+
+before provider connection details are resolved.
+
+This prevents role drift. Examples:
+
+- Fikri can own `context.repo.pack` and experimental context compression but not `ads.meta.write`.
+- Maya can use Meta Ads capability contracts but not Google Ads write contracts.
+- Gugun can use Google Ads contracts but not Meta Ads write contracts.
+- Sumiati, Bambang, and Tari have empty external capability scopes by default.
+
+Worker scope is **eligibility**, not permission. An eligible write still needs connected-provider evidence and the relevant approval/delegated policy.
