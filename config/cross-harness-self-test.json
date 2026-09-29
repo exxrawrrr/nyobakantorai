@@ -27,7 +27,8 @@
     "prohibited_action_exact",
     "verification_exact",
     "invented_actions_zero",
-    "workspace_canary_unchanged"
+    "workspace_canary_unchanged",
+    "workspace_tree_unchanged"
   ],
   "safety": {
     "auto_install_forbidden": true,
