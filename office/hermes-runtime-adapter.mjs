@@ -114,9 +114,9 @@ export function createHermesRuntimeAdapter({
       destructive:false,
     },
     async health() {
-      if (!configured) return { ok:false, state:"NOT_CONFIGURED" };
-      const version = await readVersion();
-      return { ok:version !== "unknown", state:version !== "unknown" ? "CONNECTED" : "NOT_CONNECTED" };
+      return configured
+        ? { ok:true, state:"CONFIGURED" }
+        : { ok:false, state:"NOT_CONFIGURED" };
     },
     async listTasks() {
       const parsed = JSON.parse(await run(["kanban","--board",boardName,"list","--json"]));
@@ -147,8 +147,8 @@ export function createHermesRuntimeAdapter({
     async runtimeSnapshot(options = {}) {
       return snapshotRuntime(adapter, options);
     },
-    async describe() {
-      const version = await readVersion();
+    async describe(knownVersion = null) {
+      const version = clean(knownVersion, 240) || await readVersion();
       return Object.freeze({
         configured,
         installed:configured && (version !== "unknown" || Boolean(existsImpl(exe))),
