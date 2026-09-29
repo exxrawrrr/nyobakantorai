@@ -17,6 +17,7 @@ All notable public changes to nyobakantorai are documented here.
 - Cognee self-service eight-case memory runner with run-owned datasets, profile-isolation/contamination guards, provenance/export/delete verification, secret pre-write rejection, explicit shared promotion, remote opt-in, and cleanup verification.
 - Cross-harness self-service parity runner for Hermes/Codex/Gemini/Copilot plus Codex static skill export target.
 - Real-task baseline audit/merge/prepare tooling with duplicate-source and semantic-consistency gates, immutable canonical evidence, exact 1/20 collection status, and explicit no-auto-publish behavior.
+- Full-workforce isolated fresh-install matrix covering all 16 canonical employee packs/profiles, exact per-worker skill/integration closure, all-profile native-upgrade rerun, and preservation of seeded user-owned state.
 
 ### Evaluation
 - Fikri controlled live-model run: 5/5 compiled-context downstream pass, zero critical losses, 41.10% average estimated token reduction, and 100% protected/source fidelity on the recorded synthetic fixture set.
