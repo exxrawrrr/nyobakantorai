@@ -6,7 +6,7 @@ const check=process.argv.includes("--check");
 const registry=JSON.parse(await readFile(resolve(root,"config/employees.json"),"utf8"));
 const capabilities=JSON.parse(await readFile(resolve(root,"config/capabilities.json"),"utf8"));
 const ids=new Set(), capabilityIds=new Set(capabilities.capabilities.map(x=>x.id));
-const required=["id","name","role","department","summary","aliases","personality","habits","work_style","reasoning_profile","learning_profile","expertise","skills","preferred_toolsets","external_capabilities","optional_integrations","approval_policy","verification_policy","memory_boundary","routing","visual","profile"];
+const required=["id","name","role","department","summary","aliases","personality","habits","work_style","reasoning_profile","learning_profile","expertise","skills","preferred_toolsets","external_capabilities","optional_integrations","operational_contract","approval_policy","verification_policy","memory_boundary","routing","visual","profile"];
 const findings=[];
 if(registry.schema!==1||registry.version!=="0.3.0"||!Array.isArray(registry.employees)||registry.employees.length<16)findings.push("registry must contain at least 16 v0.3 employees");
 for(const e of registry.employees){
@@ -23,6 +23,11 @@ for(const e of registry.employees){
  if(!Array.isArray(e.reasoning_profile?.mental_models)||e.reasoning_profile.mental_models.length<3||!Array.isArray(e.reasoning_profile?.default_questions)||!Array.isArray(e.reasoning_profile?.failure_modes))findings.push(`${e.id}: incomplete reasoning profile`);
  if(!e.learning_profile?.memory_mode||!e.learning_profile?.focus||!Array.isArray(e.learning_profile?.reflection_questions))findings.push(`${e.id}: incomplete learning profile`);
  if(!Array.isArray(e.optional_integrations))findings.push(`${e.id}: optional_integrations must be an array`);
+ const oc=e.operational_contract;
+ const contractArrays=["inputs","outputs","capability_scope","forbidden_actions","evidence_requirements"];
+ for(const k of contractArrays)if(!Array.isArray(oc?.[k])||oc[k].length===0&&k!=="capability_scope")findings.push(`${e.id}: invalid operational_contract.${k}`);
+ for(const k of ["failure_policy","verification_method","cost_policy"])if(!oc?.[k])findings.push(`${e.id}: missing operational_contract.${k}`);
+ for(const cap of oc?.capability_scope||[])if(!capabilityIds.has(cap))findings.push(`${e.id}: unknown operational capability ${cap}`);
  for(const skill of e.skills)if(!existsSync(resolve(root,"skills/hermes-custom",skill,"SKILL.md")))findings.push(`${e.id}: missing canonical skill ${skill}`);
  for(const cap of e.external_capabilities||[])if(!capabilityIds.has(cap))findings.push(`${e.id}: unknown capability ${cap}`);
  if(e.verification_policy?.self_verify!==false)findings.push(`${e.id}: self verification must be false`);
@@ -87,6 +92,26 @@ ${e.personality.catchphrases?.length?`- Catchphrases: ${e.personality.catchphras
 
 ## Expertise
 ${e.expertise.map(x=>`- ${x}`).join("\n")}
+
+## Operational contract
+### Inputs
+${e.operational_contract.inputs.map(x=>`- ${x}`).join("\n")}
+
+### Outputs
+${e.operational_contract.outputs.map(x=>`- ${x}`).join("\n")}
+
+### Eligible capability scope
+${e.operational_contract.capability_scope.length?e.operational_contract.capability_scope.map(x=>`- ${x}: eligibility only; connection and authorization are checked separately.`).join("\n"):"- No external/provider capability required by default."}
+
+### Forbidden actions
+${e.operational_contract.forbidden_actions.map(x=>`- ${x}`).join("\n")}
+
+### Evidence requirements
+${e.operational_contract.evidence_requirements.map(x=>`- ${x}`).join("\n")}
+
+- Failure policy: ${e.operational_contract.failure_policy}
+- Verification method: ${e.operational_contract.verification_method}
+- Cost policy: ${e.operational_contract.cost_policy}
 
 ## Preferred skills
 ${e.skills.join(", ")}.
