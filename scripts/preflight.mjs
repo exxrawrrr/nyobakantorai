@@ -45,7 +45,7 @@ if (pythonCommand) {
 for (const rel of [
   "package.json", "office/package.json", "office/server.mjs",
   "office/src/asset-manifest.json", "packages/runtime-adapter/index.mjs",
-  "README.md", "SECURITY.md", "config/employees.json", "config/capabilities.json", "config/real-task-recorder.json", "config/provider-doctor.json", "packages/real-task-recorder/index.mjs", "packages/provider-doctor/index.mjs", "scripts/real-task-recorder.mjs", "scripts/provider-doctor.mjs", "office/workforce.mjs", "office/src/workforce.generated.css",
+  "README.md", "SECURITY.md", "config/employees.json", "config/capabilities.json", "config/real-task-recorder.json", "config/provider-doctor.json", "config/browser-self-test.json", "packages/real-task-recorder/index.mjs", "packages/provider-doctor/index.mjs", "packages/browser-self-test/index.mjs", "scripts/real-task-recorder.mjs", "scripts/provider-doctor.mjs", "scripts/browser-self-test.mjs", "office/workforce.mjs", "office/src/workforce.generated.css",
 ]) add(`Required file: ${rel}`, existsSync(resolve(root, rel)), rel);
 
 try {
