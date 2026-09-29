@@ -43,6 +43,25 @@
 - [ ] pluggable storage with export/import
 - [ ] adapter sandboxing and permission-policy extensions
 
+
+## v0.4 — Modular Workforce
+- [x] distinct machine-readable dialogue fingerprints for all 16 baseline employees
+- [x] personality guardrails that never override approval, evidence, or verification
+- [x] arbitrary employee subset selection + reusable workforce presets
+- [x] selective Hermes bootstrap and Windows/POSIX installer flags
+- [x] standalone employee pack builder with skill closure, optional-integration metadata, provenance, and SHA-256 checksums
+- [x] tagged-release pipeline for one downloadable ZIP per employee + SHA256SUMS
+- [x] Fikri upgraded to Knowledge / Markdown / Context / Prompt Engineer
+- [x] source-preserving L0/L1/L2 context + prompt compiler procedure
+- [x] M0–M4 memory/learning policy with repository-PR-only canonical skill mutation
+- [x] expanded pinned upstream provenance and role-scoped optional integration catalog
+- [x] provider-neutral contracts for repository packing, experimental compression, browser operation, Lighthouse, and Polars
+- [ ] cross-harness Agent Skills compatibility tests before claiming broad portability
+- [ ] Cognee memory-provider isolation/export/deletion evaluation
+- [ ] Playwright MCP vs Browser Use reliability/evidence/recovery benchmark
+- [ ] Fikri context-compaction benchmark: token reduction + instruction/numeric/source fidelity + downstream task success
+- [ ] real-task evaluation dataset and published baseline comparison
+
 ## Non-goals
 
 nyobakantorai will not silently enable autonomous production writes, scrape credentials from local machines, or treat model output as verified evidence.
