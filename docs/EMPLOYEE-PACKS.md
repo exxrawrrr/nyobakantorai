@@ -168,3 +168,33 @@ The release job publishes:
 - the release manifest.
 
 An arbitrary two-worker setup can still use the two individual employee ZIPs; no unrelated employee pack is required.
+
+
+## Removing selected Hermes profiles
+
+Hermes supports profile deletion, but deletion is destructive: profile config, memories, sessions, and skills are removed.
+
+nyobakantorai therefore keeps removal separate from installation.
+
+Preview only:
+
+```bash
+npm run hermes:remove -- --employees=siti
+npm run hermes:remove -- --employees=praroro,siti
+```
+
+Actual deletion requires an explicit destructive-data acknowledgement:
+
+```bash
+npm run hermes:remove -- --employees=siti --confirm-delete-user-state
+```
+
+The removal script:
+
+- resolves only the requested employee subset;
+- does not touch unselected profiles;
+- treats already-absent selected profiles as idempotent success;
+- verifies every selected profile is absent after deletion;
+- fails closed if any selected profile still exists.
+
+This is intentionally not an automatic uninstall step inside the normal installer.
