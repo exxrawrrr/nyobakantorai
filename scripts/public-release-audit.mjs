@@ -92,7 +92,7 @@ for (const relative of skillPaths) {
   const nameLine = text.split(String.fromCharCode(10)).find((line) => line.startsWith("name:"));
   const name = nameLine ? nameLine.slice(5).trim() : "";
   if (name !== dir) findings.push(relative + ": frontmatter name does not match directory");
-  if (!text.toLowerCase().includes("platforms: [windows, linux, macos]")) findings.push(relative + ": public skill is not declared cross-platform");
+  if (!/^compatibility:\s*["\']Hermes-first; follows the Agent Skills SKILL[.]md core format[.]["\']\s*$/m.test(text)) findings.push(relative + ": public skill is missing Agent Skills compatibility declaration");\n  if (!/^\s*nyoba-platforms:\s*["\']windows,linux,macos["\']\s*$/m.test(text)) findings.push(relative + ": public skill is not declared cross-platform in namespaced metadata");
 }
 
 const agentPaths = tracked.filter((p) => {
