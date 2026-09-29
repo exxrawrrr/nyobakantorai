@@ -2341,6 +2341,36 @@
       "install_method": "bundled local module + Fikri skill",
       "verification_method": "context-guard tests + synthetic compaction benchmark",
       "artifact_ref": "packages/context-guard/index.mjs"
+    },
+    {
+      "id": "workflow.siti-evidence-verification",
+      "kind": "workflow",
+      "description": "Deterministically reject evidence packets with wrong facts, stale/fabricated evidence, partial completion, unauthorized verification/execution claims, or prompt-injection signals.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "original",
+      "default_state": "BUNDLED",
+      "risk_class": "PROCEDURAL",
+      "required_by": [
+        "siti"
+      ],
+      "optional_for": [
+        "praroro",
+        "fikri"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ],
+      "install_method": "bundled local module + Siti verification procedure",
+      "verification_method": "evidence-verifier unit tests + adversarial policy benchmark",
+      "artifact_ref": "packages/evidence-verifier/index.mjs"
     }
   ]
 }
