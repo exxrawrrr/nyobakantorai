@@ -138,3 +138,29 @@ test("browser self-test plan CLI is side-effect free and claim-limited",()=>{
   assert.ok(data.forbidden.includes("reuse of the user's normal browser profile"));
   assert.match(data.claim_limit,/not agent-mode\/model quality proof/i);
 });
+
+
+test("Cognee self-test plan CLI is side-effect free, key-safe, and remote-fail-closed",()=>{
+  const secret="COGNEE-CLI-SECRET-123456789";
+  const local=run(["scripts/cognee-self-test.mjs","plan","--json"],{
+    env:{COGNEE_BASE_URL:"http://127.0.0.1:8011",COGNEE_API_KEY:secret}
+  });
+  assert.equal(local.status,0,local.stderr);
+  assert.equal(local.stdout.includes(secret),false);
+  assert.equal(local.stderr.includes(secret),false);
+  const localData=JSON.parse(local.stdout);
+  assert.equal(localData.provider_id,"cognee-hermes");
+  assert.equal(localData.provider_call_performed,false);
+  assert.equal(localData.endpoint_reachability,"NOT_CHECKED");
+  assert.equal(localData.target_scope,"LOOPBACK");
+
+  const remote=run(["scripts/cognee-self-test.mjs","plan","--json","--base-url","https://memory.example.test"],{
+    env:{COGNEE_API_KEY:secret}
+  });
+  assert.equal(remote.status,0,remote.stderr);
+  const remoteData=JSON.parse(remote.stdout);
+  assert.equal(remoteData.configuration_ready,false);
+  assert.equal(remoteData.target_scope,"REMOTE");
+  assert.equal(remoteData.api_key_present,true);
+  assert.equal(remoteData.remote_opt_in,false);
+});
