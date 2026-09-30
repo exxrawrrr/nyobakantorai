@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat15-resolve-runtime-portability-unknowns",
+  "audit": "v0.5-chat19-prune-release-claims-boundary",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -304,17 +304,17 @@
       "classification": "CORE_PORTABLE",
       "paths": [
         "packages/release-claims",
-        "packages/deferred-evidence",
         "config/v0.4-deferred-evidence.json"
       ],
-      "rationale": "Release-claim construction and deferred-evidence semantics consume provider IDs, evidence states and truth boundaries without runtime implementation imports. Historical v0.4 Hermes/provider evidence remains data, while synthetic-provider tests independently demonstrate that the claims model itself is provider-neutral.",
+      "rationale": "Release-claim construction and historical deferred-evidence semantics now share one provider-neutral package boundary under packages/release-claims. Historical v0.4 Hermes/provider evidence remains data, while synthetic-provider tests independently demonstrate that the claims model itself is provider-neutral.",
       "evidence": [
         "packages/release-claims/index.mjs",
         "packages/release-claims/index.test.mjs",
-        "packages/deferred-evidence/index.mjs",
+        "packages/release-claims/deferred-evidence.mjs",
+        "packages/release-claims/deferred-evidence.test.mjs",
         "config/v0.4-deferred-evidence.json"
       ],
-      "next_action": "Keep historical release data truthful and runtime-specific as data; keep claim evaluation logic provider-neutral."
+      "next_action": "Keep historical release data truthful and runtime-specific as data; keep the consolidated release-claims evaluation/deferral logic provider-neutral."
     },
     {
       "id": "office-ui-workforce-view",
