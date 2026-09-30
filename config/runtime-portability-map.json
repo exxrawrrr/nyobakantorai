@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat8-bounded-live-reference-run-harness",
+  "audit": "v0.5-chat9-hermes-live-readiness-hardening",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -376,13 +376,13 @@
       "paths": [
         "packages/hermes-execution-adapter"
       ],
-      "rationale": "Hermes-specific one-shot execution is isolated behind RuntimeExecutionAdapter v1, bound to the Chat 4 canonical Siti core bundle, and exposes only the skills toolset under fixture/conformance proof.",
+      "rationale": "Hermes-specific one-shot execution is isolated behind RuntimeExecutionAdapter v1 and bound to the exact Chat 4 canonical Siti core bundle. Portable worker identity is independent from the local Hermes runtime profile; the adapter defaults to the safe local `default` profile, exposes only the skills toolset, and ignores runtime rules that could replace the canonical worker contract.",
       "evidence": [
         "packages/hermes-execution-adapter/index.mjs",
         "packages/hermes-execution-adapter/index.test.mjs",
         "docs/HERMES-EXECUTION-ADAPTER.md"
       ],
-      "next_action": "Run a separately authorized bounded live Hermes reference execution later without changing the canonical core bundle or promoting fixture evidence to live portability."
+      "next_action": "Collect separately authorized live Hermes evidence only after a user-owned provider/auth path is configured. Runtime profile choice remains adapter metadata and must not alter the canonical core bundle."
     },
     {
       "id": "codex-execution-adapter",
