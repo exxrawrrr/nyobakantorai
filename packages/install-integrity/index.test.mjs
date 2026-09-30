@@ -115,3 +115,16 @@ test("manifest is deterministic for the same bytes and metadata", () => {
   assert.deepEqual(again, manifest);
   assert.equal(formatChecksumFile(again), sums);
 });
+
+
+test("package version mismatch is rejected before release assets are built", () => {
+  assert.throws(
+    () => buildInstallManifest({
+      releaseTag: "v0.5.0",
+      sourceCommit: COMMIT,
+      packageVersion: "0.4.0",
+      artifacts: [{ name: artifactName, format: "zip", bytes: original }],
+    }),
+    /packageVersion must exactly match releaseTag/
+  );
+});
