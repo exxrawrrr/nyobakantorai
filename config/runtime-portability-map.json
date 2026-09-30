@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat7-reference-case-comparator",
+  "audit": "v0.5-chat8-bounded-live-reference-run-harness",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -38,7 +38,8 @@
       "portability-reference-inputs",
       "hermes-execution-adapter",
       "codex-execution-adapter",
-      "reference-case-comparator"
+      "reference-case-comparator",
+      "live-reference-run-harness"
     ],
     "forbidden_core_import_fragments": [
       "hermes-bootstrap",
@@ -410,6 +411,21 @@
         "docs/PORTABILITY-COMPARATOR.md"
       ],
       "next_action": "Feed separately collected live Hermes/Codex run records into this comparator. Fixture evidence must remain PARTIAL and live evidence without independent verification must remain PORTABILITY_CANDIDATE."
+    },
+    {
+      "id": "live-reference-run-harness",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "packages/portability-live-run",
+        "scripts/portability-live-run.mjs",
+        "config/portability-live-run.json"
+      ],
+      "rationale": "The harness binds canonical core plus runtime-specific adapters, provider detection, clean Git state and public-safety checks into redacted comparator-compatible run records while refusing fixture/provider-unverified promotion to LIVE_RUNTIME_EVIDENCE.",
+      "evidence": [
+        "packages/portability-live-run/index.test.mjs",
+        "docs/PORTABILITY-LIVE-RUN.md"
+      ],
+      "next_action": "Use explicit plan/run commands for separately authorized live Hermes and Codex reference attempts; keep generated records local until redaction/public review."
     }
   ]
 }
