@@ -10,7 +10,7 @@ The repository is **already PUBLIC**. The old private-to-public visibility trans
 - [ ] Evidence-dependent gaps are either completed for the release scope or explicitly accepted/deferred by the owner without inflating claims.
 - [ ] README, changelog, roadmap, evaluation docs, and release notes describe the same capability/evidence state.
 
-For the current v0.4 Draft candidate, stable promotion is **HOLD**. See `docs/V0.4-RELEASE-DECISION.md`.
+For v0.4.0, the owner explicitly accepted the six still-open evidence classes as deferred scope on 2026-09-30. Stable promotion is authorized only after the exact promoted `main` commit passes cross-platform verify and the manual release-gate. See `docs/V0.4-RELEASE-DECISION.md`.
 
 ## Code and tests
 - [ ] `npm run doctor` passes on the release machine.
