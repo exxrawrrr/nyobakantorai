@@ -4,7 +4,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { inspectEvaluationReadiness } from "./evaluation-doctor.mjs";
 import { buildReleaseClaimSnapshot } from "../packages/release-claims/index.mjs";
-import { buildDeferredEvidenceSnapshot, validateDeferredEvidenceLedger } from "../packages/deferred-evidence/index.mjs";
+import { buildDeferredEvidenceSnapshot, validateDeferredEvidenceLedger } from "../packages/release-claims/deferred-evidence.mjs";
 import { buildEvidenceClassificationSnapshot, validateEvidenceInventory } from "../packages/evidence-classification/index.mjs";
 import { buildMaturitySnapshot, validateMaturityModel } from "../packages/maturity-model/index.mjs";
 

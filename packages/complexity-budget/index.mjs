@@ -96,10 +96,19 @@ export async function validateComplexityBudget(ledger,{root=resolve(import.meta.
     }
     if(scan?.require_private_root_package===true&&packageJson.private!==true)errors.push(evaluation.id+": root package must remain private for internal-only migration assumption");
     if(scan?.require_no_package_exports===true&&packageJson.exports!==undefined)errors.push(evaluation.id+": package exports appeared; migration assumptions must be reviewed");
+    if(evaluation.execution_status!==undefined&&!["PLANNED","COMPLETED"].includes(evaluation.execution_status))errors.push(evaluation.id+": invalid execution_status");
+    if(evaluation.execution_status==="COMPLETED"){
+      if(!nonEmpty(evaluation.executed_in))errors.push(evaluation.id+": executed_in required for completed pruning");
+      if(!nonEmpty(evaluation.execution_note))errors.push(evaluation.id+": execution_note required for completed pruning");
+      if(!Array.isArray(evaluation.removed_paths)||!evaluation.removed_paths.length)errors.push(evaluation.id+": removed_paths required for completed pruning");
+      if(!Array.isArray(evaluation.replacement_paths)||!evaluation.replacement_paths.length)errors.push(evaluation.id+": replacement_paths required for completed pruning");
+      for(const path of evaluation.removed_paths||[])if(await exists(resolve(root,path)))errors.push(evaluation.id+": removed path still exists: "+path);
+      for(const path of evaluation.replacement_paths||[])if(!await exists(resolve(root,path)))errors.push(evaluation.id+": replacement path missing: "+path);
+    }
   }
 
   const decisions=Object.fromEntries(COMPLEXITY_DECISIONS.map((d)=>[d,(ledger?.subsystems||[]).filter((row)=>row.keep_simplify_delete===d).length]));
-  return Object.freeze({ok:!errors.length,errors:Object.freeze(errors),subsystems:(ledger?.subsystems||[]).length,decisions:Object.freeze(decisions),non_keep:Object.freeze(nonKeep.map((row)=>row.subsystem)),deep_evaluations:(ledger?.deep_evaluations||[]).length});
+  return Object.freeze({ok:!errors.length,errors:Object.freeze(errors),subsystems:(ledger?.subsystems||[]).length,decisions:Object.freeze(decisions),non_keep:Object.freeze(nonKeep.map((row)=>row.subsystem)),deep_evaluations:(ledger?.deep_evaluations||[]).length,completed_pruning:Object.freeze((ledger?.deep_evaluations||[]).filter((item)=>item.execution_status==="COMPLETED").map((item)=>item.id))});
 }
 
 export function buildComplexityBudgetSnapshot({ledger,validation}){

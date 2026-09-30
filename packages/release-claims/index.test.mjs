@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { inspectEvaluationReadiness } from "../../scripts/evaluation-doctor.mjs";
 import { buildReleaseClaimSnapshot } from "./index.mjs";
-import { buildDeferredEvidenceSnapshot, validateDeferredEvidenceLedger } from "../deferred-evidence/index.mjs";
+import { buildDeferredEvidenceSnapshot, validateDeferredEvidenceLedger } from "./deferred-evidence.mjs";
 import { readFile } from "node:fs/promises";
 import { readAndValidateEvidenceInventory, buildEvidenceClassificationSnapshot } from "../evidence-classification/index.mjs";
 import { readMaturityInputs, validateMaturityModel, buildMaturitySnapshot } from "../maturity-model/index.mjs";

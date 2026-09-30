@@ -12,11 +12,13 @@ test("canonical complexity budget covers every required subsystem and contains a
  assert.equal(validation.decisions.MERGE,1);
  assert.deepEqual(validation.non_keep,["deferred-evidence-release-claims"]);
  assert.equal(ledger.deep_evaluations[0].execute_in,"Chat 19");
+ assert.equal(ledger.deep_evaluations[0].execution_status,"COMPLETED");
+ assert.deepEqual(validation.completed_pruning,["merge-deferred-evidence-package-boundary"]);
 });
 
-test("deferred-evidence merge candidate dependency scan is exact",async()=>{
- assert.deepEqual(await findRelativeImporters(root,"packages/deferred-evidence/index.mjs"),[
-  "packages/deferred-evidence/index.test.mjs",
+test("completed deferred-evidence merge has exact replacement dependency scan and no old boundary",async()=>{
+ assert.deepEqual(await findRelativeImporters(root,"packages/release-claims/deferred-evidence.mjs"),[
+  "packages/release-claims/deferred-evidence.test.mjs",
   "packages/release-claims/index.test.mjs",
   "scripts/release-manifest.mjs"
  ]);
@@ -24,6 +26,9 @@ test("deferred-evidence merge candidate dependency scan is exact",async()=>{
   "packages/release-claims/index.test.mjs",
   "scripts/release-manifest.mjs"
  ]);
+ const { access }=await import("node:fs/promises");
+ await assert.rejects(access(resolve(root,"packages/deferred-evidence/index.mjs")));
+ await assert.rejects(access(resolve(root,"packages/deferred-evidence/index.test.mjs")));
 });
 
 test("all-KEEP complexity ledger is rejected",async()=>{
@@ -54,4 +59,16 @@ test("MERGE decision requires preserved surfaces, replacement tests, and rollbac
  assert.equal(result.ok,false);
  assert.ok(result.errors.some((e)=>/replacement_test_plan required/.test(e)));
  assert.ok(result.errors.some((e)=>/rollback_recovery required/.test(e)));
+});
+
+
+test("completed MERGE fails if an old path reappears or replacement disappears",async()=>{
+ const {ledger}=await readAndValidateComplexityBudget({root});
+ const changed=structuredClone(ledger);
+ changed.deep_evaluations[0].removed_paths=["packages/release-claims/index.mjs"];
+ changed.deep_evaluations[0].replacement_paths=["packages/deferred-evidence/index.mjs"];
+ const result=await validateComplexityBudget(changed,{root});
+ assert.equal(result.ok,false);
+ assert.ok(result.errors.some((e)=>/removed path still exists/.test(e)));
+ assert.ok(result.errors.some((e)=>/replacement path missing/.test(e)));
 });

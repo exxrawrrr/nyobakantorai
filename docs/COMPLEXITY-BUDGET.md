@@ -40,7 +40,7 @@ This is **not** a claim that eleven KEEP rows are free. Each row has explicit fa
 
 ## Deep evaluation: merge the package boundary, not the historical evidence
 
-The concrete Chat 19 candidate is:
+The Chat 19 simplification was executed:
 
 `packages/deferred-evidence/` → merge under `packages/release-claims/`
 
@@ -61,7 +61,7 @@ What must be preserved:
 - release-manifest deferred decision/open-blocker semantics;
 - the rule `release-scope acceptance != evidence completion`.
 
-What Chat 19 may remove is only the redundant **top-level package boundary** after the code/tests have moved under release-claims.
+Chat 19 removed only the redundant **top-level package boundary** after relocating code/tests under release-claims.
 
 ## Why the other large subsystems stay
 
@@ -85,4 +85,22 @@ Run:
 npm run complexity:check
 ```
 
-Chat 18 evaluates. Chat 19 is where the approved simplification is actually executed.
+Chat 18 evaluated the merge. Chat 19 executed it and added post-prune invariants.
+
+
+## Chat 19 execution result
+
+Completed on branch `v0.5/proof-over-machinery`:
+
+- moved deferred-ledger validation/snapshot behavior to `packages/release-claims/deferred-evidence.mjs`;
+- moved every deferred-evidence negative drift test to `packages/release-claims/deferred-evidence.test.mjs`;
+- folded the old `test:deferred-evidence` script into `test:release-claims`;
+- updated release-manifest and release-claims imports;
+- deleted `packages/deferred-evidence/index.mjs` and `packages/deferred-evidence/index.test.mjs`;
+- retained no compatibility shim because the root package is private and has no package exports.
+
+Post-prune validation now fails if an old removed path reappears, a replacement path disappears, or the exact importer set drifts.
+
+Historical `config/v0.4-deferred-evidence.json` and the v0.4 public decision documents were not moved or rewritten.
+
+Rollback: revert the Chat 19 pruning commit. The historical source ledger remains independently recoverable at its original path.

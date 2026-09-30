@@ -294,7 +294,7 @@
       "risk_reduced": "Reduces retroactive rewriting of UNPROVEN/NOT_RUN/COLLECTING states when a release is authorized.",
       "evidence": [
         "config/v0.4-deferred-evidence.json",
-        "packages/deferred-evidence/index.test.mjs",
+        "packages/release-claims/deferred-evidence.test.mjs",
         "packages/release-claims/index.test.mjs",
         "scripts/release-manifest.mjs",
         "docs/DEFERRED-EVIDENCE.md"
@@ -303,22 +303,22 @@
         "tracked_files": 6,
         "approx_bytes": 28452,
         "primary_paths": [
-          "packages/deferred-evidence/",
           "packages/release-claims/",
           "config/v0.4-deferred-evidence.json",
-          "scripts/release-manifest.mjs"
+          "scripts/release-manifest.mjs",
+          "docs/DEFERRED-EVIDENCE.md"
         ]
       },
       "runtime_coupling": "NONE",
       "failure_modes": [
         "Historical ledger drift",
-        "Duplicate package boundary",
         "Release manifest orchestration drift",
-        "Accidental evidence promotion"
+        "Accidental evidence promotion",
+        "Historical module relocation drift"
       ],
       "keep_simplify_delete": "MERGE",
       "delete_test_answer": "YES to the behavior, NO to two top-level package boundaries — the historical validator/snapshot can live under release-claims.",
-      "owner_review_note": "Merge package boundaries in Chat 19 only after dependency scan stays bounded. Preserve config/v0.4-deferred-evidence.json and historical docs unchanged."
+      "owner_review_note": "Chat 19 executed the MERGE: deferred-evidence validation/tests now live under release-claims; historical config/docs remain at their original paths."
     },
     {
       "subsystem": "approval-queue",
@@ -403,9 +403,9 @@
       "dependency_scan": {
         "targets": [
           {
-            "module": "packages/deferred-evidence/index.mjs",
+            "module": "packages/release-claims/deferred-evidence.mjs",
             "expected_importers": [
-              "packages/deferred-evidence/index.test.mjs",
+              "packages/release-claims/deferred-evidence.test.mjs",
               "packages/release-claims/index.test.mjs",
               "scripts/release-manifest.mjs"
             ]
@@ -449,7 +449,39 @@
       ],
       "migration_note": "Internal-only module move: the repository root package is private and has no package exports. Historical JSON/docs remain at their existing paths.",
       "rollback_recovery": "Revert the Chat 19 pruning commit; the historical JSON ledger and docs are not moved or rewritten.",
-      "execute_in": "Chat 19"
+      "execute_in": "Chat 19",
+      "pre_prune_dependency_scan": {
+        "targets": [
+          {
+            "module": "packages/deferred-evidence/index.mjs",
+            "expected_importers": [
+              "packages/deferred-evidence/index.test.mjs",
+              "packages/release-claims/index.test.mjs",
+              "scripts/release-manifest.mjs"
+            ]
+          },
+          {
+            "module": "packages/release-claims/index.mjs",
+            "expected_importers": [
+              "packages/release-claims/index.test.mjs",
+              "scripts/release-manifest.mjs"
+            ]
+          }
+        ],
+        "require_private_root_package": true,
+        "require_no_package_exports": true
+      },
+      "execution_status": "COMPLETED",
+      "executed_in": "Chat 19",
+      "removed_paths": [
+        "packages/deferred-evidence/index.mjs",
+        "packages/deferred-evidence/index.test.mjs"
+      ],
+      "replacement_paths": [
+        "packages/release-claims/deferred-evidence.mjs",
+        "packages/release-claims/deferred-evidence.test.mjs"
+      ],
+      "execution_note": "Package boundary merged without changing the historical JSON ledger or v0.4 public decision documents. No compatibility shim retained because the root package is private and has no package exports."
     }
   ]
 }
