@@ -87,7 +87,7 @@ test("Codex fixture execution uses read-only ephemeral sandbox and cleans worksp
   assert.equal(outcome.normalized_result.output.review_state,"FAIL");
   assert.equal(fake.calls.length,1);
   const call=fake.calls[0];
-  assert.deepEqual(call.args,["exec","--skip-git-repo-check","--sandbox","read-only","--ephemeral","--ignore-user-config","--ignore-rules","--json","-"]);
+  assert.deepEqual(call.args,["exec","--skip-git-repo-check","--sandbox","read-only","--ephemeral","--ignore-user-config","--ignore-rules","-c",'model_reasoning_effort="low"',"--json","-"]);
   assert.equal(call.args.includes("--dangerously-bypass-approvals-and-sandbox"),false);
   assert.ok(call.stdin.includes(CODEX_REFERENCE_CORE_SHA256));
   assert.equal(call.stdin.includes('"expected_result"'),false);
@@ -98,6 +98,7 @@ test("Codex fixture execution uses read-only ephemeral sandbox and cleans worksp
   assert.ok(outcome.evidence.evidence_refs.includes("codex-session:ephemeral"));
   assert.ok(outcome.evidence.evidence_refs.includes("codex-user-config:ignored"));
   assert.ok(outcome.evidence.evidence_refs.includes("codex-rules:ignored"));
+  assert.ok(outcome.evidence.evidence_refs.includes("codex-reasoning-effort:low"));
 });
 
 test("Codex workspace stages exact five canonical skills under .agents/skills",async()=>{
