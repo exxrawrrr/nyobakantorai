@@ -193,3 +193,11 @@ Chat 11 adds a Python reference verifier for the minimum stable signed-receipt/e
 The implementation does not import or invoke the JavaScript verifier and does not consume a JavaScript verdict. It independently checks canonical payload SHA-256, Ed25519 signatures, trusted key IDs, task/worker/capability/result bindings, freshness, replay, runtime scope, and evidence receipt-reference presence.
 
 This establishes an independent implementation path. Cross-implementation agreement remains a separate differential-corpus gate.
+
+## Chat 12 differential verifier update
+
+Chat 12 adds one static adversarial receipt corpus consumed by both the JavaScript production verifier and the independent Python reference verifier.
+
+The gate compares the exact corpus SHA-256, accept/reject decision, packet-level reason codes, and per-receipt reason sets. Any disagreement fails CI.
+
+The shared corpus contains valid, tampered payload, bad signature, unknown key, stale/future, task/worker/capability/result/runtime mismatch, consumed replay, duplicate replay, and missing receipt-reference cases.

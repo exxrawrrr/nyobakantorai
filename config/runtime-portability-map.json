@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat11-independent-python-reference-verifier",
+  "audit": "v0.5-chat12-differential-verifier-corpus",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -40,7 +40,8 @@
       "codex-execution-adapter",
       "reference-case-comparator",
       "live-reference-run-harness",
-      "independent-python-reference-verifier"
+      "independent-python-reference-verifier",
+      "verifier-differential-corpus"
     ],
     "forbidden_core_import_fragments": [
       "hermes-bootstrap",
@@ -440,6 +441,21 @@
         "docs/INDEPENDENT-REFERENCE-VERIFIER.md"
       ],
       "next_action": "Build the shared adversarial differential corpus and require JavaScript/Python accept-reject agreement before claiming cross-implementation verification."
+    },
+    {
+      "id": "verifier-differential-corpus",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "benchmarks/verifier-differential",
+        "reference-verifier/python/differential_runner.py"
+      ],
+      "rationale": "One static signed-receipt corpus is consumed independently by the production JavaScript verifier and Python reference verifier; exact accept/reject, packet reason codes, receipt reason sets, and corpus SHA-256 must agree.",
+      "evidence": [
+        "benchmarks/verifier-differential/corpus.json",
+        "benchmarks/verifier-differential/run.mjs",
+        "docs/VERIFIER-DIFFERENTIAL-CORPUS.md"
+      ],
+      "next_action": "Treat any future JavaScript/Python disagreement as a release-blocking contract regression; extend the corpus when the stable receipt trust surface changes."
     }
   ]
 }

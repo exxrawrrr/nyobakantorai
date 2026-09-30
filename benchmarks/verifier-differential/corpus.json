@@ -1,0 +1,1450 @@
+{
+  "schema": 1,
+  "id": "receipt-verifier-differential-v1",
+  "description": "Shared static corpus for JavaScript/Python signed-receipt verifier agreement.",
+  "generation_note": "Signatures were created once with an ephemeral Ed25519 private key. Only the public key and signed envelopes are stored.",
+  "cases": [
+    {
+      "id": "valid",
+      "description": "valid trusted receipt",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": true,
+        "packet_reason_codes": [],
+        "receipt_reason_sets": [
+          []
+        ]
+      }
+    },
+    {
+      "id": "tampered-payload",
+      "description": "payload modified after signing",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Changed after signing.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "PAYLOAD_HASH_MISMATCH",
+            "SIGNATURE_INVALID"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "bad-signature",
+      "description": "signature bytes modified",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "gnwCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "SIGNATURE_INVALID"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "unknown-key",
+      "description": "untrusted key id",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:unknown",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "UNTRUSTED_KEY_ID"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stale",
+      "description": "receipt exceeds freshness window",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T02:59:00.000Z",
+                "finished_at": "2026-09-29T03:00:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "b3e317ef6e0456c1203ee96829b56629ca19bb627e05de789e5371bc472c9a16",
+              "signature_base64": "W+E2IWP/pXOWDjZIeLlWHYDWIo8153uAhY0/vJ7sW7+FFfKrXtr1alMeDbs094xnd3KNZDAWHYQ87Ki3G4UtDw=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:b3e317ef6e0456c1203ee96829b56629ca19bb627e05de789e5371bc472c9a16"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "RECEIPT_STALE"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "future",
+      "description": "receipt finish time exceeds allowed future skew",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:59:00.000Z",
+                "finished_at": "2026-09-29T04:00:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "34e694bb44995cb33202e90a7fafec0fe3aba7e34409c17ae6592144726fa22d",
+              "signature_base64": "JzSO5iaZgBzGZGsNHqZ1B7LHO9QLaux1kX/MlYcpgt0j4PiJsWihSCX130p3oa3BAgMGDIDgkNzrqAbXDE32Bg=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:34e694bb44995cb33202e90a7fafec0fe3aba7e34409c17ae6592144726fa22d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "PAYLOAD_INVALID:finished_at is too far in the future"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "task-mismatch",
+      "description": "task binding mismatch",
+      "packet": {
+        "expected": {
+          "task_id": "task-other",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "TASK_BINDING_MISMATCH"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worker-mismatch",
+      "description": "worker binding mismatch",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "gugun",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "EMPLOYEE_BINDING_MISMATCH"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "capability-mismatch",
+      "description": "capability binding mismatch",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.google.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "CAPABILITY_BINDING_MISMATCH"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "result-state-mismatch",
+      "description": "result state not allowed",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "FAILED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "RESULT_STATE_NOT_ALLOWED"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "runtime-mismatch",
+      "description": "runtime provider and ref are outside allowlist",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "hermes"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "hermes:"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "RUNTIME_PROVIDER_NOT_ALLOWED",
+            "RUNTIME_REF_NOT_ALLOWED"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "replay-consumed",
+      "description": "receipt ref already consumed",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ]
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "RECEIPT_REPLAYED"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "duplicate-replay",
+      "description": "same receipt occurs twice in one evidence packet",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            },
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID"
+        ],
+        "receipt_reason_sets": [
+          [],
+          [
+            "RECEIPT_REPLAYED"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "missing-receipt-ref",
+      "description": "valid signed receipt is absent from evidence refs",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": []
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:differential-v1",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T03:40:00.000Z",
+                "finished_at": "2026-09-29T03:41:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
+              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+            }
+          ],
+          "refs": [],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T03:45:00.000Z"
+        },
+        "now": "2026-09-29T03:45:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_RECEIPT_REFERENCE_MISSING"
+        ],
+        "receipt_reason_sets": [
+          []
+        ]
+      }
+    }
+  ]
+}
