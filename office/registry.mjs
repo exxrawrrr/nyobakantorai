@@ -1,8 +1,8 @@
-import { WORKFORCE } from "./workforce.mjs";
+import { WORKFORCE_VIEW as WORKFORCE } from "./workforce-view.mjs";
 
-export const EMPLOYEES = Object.freeze(WORKFORCE.map(({ id, name, role, department, visual, external_capabilities, preferred_toolsets }) => Object.freeze({
+export const EMPLOYEES = Object.freeze(WORKFORCE.map(({ id, name, role, department, visual, external_capabilities }) => Object.freeze({
   id, name, role, department, color: visual.color, asset_status: visual.asset_status,
-  initials: visual.initials, external_capabilities, preferred_toolsets,
+  initials: visual.initials, external_capabilities,
 })));
 export const RISK_CLASSES = Object.freeze(["READ_ONLY", "LOCAL_WRITE", "EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
 export const APPROVAL_STATUSES = Object.freeze(["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED"]);
