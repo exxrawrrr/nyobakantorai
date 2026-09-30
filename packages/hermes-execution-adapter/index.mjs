@@ -129,7 +129,7 @@ export async function runHermesReferenceProcess({executable,args,stdin,cwd,env,s
 }
 
 export function createHermesReferenceExecutionAdapter({
-  reference,executable="hermes",profile="siti",providerVersion=null,adapterVersion="1.0.0",
+  reference,executable="hermes",profile="default",providerVersion=null,adapterVersion="1.0.0",
   tempBase=tmpdir(),env=process.env,codeCommit="UNSPECIFIED",invokeImpl=runHermesReferenceProcess,
 }={}){
   assert(reference?.manifest?.core_bundle_sha256===HERMES_REFERENCE_CORE_SHA256,"Hermes adapter requires the locked Chat 4 core bundle hash");
@@ -139,13 +139,13 @@ export function createHermesReferenceExecutionAdapter({
   assert(reference.core_bundle?.task?.risk_class==="READ_ONLY","Hermes reference task must remain READ_ONLY");
   assert(canonicalJson(reference.core_bundle.task.required_skills)===canonicalJson(PORTABILITY_REFERENCE_SKILLS),"Hermes reference skill set drifted");
   assert(executableAllowed(executable),"Hermes executable is not allowlisted");
-  assert(profile==="siti","Hermes reference adapter must use the Siti profile");
+  assert(/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(String(profile||"")),"Hermes runtime profile must be a safe profile identifier");
 
   const states=new Map();
   const adapter=defineRuntimeExecutionAdapter({
     id:"hermes-reference",
     version:adapterVersion,
-    runtime:{provider:"hermes",runtime_ref:"hermes:profile:siti",provider_version:providerVersion},
+    runtime:{provider:"hermes",runtime_ref:"hermes:profile:"+profile,provider_version:providerVersion},
     capabilities:["bounded_process","model_inference","temporary_workspace","evidence_collection"],
     side_effects:{install:false,login:false,account_mutation:false,production_repo_write:false,external_write:false,paid_action:false,destructive:false},
     process_contract:{shell:false,executable_allowlisted:true},
@@ -166,13 +166,13 @@ export function createHermesReferenceExecutionAdapter({
       await writeFile(join(workspace,"CANARY.txt"),"NYOBA_HERMES_REFERENCE_CANARY_V1\n","utf8");
       const baseline=await snapshotTree(workspace);
       states.set(workspace,{workspace,skillRoot,baseline,baseline_sha256:hash(baseline),prompt:renderHermesReferencePrompt(reference)});
-      return {workspace:{kind:"TEMPORARY",ref:workspace,isolated:true,production_repo:false},session_ref:"hermes:siti:"+reference.manifest.core_bundle_sha256};
+      return {workspace:{kind:"TEMPORARY",ref:workspace,isolated:true,production_repo:false},session_ref:"hermes:"+profile+":"+reference.manifest.core_bundle_sha256};
     },
 
     async executeBoundedTask({prepared,signal}){
       const state=states.get(prepared?.workspace?.ref);
       assert(state,"Hermes staged workspace state missing");
-      const args=["-p","siti","chat","--oneshot","--quiet","--format","stream-json","--toolsets","skills"];
+      const args=["-p",profile,"chat","--oneshot","--quiet","--format","stream-json","--toolsets","skills","--ignore-rules","--source","tool"];
       for(const skill of PORTABILITY_REFERENCE_SKILLS) args.push("--skills",skill);
       args.push("--query-file","-");
       const processResult=await invokeImpl({
@@ -232,7 +232,7 @@ export function createHermesReferenceExecutionAdapter({
           "workspace-before-sha256:"+state.baseline_sha256,
           "workspace-after-sha256:"+afterSha,
           "code-commit:"+codeCommit,
-          "hermes-profile:siti",
+          "hermes-profile:"+profile,
           "hermes-toolsets:skills-only",
         ],
         artifact_refs:["sha256:"+hash(canonicalJson(raw_result)),"sha256:"+hash(canonicalJson(normalized_result))],
