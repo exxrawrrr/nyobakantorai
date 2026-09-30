@@ -114,6 +114,7 @@
     "test:verifier-differential": "node benchmarks/verifier-differential/run.mjs",
     "verifier:differential": "node benchmarks/verifier-differential/run.mjs",
     "test:trust-registry": "node --test packages/receipt-trust-registry/index.test.mjs packages/receipt-trust-registry/integration.test.mjs",
-    "test:install-integrity": "node --test packages/install-integrity/index.test.mjs scripts/build-install-assets.test.mjs"
+    "test:install-integrity": "node --test packages/install-integrity/index.test.mjs packages/install-integrity/installers.test.mjs scripts/build-install-assets.test.mjs",
+    "install:assets:verify": "node scripts/verify-install-assets.mjs"
   }
 }
