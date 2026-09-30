@@ -10,7 +10,7 @@
     "check": "node --check src/app.mjs && node --check src/scene.mjs && node --check registry.mjs && node --check reconcile.mjs && node --check server.mjs && node --test",
     "dev": "node build.mjs && node server.mjs"
   },
-  "version": "0.4.0-rc.1",
+  "version": "0.4.0",
   "description": "nyobakantorai v0.3 local-first sixteen-worker Hermes office",
   "engines": {
     "node": ">=20"
