@@ -201,3 +201,11 @@ Chat 12 adds one static adversarial receipt corpus consumed by both the JavaScri
 The gate compares the exact corpus SHA-256, accept/reject decision, packet-level reason codes, and per-receipt reason sets. Any disagreement fails CI.
 
 The shared corpus contains valid, tampered payload, bad signature, unknown key, stale/future, task/worker/capability/result/runtime mismatch, consumed replay, duplicate replay, and missing receipt-reference cases.
+
+## Chat 13 signing-key lifecycle update
+
+Chat 13 adds a runtime-neutral public receipt trust registry with explicit ACTIVE, RETIRED, and REVOKED semantics, validity windows, runtime provider/reference scope, rotation overlap analysis, and compromise policies.
+
+The registry is authoritative when supplied to the verifier; a legacy public-key map cannot bypass a revoked or out-of-scope registry key.
+
+The JavaScript/Python differential corpus is extended to v2 with lifecycle cases so cross-implementation agreement now covers the tested trust-registry semantics as well as the original signed-receipt cases.
