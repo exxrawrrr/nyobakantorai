@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat10-codex-live-readiness-hardening",
+  "audit": "v0.5-chat11-independent-python-reference-verifier",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -39,7 +39,8 @@
       "hermes-execution-adapter",
       "codex-execution-adapter",
       "reference-case-comparator",
-      "live-reference-run-harness"
+      "live-reference-run-harness",
+      "independent-python-reference-verifier"
     ],
     "forbidden_core_import_fragments": [
       "hermes-bootstrap",
@@ -426,6 +427,19 @@
         "docs/PORTABILITY-LIVE-RUN.md"
       ],
       "next_action": "Use explicit plan/run commands for separately authorized live Hermes and Codex reference attempts; keep generated records local until redaction/public review."
+    },
+    {
+      "id": "independent-python-reference-verifier",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "reference-verifier/python"
+      ],
+      "rationale": "Python independently verifies the signed receipt/evidence trust surface without importing or invoking the JavaScript verifier, providing a second implementation boundary for payload hash, Ed25519, bindings, freshness, replay, runtime scope, and receipt-reference checks.",
+      "evidence": [
+        "reference-verifier/python/test_verifier.py",
+        "docs/INDEPENDENT-REFERENCE-VERIFIER.md"
+      ],
+      "next_action": "Build the shared adversarial differential corpus and require JavaScript/Python accept-reject agreement before claiming cross-implementation verification."
     }
   ]
 }
