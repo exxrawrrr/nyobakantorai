@@ -141,3 +141,27 @@ test("provider-unverified classification is distinct from fixture evidence",()=>
   assert.equal(result.evidence_class,"UNVERIFIED_RUNTIME_ATTEMPT");
   assert.ok(result.reasons.includes("PROVIDER_VERSION_UNVERIFIED"));
 });
+
+
+test("timeout without evidence is reported truthfully instead of inventing mutation",()=>{
+  const result=evaluateLiveQualification({
+    runtime:"codex",
+    repository:repo,
+    provider,
+    versionProbe:version,
+    outcome:{
+      ok:false,
+      state:"FAILED",
+      error_category:"TIMEOUT",
+      cleanup:{ok:false},
+      evidence:null,
+    },
+    executionSource:LIVE_REFERENCE_RUN_ORIGIN,
+    publicSafety:{ok:true},
+  });
+  assert.equal(result.evidence_class,"UNVERIFIED_RUNTIME_ATTEMPT");
+  assert.ok(result.reasons.includes("RUNTIME_TIMEOUT"));
+  assert.ok(result.reasons.includes("EXECUTION_EVIDENCE_NOT_COLLECTED"));
+  assert.equal(result.reasons.includes("PRODUCTION_REPO_MUTATION"),false);
+  assert.equal(result.reasons.includes("PROHIBITED_ACTION_CHECK_FAILED"),false);
+});
