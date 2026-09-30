@@ -7,7 +7,7 @@ This is the recommended path when you want nyobakantorai to behave like a real H
 The nyobakantorai installer can:
 
 1. install or reuse the upstream **Hermes Agent** CLI;
-2. download/update nyobakantorai;
+2. download a tagged nyobakantorai core release and verify its manifest + SHA-256 before unpacking;
 3. validate the runtime prerequisites;
 4. install or safely upgrade the native Hermes profile distributions from `config/employees.json`;
 5. install the canonical role skills and fresh-install toolset defaults assigned to each employee;
@@ -21,7 +21,7 @@ It does **not** copy the author’s credentials, provider configuration, API key
 Open PowerShell and run:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Start
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Start
 ```
 
 The `-WithHermes` flag is explicit permission to invoke the official Hermes upstream installer if Hermes is not already installed. If you prefer to inspect scripts before execution, download `install.ps1` and the Hermes upstream installer first, review them, then run locally.
@@ -29,7 +29,7 @@ The `-WithHermes` flag is explicit permission to invoke the official Hermes upst
 ## Linux / macOS / WSL2 — fastest path
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --start
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --start
 ```
 
 ## Install only selected employees
@@ -90,14 +90,34 @@ The office runs at `http://127.0.0.1:4322` by default.
 
 ## Safe update behavior
 
-The bootstrap is intentionally conservative:
+Stable installer behavior is intentionally immutable and conservative:
+
+- stable mode resolves a tagged GitHub release, not mutable `main`;
+- `install-manifest.json` and `INSTALL-SHA256SUMS.txt` must both agree with the downloaded core artifact;
+- release tag, package version, source commit, byte size, and SHA-256 are checked before unpacking;
+- any integrity failure stops installation with no fallback to Git clone or branch archive;
+- stable mode refuses to mutate a non-empty existing install directory;
+- installation provenance is recorded in `.nyobakantorai-install.json`.
+
+Mutable source is still available only through explicit development mode:
+
+```bash
+./install.sh --channel development --ref main
+```
+
+```powershell
+.\install.ps1 -Channel development -Ref main
+```
+
+Hermes profile bootstrap remains separately conservative:
 
 - normal `install` mode skips a profile that already exists;
 - `--upgrade` uses native `hermes profile update` for existing distributions and installs missing workers;
 - it never copies `.env`, `auth.json`, model/provider secrets, memories, sessions, or runtime databases;
-- use `node scripts/hermes-bootstrap.mjs --upgrade` for v0.2 → v0.3 migration; native Hermes update preserves existing user config/state;
-- use `--force` only when you explicitly want the public distribution files to replace the profile’s distribution-owned files;
-- Hermes user-owned data remains protected by Hermes’ own distribution installer rules.
+- use `--force` only when you explicitly want public distribution-owned files replaced;
+- user-owned Hermes state remains outside the release artifact integrity contract.
+
+See [INSTALL-INTEGRITY.md](INSTALL-INTEGRITY.md) for the stable channel and release-asset threat boundary.
 
 ## Core-only mode
 
