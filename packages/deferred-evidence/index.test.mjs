@@ -25,13 +25,14 @@ function validate(overrides={}){
   });
 }
 
-test("deferred evidence ledger matches every current canonical blocker",()=>{
+test("owner-accepted deferred evidence preserves canonical states and allows v0.4 stable scope",()=>{
   const result=validate();
   assert.equal(result.ok,true,result.errors.join("\n"));
-  assert.equal(result.decision,"HOLD");
-  assert.equal(result.open_blockers,6);
-  assert.equal(result.stable_promotion_allowed,false);
-  assert.deepEqual(result.blocker_ids,[
+  assert.equal(result.decision,"RELEASE_WITH_ACCEPTED_DEFERRALS");
+  assert.equal(result.open_blockers,0);
+  assert.equal(result.accepted_deferred,6);
+  assert.equal(result.stable_promotion_allowed,true);
+  assert.deepEqual(result.accepted_ids,[
     "cross-harness-live-parity",
     "cognee-live-provider",
     "browser-use-live-provider",
@@ -89,20 +90,29 @@ test("real-task publication gate opening forces release-decision review",()=>{
   assert.ok(result.errors.some(x=>/publication gate is no longer closed/.test(x)));
 });
 
-test("blocking item cannot be relabeled non-blocking while decision remains HOLD",()=>{
+test("accepted release fails closed if one deferred item is not explicitly accepted",()=>{
   const changed=structuredClone(ledger);
-  changed.items[0].blocking_stable_promotion=false;
+  changed.items[0].accepted_for_v0_4_scope=false;
   const result=validate({ledger:changed});
   assert.equal(result.ok,false);
-  assert.ok(result.errors.some(x=>/blocking_stable_promotion must be true/.test(x)));
+  assert.ok(result.errors.some(x=>/accepted release requires accepted_for_v0_4_scope=true/.test(x)));
+});
+
+test("accepted release fails closed if one accepted item is still blocking",()=>{
+  const changed=structuredClone(ledger);
+  changed.items[0].blocking_stable_promotion=true;
+  const result=validate({ledger:changed});
+  assert.equal(result.ok,false);
+  assert.ok(result.errors.some(x=>/accepted release requires blocking_stable_promotion=false/.test(x)));
 });
 
 test("release snapshot remains compact and contains no free-form next actions",()=>{
   const validation=validate();
   const snapshot=buildDeferredEvidenceSnapshot({ledger,validation});
-  assert.equal(snapshot.decision,"HOLD");
-  assert.equal(snapshot.open_blockers,6);
-  assert.equal(snapshot.stable_promotion_allowed,false);
+  assert.equal(snapshot.decision,"RELEASE_WITH_ACCEPTED_DEFERRALS");
+  assert.equal(snapshot.open_blockers,0);
+  assert.equal(snapshot.accepted_deferred,6);
+  assert.equal(snapshot.stable_promotion_allowed,true);
   assert.equal(snapshot.items.length,6);
   assert.equal(JSON.stringify(snapshot).includes("safe_next_action"),false);
   assert.equal(JSON.stringify(snapshot).includes("completion_criterion"),false);
