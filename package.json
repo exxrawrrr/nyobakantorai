@@ -109,6 +109,7 @@
     "portability:compare": "node scripts/portability-compare.mjs",
     "test:portability-live-run": "node --test packages/portability-live-run/index.test.mjs",
     "portability:live:plan": "node scripts/portability-live-run.mjs plan",
-    "portability:live:run": "node scripts/portability-live-run.mjs run"
+    "portability:live:run": "node scripts/portability-live-run.mjs run",
+    "test:reference-verifier-python": "python -m unittest discover -s reference-verifier/python -v"
   }
 }
