@@ -66,3 +66,18 @@ test("tagged release workflow builds and publishes immutable install assets from
   assert.match(text, /dist\/install-assets\/install\.sh/);
   assert.match(text, /dist\/install-assets\/install\.ps1/);
 });
+
+
+test("README presents release assets as stable quick-start and labels main as development", async () => {
+  const text = await read("README.md");
+  assert.match(text, /releases\/latest\/download\/install\.sh/);
+  assert.match(text, /releases\/latest\/download\/install\.ps1/);
+  assert.match(text, /Mutable development path — explicit opt-in only/);
+  assert.match(text, /--channel development --ref main/);
+  assert.match(text, /-Channel development -Ref main/);
+  const installStart = text.indexOf("## Install");
+  const devStart = text.indexOf("### Mutable development path");
+  assert.ok(installStart >= 0 && devStart > installStart);
+  const stableSection = text.slice(installStart, devStart);
+  assert.doesNotMatch(stableSection, /raw\.githubusercontent\.com\/exxrawrrr\/nyobakantorai\/main\/install/);
+});
