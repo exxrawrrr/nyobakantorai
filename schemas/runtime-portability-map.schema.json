@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/runtime-portability-map.schema.json",
+  "title": "nyobakantorai runtime portability map",
+  "type": "object",
+  "required": [
+    "schema",
+    "audit",
+    "audited_release",
+    "audited_base_commit",
+    "classifications",
+    "policy",
+    "surfaces"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "audit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audited_release": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audited_base_commit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "claim_limit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "classifications": {
+      "type": "object",
+      "minProperties": 5
+    },
+    "policy": {
+      "type": "object",
+      "required": [
+        "required_surface_ids",
+        "forbidden_core_import_fragments",
+        "portable_source_extensions",
+        "direction_rule"
+      ]
+    },
+    "surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "classification",
+          "paths",
+          "rationale",
+          "evidence",
+          "next_action"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]+$"
+          },
+          "classification": {
+            "enum": [
+              "CORE_PORTABLE",
+              "ADAPTER_BOUNDARY",
+              "HERMES_SHAPED",
+              "RUNTIME_SPECIFIC_BY_DESIGN",
+              "UNKNOWN_REQUIRES_PROOF"
+            ]
+          },
+          "paths": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "next_action": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

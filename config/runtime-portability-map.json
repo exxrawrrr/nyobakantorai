@@ -1,0 +1,317 @@
+{
+  "schema": 1,
+  "audit": "v0.5-chat1-runtime-portability-baseline",
+  "audited_release": "v0.4.0",
+  "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
+  "observed_on": "2026-09-30",
+  "claim_limit": "This map classifies current coupling. CORE_PORTABLE means the audited surface has no known Hermes implementation dependency; it does not by itself prove live multi-runtime behavioral parity.",
+  "classifications": {
+    "CORE_PORTABLE": "Runtime-neutral contract/logic with no known direct Hermes implementation dependency in the audited surface.",
+    "ADAPTER_BOUNDARY": "Intentional boundary that knows about one or more runtime/provider interfaces but should keep runtime semantics outside portable core.",
+    "HERMES_SHAPED": "A surface intended to participate in general product behavior but currently embeds Hermes-specific names, states, paths, lifecycle semantics, or assumptions.",
+    "RUNTIME_SPECIFIC_BY_DESIGN": "A Hermes-specific distribution/integration surface whose runtime coupling is intentional and should remain behind an adapter or packaging boundary.",
+    "UNKNOWN_REQUIRES_PROOF": "A mixed or insufficiently isolated surface; portability must not be claimed until coupling is split or executable evidence exists."
+  },
+  "policy": {
+    "required_surface_ids": [
+      "employee-definitions",
+      "skill-definitions",
+      "capability-contracts",
+      "task-registry",
+      "approval-policy",
+      "evidence-and-receipts",
+      "memory-policy",
+      "provider-doctor",
+      "runtime-adapter-sdk",
+      "hermes-office-adapter",
+      "hermes-bootstrap",
+      "cross-harness-export",
+      "office-runtime-reconciliation",
+      "install-update-remove-lifecycle",
+      "employee-packaging",
+      "real-task-evidence",
+      "release-claims",
+      "office-ui-workforce-view",
+      "workforce-generation-pipeline"
+    ],
+    "forbidden_core_import_fragments": [
+      "hermes-runtime-adapter",
+      "hermes-home",
+      "hermes-bootstrap",
+      "hermes-profiles",
+      "skills/hermes-custom"
+    ],
+    "portable_source_extensions": [
+      ".mjs",
+      ".js",
+      ".cjs"
+    ],
+    "direction_rule": "portable core may define contracts used by adapters; portable core must not import Hermes implementation modules"
+  },
+  "surfaces": [
+    {
+      "id": "employee-definitions",
+      "classification": "UNKNOWN_REQUIRES_PROOF",
+      "paths": [
+        "config/employees.json"
+      ],
+      "rationale": "The registry contains portable role, personality, approval, verification and operational contracts, but also preferred runtime toolsets, Hermes-named optional integrations, and PROFILE_SCOPED_HERMES_FIRST memory-mode values.",
+      "evidence": [
+        "config/employees.json"
+      ],
+      "next_action": "Split portable worker contract fields from runtime preferences without changing worker behavior."
+    },
+    {
+      "id": "skill-definitions",
+      "classification": "HERMES_SHAPED",
+      "paths": [
+        "skills/hermes-custom"
+      ],
+      "rationale": "These files act as the canonical skill source and are exported to multiple harnesses, but the canonical path and generation pipeline are still Hermes-labelled.",
+      "evidence": [
+        "scripts/generate-workforce.mjs",
+        "scripts/export-skills.mjs"
+      ],
+      "next_action": "Establish a runtime-neutral canonical skill root or prove the existing root name is packaging-only."
+    },
+    {
+      "id": "capability-contracts",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "config/capabilities.json",
+        "packages/capability-router"
+      ],
+      "rationale": "Capability IDs, risk classes, connection truth and authorization routing are expressed independently of Hermes.",
+      "evidence": [
+        "config/capabilities.json",
+        "packages/capability-router/index.mjs"
+      ],
+      "next_action": "Keep runtime capability realization behind adapters."
+    },
+    {
+      "id": "task-registry",
+      "classification": "HERMES_SHAPED",
+      "paths": [
+        "packages/task-registry"
+      ],
+      "rationale": "The local registry contains portable lifecycle and evidence rules but hard-codes execution_mode HERMES versus DEMO and Hermes-specific reconciliation provenance.",
+      "evidence": [
+        "packages/task-registry/registry.mjs"
+      ],
+      "next_action": "Extract runtime identity from generic task lifecycle semantics."
+    },
+    {
+      "id": "approval-policy",
+      "classification": "UNKNOWN_REQUIRES_PROOF",
+      "paths": [
+        "config/employees.json",
+        "packages/task-registry/registry.mjs",
+        "docs/APPROVAL-MODEL.md"
+      ],
+      "rationale": "Risk classes and owner approval semantics are runtime-neutral, but the current implementation is co-located with Hermes-shaped task mode semantics and worker records.",
+      "evidence": [
+        "docs/APPROVAL-MODEL.md"
+      ],
+      "next_action": "Preserve the policy contract while separating runtime-specific task provenance."
+    },
+    {
+      "id": "evidence-and-receipts",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/evidence-verifier",
+        "packages/execution-receipt",
+        "schemas/execution-receipt.schema.json"
+      ],
+      "rationale": "Receipt signing, binding, freshness, replay, evidence references and verification do not depend on Hermes implementation modules.",
+      "evidence": [
+        "packages/evidence-verifier/index.mjs",
+        "packages/execution-receipt/index.mjs"
+      ],
+      "next_action": "Retain as core; Chat 9-10 will add implementation-independent verification evidence."
+    },
+    {
+      "id": "memory-policy",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "config/memory-policy.json",
+        "packages/memory-learning"
+      ],
+      "rationale": "Canonical memory layers, evidence requirements and promotion rules are runtime-neutral even though employee profile metadata separately contains Hermes-first wording.",
+      "evidence": [
+        "config/memory-policy.json",
+        "packages/memory-learning/index.mjs"
+      ],
+      "next_action": "Keep core policy neutral; move runtime memory preferences out of employee core contract."
+    },
+    {
+      "id": "provider-doctor",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "config/provider-doctor.json",
+        "packages/provider-doctor",
+        "scripts/provider-doctor.mjs"
+      ],
+      "rationale": "The doctor intentionally knows concrete harness/provider commands and reports availability without making them core workforce semantics.",
+      "evidence": [
+        "config/provider-doctor.json",
+        "packages/provider-doctor/index.mjs"
+      ],
+      "next_action": "Keep provider-specific probing at the boundary and prevent it from becoming worker policy."
+    },
+    {
+      "id": "runtime-adapter-sdk",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "packages/runtime-adapter",
+        "config/runtime-adapter-policy.json"
+      ],
+      "rationale": "The read-only SDK defines normalized runtime snapshots and policy-constrained adapters. Hermes is one configured adapter policy, not the only interface.",
+      "evidence": [
+        "packages/runtime-adapter/index.mjs",
+        "config/runtime-adapter-policy.json"
+      ],
+      "next_action": "Chat 3 should add a separately scoped execution adapter contract rather than broadening the read-only API."
+    },
+    {
+      "id": "hermes-office-adapter",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "office/hermes-runtime-adapter.mjs",
+        "office/hermes-home.mjs"
+      ],
+      "rationale": "Executable resolution, profile inspection, kanban invocation and Hermes environment rules are intentionally Hermes-specific.",
+      "evidence": [
+        "office/hermes-runtime-adapter.mjs",
+        "office/hermes-home.mjs"
+      ],
+      "next_action": "Keep behind a runtime-neutral office/runtime boundary."
+    },
+    {
+      "id": "hermes-bootstrap",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "scripts/hermes-bootstrap.mjs",
+        "scripts/hermes-bootstrap-plan.mjs",
+        "hermes-profiles"
+      ],
+      "rationale": "Profile installation, upgrade and Hermes-owned distribution layout are runtime packaging concerns.",
+      "evidence": [
+        "scripts/hermes-bootstrap-plan.mjs",
+        "hermes-profiles/README.md"
+      ],
+      "next_action": "Retain as Hermes distribution implementation; do not leak lifecycle semantics into core."
+    },
+    {
+      "id": "cross-harness-export",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "config/cross-harness-self-test.json",
+        "packages/cross-harness-self-test",
+        "scripts/export-skills.mjs"
+      ],
+      "rationale": "This boundary knows Hermes, Codex, Gemini and Copilot invocation/export details and already states that self-test success is not broad behavioral portability.",
+      "evidence": [
+        "config/cross-harness-self-test.json"
+      ],
+      "next_action": "Reuse its bounded harness knowledge for reference-case proof without promoting self-test to canonical live parity."
+    },
+    {
+      "id": "office-runtime-reconciliation",
+      "classification": "HERMES_SHAPED",
+      "paths": [
+        "office/server.mjs",
+        "office/reconcile.mjs",
+        "office/runtime-cache.mjs"
+      ],
+      "rationale": "The office server constructs Hermes directly, exposes a hermes-shaped runtime snapshot, and reconciliation emits a Hermes board reference.",
+      "evidence": [
+        "office/server.mjs",
+        "office/reconcile.mjs"
+      ],
+      "next_action": "Introduce a generic office runtime port and move Hermes construction behind it."
+    },
+    {
+      "id": "install-update-remove-lifecycle",
+      "classification": "HERMES_SHAPED",
+      "paths": [
+        "install.sh",
+        "install.ps1",
+        "packages/fresh-install-matrix",
+        "scripts/hermes-remove-selected.mjs"
+      ],
+      "rationale": "The current product installer is core-only when Hermes is absent but the employee install/upgrade/remove lifecycle is still expressed primarily through Hermes bootstrap semantics.",
+      "evidence": [
+        "install.sh",
+        "install.ps1"
+      ],
+      "next_action": "Separate core install channel from runtime profile installation; immutable release work occurs in Chat 12."
+    },
+    {
+      "id": "employee-packaging",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "scripts/employee-pack.mjs",
+        "hermes-profiles"
+      ],
+      "rationale": "Current employee release packs package Hermes profile distributions. They are valid release artifacts but are not a runtime-neutral worker package proof.",
+      "evidence": [
+        "scripts/employee-pack.mjs"
+      ],
+      "next_action": "Keep Hermes packs stable while defining portable core inputs separately."
+    },
+    {
+      "id": "real-task-evidence",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/real-task-recorder",
+        "packages/real-task-evaluation",
+        "packages/real-task-baseline"
+      ],
+      "rationale": "Real-task collection, hash-chain truth and evaluation readiness operate on evidence/task contracts rather than Hermes implementation details.",
+      "evidence": [
+        "packages/real-task-recorder/index.mjs"
+      ],
+      "next_action": "Keep as core evidence machinery; do not require 20/20 for the v0.5 portability reference case."
+    },
+    {
+      "id": "release-claims",
+      "classification": "UNKNOWN_REQUIRES_PROOF",
+      "paths": [
+        "packages/release-claims",
+        "packages/deferred-evidence",
+        "config/v0.4-deferred-evidence.json"
+      ],
+      "rationale": "The mechanism is generic, but current canonical release data contains Hermes lifecycle and provider-specific evidence states; portability of the claims model is plausible but not independently demonstrated.",
+      "evidence": [
+        "config/v0.4-deferred-evidence.json"
+      ],
+      "next_action": "Preserve historical v0.4 truth while introducing dimensioned maturity in Chat 13."
+    },
+    {
+      "id": "office-ui-workforce-view",
+      "classification": "UNKNOWN_REQUIRES_PROOF",
+      "paths": [
+        "office/src/app.mjs",
+        "office/workforce.mjs"
+      ],
+      "rationale": "The visual workforce is broadly reusable, but it exposes preferred Hermes toolsets and consumes a generated workforce object containing runtime-shaped metadata.",
+      "evidence": [
+        "office/src/app.mjs",
+        "office/workforce.mjs"
+      ],
+      "next_action": "Keep UI behavior while decoupling portable worker identity from runtime-specific preferences."
+    },
+    {
+      "id": "workforce-generation-pipeline",
+      "classification": "HERMES_SHAPED",
+      "paths": [
+        "scripts/generate-workforce.mjs"
+      ],
+      "rationale": "One generator currently produces both portable-looking office/agent material and Hermes profiles, reads skills/hermes-custom as canonical source, and writes Hermes-specific distribution files.",
+      "evidence": [
+        "scripts/generate-workforce.mjs"
+      ],
+      "next_action": "Split core worker generation from Hermes distribution generation or make the runtime target explicit."
+    }
+  ]
+}
