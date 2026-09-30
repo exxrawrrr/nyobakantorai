@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { tmpdir } from "node:os";
+import { setTimeout as sleep } from "node:timers/promises";
 import { defineRuntimeExecutionAdapter } from "../runtime-execution-adapter/index.mjs";
 import { canonicalJson } from "../execution-receipt/index.mjs";
 import { PORTABILITY_REFERENCE_SKILLS } from "../portability-reference/index.mjs";
@@ -171,7 +172,7 @@ export function createCodexReferenceExecutionAdapter({
     async executeBoundedTask({prepared,signal}){
       const state=states.get(prepared?.workspace?.ref);
       assert(state,"Codex staged workspace state missing");
-      const args=["exec","--skip-git-repo-check","--sandbox","read-only","--ephemeral","--json","-"];
+      const args=["exec","--skip-git-repo-check","--sandbox","read-only","--ephemeral","--ignore-user-config","--ignore-rules","--json","-"];
       const processResult=await invokeImpl({
         executable,args,stdin:state.prompt,cwd:state.workspace,
         env:{...env,NO_COLOR:"1"},signal,
@@ -231,6 +232,8 @@ export function createCodexReferenceExecutionAdapter({
           "code-commit:"+codeCommit,
           "codex-sandbox:read-only",
           "codex-session:ephemeral",
+          "codex-user-config:ignored",
+          "codex-rules:ignored",
           "codex-skill-root:.agents/skills",
         ],
         artifact_refs:["sha256:"+hash(canonicalJson(raw_result)),"sha256:"+hash(canonicalJson(normalized_result))],
@@ -240,8 +243,16 @@ export function createCodexReferenceExecutionAdapter({
     async cleanup({prepared}){
       const workspace=prepared?.workspace?.ref;
       if(!workspace) return {ok:true};
-      try{await rm(workspace,{recursive:true,force:true});states.delete(workspace);return {ok:true};}
-      catch{return {ok:false};}
+      for(let attempt=0;attempt<5;attempt++){
+        try{
+          await rm(workspace,{recursive:true,force:true});
+          states.delete(workspace);
+          return {ok:true};
+        }catch{
+          if(attempt<4) await sleep(200);
+        }
+      }
+      return {ok:false};
     },
   });
 
