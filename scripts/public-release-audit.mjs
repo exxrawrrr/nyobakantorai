@@ -84,7 +84,7 @@ for (const relative of tracked) {
 
 const skillPaths = tracked.filter((p) => {
   const parts = p.split(slash).join("/").split("/");
-  return parts.length === 4 && parts[0] === "skills" && parts[1] === "hermes-custom" && parts[3] === "SKILL.md";
+  return parts.length === 4 && parts[0] === "skills" && parts[1] === "canonical" && parts[3] === "SKILL.md";
 });
 const canonicalSkillNames = new Set(skillPaths.map((p) => p.split(slash).join("/").split("/")[2]));
 if (canonicalSkillNames.size < 16) findings.push("expected at least 16 canonical public skills, found " + canonicalSkillNames.size);
@@ -124,7 +124,7 @@ for (const employee of workforceRegistry.employees) {
   for (const skill of expectedSkills) {
     if (!canonicalSkillNames.has(skill)) findings.push(`${id}: registry references missing canonical skill ${skill}`);
     const packagedPath = `hermes-profiles/${id}/skills/nyobakantorai/${skill}/SKILL.md`;
-    const canonical = `skills/hermes-custom/${skill}/SKILL.md`;
+    const canonical = `skills/canonical/${skill}/SKILL.md`;
     if (!tracked.includes(packagedPath) || !tracked.includes(canonical)) continue;
     if (readFileSync(resolve(root, packagedPath), "utf8") !== readFileSync(resolve(root, canonical), "utf8")) {
       findings.push(packagedPath + ": packaged skill drifted from canonical source");

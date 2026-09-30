@@ -108,7 +108,8 @@ try {
   assert.equal(runtimeResponse.status, 200);
   const runtime = await runtimeResponse.json();
   assert.equal(runtime.mode, "READ_ONLY / VALIDATE_ONLY");
-  assert.equal(runtime.hermes.configured, false);
+  assert.equal(runtime.runtime.provider_id, "hermes");
+  assert.equal(runtime.runtime.configured, false);
   assert.equal(runtime.dispatch.enabled, false);
   assert.equal(runtime.dispatch.state, "BLOCKED");
 

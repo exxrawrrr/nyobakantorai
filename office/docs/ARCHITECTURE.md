@@ -19,7 +19,7 @@ nyobakantorai is a local-first visual office for human-governed multi-agent work
 - `config/capabilities.json` — provider-neutral capability/autonomy contract.
 - `agents/` — registry-derived public employee SOUL/profile definitions.
 - `hermes-profiles/` — generated native Hermes profile distributions with role-scoped skills and fresh-install toolset defaults.
-- `skills/hermes-custom/` — reusable procedural skills.
+- `skills/canonical/` — reusable procedural skills.
 - `operations/taskctl/` — owner-controlled blocked task intake for Hermes.
 - `operations/handoff/` — manual handoff, return receipts, and source provenance gates.
 - `operations/workflow/` — deterministic routing preview and QA request flow.

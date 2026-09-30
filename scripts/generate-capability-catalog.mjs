@@ -50,7 +50,7 @@ export async function buildCapabilityCatalog() {
   const sourceById = new Map(sources.sources.map((item) => [item.id, item]));
   const runtimeById = new Map(runtime.capabilities.map((item) => [item.id, item]));
   const workers = employees.employees;
-  const skillDirs = (await readdir(resolve(root, "skills/hermes-custom"), { withFileTypes:true }))
+  const skillDirs = (await readdir(resolve(root, "skills/canonical"), { withFileTypes:true }))
     .filter((item) => item.isDirectory())
     .map((item) => item.name)
     .sort();
@@ -79,7 +79,7 @@ export async function buildCapabilityCatalog() {
       platforms:["windows","linux","macos"],
       install_method:"bundled-with-employee-profile",
       verification_method:"workforce:check + packaged-skill parity",
-      artifact_ref:`skills/hermes-custom/${skill}/SKILL.md`,
+      artifact_ref:`skills/canonical/${skill}/SKILL.md`,
     });
   }
 
@@ -214,7 +214,7 @@ export async function buildCapabilityCatalog() {
       "config/integrations.json",
       "config/upstream-sources.json",
       "config/skill-provenance.json",
-      "skills/hermes-custom/*/SKILL.md"
+      "skills/canonical/*/SKILL.md"
     ],
     taxonomy:{
       kinds:[...KINDS],

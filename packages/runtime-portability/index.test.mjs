@@ -10,21 +10,22 @@ const root=resolve(import.meta.dirname,"../..");
 test("canonical runtime portability map validates against the repository",async()=>{
   const {map,validation}=await readAndValidateRuntimePortabilityMap({root});
   assert.equal(validation.ok,true,validation.errors.map((item)=>item.code+":"+item.detail).join("\n"));
-  assert.equal(validation.surface_count,19);
+  assert.equal(validation.surface_count,20);
   assert.equal(map.audited_release,"v0.4.0");
 });
 
-test("baseline classifications preserve the uncomfortable coupling findings",async()=>{
+test("Chat 2 classifications record only enforced boundary improvements",async()=>{
   const {map}=await readAndValidateRuntimePortabilityMap({root});
   const byId=Object.fromEntries(map.surfaces.map((surface)=>[surface.id,surface.classification]));
   assert.equal(byId["capability-contracts"],"CORE_PORTABLE");
   assert.equal(byId["evidence-and-receipts"],"CORE_PORTABLE");
   assert.equal(byId["runtime-adapter-sdk"],"ADAPTER_BOUNDARY");
   assert.equal(byId["employee-definitions"],"UNKNOWN_REQUIRES_PROOF");
-  assert.equal(byId["skill-definitions"],"HERMES_SHAPED");
-  assert.equal(byId["task-registry"],"HERMES_SHAPED");
-  assert.equal(byId["office-runtime-reconciliation"],"HERMES_SHAPED");
+  assert.equal(byId["skill-definitions"],"ADAPTER_BOUNDARY");
+  assert.equal(byId["task-registry"],"CORE_PORTABLE");
+  assert.equal(byId["office-runtime-reconciliation"],"ADAPTER_BOUNDARY");
   assert.equal(byId["hermes-bootstrap"],"RUNTIME_SPECIFIC_BY_DESIGN");
+  assert.equal(byId["portable-worker-contract"],"CORE_PORTABLE");
 });
 
 test("mapped paths fail closed when repository structure drifts",async()=>{

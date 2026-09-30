@@ -130,7 +130,7 @@ async function main() {
   const registry = JSON.parse(await readFile(registryPath, "utf8"));
   const employee = draftEmployee(options, registry);
   for (const skill of employee.skills) {
-    if (!existsSync(resolve(root, "skills/hermes-custom", skill, "SKILL.md"))) throw new Error(`Unknown canonical skill: ${skill}`);
+    if (!existsSync(resolve(root, "skills/canonical", skill, "SKILL.md"))) throw new Error(`Unknown canonical skill: ${skill}`);
   }
 
   const preview = {

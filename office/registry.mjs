@@ -73,7 +73,7 @@ export function updateTask(registry, taskId, patch, clock = now) {
   const next = clone(registry);
   const task = next.tasks.find(({ id: current }) => current === taskId);
   if (!task) throw new Error("Task not found.");
-  if (task.execution_mode === "HERMES") throw new Error("Hermes claims are read-only in the office.");
+  if (task.execution_mode === "RUNTIME") throw new Error("Runtime claims are read-only in the office.");
   const status = clean(patch.lifecycle_status || task.lifecycle_status, 30).toUpperCase();
   if (!STATUSES.includes(status)) throw new Error("Unknown status.");
   if (status !== task.lifecycle_status && !transitions[task.lifecycle_status]?.has(status)) throw new Error(`Invalid transition ${task.lifecycle_status} → ${status}.`);
@@ -107,7 +107,7 @@ export function recordApproval(registry, taskId, decision, clock = now) {
   const next = clone(registry);
   const task = next.tasks.find(({ id: current }) => current === taskId);
   if (!task) throw new Error("Task not found.");
-  if (task.execution_mode === "HERMES") throw new Error("Hermes claims are read-only in the office.");
+  if (task.execution_mode === "RUNTIME") throw new Error("Runtime claims are read-only in the office.");
   if (!task.approval_required) throw new Error("Task does not require approval.");
   const actor = clean(decision.actor || "owner", 40).toLowerCase();
   if (actor !== "owner") throw new Error("Only the owner may approve high-impact work.");
@@ -137,16 +137,17 @@ export function importRegistry(text) {
     ...task,
     id: clean(task.id, 120), title: clean(task.title, 160), detail: clean(task.detail, 4000),
     assignee_id: clean(task.assignee_id, 40).toLowerCase(),
-    execution_mode: task.execution_mode === "HERMES" ? "HERMES" : "DEMO",
+    execution_mode: task.execution_mode && !["DEMO","LOCAL"].includes(task.execution_mode) ? "RUNTIME" : "DEMO",
+    runtime_provider: clean(task.runtime_provider || (task.execution_mode && !["DEMO","LOCAL"].includes(task.execution_mode) ? String(task.execution_mode).toLowerCase() : ""), 64),
     risk_class: RISK_CLASSES.includes(task.risk_class) ? task.risk_class : "READ_ONLY",
     approval_required: AUTO_APPROVAL_RISKS.has(task.risk_class) || Boolean(task.approval_required),
     approval_status: APPROVAL_STATUSES.includes(task.approval_status) ? task.approval_status : (AUTO_APPROVAL_RISKS.has(task.risk_class) || task.approval_required ? "PENDING" : "NOT_REQUIRED"),
     approval_actor: clean(task.approval_actor, 40),
     approval_at: clean(task.approval_at, 80),
     approval_evidence_ref: clean(task.approval_evidence_ref, 1000),
-    provenance: task.execution_mode === "HERMES" ? "LOCAL_CLAIM" : "DEMO",
-    quarantined: task.execution_mode === "HERMES",
-    reconcile_reason: task.execution_mode === "HERMES" ? "NOT_RECONCILED" : "",
+    provenance: task.execution_mode && !["DEMO","LOCAL"].includes(task.execution_mode) ? "LOCAL_CLAIM" : "DEMO",
+    quarantined: Boolean(task.execution_mode && !["DEMO","LOCAL"].includes(task.execution_mode)),
+    reconcile_reason: task.execution_mode && !["DEMO","LOCAL"].includes(task.execution_mode) ? "NOT_RECONCILED" : "",
     comments: Array.isArray(task.comments) ? task.comments.slice(0, 200) : [],
     attachments: Array.isArray(task.attachments) ? task.attachments.slice(0, 50) : [],
     evidence_refs: Array.isArray(task.evidence_refs) ? task.evidence_refs.map((item) => clean(item, 1000)).slice(0, 50) : [],
@@ -170,7 +171,7 @@ export function validateRegistry(registry) {
         && entry.new_status === "VERIFIED" && entry.evidence_ref && mayVerify(task.assignee_id, entry.actor));
       if (!verified) throw new Error("VERIFIED requires an independent reviewer evidence event.");
     }
-    if (task.execution_mode === "HERMES" && task.provenance === "AUTHORITATIVE_RUNTIME" && (!task.runtime_evidence?.id || task.runtime_evidence.id !== task.runtime_ref)) throw new Error("Runtime provenance is incomplete.");
+    if (task.execution_mode === "RUNTIME" && task.provenance === "AUTHORITATIVE_RUNTIME" && (!task.runtime_evidence?.id || task.runtime_evidence.id !== task.runtime_ref)) throw new Error("Runtime provenance is incomplete.");
   }
   return true;
 }

@@ -1,41 +1,50 @@
 import { EMPLOYEE_IDS } from "./workforce.mjs";
 
-const TASK_ID = /^t_[a-z0-9]+$/i;
+const RUNTIME_ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/;
 const EMPLOYEES = new Set(EMPLOYEE_IDS);
+const clean = (value, max = 240) => String(value ?? "").trim().slice(0, max);
 
 export function sanitizeRuntimeTask(task) {
-  if (!task || !TASK_ID.test(String(task.id || ""))) return null;
-  const assignee = String(task.assignee || "").toLowerCase();
+  const id = clean(task?.id, 160);
+  if (!task || !RUNTIME_ID.test(id)) return null;
+  const assignee = clean(task.assignee, 80).toLowerCase();
   if (!EMPLOYEES.has(assignee)) return null;
   return {
-    id: String(task.id),
+    id,
     assignee,
-    status: String(task.status || "unknown").toLowerCase(),
-    created_by: String(task.created_by || "unknown").slice(0, 80),
+    status: clean(task.status || "unknown", 40).toLowerCase(),
+    created_by: clean(task.created_by || "unknown", 80),
     created_at: Number.isFinite(task.created_at) ? task.created_at : null,
     session_present: Boolean(task.session_id),
     result_present: Boolean(task.result),
   };
 }
 
-export function reconcileClaims(claims, runtimeTasks, checkedAt = new Date().toISOString()) {
+export function reconcileClaims(claims, runtimeTasks, checkedAt = new Date().toISOString(), {
+  providerId = "runtime",
+  sourceId = "nyobakantorai",
+} = {}) {
+  const provider = clean(providerId, 64).toLowerCase();
+  const source = clean(sourceId, 120);
   const official = new Map(runtimeTasks.map(sanitizeRuntimeTask).filter(Boolean).map((task) => [task.id, task]));
   return claims.map((claim) => {
-    const runtimeRef = String(claim.runtime_ref || "");
+    const runtimeRef = clean(claim.runtime_ref, 160);
     const match = official.get(runtimeRef);
-    const assignee = String(claim.assignee_id || "").toLowerCase();
-    if (!TASK_ID.test(runtimeRef)) return { ...claim, provenance: "LOCAL_CLAIM", quarantined: true, reconcile_reason: "INVALID_RUNTIME_REF" };
-    if (!match) return { ...claim, provenance: "LOCAL_CLAIM", quarantined: true, reconcile_reason: "NOT_ON_OFFICIAL_BOARD" };
+    const assignee = clean(claim.assignee_id, 80).toLowerCase();
+    if (!RUNTIME_ID.test(runtimeRef)) return { ...claim, provenance: "LOCAL_CLAIM", quarantined: true, reconcile_reason: "INVALID_RUNTIME_REF" };
+    if (!match) return { ...claim, provenance: "LOCAL_CLAIM", quarantined: true, reconcile_reason: "NOT_ON_RUNTIME_SOURCE" };
     if (match.assignee !== assignee) return { ...claim, provenance: "LOCAL_CLAIM", quarantined: true, reconcile_reason: "ASSIGNEE_MISMATCH" };
-    const expected = String(claim.runtime_state || claim.lifecycle_status || "").toLowerCase();
+    const expected = clean(claim.runtime_state || claim.lifecycle_status, 40).toLowerCase();
     if (expected && expected !== match.status) return { ...claim, provenance: "LOCAL_CLAIM", quarantined: true, reconcile_reason: "STATUS_MISMATCH" };
     return {
       ...claim,
-      provenance: "AUTHORITATIVE_RUNTIME",
-      quarantined: false,
-      reconciled_at: checkedAt,
-      runtime_state: match.status,
-      runtime_evidence: { board: "nyobakantorai", id: match.id, assignee: match.assignee, checked_at: checkedAt },
+      execution_mode:"RUNTIME",
+      runtime_provider:provider,
+      provenance:"AUTHORITATIVE_RUNTIME",
+      quarantined:false,
+      reconciled_at:checkedAt,
+      runtime_state:match.status,
+      runtime_evidence:{ provider_id:provider, source_id:source, id:match.id, assignee:match.assignee, checked_at:checkedAt },
     };
   });
 }

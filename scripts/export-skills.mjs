@@ -38,7 +38,7 @@ export function renderMinimalSkill(parsed) {
 }
 
 async function listSkillDirs() {
-  return (await readdir(resolve(root, "skills/hermes-custom"), { withFileTypes:true }))
+  return (await readdir(resolve(root, "skills/canonical"), { withFileTypes:true }))
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
@@ -58,7 +58,7 @@ async function walkFiles(dir) {
 }
 
 async function copySkillDirectory({ skill, destinationDir, minimalFrontmatter }) {
-  const sourceDir = resolve(root, "skills/hermes-custom", skill);
+  const sourceDir = resolve(root, "skills/canonical", skill);
   await mkdir(destinationDir, { recursive:true });
   const sourceFiles = await walkFiles(sourceDir);
   const records = [];
@@ -98,7 +98,7 @@ async function verifyHermesAssignments() {
   const results = [];
   for (const employee of employees.employees) {
     for (const skill of employee.skills) {
-      const canonicalPath = resolve(root, "skills/hermes-custom", skill, "SKILL.md");
+      const canonicalPath = resolve(root, "skills/canonical", skill, "SKILL.md");
       const generatedPath = resolve(root, "hermes-profiles", employee.id, "skills/nyobakantorai", skill, "SKILL.md");
       const [canonical, generated] = await Promise.all([
         readFile(canonicalPath, "utf8"),

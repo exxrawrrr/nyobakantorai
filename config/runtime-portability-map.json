@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat1-runtime-portability-baseline",
+  "audit": "v0.5-chat2-enforced-core-runtime-boundary",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -32,14 +32,16 @@
       "real-task-evidence",
       "release-claims",
       "office-ui-workforce-view",
-      "workforce-generation-pipeline"
+      "workforce-generation-pipeline",
+      "portable-worker-contract"
     ],
     "forbidden_core_import_fragments": [
-      "hermes-runtime-adapter",
-      "hermes-home",
       "hermes-bootstrap",
+      "hermes-home",
       "hermes-profiles",
-      "skills/hermes-custom"
+      "hermes-runtime-adapter",
+      "runtime-composition",
+      "skills/canonical"
     ],
     "portable_source_extensions": [
       ".mjs",
@@ -63,16 +65,16 @@
     },
     {
       "id": "skill-definitions",
-      "classification": "HERMES_SHAPED",
+      "classification": "ADAPTER_BOUNDARY",
       "paths": [
-        "skills/hermes-custom"
+        "skills/canonical"
       ],
-      "rationale": "These files act as the canonical skill source and are exported to multiple harnesses, but the canonical path and generation pipeline are still Hermes-labelled.",
+      "rationale": "Canonical skills now live under a runtime-neutral source root. Their compatibility metadata still requires adapter/export interpretation, so Chat 2 does not overclaim them as behaviorally portable.",
       "evidence": [
-        "scripts/generate-workforce.mjs",
+        "skills/canonical",
         "scripts/export-skills.mjs"
       ],
-      "next_action": "Establish a runtime-neutral canonical skill root or prove the existing root name is packaging-only."
+      "next_action": "Keep runtime-specific activation in adapters/export targets; behavioral portability still requires live proof."
     },
     {
       "id": "capability-contracts",
@@ -90,15 +92,16 @@
     },
     {
       "id": "task-registry",
-      "classification": "HERMES_SHAPED",
+      "classification": "CORE_PORTABLE",
       "paths": [
         "packages/task-registry"
       ],
-      "rationale": "The local registry contains portable lifecycle and evidence rules but hard-codes execution_mode HERMES versus DEMO and Hermes-specific reconciliation provenance.",
+      "rationale": "Task lifecycle, approval and verification now bind to an opaque runtime provider/reference instead of hard-coding one runtime execution mode, task ID format, staging action or actor.",
       "evidence": [
-        "packages/task-registry/registry.mjs"
+        "packages/task-registry/registry.mjs",
+        "packages/task-registry/registry.test.mjs"
       ],
-      "next_action": "Extract runtime identity from generic task lifecycle semantics."
+      "next_action": "Keep runtime-specific ID/reference construction in adapters; Chat 3 may consume this generic binding from an execution adapter."
     },
     {
       "id": "approval-policy",
@@ -217,18 +220,20 @@
     },
     {
       "id": "office-runtime-reconciliation",
-      "classification": "HERMES_SHAPED",
+      "classification": "ADAPTER_BOUNDARY",
       "paths": [
         "office/server.mjs",
         "office/reconcile.mjs",
+        "office/runtime-composition.mjs",
         "office/runtime-cache.mjs"
       ],
-      "rationale": "The office server constructs Hermes directly, exposes a hermes-shaped runtime snapshot, and reconciliation emits a Hermes board reference.",
+      "rationale": "Server and reconciliation consume a generic runtime provider shape. Hermes construction moved into the explicit composition root while the existing Hermes read-only adapter remains runtime-specific.",
       "evidence": [
-        "office/server.mjs",
-        "office/reconcile.mjs"
+        "office/runtime-composition.mjs",
+        "office/tests/architecture-sync.test.mjs",
+        "office/tests/reconcile.test.mjs"
       ],
-      "next_action": "Introduce a generic office runtime port and move Hermes construction behind it."
+      "next_action": "Add execution-capable adapters separately without widening the read-only snapshot contract."
     },
     {
       "id": "install-update-remove-lifecycle",
@@ -303,15 +308,29 @@
     },
     {
       "id": "workforce-generation-pipeline",
-      "classification": "HERMES_SHAPED",
+      "classification": "ADAPTER_BOUNDARY",
       "paths": [
         "scripts/generate-workforce.mjs"
       ],
-      "rationale": "One generator currently produces both portable-looking office/agent material and Hermes profiles, reads skills/hermes-custom as canonical source, and writes Hermes-specific distribution files.",
+      "rationale": "The generator still emits Hermes distributions by design, but canonical skill ownership is runtime-neutral and portable/core versus runtime distribution outputs are now separate responsibilities.",
       "evidence": [
-        "scripts/generate-workforce.mjs"
+        "scripts/generate-workforce.mjs",
+        "skills/canonical"
       ],
-      "next_action": "Split core worker generation from Hermes distribution generation or make the runtime target explicit."
+      "next_action": "Keep runtime distribution generation explicit; do not treat Hermes output generation as portable-core behavior."
+    },
+    {
+      "id": "portable-worker-contract",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "lib/workforce.mjs"
+      ],
+      "rationale": "Portable worker projection strips runtime toolsets, optional integrations and distribution metadata while preserving identity, skills, governance and operational contracts.",
+      "evidence": [
+        "lib/workforce.mjs",
+        "lib/workforce-portability.test.mjs"
+      ],
+      "next_action": "Use PORTABLE_WORKFORCE for runtime-neutral core and portability hashes; keep full WORKFORCE only where runtime packaging or UI compatibility needs it."
     }
   ]
 }

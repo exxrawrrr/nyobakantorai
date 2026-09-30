@@ -6,7 +6,7 @@ import sys
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILLS_ROOT = ROOT / "skills" / "hermes-custom"
+SKILLS_ROOT = ROOT / "skills" / "canonical"
 ALLOWED_TOP_LEVEL = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 

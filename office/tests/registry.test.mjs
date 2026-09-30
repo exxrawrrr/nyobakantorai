@@ -15,9 +15,11 @@ test("local task lifecycle and independent reviewer evidence gate", () => {
   assert.equal(validateRegistry(registry), true);
 });
 
-test("Hermes imports are quarantined until server reconciliation", () => {
+test("runtime imports are normalized and quarantined until server reconciliation", () => {
   const raw = JSON.stringify({ schema: 3, tasks: [{ ...make().tasks[0], execution_mode: "HERMES", runtime_ref: "t_fake", runtime_state: "blocked" }], events: [] });
   const registry = importRegistry(raw);
+  assert.equal(registry.tasks[0].execution_mode, "RUNTIME");
+  assert.equal(registry.tasks[0].runtime_provider, "hermes");
   assert.equal(registry.tasks[0].provenance, "LOCAL_CLAIM");
   assert.equal(registry.tasks[0].quarantined, true);
 });

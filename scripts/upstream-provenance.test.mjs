@@ -29,10 +29,10 @@ test("upstream-derived skills and integrations have explicit provenance",async()
     assert.match(item.default_state,/NOT_INSTALLED|REFERENCE_ONLY/);
     if(item.capability) assert.ok(capabilityIds.has(item.capability),item.id+" references unknown capability "+item.capability);
   }
-  const skillDirs=(await readdir(resolve(root,"skills/hermes-custom"),{withFileTypes:true})).filter(x=>x.isDirectory()).map(x=>x.name);
+  const skillDirs=(await readdir(resolve(root,"skills/canonical"),{withFileTypes:true})).filter(x=>x.isDirectory()).map(x=>x.name);
   const declaredDerived=new Set();
   for(const name of skillDirs){
-    const text=await readFile(resolve(root,"skills/hermes-custom",name,"SKILL.md"),"utf8");
+    const text=await readFile(resolve(root,"skills/canonical",name,"SKILL.md"),"utf8");
     const modeMatch=text.match(/^\s*nyoba-provenance-mode:\s*["']?([^"'\n]+)["']?\s*$/m);
     const idsMatch=text.match(/^\s*nyoba-source-ids:\s*["']([^"']+)["']\s*$/m);
     if(modeMatch||idsMatch) declaredDerived.add(name);

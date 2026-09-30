@@ -2,8 +2,7 @@ import { createServer } from "node:http";
 import { readFile, stat, writeFile, unlink } from "node:fs/promises";
 import { extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveHermesHome } from "./hermes-home.mjs";
-import { createHermesRuntimeAdapter } from "./hermes-runtime-adapter.mjs";
+import { createConfiguredRuntimeProvider } from "./runtime-composition.mjs";
 import { randomBytes } from "node:crypto";
 import { sanitizeRuntimeTask } from "./reconcile.mjs";
 import { createRuntimeSnapshotCache } from "./runtime-cache.mjs";
@@ -13,9 +12,6 @@ const projectRoot = fileURLToPath(new URL(".", import.meta.url));
 const root = join(projectRoot, "dist");
 const requestedPort = Number.parseInt(process.env.NYOBAKANTORAI_PORT || "4322", 10);
 const port = Number.isInteger(requestedPort) && requestedPort > 1023 && requestedPort < 65536 ? requestedPort : 4322;
-const hermesExe = process.env.NYOBAKANTORAI_HERMES_EXE || process.env.HERMES_EXE || "hermes";
-const hermesDisabled = /^(1|true|yes)$/i.test(process.env.NYOBAKANTORAI_DISABLE_HERMES || "");
-const hermesHome = hermesDisabled ? "" : resolveHermesHome();
 const board = process.env.NYOBAKANTORAI_BOARD || "nyobakantorai";
 const requestedWorkerPort = Number.parseInt(process.env.NYOBAKANTORAI_WORKER_PORT || "4333", 10);
 const workerPort = Number.isInteger(requestedWorkerPort) && requestedWorkerPort > 1023 && requestedWorkerPort < 65536 ? requestedWorkerPort : 4333;
@@ -52,16 +48,10 @@ function json(response, statusCode, value) {
   response.writeHead(statusCode, { ...security, "Content-Type": "application/json; charset=utf-8" });
   response.end(JSON.stringify(value));
 }
-const hermesRuntime = createHermesRuntimeAdapter({
-  executable:hermesExe,
-  hermesHome,
-  board,
-  employeeIds:EMPLOYEE_IDS,
-  disabled:hermesDisabled,
-});
+const runtimeProvider = createConfiguredRuntimeProvider({ employeeIds:EMPLOYEE_IDS, board });
 
 async function employeeSnapshot() {
-  const snapshot = await hermesRuntime.employeeSnapshot();
+  const snapshot = await runtimeProvider.employeeSnapshot();
   return {
     profiles:snapshot.profiles.map((profile) => {
       const person = WORKFORCE.find((employee) => employee.id === profile.id);
@@ -87,11 +77,11 @@ const readEmployees = createRuntimeSnapshotCache(employeeSnapshot, {
 async function runtimeSnapshot() {
   const employeesPending = readEmployees();
   const [runtime, employeesReading] = await Promise.all([
-    hermesRuntime.runtimeSnapshot({ timeoutMs: 10_000, maxTasks: 500 }),
+    runtimeProvider.runtimeSnapshot({ timeoutMs: 10_000, maxTasks: 500 }),
     employeesPending,
   ]);
   const { profiles, version } = employeesReading.snapshot;
-  const descriptor = await hermesRuntime.describe(version);
+  const descriptor = await runtimeProvider.describe(version);
   const employeeAgeMs = Math.max(0, Date.now() - Date.parse(employeesReading.snapshot.checked_at));
   const boardConnected = runtime.connected === true && Array.isArray(runtime.tasks);
   return {
@@ -101,12 +91,13 @@ async function runtimeSnapshot() {
       ttl_ms: EMPLOYEE_CACHE_TTL_MS, checked_at: employeesReading.snapshot.checked_at,
       stale: employeeAgeMs >= EMPLOYEE_CACHE_TTL_MS,
     },
-    hermes: {
+    runtime: {
+      provider_id: runtimeProvider.provider_id,
       configured: descriptor.configured,
       installed: descriptor.installed,
       version: version || descriptor.version,
-      board: descriptor.board,
-      board_connected: boardConnected,
+      resource: descriptor.resource,
+      connected: boardConnected,
       task_count: boardConnected ? runtime.tasks.length : null,
       adapter_id: runtime.adapter_id,
       adapter_state: runtime.state,
@@ -115,7 +106,7 @@ async function runtimeSnapshot() {
       id:task.id,
       assignee:task.assignee,
       status:task.state,
-      created_by:"adapter:hermes",
+      created_by:`adapter:${runtimeProvider.provider_id}`,
       created_at:null,
       session_id:null,
       result:null,
@@ -128,7 +119,7 @@ async function runtimeSnapshot() {
 const RUNTIME_CACHE_TTL_MS = 1500;
 const readRuntimeSnapshot = createRuntimeSnapshotCache(runtimeSnapshot, {
   ttlMs: RUNTIME_CACHE_TTL_MS,
-  cacheable: (value) => value?.hermes?.board_connected === true
+  cacheable: (value) => value?.runtime?.connected === true
     && Array.isArray(value?.tasks)
     && value.employee_snapshot_cache?.stale === false
     && EMPLOYEE_IDS.every((id) => value.employees?.[id]?.profile_exists === true),
@@ -143,7 +134,7 @@ const server = createServer(async (request, response) => {
     }
     if (pathname === "/api/capabilities" && request.method === "GET") {
       assertLocal(request);
-      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: hermesRuntime.configured ? hermesRuntime.adapter.id : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, autonomy_default: DEFAULT_AUTONOMY, autonomy_modes: AUTONOMY_MODES, capability_states: CAPABILITY_STATES, external_capability_catalog: CAPABILITY_CATALOG, employees: EMPLOYEE_IDS, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks"] }); return;
+      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: runtimeProvider.configured ? runtimeProvider.adapter.id : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, autonomy_default: DEFAULT_AUTONOMY, autonomy_modes: AUTONOMY_MODES, capability_states: CAPABILITY_STATES, external_capability_catalog: CAPABILITY_CATALOG, employees: EMPLOYEE_IDS, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks"] }); return;
     }
     if (pathname === "/api/capabilities") throw new PublicError(405, "Method not allowed");
     if (pathname === "/api/workforce" && request.method === "GET") {
@@ -232,6 +223,6 @@ const server = createServer(async (request, response) => {
 server.listen(port, "127.0.0.1", async () => {
   await writeFile(stopFile, stopToken, { encoding: "utf8", mode: 0o600 });
   console.log(`nyobakantorai: http://127.0.0.1:${port}`);
-  console.log(`Local-only · ${hermesRuntime.configured ? hermesRuntime.adapter.id : "no runtime adapter"} · dispatch disabled · ${Math.round(process.memoryUsage().rss / 1024 / 1024)} MiB RSS`);
+  console.log(`Local-only · ${runtimeProvider.configured ? runtimeProvider.adapter.id : "no runtime adapter"} · dispatch disabled · ${Math.round(process.memoryUsage().rss / 1024 / 1024)} MiB RSS`);
 });
 for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, () => server.close(async () => { try { await unlink(stopFile); } catch {} process.exit(0); }));

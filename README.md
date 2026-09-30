@@ -530,7 +530,7 @@ No secret is required by the repository itself.
 | `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
 | `agents/` | Registry-derived public SOUL/profile definitions |
 | `hermes-profiles/` | Native Hermes profile distributions generated for the workforce |
-| `skills/hermes-custom/` | Reusable portable skills |
+| `skills/canonical/` | Reusable portable skills |
 | `operations/taskctl/` | Blocked owner-controlled Hermes task intake |
 | `operations/handoff/` | Manual handoff, receipts, and source-evidence gates |
 | `operations/workflow/` | Deterministic routing preview and QA request flow |

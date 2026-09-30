@@ -30,7 +30,7 @@ Anthropic's PDF/DOCX document skills have skill-specific restrictive terms. They
 
 ## Adaptation policy
 
-Most new skills in `skills/hermes-custom/` are **recreated**: they express general workflows in nyobakantorai's own wording and safety model rather than copying upstream prose. Each recreated skill lists `source_ids` in frontmatter. Exact vendoring, if ever introduced, must preserve the upstream license and notices in the same change.
+Most new skills in `skills/canonical/` are **recreated**: they express general workflows in nyobakantorai's own wording and safety model rather than copying upstream prose. Each recreated skill lists `source_ids` in frontmatter. Exact vendoring, if ever introduced, must preserve the upstream license and notices in the same change.
 
 
 ## Research pins
