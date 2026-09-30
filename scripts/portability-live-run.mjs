@@ -39,7 +39,7 @@ const provider={
 };
 let versionProbe={ok:false,version:null};
 if(executable){
-  const probe=spawnSync(executable,["--version"],{encoding:"utf8",windowsHide:true,shell:false,env:process.env,timeout:5000});
+  const probe=spawnSync(executable,["--version"],{encoding:"utf8",windowsHide:true,shell:false,env:process.env,timeout:livePolicy.preflight?.version_probe_timeout_ms||15000});
   const version=String(probe.stdout||probe.stderr||"").trim().split(/\r?\n/)[0].slice(0,120);
   versionProbe={ok:probe.status===0 && Boolean(version),version:probe.status===0?version:null};
 }
