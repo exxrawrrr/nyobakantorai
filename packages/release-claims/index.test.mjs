@@ -4,6 +4,8 @@ import { inspectEvaluationReadiness } from "../../scripts/evaluation-doctor.mjs"
 import { buildReleaseClaimSnapshot } from "./index.mjs";
 import { buildDeferredEvidenceSnapshot, validateDeferredEvidenceLedger } from "../deferred-evidence/index.mjs";
 import { readFile } from "node:fs/promises";
+import { readAndValidateEvidenceInventory, buildEvidenceClassificationSnapshot } from "../evidence-classification/index.mjs";
+import { readMaturityInputs, validateMaturityModel, buildMaturitySnapshot } from "../maturity-model/index.mjs";
 
 test("release claims preserve mixed evaluated and UNPROVEN provider state", async () => {
   const report = await inspectEvaluationReadiness();
@@ -91,4 +93,12 @@ test("release claim model is provider-neutral for synthetic evidence", () => {
   assert.equal(snapshot.memory[0].provider_id, "runtime-memory-a");
   assert.equal(snapshot.deferred_evidence.items[0].id, "generic-runtime-proof");
   assert.equal(snapshot.truth_boundary, "cataloged != installed != connected != authorized != executed != succeeded != verified");
+});
+
+
+test("release claims expose evidence inventory and multidimensional maturity without promoting open claims",async()=>{
+ const {inventory,validation:evidenceValidation}=await readAndValidateEvidenceInventory();assert.equal(evidenceValidation.ok,true,evidenceValidation.errors.join("\n"));const evidenceInventory=buildEvidenceClassificationSnapshot({inventory,validation:evidenceValidation});
+ const inputs=await readMaturityInputs();const maturityValidation=await validateMaturityModel(inputs.model,{evidenceValidation,...inputs});assert.equal(maturityValidation.ok,true,maturityValidation.errors.join("\n"));const maturity=buildMaturitySnapshot({model:inputs.model,validation:maturityValidation});
+ const report=await inspectEvaluationReadiness();const snapshot=buildReleaseClaimSnapshot(report,{evidenceInventory,maturity});
+ assert.equal(snapshot.evidence_inventory.claims["reference-case-portability"].status,"UNPROVEN");assert.equal(snapshot.evidence_inventory.claims["real-world-workflow-demonstrated"].status,"COLLECTING");assert.equal(snapshot.maturity.dimensions.artifact,"candidate");assert.equal(snapshot.maturity.dimensions.behavioral_evidence,"evaluated-case");assert.equal(snapshot.maturity.dimensions.real_world_workflow,"collecting");assert.match(snapshot.maturity.truth_boundary,/artifact maturity != contract maturity/);
 });

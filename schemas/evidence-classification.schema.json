@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evidence classification inventory",
+  "type": "object",
+  "required": [
+    "schema",
+    "candidate",
+    "classes",
+    "evidence",
+    "claims",
+    "v0_5_evidence_growth"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "candidate": {
+      "type": "string",
+      "minLength": 1
+    },
+    "classes": {
+      "type": "array",
+      "minItems": 7,
+      "uniqueItems": true
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1
+    },
+    "v0_5_evidence_growth": {
+      "type": "object"
+    }
+  }
+}

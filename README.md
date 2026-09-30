@@ -263,6 +263,20 @@ itu belum kemenangan.
 
 Release stable terbaru adalah **v0.4.0**. Workstream v0.5 saat ini masih berada di branch/PR pengembangan dan belum boleh dianggap sebagai release stabil sampai seluruh gate v0.5 selesai.
 
+**Snapshot maturity v0.5 saat ini (candidate, bukan release stable):**
+
+| Dimension | State |
+| --- | --- |
+| Artifact | `candidate` |
+| Contract/API | `candidate` |
+| Runtime adapter | `candidate` |
+| Behavioral evidence | `evaluated-case` |
+| Real-world workflow | `collecting` |
+| Provider lifecycle | `partial` |
+
+Ini sengaja multidimensi: **stable artifact ≠ stable behavior**. Controlled live cases tidak otomatis berarti repeated behavior; real-task 1/20 juga tetap `collecting`. Sumber mesin: [evidence classification](config/evidence-classification.json) dan [maturity model](config/maturity-model.json); penjelasan: [Evidence Classification](docs/EVIDENCE-CLASSIFICATION.md) dan [Stability Model](docs/STABILITY-MODEL.md).
+
+
 v0.4 Modular Workforce sudah mencapai **stable-promotion scope**. Pada 30 September 2026 owner secara eksplisit menerima enam evidence gap yang masih terbuka sebagai deferred scope untuk v0.4.0; status `UNPROVEN`, `NOT_RUN`, dan `COLLECTING` tetap dipertahankan apa adanya dan tidak dipoles menjadi bukti selesai.
 
 Yang sudah ada di kandidat v0.4 antara lain:

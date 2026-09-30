@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "candidate": "v0.5.0",
+  "baseline_release": "v0.4.0",
+  "observed_on": "2026-09-30",
+  "rule": "Each maturity dimension is independent. Promotion in one dimension MUST NOT promote another dimension.",
+  "dimensions": {
+    "artifact": {
+      "state": "candidate",
+      "basis": [
+        "docs/INSTALL-INTEGRITY.md",
+        "packages/install-integrity/index.test.mjs"
+      ],
+      "rationale": "Immutable stable-install machinery and negative integrity tests exist on the v0.5 development branch, but v0.5.0 has not been promoted/tagged as the stable release."
+    },
+    "contract_api": {
+      "state": "candidate",
+      "basis": [
+        "packages/runtime-execution-adapter/index.mjs",
+        "office/src/approval-summary.mjs",
+        "packages/receipt-trust-registry/index.mjs"
+      ],
+      "rationale": "Portable contracts are executable and tested, but their v0.5 versions remain unreleased candidate contracts."
+    },
+    "runtime_adapter": {
+      "state": "candidate",
+      "basis": [
+        "packages/hermes-execution-adapter/index.test.mjs",
+        "packages/codex-execution-adapter/index.test.mjs",
+        "config/runtime-portability-map.json"
+      ],
+      "rationale": "Hermes and Codex reference adapters pass conformance, while canonical successful live reference execution across both runtimes remains unproven."
+    },
+    "behavioral_evidence": {
+      "state": "evaluated-case",
+      "basis": [
+        "benchmarks/fikri-live/run-2026-09-29.json",
+        "benchmarks/provider-evaluations/browser-results.json",
+        "config/evidence-classification.json"
+      ],
+      "rationale": "Bounded controlled live cases and black-box checks exist. This does not imply repeated or general behavior, and reference-case portability remains UNPROVEN."
+    },
+    "real_world_workflow": {
+      "state": "collecting",
+      "basis": [
+        "benchmarks/real-tasks/collection-status-2026-09-29.json",
+        "config/evidence-classification.json"
+      ],
+      "rationale": "The canonical real-task baseline is 1/20 eligible cases and preserves its one known failure; publication/demonstration gate is closed."
+    },
+    "provider_lifecycle": {
+      "state": "partial",
+      "basis": [
+        "benchmarks/provider-evaluations/browser-results.json",
+        "benchmarks/provider-evaluations/memory-results.json",
+        "config/v0.4-deferred-evidence.json"
+      ],
+      "rationale": "Playwright has a bounded completed live evaluation, while Browser Use and Cognee remain NOT_RUN and the clean-machine Hermes lifecycle remains deferred."
+    }
+  },
+  "rules": {
+    "no_cross_dimension_promotion": true,
+    "stable_artifact_does_not_imply_stable_behavior": true,
+    "evaluated_case_does_not_imply_repeated_behavior": true,
+    "collecting_real_world_does_not_imply_demonstrated": true,
+    "provider_detection_does_not_imply_lifecycle_validation": true
+  },
+  "historical_truth": {
+    "v0_4_release": "v0.4.0",
+    "deferred_evidence_source": "config/v0.4-deferred-evidence.json",
+    "rule": "Do not rewrite v0.4 UNPROVEN, NOT_RUN, or COLLECTING evidence states when describing v0.5 maturity."
+  }
+}

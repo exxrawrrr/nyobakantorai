@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Multidimensional maturity model",
+  "type": "object",
+  "required": [
+    "schema",
+    "candidate",
+    "baseline_release",
+    "dimensions",
+    "rules",
+    "historical_truth"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "candidate": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baseline_release": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dimensions": {
+      "type": "object",
+      "required": [
+        "artifact",
+        "contract_api",
+        "runtime_adapter",
+        "behavioral_evidence",
+        "real_world_workflow",
+        "provider_lifecycle"
+      ]
+    },
+    "rules": {
+      "type": "object"
+    },
+    "historical_truth": {
+      "type": "object"
+    }
+  }
+}

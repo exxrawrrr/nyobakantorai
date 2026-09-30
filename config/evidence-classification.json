@@ -1,0 +1,396 @@
+{
+  "schema": 1,
+  "candidate": "v0.5.0",
+  "observed_on": "2026-09-30",
+  "policy": "Evidence class describes how a check observes behavior, not how impressive the result sounds. Internal/self-observation evidence cannot be the sole support for a SUPPORTED behavioral claim.",
+  "classes": [
+    "INTERNAL_UNIT",
+    "INTERNAL_INTEGRATION",
+    "SELF_OBSERVATION",
+    "BLACK_BOX_EXTERNAL_BEHAVIOR",
+    "CROSS_IMPLEMENTATION",
+    "LIVE_RUNTIME_EVIDENCE",
+    "REAL_WORLD_EVIDENCE"
+  ],
+  "evidence": [
+    {
+      "id": "approval-summary-deterministic-contract",
+      "class": "INTERNAL_UNIT",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "office/src/approval-summary.mjs",
+        "office/tests/approval-summary.test.mjs",
+        "office/tests/fixtures/approval-summary.json"
+      ],
+      "supports_claims": [
+        "approval-anomaly-summary-contract"
+      ],
+      "claim_limit": "Proves deterministic structured summary semantics and untrusted-agent-signal rejection; it does not prove reduced human review time in real use."
+    },
+    {
+      "id": "office-http-black-box-smoke",
+      "class": "BLACK_BOX_EXTERNAL_BEHAVIOR",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "scripts/smoke-test.mjs",
+        "office/server.mjs",
+        "office/build.mjs"
+      ],
+      "supports_claims": [
+        "office-black-box-boundary"
+      ],
+      "claim_limit": "Exercises the built local server through HTTP from an external child-process client; it does not prove third-party runtime behavior."
+    },
+    {
+      "id": "runtime-execution-adapter-conformance",
+      "class": "INTERNAL_INTEGRATION",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "packages/runtime-execution-adapter/index.mjs",
+        "packages/runtime-execution-adapter/index.test.mjs"
+      ],
+      "supports_claims": [
+        "reference-case-portability"
+      ],
+      "claim_limit": "Proves adapter contract behavior under repository-controlled tests, not live runtime parity."
+    },
+    {
+      "id": "hermes-reference-adapter-conformance",
+      "class": "INTERNAL_INTEGRATION",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "packages/hermes-execution-adapter/index.mjs",
+        "packages/hermes-execution-adapter/index.test.mjs"
+      ],
+      "supports_claims": [
+        "reference-case-portability"
+      ],
+      "claim_limit": "Proves Hermes adapter normalization/conformance in tests, not successful canonical live execution."
+    },
+    {
+      "id": "codex-reference-adapter-conformance",
+      "class": "INTERNAL_INTEGRATION",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "packages/codex-execution-adapter/index.mjs",
+        "packages/codex-execution-adapter/index.test.mjs"
+      ],
+      "supports_claims": [
+        "reference-case-portability"
+      ],
+      "claim_limit": "Proves Codex adapter normalization/conformance in tests, not successful canonical live execution."
+    },
+    {
+      "id": "portability-reference-byte-identity",
+      "class": "INTERNAL_INTEGRATION",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "benchmarks/portability/reference-case/manifest.json",
+        "packages/portability-reference/index.test.mjs"
+      ],
+      "supports_claims": [
+        "reference-case-portability"
+      ],
+      "claim_limit": "Byte identity proves unchanged canonical inputs only; it does not prove equal runtime behavior."
+    },
+    {
+      "id": "node-python-verifier-differential",
+      "class": "CROSS_IMPLEMENTATION",
+      "status": "VALIDATED",
+      "units": 14,
+      "source_paths": [
+        "benchmarks/verifier-differential/run.mjs",
+        "benchmarks/verifier-differential/corpus.json",
+        "reference-verifier/python/differential_runner.py"
+      ],
+      "supports_claims": [
+        "independent-verifier-consistency"
+      ],
+      "claim_limit": "Proves agreement on the committed adversarial corpus, not every possible cryptographic or JSON edge case."
+    },
+    {
+      "id": "fikri-controlled-live-model",
+      "class": "LIVE_RUNTIME_EVIDENCE",
+      "status": "EVALUATED",
+      "units": 5,
+      "source_paths": [
+        "benchmarks/fikri-live/run-2026-09-29.json",
+        "benchmarks/fikri-live/validate.mjs"
+      ],
+      "supports_claims": [
+        "controlled-fikri-context-compaction"
+      ],
+      "claim_limit": "Live-model evaluation over five controlled synthetic fixtures; not real-world baseline and not cross-runtime parity."
+    },
+    {
+      "id": "playwright-controlled-live-provider",
+      "class": "LIVE_RUNTIME_EVIDENCE",
+      "status": "EVALUATED",
+      "units": 6,
+      "source_paths": [
+        "benchmarks/provider-evaluations/browser-results.json",
+        "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/agent-result.json"
+      ],
+      "supports_claims": [
+        "controlled-playwright-browser-behavior",
+        "provider-lifecycle-complete"
+      ],
+      "claim_limit": "One controlled live provider on a disposable loopback target; not a Browser Use comparison and not production approval."
+    },
+    {
+      "id": "playwright-server-side-loopback-observation",
+      "class": "BLACK_BOX_EXTERNAL_BEHAVIOR",
+      "status": "EVALUATED",
+      "units": 6,
+      "source_paths": [
+        "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/server-evidence.json",
+        "benchmarks/provider-evaluations/browser-results.json"
+      ],
+      "supports_claims": [
+        "controlled-playwright-browser-behavior"
+      ],
+      "claim_limit": "Server-side target evidence observes mutation/auth behavior independently of provider prose, scoped to the disposable localhost target."
+    },
+    {
+      "id": "browser-use-live-provider",
+      "class": "LIVE_RUNTIME_EVIDENCE",
+      "status": "NOT_RUN",
+      "units": 0,
+      "source_paths": [
+        "benchmarks/provider-evaluations/browser-results.json"
+      ],
+      "supports_claims": [
+        "provider-lifecycle-complete"
+      ],
+      "claim_limit": "Readiness was checked but Browser Use provider cases were not executed."
+    },
+    {
+      "id": "cognee-live-provider",
+      "class": "LIVE_RUNTIME_EVIDENCE",
+      "status": "NOT_RUN",
+      "units": 0,
+      "source_paths": [
+        "benchmarks/provider-evaluations/memory-results.json"
+      ],
+      "supports_claims": [
+        "provider-lifecycle-complete"
+      ],
+      "claim_limit": "Readiness was checked but Cognee/Hermes provider cases were not executed."
+    },
+    {
+      "id": "real-task-baseline-collection",
+      "class": "REAL_WORLD_EVIDENCE",
+      "status": "COLLECTING",
+      "units": 1,
+      "source_paths": [
+        "benchmarks/real-tasks/collection-status-2026-09-29.json",
+        "benchmarks/real-tasks/evidence/2026-09-22-p122.json"
+      ],
+      "supports_claims": [
+        "real-world-workflow-demonstrated"
+      ],
+      "claim_limit": "One eligible owner task is preserved as a truthful failure; the 20-case publication gate remains closed."
+    },
+    {
+      "id": "provider-doctor-self-observation",
+      "class": "SELF_OBSERVATION",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "packages/provider-doctor/index.test.mjs",
+        "scripts/provider-doctor.mjs"
+      ],
+      "supports_claims": [],
+      "claim_limit": "Environment/readiness diagnostics only; configured or detected does not prove provider behavior."
+    },
+    {
+      "id": "immutable-install-integrity-matrix",
+      "class": "INTERNAL_INTEGRATION",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "packages/install-integrity/index.test.mjs",
+        "packages/install-integrity/installers.test.mjs",
+        "scripts/build-install-assets.test.mjs"
+      ],
+      "supports_claims": [
+        "immutable-install-integrity"
+      ],
+      "claim_limit": "Proves fail-closed artifact/manifest/checksum semantics in repository-controlled test environments; final tagged release smoke remains a release step."
+    },
+    {
+      "id": "fresh-install-lifecycle-self-observation",
+      "class": "SELF_OBSERVATION",
+      "status": "VALIDATED",
+      "units": 1,
+      "source_paths": [
+        "packages/fresh-install-matrix/index.test.mjs",
+        "scripts/fresh-install-matrix.mjs"
+      ],
+      "supports_claims": [],
+      "claim_limit": "Deterministic isolated lifecycle matrix is not a real clean-machine Hermes lifecycle."
+    }
+  ],
+  "claims": [
+    {
+      "id": "approval-anomaly-summary-contract",
+      "kind": "STRUCTURAL",
+      "expected_status": "SUPPORTED",
+      "required_classes": [
+        "INTERNAL_UNIT"
+      ],
+      "minimum_qualifying_units": 1,
+      "minimum_qualifying_records": 1,
+      "evidence_ids": [
+        "approval-summary-deterministic-contract"
+      ],
+      "claim": "Anomaly-first approval summary semantics are deterministic and reject untrusted agent-authored safety claims."
+    },
+    {
+      "id": "office-black-box-boundary",
+      "kind": "BEHAVIORAL",
+      "expected_status": "SUPPORTED",
+      "required_classes": [
+        "BLACK_BOX_EXTERNAL_BEHAVIOR"
+      ],
+      "minimum_qualifying_units": 1,
+      "minimum_qualifying_records": 1,
+      "evidence_ids": [
+        "office-http-black-box-smoke"
+      ],
+      "claim": "The built local office server satisfies its bounded HTTP smoke contract."
+    },
+    {
+      "id": "independent-verifier-consistency",
+      "kind": "BEHAVIORAL",
+      "expected_status": "SUPPORTED",
+      "required_classes": [
+        "CROSS_IMPLEMENTATION"
+      ],
+      "minimum_qualifying_units": 14,
+      "minimum_qualifying_records": 1,
+      "evidence_ids": [
+        "node-python-verifier-differential"
+      ],
+      "claim": "Independent Node and Python verifier implementations agree with each other and the expected corpus on all committed differential cases."
+    },
+    {
+      "id": "immutable-install-integrity",
+      "kind": "STRUCTURAL",
+      "expected_status": "SUPPORTED",
+      "required_classes": [
+        "INTERNAL_INTEGRATION"
+      ],
+      "minimum_qualifying_units": 1,
+      "minimum_qualifying_records": 1,
+      "evidence_ids": [
+        "immutable-install-integrity-matrix"
+      ],
+      "claim": "Stable installer integrity semantics fail closed under the committed tamper/mismatch matrix."
+    },
+    {
+      "id": "controlled-fikri-context-compaction",
+      "kind": "BEHAVIORAL",
+      "expected_status": "SUPPORTED",
+      "required_classes": [
+        "LIVE_RUNTIME_EVIDENCE"
+      ],
+      "minimum_qualifying_units": 5,
+      "minimum_qualifying_records": 1,
+      "evidence_ids": [
+        "fikri-controlled-live-model"
+      ],
+      "claim": "Fikri context compaction passed the five-case controlled live-model regression set within its documented synthetic-fixture scope."
+    },
+    {
+      "id": "controlled-playwright-browser-behavior",
+      "kind": "BEHAVIORAL",
+      "expected_status": "SUPPORTED",
+      "required_classes": [
+        "LIVE_RUNTIME_EVIDENCE",
+        "BLACK_BOX_EXTERNAL_BEHAVIOR"
+      ],
+      "minimum_qualifying_units": 12,
+      "minimum_qualifying_records": 2,
+      "evidence_ids": [
+        "playwright-controlled-live-provider",
+        "playwright-server-side-loopback-observation"
+      ],
+      "claim": "Playwright MCP passed the bounded six-case disposable-loopback evaluation with provider output plus server-side behavioral evidence."
+    },
+    {
+      "id": "reference-case-portability",
+      "kind": "BEHAVIORAL",
+      "expected_status": "UNPROVEN",
+      "required_classes": [
+        "LIVE_RUNTIME_EVIDENCE"
+      ],
+      "minimum_qualifying_units": 2,
+      "minimum_qualifying_records": 2,
+      "evidence_ids": [
+        "runtime-execution-adapter-conformance",
+        "hermes-reference-adapter-conformance",
+        "codex-reference-adapter-conformance",
+        "portability-reference-byte-identity"
+      ],
+      "claim": "One canonical Siti worker/task executes successfully through both Hermes and Codex with unchanged core inputs and policy."
+    },
+    {
+      "id": "real-world-workflow-demonstrated",
+      "kind": "REAL_WORLD",
+      "expected_status": "COLLECTING",
+      "required_classes": [
+        "REAL_WORLD_EVIDENCE"
+      ],
+      "minimum_qualifying_units": 20,
+      "minimum_qualifying_records": 1,
+      "evidence_ids": [
+        "real-task-baseline-collection"
+      ],
+      "claim": "The project has a demonstrated real-world baseline of at least 20 eligible independently verified tasks with zero false-successes."
+    },
+    {
+      "id": "provider-lifecycle-complete",
+      "kind": "BEHAVIORAL",
+      "expected_status": "UNPROVEN",
+      "required_classes": [
+        "LIVE_RUNTIME_EVIDENCE"
+      ],
+      "minimum_qualifying_units": 3,
+      "minimum_qualifying_records": 3,
+      "evidence_ids": [
+        "playwright-controlled-live-provider",
+        "browser-use-live-provider",
+        "cognee-live-provider"
+      ],
+      "claim": "The intended live provider lifecycle set is validated rather than merely configured or self-observed."
+    }
+  ],
+  "v0_5_evidence_growth": {
+    "BLACK_BOX_EXTERNAL_BEHAVIOR": {
+      "state": "INCREASED",
+      "evidence_ids": [
+        "office-http-black-box-smoke"
+      ],
+      "note": "Chat 16 strengthened the release smoke into a built-module HTTP black-box check."
+    },
+    "CROSS_IMPLEMENTATION": {
+      "state": "INCREASED",
+      "evidence_ids": [
+        "node-python-verifier-differential"
+      ],
+      "note": "v0.5 added an independently implemented Python verifier and shared differential corpus."
+    },
+    "LIVE_RUNTIME_EVIDENCE": {
+      "state": "OPEN_REQUIRED",
+      "evidence_ids": [],
+      "note": "Existing bounded live records are inventoried, but the v0.5 canonical Hermes+Codex portability proof still lacks qualifying successful live evidence."
+    }
+  }
+}
