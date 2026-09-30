@@ -31,49 +31,56 @@ const fixtureTask = Object.freeze({
 });
 
 export async function runRuntimeExecutionAdapterConformance(adapter, { policy } = {}) {
-  const checks = [];
-  const check = (id, passed, detail = "") => checks.push(Object.freeze({ id, passed:Boolean(passed), detail }));
+  const outcome = await executeBoundedRuntimeTask(adapter, fixtureTask, { policy });
+  const results = new Map();
 
-  check("explicit-runtime-identity",
+  results.set("declared-capabilities-only",
+    Array.isArray(adapter?.capabilities)
+      && adapter.capabilities.every((capability) => policy.allowed_capabilities.includes(capability)));
+  results.set("bounded-process-no-shell",
+    !adapter.capabilities.includes("bounded_process")
+      || (adapter.process_contract?.shell === false && adapter.process_contract?.executable_allowlisted === true));
+  results.set("temporary-workspace-isolation",
+    outcome.evidence?.workspace_mutation_check?.temporary_workspace_only === true
+      && outcome.evidence?.workspace_mutation_check?.production_repo_changed === false);
+  results.set("cleanup", outcome.cleanup?.attempted === true && outcome.cleanup?.ok === true);
+  results.set("bounded-timeout",
+    Number.isInteger(policy.max_timeout_ms)
+      && Number.isInteger(policy.default_timeout_ms)
+      && policy.default_timeout_ms <= policy.max_timeout_ms);
+  results.set("bounded-output", Number.isInteger(policy.max_output_bytes) && policy.max_output_bytes > 0);
+  results.set("normalized-result-schema",
+    outcome.normalized_result?.schema === 1
+      && typeof outcome.normalized_result?.output === "object");
+  results.set("explicit-runtime-identity",
     adapter?.api === RUNTIME_EXECUTION_ADAPTER_API
       && Boolean(adapter?.runtime?.provider)
       && Boolean(adapter?.runtime?.runtime_ref));
-
-  check("declared-capabilities-only",
-    Array.isArray(adapter?.capabilities)
-      && adapter.capabilities.every((capability) => policy.allowed_capabilities.includes(capability)));
-
-  check("bounded-process-no-shell",
-    !adapter.capabilities.includes("bounded_process")
-      || (adapter.process_contract?.shell === false && adapter.process_contract?.executable_allowlisted === true));
-
-  check("no-hidden-install-login",
+  results.set("failure-truthfulness",
+    outcome.ok === (outcome.state === "SUCCEEDED" && outcome.error_category === null));
+  results.set("no-success-on-timeout", true);
+  results.set("no-success-on-malformed-output", true);
+  results.set("no-hidden-account-mutation", adapter?.side_effects?.account_mutation === false);
+  results.set("no-hidden-install-login",
     adapter?.side_effects?.install === false && adapter?.side_effects?.login === false);
-
-  check("no-hidden-account-mutation",
-    adapter?.side_effects?.account_mutation === false);
-
-  check("no-production-repository-writes",
-    adapter?.side_effects?.production_repo_write === false);
-
-  const outcome = await executeBoundedRuntimeTask(adapter, fixtureTask, { policy });
-  check("temporary-workspace-isolation",
-    outcome.evidence?.workspace_mutation_check?.temporary_workspace_only === true
+  results.set("no-production-repository-writes",
+    adapter?.side_effects?.production_repo_write === false
       && outcome.evidence?.workspace_mutation_check?.production_repo_changed === false);
-  check("cleanup", outcome.cleanup?.attempted === true && outcome.cleanup?.ok === true);
-  check("bounded-timeout", Number.isInteger(policy.max_timeout_ms) && Number.isInteger(policy.default_timeout_ms) && policy.default_timeout_ms <= policy.max_timeout_ms);
-  check("bounded-output", Number.isInteger(policy.max_output_bytes) && policy.max_output_bytes > 0);
-  check("normalized-result-schema", outcome.normalized_result?.schema === 1 && typeof outcome.normalized_result?.output === "object");
-  check("failure-truthfulness", outcome.ok === (outcome.state === "SUCCEEDED" && outcome.error_category === null));
-  check("no-success-on-timeout", true, "enforced by executeBoundedRuntimeTask wrapper and package negative tests");
-  check("no-success-on-malformed-output", true, "enforced by normalizeResult and package negative tests");
-  check("evidence-bundle-completeness",
+  results.set("evidence-bundle-completeness",
     Boolean(outcome.evidence?.raw_result_ref)
       && Boolean(outcome.evidence?.normalized_result_ref)
       && Array.isArray(outcome.evidence?.capabilities_used));
 
+  const checks = RUNTIME_EXECUTION_CONFORMANCE_REQUIREMENTS.map((id) => Object.freeze({
+    id,
+    passed:results.get(id) === true,
+    detail:["no-success-on-timeout","no-success-on-malformed-output"].includes(id)
+      ? "enforced by executeBoundedRuntimeTask wrapper and package negative tests"
+      : "",
+  }));
+
   return Object.freeze({
-    ok:checks.length === RUNTIME_EXECUTION_CONFORMANCE_REQUIREMENTS.length && checks.every((item) => item.passed),
+    ok:checks.every((item) => item.passed),
     adapter_id:adapter.id,
     outcome,
     checks:Object.freeze(checks),
