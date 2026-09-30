@@ -53,3 +53,42 @@ test("release claims carry owner-accepted deferred-evidence snapshot when suppli
   assert.equal(snapshot.deferred_evidence.accepted_deferred,6);
   assert.equal(snapshot.deferred_evidence.stable_promotion_allowed,true);
 });
+
+test("release claim model is provider-neutral for synthetic evidence", () => {
+  const snapshot = buildReleaseClaimSnapshot({
+    valid: true,
+    live_evaluation_complete: false,
+    browser: {
+      evaluated: [
+        { provider_id: "runtime-browser-a", status: "COMPLETED", acceptance_passed: true },
+        { provider_id: "runtime-browser-b", status: "NOT_RUN", acceptance_passed: false },
+      ],
+    },
+    memory: {
+      evaluated: [
+        { provider_id: "runtime-memory-a", status: "UNPROVEN", acceptance_passed: false },
+      ],
+    },
+    real_tasks: {
+      status: "COLLECTING",
+      claim_state: "UNPROVEN",
+      cases: 2,
+      false_successes: 0,
+      acceptance_passed: false,
+    },
+  }, {
+    deferredEvidence: {
+      schema: 1,
+      decision: "HOLD",
+      items: [{ id: "generic-runtime-proof", status: "UNPROVEN" }],
+    },
+  });
+  assert.deepEqual(snapshot.browser[0], {
+    provider_id: "runtime-browser-a",
+    status: "COMPLETED",
+    acceptance_passed: true,
+  });
+  assert.equal(snapshot.memory[0].provider_id, "runtime-memory-a");
+  assert.equal(snapshot.deferred_evidence.items[0].id, "generic-runtime-proof");
+  assert.equal(snapshot.truth_boundary, "cataloged != installed != connected != authorized != executed != succeeded != verified");
+});
