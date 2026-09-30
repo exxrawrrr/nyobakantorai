@@ -185,3 +185,11 @@ Chat 8 adds a one-runtime-at-a-time live evidence harness with explicit confirma
 Fixture evidence remains fixture evidence. Provider-unverified attempts use a separate `UNVERIFIED_RUNTIME_ATTEMPT` class. Only a successful canonical live path satisfying every qualification gate may emit `LIVE_RUNTIME_EVIDENCE`.
 
 CI does not execute provider/model calls, so Chat 8 does not itself create live portability evidence.
+
+## Chat 11 independent verifier update
+
+Chat 11 adds a Python reference verifier for the minimum stable signed-receipt/evidence trust surface.
+
+The implementation does not import or invoke the JavaScript verifier and does not consume a JavaScript verdict. It independently checks canonical payload SHA-256, Ed25519 signatures, trusted key IDs, task/worker/capability/result bindings, freshness, replay, runtime scope, and evidence receipt-reference presence.
+
+This establishes an independent implementation path. Cross-implementation agreement remains a separate differential-corpus gate.
