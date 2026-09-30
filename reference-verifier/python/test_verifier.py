@@ -11,7 +11,9 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from verifier import (
     canonical_json,
     execution_receipt_ref,
+    resolve_receipt_trust,
     sha256_text,
+    validate_trust_registry,
     verify_execution_receipt,
     verify_receipt_packet,
 )
@@ -90,6 +92,37 @@ def sign_payload(payload, private_key, key_id="local:python-test"):
         "payload_sha256": sha256_text(canonical),
         "signature_base64": base64.b64encode(signature).decode("ascii"),
     }
+
+
+def trust_entry(private_key, **overrides):
+    entry = {
+        "key_id": "key:active",
+        "public_key_pem": public_pem(private_key),
+        "status": "ACTIVE",
+        "signer_identity": "python runtime signer",
+        "key_owner": "owner-security",
+        "generation_boundary": "outside repository",
+        "storage_expectation": "private key stays in signer-owned secret storage",
+        "valid_from": "2026-09-29T03:00:00.000Z",
+        "valid_until": None,
+        "runtime_provider_scope": ["meta-ads"],
+        "runtime_ref_prefixes": ["runtime://meta/"],
+        "revoked_at": None,
+        "compromise_cutoff": None,
+        "revocation_reason": None,
+        "historical_policy": "ALLOW_WITHIN_VALIDITY",
+    }
+    entry.update(overrides)
+    return entry
+
+
+def trust_registry(private_key, **entry_overrides):
+    return {
+        "schema": 1,
+        "registry_id": "python-trust-registry-v1",
+        "keys": [trust_entry(private_key, **entry_overrides)],
+    }
+
 
 
 class IndependentReceiptVerifierTests(unittest.TestCase):
@@ -269,6 +302,107 @@ class IndependentReceiptVerifierTests(unittest.TestCase):
         result = self.verify(envelope)
         self.assertFalse(result["ok"])
         self.assertIn("ENVELOPE_SHAPE_INVALID", result["reasons"])
+
+    def test_trust_registry_active_key_verifies_signed_receipt(self):
+        private_key = Ed25519PrivateKey.generate()
+        registry = trust_registry(private_key)
+        envelope = sign_payload(base_payload(), private_key, "key:active")
+        result = verify_execution_receipt(
+            envelope,
+            trust_registry=registry,
+            public_keys={"key:active": "not-used"},
+            now=NOW,
+        )
+        self.assertTrue(result["ok"])
+
+    def test_trust_registry_retired_key_preserves_historical_receipt(self):
+        private_key = Ed25519PrivateKey.generate()
+        registry = trust_registry(
+            private_key,
+            status="RETIRED",
+            valid_until="2026-09-29T03:42:00.000Z",
+        )
+        envelope = sign_payload(base_payload(), private_key, "key:active")
+        result = verify_execution_receipt(
+            envelope,
+            trust_registry=registry,
+            now=NOW,
+        )
+        self.assertTrue(result["ok"])
+
+    def test_trust_registry_revoked_key_overrides_legacy_public_key_map(self):
+        private_key = Ed25519PrivateKey.generate()
+        registry = trust_registry(
+            private_key,
+            status="REVOKED",
+            historical_policy="REJECT_ALL",
+            revoked_at="2026-09-29T03:44:00.000Z",
+            revocation_reason="compromised",
+        )
+        envelope = sign_payload(base_payload(), private_key, "key:active")
+        result = verify_execution_receipt(
+            envelope,
+            trust_registry=registry,
+            public_keys={"key:active": public_pem(private_key)},
+            now=NOW,
+        )
+        self.assertFalse(result["ok"])
+        self.assertIn("KEY_REVOKED", result["reasons"])
+        self.assertNotIn("UNTRUSTED_KEY_ID", result["reasons"])
+
+    def test_trust_registry_pre_compromise_policy_is_cutoff_bounded(self):
+        private_key = Ed25519PrivateKey.generate()
+        registry = trust_registry(
+            private_key,
+            status="REVOKED",
+            historical_policy="ALLOW_PRE_COMPROMISE",
+            revoked_at="2026-09-29T03:44:00.000Z",
+            compromise_cutoff="2026-09-29T03:42:00.000Z",
+            revocation_reason="bounded earliest-known compromise",
+        )
+        before = sign_payload(base_payload(), private_key, "key:active")
+        before_result = verify_execution_receipt(
+            before,
+            trust_registry=registry,
+            now=NOW,
+        )
+        self.assertTrue(before_result["ok"])
+
+        after_payload = base_payload(
+            finished_at="2026-09-29T03:43:00.000Z",
+        )
+        after = sign_payload(after_payload, private_key, "key:active")
+        after_result = verify_execution_receipt(
+            after,
+            trust_registry=registry,
+            now=NOW,
+        )
+        self.assertFalse(after_result["ok"])
+        self.assertIn("KEY_COMPROMISED_AFTER_CUTOFF", after_result["reasons"])
+
+    def test_trust_registry_scope_and_private_key_rules_fail_closed(self):
+        private_key = Ed25519PrivateKey.generate()
+        registry = trust_registry(private_key)
+        scoped = resolve_receipt_trust(
+            registry,
+            key_id="key:active",
+            finished_at="2026-09-29T03:41:00.000Z",
+            runtime_provider="hermes",
+            runtime_ref="hermes:task:42",
+        )
+        self.assertFalse(scoped["ok"])
+        self.assertIn("KEY_RUNTIME_PROVIDER_NOT_ALLOWED", scoped["reasons"])
+        self.assertIn("KEY_RUNTIME_REF_NOT_ALLOWED", scoped["reasons"])
+
+        registry["keys"][0]["public_key_pem"] = (
+            private_key.private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.PKCS8,
+                encryption_algorithm=serialization.NoEncryption(),
+            ).decode("utf-8")
+        )
+        errors = validate_trust_registry(registry)
+        self.assertTrue(any("public key material only" in item for item in errors))
 
     def test_verifier_source_has_no_javascript_runtime_dependency(self):
         source = Path(__file__).with_name("verifier.py").read_text(encoding="utf-8")

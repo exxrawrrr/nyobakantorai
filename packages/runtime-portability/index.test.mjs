@@ -10,7 +10,7 @@ const root=resolve(import.meta.dirname,"../..");
 test("canonical runtime portability map validates against the repository",async()=>{
   const {map,validation}=await readAndValidateRuntimePortabilityMap({root});
   assert.equal(validation.ok,true,validation.errors.map((item)=>item.code+":"+item.detail).join("\n"));
-  assert.equal(validation.surface_count,28);
+  assert.equal(validation.surface_count,29);
   assert.equal(map.audited_release,"v0.4.0");
 });
 
@@ -34,6 +34,7 @@ test("Chat 2 classifications record only enforced boundary improvements",async()
   assert.equal(byId["live-reference-run-harness"],"ADAPTER_BOUNDARY");
   assert.equal(byId["independent-python-reference-verifier"],"CORE_PORTABLE");
   assert.equal(byId["verifier-differential-corpus"],"CORE_PORTABLE");
+  assert.equal(byId["receipt-trust-registry"],"CORE_PORTABLE");
 });
 
 test("mapped paths fail closed when repository structure drifts",async()=>{

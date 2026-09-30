@@ -1,6 +1,6 @@
 # Differential / Adversarial Verifier Corpus
 
-Status: **v0.5 Chat 12 — shared cross-implementation verifier gate**
+Status: **v0.5 Chat 12–13 — shared cross-implementation verifier + signing-key lifecycle gate**
 
 This benchmark is the first release gate that feeds the **same static signed-receipt fixtures** to both verifier implementations:
 
@@ -29,7 +29,7 @@ Both evaluators compute SHA-256 over the exact same corpus bytes. A corpus-hash 
 
 ## Corpus cases
 
-The v1 corpus contains 14 cases:
+The v2 corpus contains 24 cases:
 
 1. valid trusted receipt;
 2. payload modified after signing;
@@ -44,7 +44,23 @@ The v1 corpus contains 14 cases:
 11. runtime provider/reference mismatch;
 12. previously consumed receipt replay;
 13. duplicate receipt replay inside one packet;
-14. valid receipt missing its evidence reference.
+14. valid receipt missing its evidence reference;
+15. ACTIVE key valid after activation;
+16. ACTIVE key used before `valid_from`;
+17. RETIRED key historical receipt inside validity window;
+18. RETIRED key receipt after `valid_until`;
+19. REVOKED `REJECT_ALL` historical receipt;
+20. REVOKED `ALLOW_PRE_COMPROMISE` receipt before cutoff;
+21. REVOKED `ALLOW_PRE_COMPROMISE` receipt at/after cutoff;
+22. key runtime-scope mismatch;
+23. registry unknown key despite legacy public-key presence;
+24. invalid registry with duplicate `key_id`.
+
+Corpus v2 SHA-256:
+
+```text
+0bcdc49bf70608d7b8bd9dac86f19819a04d27e72c2462bcd65c71fecf3e577e
+```
 
 ## Compared surface
 
@@ -74,13 +90,13 @@ The Python verifier still does not invoke Node or consume a Node verdict.
 
 Passing this gate supports:
 
-> JavaScript and Python independently agree on accept/reject and tested reason semantics for the shared v1 signed-receipt/evidence corpus.
+> JavaScript and Python independently agree on accept/reject and tested reason semantics for the shared v2 signed-receipt/evidence + signing-key lifecycle corpus.
 
 It does not prove:
 
 - correctness for every possible JSON/crypto edge case;
 - correctness of external work described by a receipt;
-- signer-key lifecycle policy;
+- every possible signer-key lifecycle/compromise scenario beyond the tested registry policies;
 - live runtime portability.
 
 Those remain separate gates.

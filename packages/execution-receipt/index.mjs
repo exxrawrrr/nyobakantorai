@@ -6,6 +6,7 @@ import {
   sign as cryptoSign,
   verify as cryptoVerify,
 } from "node:crypto";
+import { resolveReceiptTrust } from "../receipt-trust-registry/index.mjs";
 
 const RECEIPT_ALG = "Ed25519";
 const HIGH_IMPACT = new Set(["EXTERNAL_WRITE","PAID_ACTION","ACCOUNT_CHANGE","DESTRUCTIVE"]);
@@ -223,6 +224,7 @@ export function executionReceiptRef(envelope) {
 
 export function verifyExecutionReceipt(envelope, {
   publicKeys = {},
+  trustRegistry = null,
   now = new Date(),
   maxFutureSkewMs = 5 * 60 * 1000,
   maxReceiptAgeMs = null,
@@ -248,10 +250,21 @@ export function verifyExecutionReceipt(envelope, {
   try { canonical = canonicalJson(envelope?.payload); } catch (error) { reasons.push(`CANONICALIZATION_FAILED:${error.message}`); }
   if (canonical && sha256(canonical) !== envelope?.payload_sha256) reasons.push("PAYLOAD_HASH_MISMATCH");
 
-  const publicKeyPem = publicKeys?.[envelope?.key_id];
-  if (!nonEmpty(publicKeyPem)) {
-    reasons.push("UNTRUSTED_KEY_ID");
-  } else if (canonical && nonEmpty(envelope?.signature_base64)) {
+  let publicKeyPem = null;
+  if (trustRegistry) {
+    const trust = resolveReceiptTrust(trustRegistry, {
+      keyId:envelope?.key_id,
+      finishedAt:envelope?.payload?.finished_at,
+      runtimeProvider:envelope?.payload?.runtime?.provider,
+      runtimeRef:envelope?.payload?.runtime?.runtime_ref,
+    });
+    reasons.push(...trust.reasons);
+    publicKeyPem = trust.public_key_pem;
+  } else {
+    publicKeyPem = publicKeys?.[envelope?.key_id];
+    if (!nonEmpty(publicKeyPem)) reasons.push("UNTRUSTED_KEY_ID");
+  }
+  if (nonEmpty(publicKeyPem) && canonical && nonEmpty(envelope?.signature_base64)) {
     try {
       const publicKey = createPublicKey(publicKeyPem);
       const valid = cryptoVerify(

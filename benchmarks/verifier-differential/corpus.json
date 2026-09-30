@@ -1,8 +1,8 @@
 {
-  "schema": 1,
-  "id": "receipt-verifier-differential-v1",
-  "description": "Shared static corpus for JavaScript/Python signed-receipt verifier agreement.",
-  "generation_note": "Signatures were created once with an ephemeral Ed25519 private key. Only the public key and signed envelopes are stored.",
+  "schema": 2,
+  "id": "receipt-verifier-differential-v2",
+  "description": "Shared static corpus for JavaScript/Python signed-receipt verifier and key-lifecycle agreement.",
+  "generation_note": "Signatures were created once with ephemeral Ed25519 private keys. Only public keys and signed envelopes are stored; generator/private keys are discarded.",
   "cases": [
     {
       "id": "valid",
@@ -17,7 +17,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -34,7 +34,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -49,8 +49,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -76,19 +76,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -112,7 +112,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -129,7 +129,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -144,8 +144,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Changed after signing.",
@@ -171,19 +171,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -213,7 +213,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -230,7 +230,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -245,8 +245,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -272,19 +272,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "gnwCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "gxMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -302,7 +302,7 @@
     },
     {
       "id": "unknown-key",
-      "description": "untrusted key id",
+      "description": "untrusted key id through legacy public-key map",
       "packet": {
         "expected": {
           "task_id": "task-42",
@@ -313,7 +313,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -345,8 +345,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -372,19 +372,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -413,7 +413,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -430,7 +430,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -473,7 +473,7 @@
                 "previous_receipt_sha256": null
               },
               "payload_sha256": "b3e317ef6e0456c1203ee96829b56629ca19bb627e05de789e5371bc472c9a16",
-              "signature_base64": "W+E2IWP/pXOWDjZIeLlWHYDWIo8153uAhY0/vJ7sW7+FFfKrXtr1alMeDbs094xnd3KNZDAWHYQ87Ki3G4UtDw=="
+              "signature_base64": "wGdyFUkfzuJOVSZMC47n2SlPa1AURHFLvouriVngB3+E6hLbjHq4ken4uNEnDuCfULDeJdS5JlDWuWcCHMMFCA=="
             }
           ],
           "refs": [
@@ -482,9 +482,9 @@
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -513,7 +513,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -530,7 +530,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -545,8 +545,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:59:00.000Z",
-                "finished_at": "2026-09-29T04:00:00.000Z",
+                "started_at": "2026-09-29T04:29:00.000Z",
+                "finished_at": "2026-09-29T04:30:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -572,19 +572,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "34e694bb44995cb33202e90a7fafec0fe3aba7e34409c17ae6592144726fa22d",
-              "signature_base64": "JzSO5iaZgBzGZGsNHqZ1B7LHO9QLaux1kX/MlYcpgt0j4PiJsWihSCX130p3oa3BAgMGDIDgkNzrqAbXDE32Bg=="
+              "payload_sha256": "345ed760960b5f617ad4e9746b61bdd5c4b887c3464da04cd622990e12dc6740",
+              "signature_base64": "0qCy8p2s3M3HMzWs/dPMYlRLiXVapCaPhBILSnPvwQIEoKuAbAvOTKQPPSBOPKZ9gFt6iUKQmBJsiULtN4O0Bg=="
             }
           ],
           "refs": [
-            "receipt:sha256:34e694bb44995cb33202e90a7fafec0fe3aba7e34409c17ae6592144726fa22d"
+            "receipt:sha256:345ed760960b5f617ad4e9746b61bdd5c4b887c3464da04cd622990e12dc6740"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -613,7 +613,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -630,7 +630,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -645,8 +645,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -672,19 +672,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -713,7 +713,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -730,7 +730,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -745,8 +745,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -772,19 +772,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -813,7 +813,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -830,7 +830,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -845,8 +845,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -872,19 +872,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -913,7 +913,7 @@
             "FAILED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -930,7 +930,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -945,8 +945,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -972,19 +972,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -1013,7 +1013,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -1030,7 +1030,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -1045,8 +1045,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -1072,19 +1072,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -1114,7 +1114,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -1124,7 +1124,7 @@
             "runtime://meta/"
           ],
           "consumed_receipt_refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ]
         },
         "report": {},
@@ -1133,7 +1133,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -1148,8 +1148,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -1175,19 +1175,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -1216,7 +1216,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -1233,7 +1233,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -1248,8 +1248,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -1275,13 +1275,13 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             },
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -1296,8 +1296,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -1323,19 +1323,19 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [
-            "receipt:sha256:9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d"
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
           ],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -1364,7 +1364,7 @@
             "SUCCEEDED"
           ],
           "receipt_public_keys": {
-            "fixture:differential-v1": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyZQETgCXUkT16hVtxkh9EPTPFsUpXO/dIjqiLmLUkFE=\n-----END PUBLIC KEY-----\n"
+            "fixture:differential-v2": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0v/WUKHjd+Y2O2r5EGlrjlNhFn/gFUZAFUvHUMt+ZGw=\n-----END PUBLIC KEY-----\n"
           },
           "max_execution_receipt_age_ms": 900000,
           "allowed_receipt_runtime_providers": [
@@ -1381,7 +1381,7 @@
             {
               "schema": 1,
               "alg": "Ed25519",
-              "key_id": "fixture:differential-v1",
+              "key_id": "fixture:differential-v2",
               "payload": {
                 "schema": 1,
                 "receipt_id": "receipt.maya.0001",
@@ -1396,8 +1396,8 @@
                   "reason": "CONNECTED_AND_OWNER_APPROVED",
                   "approval_ref": "approval://task-42/owner"
                 },
-                "started_at": "2026-09-29T03:40:00.000Z",
-                "finished_at": "2026-09-29T03:41:00.000Z",
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
                 "result": {
                   "state": "SUCCEEDED",
                   "summary": "Budget update completed and provider read-back matched.",
@@ -1423,17 +1423,17 @@
                 },
                 "previous_receipt_sha256": null
               },
-              "payload_sha256": "9dea6cb1258ed00ee8237a4026bd08cd009a7a54b9443b15bcca475eb0c1a49d",
-              "signature_base64": "g3wCibYvFiMmi65aKNzBkli9PlfKIBe3tVtsVbLohcbF/ZAhxt/mGC+XjJaQJJNHhVIW+7QQWoV0xWJXzKhJAQ=="
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "ghMj8B5rsMHEcoOcHdKiVncPDWfWeqsvgmQQJPHkwGl9Kbpmtw3cYFW+ipIjXQd6giBuF4Y6Fca/Ok5DodTnCQ=="
             }
           ],
           "refs": [],
           "artifacts": [],
           "completion_items": [],
           "observed_text": "",
-          "checked_at": "2026-09-29T03:45:00.000Z"
+          "checked_at": "2026-09-29T04:20:00.000Z"
         },
-        "now": "2026-09-29T03:45:00.000Z",
+        "now": "2026-09-29T04:20:00.000Z",
         "maxAgeMs": 900000
       },
       "expected": {
@@ -1443,6 +1443,1886 @@
         ],
         "receipt_reason_sets": [
           []
+        ]
+      }
+    },
+    {
+      "id": "registry-active-valid",
+      "description": "new ACTIVE key verifies after activation",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:rotation-new",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:15:30.000Z",
+                "finished_at": "2026-09-29T04:16:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9bc8382201c40141524226b4bebc33a656baa1821582da9dbbe4c20fc5c8dd49",
+              "signature_base64": "u5SVBKg9YQzEG8rvmSXAyPunBMgoQMBIJktcDOBkr4w4ODGceh/4KreDPYUWFx2NjHWXdRviepIJ5kvia0iNAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9bc8382201c40141524226b4bebc33a656baa1821582da9dbbe4c20fc5c8dd49"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": true,
+        "packet_reason_codes": [],
+        "receipt_reason_sets": [
+          []
+        ]
+      }
+    },
+    {
+      "id": "registry-active-not-yet-valid",
+      "description": "ACTIVE key cannot validate receipt before valid_from",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:rotation-new",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "NePXTnH30L8LdOGa6lgn/FUbypfcSHbHGPOmiVMZQy2ootXuwTWJv6UGvUsmtcQpNBAnSmcK1PKU+FWKJWxKBg=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "KEY_NOT_YET_VALID"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "registry-retired-historical",
+      "description": "RETIRED key preserves receipt inside old validity window",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:rotation-old",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "aWhs79j7xrR0ifQL37BDHK7duMLdTCqWuU6rwIkqJVBc8aMq5BLlwLhzQIdltoV/DZB2Z24D5LeHGXvJZ2IOAw=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": true,
+        "packet_reason_codes": [],
+        "receipt_reason_sets": [
+          []
+        ]
+      }
+    },
+    {
+      "id": "registry-retired-expired",
+      "description": "RETIRED key rejects receipt after valid_until",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:rotation-old",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:12:30.000Z",
+                "finished_at": "2026-09-29T04:13:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "92ab7068ed41ced60dcbf874644fed680d27bfd4167f917b4a1ade80b48ff192",
+              "signature_base64": "8ixNe+DlbM1oETWi7dOqM+1t9guEZj9oWS1AduLJ/eA/rEZKxNQaJ/lR4YTEsS4Bs3ywUkq+Ea9drxGmGRCeDQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:92ab7068ed41ced60dcbf874644fed680d27bfd4167f917b4a1ade80b48ff192"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "KEY_EXPIRED"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "registry-revoked-reject-all",
+      "description": "REVOKED REJECT_ALL rejects historical receipt",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:revoked-all",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "zRsW5EqWtaGWbzEpQ+96Wypo4kE9tEooXaSFbOeefybprUzaxCPJCv1yadHYo8OahaM9liHMc/fTDNTOaQdtCw=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "KEY_REVOKED"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "registry-revoked-pre-compromise",
+      "description": "REVOKED ALLOW_PRE_COMPROMISE keeps receipt strictly before cutoff",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:revoked-cutoff",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:06:30.000Z",
+                "finished_at": "2026-09-29T04:07:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "bdda61780e503ca001e419f056d336f37c9e22a54399f50db39e278ad7a55a63",
+              "signature_base64": "ScXTfK1thIFhZQQ5gaEko+fsEkj3xDuqLYIhZLCN2XjXeSct5fP1zw6AljHZhvq5WE8wDnPNoJsezhpMUQGqBA=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:bdda61780e503ca001e419f056d336f37c9e22a54399f50db39e278ad7a55a63"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": true,
+        "packet_reason_codes": [],
+        "receipt_reason_sets": [
+          []
+        ]
+      }
+    },
+    {
+      "id": "registry-revoked-post-compromise",
+      "description": "REVOKED ALLOW_PRE_COMPROMISE rejects receipt at or after cutoff",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:revoked-cutoff",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:08:30.000Z",
+                "finished_at": "2026-09-29T04:09:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "1cd702c409a14e3c4bea9205c9cc92798fd79f4ecd68e6572bd5876f23e7243c",
+              "signature_base64": "iTiJNLSvqoN368Sb7sKckshwcab8cgYvzSjVEEUxjO6QIloHSkzbPoptcW345zHbnKk7Tm2Xt6i/BF9HgPsPBw=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:1cd702c409a14e3c4bea9205c9cc92798fd79f4ecd68e6572bd5876f23e7243c"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "KEY_COMPROMISED_AFTER_CUTOFF"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "registry-runtime-scope",
+      "description": "key runtime scope rejects otherwise allowed Hermes receipt",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:runtime-scope": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA8jXHnU3lkoIU+NpHM2rhvGpHNcV+JI+4k/RTr94nSig=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "hermes"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "hermes:"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-runtime-scope-v1",
+            "keys": [
+              {
+                "key_id": "fixture:runtime-scope",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA8jXHnU3lkoIU+NpHM2rhvGpHNcV+JI+4k/RTr94nSig=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture runtime-scope signer",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential patch generator",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:runtime-scope",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.scope01",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:15:30.000Z",
+                "finished_at": "2026-09-29T04:16:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "hermes:task:42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "hermes",
+                  "runtime_ref": "hermes:task:42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "4ebf4264d4cf5d046652671829251772a7d35d9f6c981cfaad2ebdbcbe493223",
+              "signature_base64": "GObIXXgGLLNdVLPNU5XY2ejrIKS3aY6D9Bu/FNvby1JH7EjB1Q6iWslumMjt07bFK5fbN3YuwAV8ZrSqZTbdCg=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:4ebf4264d4cf5d046652671829251772a7d35d9f6c981cfaad2ebdbcbe493223"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "KEY_RUNTIME_PROVIDER_NOT_ALLOWED",
+            "KEY_RUNTIME_REF_NOT_ALLOWED"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "registry-unknown-key",
+      "description": "legacy public key cannot bypass registry unknown-key rejection",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:registry-unknown",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:09:00.000Z",
+                "finished_at": "2026-09-29T04:10:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7",
+              "signature_base64": "9XIQDEZgYdBchfT3w8nbMosJDvJQ46PQt9GuD87iPyGDuMwzvxG860ivY5up7JbrXyj9HXWKT97biNjTmzBBDQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:4686330cbf0a19fb6aa28f1698b251720d4b73aa3a9339cd7b5ff71a2a2631c7"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "UNTRUSTED_KEY_ID"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "registry-invalid-duplicate-key",
+      "description": "invalid registry fails closed",
+      "packet": {
+        "expected": {
+          "task_id": "task-42",
+          "assignee_id": "maya",
+          "capability_id": "ads.meta.write",
+          "require_signed_execution_receipt": true,
+          "required_receipt_result_states": [
+            "SUCCEEDED"
+          ],
+          "receipt_public_keys": {
+            "fixture:rotation-old": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+            "fixture:rotation-new": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-all": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+            "fixture:revoked-cutoff": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+            "fixture:registry-unknown": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEW1XrgzlIiZkRoxfvbnpNRcLLPm9SJ/JzHRnOENzh0A=\n-----END PUBLIC KEY-----\n"
+          },
+          "max_execution_receipt_age_ms": 900000,
+          "allowed_receipt_runtime_providers": [
+            "meta-ads"
+          ],
+          "allowed_receipt_runtime_ref_prefixes": [
+            "runtime://meta/"
+          ],
+          "consumed_receipt_refs": [],
+          "receipt_trust_registry": {
+            "schema": 1,
+            "registry_id": "differential-lifecycle-v1",
+            "keys": [
+              {
+                "key_id": "fixture:rotation-old",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhtg0fL6ZsYdTJ9rROBbh6KL3fjCnnqZ806R72MspKC8=\n-----END PUBLIC KEY-----\n",
+                "status": "RETIRED",
+                "signer_identity": "fixture signer fixture:rotation-old",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": "2026-09-29T04:12:00.000Z",
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              },
+              {
+                "key_id": "fixture:revoked-all",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARmMwSCl7CgEeW7dNZ/bdflGkDBmOuyxTENkan8B+Tf0=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-all",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": null,
+                "revocation_reason": "fixture compromise with unknown exposure window",
+                "historical_policy": "REJECT_ALL"
+              },
+              {
+                "key_id": "fixture:revoked-cutoff",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4QZHmwLZwJ/QylcNxq0FvexVby+13HUodow+5ftMxQ=\n-----END PUBLIC KEY-----\n",
+                "status": "REVOKED",
+                "signer_identity": "fixture signer fixture:revoked-cutoff",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T03:30:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": "2026-09-29T04:16:00.000Z",
+                "compromise_cutoff": "2026-09-29T04:08:00.000Z",
+                "revocation_reason": "fixture bounded compromise cutoff",
+                "historical_policy": "ALLOW_PRE_COMPROMISE"
+              },
+              {
+                "key_id": "fixture:rotation-new",
+                "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhyTis3hcjCgbTaPXHcjmUmZ7FUosrTapJxIbh5EVzLU=\n-----END PUBLIC KEY-----\n",
+                "status": "ACTIVE",
+                "signer_identity": "fixture signer fixture:rotation-new",
+                "key_owner": "fixture-owner",
+                "generation_boundary": "ephemeral differential generator outside committed corpus",
+                "storage_expectation": "private key discarded after corpus generation",
+                "valid_from": "2026-09-29T04:15:00.000Z",
+                "valid_until": null,
+                "runtime_provider_scope": [
+                  "meta-ads"
+                ],
+                "runtime_ref_prefixes": [
+                  "runtime://meta/"
+                ],
+                "revoked_at": null,
+                "compromise_cutoff": null,
+                "revocation_reason": null,
+                "historical_policy": "ALLOW_WITHIN_VALIDITY"
+              }
+            ]
+          }
+        },
+        "report": {},
+        "evidence": {
+          "signed_receipts": [
+            {
+              "schema": 1,
+              "alg": "Ed25519",
+              "key_id": "fixture:rotation-new",
+              "payload": {
+                "schema": 1,
+                "receipt_id": "receipt.maya.0001",
+                "task_id": "task-42",
+                "employee_id": "maya",
+                "action": "Update approved Meta campaign budget",
+                "capability_id": "ads.meta.write",
+                "risk_class": "PAID_ACTION",
+                "autonomy": "GUARDED",
+                "authorization": {
+                  "allowed": true,
+                  "reason": "CONNECTED_AND_OWNER_APPROVED",
+                  "approval_ref": "approval://task-42/owner"
+                },
+                "started_at": "2026-09-29T04:15:30.000Z",
+                "finished_at": "2026-09-29T04:16:00.000Z",
+                "result": {
+                  "state": "SUCCEEDED",
+                  "summary": "Budget update completed and provider read-back matched.",
+                  "artifact_refs": [
+                    "artifact://meta/change-42.json"
+                  ],
+                  "evidence_refs": [
+                    "runtime://meta/change-42",
+                    "test://readback/change-42"
+                  ]
+                },
+                "runtime": {
+                  "provider": "meta-ads",
+                  "runtime_ref": "runtime://meta/change-42",
+                  "provider_version": "differential-fixture"
+                },
+                "usage": {
+                  "input_tokens": 1200,
+                  "output_tokens": 240,
+                  "cost_known": true,
+                  "cost_amount": 0.031,
+                  "currency": "USD"
+                },
+                "previous_receipt_sha256": null
+              },
+              "payload_sha256": "9bc8382201c40141524226b4bebc33a656baa1821582da9dbbe4c20fc5c8dd49",
+              "signature_base64": "u5SVBKg9YQzEG8rvmSXAyPunBMgoQMBIJktcDOBkr4w4ODGceh/4KreDPYUWFx2NjHWXdRviepIJ5kvia0iNAQ=="
+            }
+          ],
+          "refs": [
+            "receipt:sha256:9bc8382201c40141524226b4bebc33a656baa1821582da9dbbe4c20fc5c8dd49"
+          ],
+          "artifacts": [],
+          "completion_items": [],
+          "observed_text": "",
+          "checked_at": "2026-09-29T04:20:00.000Z"
+        },
+        "now": "2026-09-29T04:20:00.000Z",
+        "maxAgeMs": 900000
+      },
+      "expected": {
+        "accept": false,
+        "packet_reason_codes": [
+          "SIGNED_EXECUTION_RECEIPT_INVALID",
+          "SIGNED_EXECUTION_RECEIPT_MISSING_VALID"
+        ],
+        "receipt_reason_sets": [
+          [
+            "TRUST_REGISTRY_INVALID"
+          ]
         ]
       }
     }

@@ -337,11 +337,235 @@ def validate_payload(
 
     return errors
 
+TRUST_STATUSES = {"ACTIVE", "RETIRED", "REVOKED"}
+TRUST_HISTORICAL_POLICIES = {
+    "ALLOW_WITHIN_VALIDITY",
+    "REJECT_ALL",
+    "ALLOW_PRE_COMPROMISE",
+}
+TRUST_KEY_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$")
+PUBLIC_KEY_MARKER = "-----BEGIN PUBLIC KEY-----"
+TRUST_REGISTRY_FIELDS = {"schema", "registry_id", "keys"}
+TRUST_ENTRY_FIELDS = {
+    "key_id",
+    "public_key_pem",
+    "status",
+    "signer_identity",
+    "key_owner",
+    "generation_boundary",
+    "storage_expectation",
+    "valid_from",
+    "valid_until",
+    "runtime_provider_scope",
+    "runtime_ref_prefixes",
+    "revoked_at",
+    "compromise_cutoff",
+    "revocation_reason",
+    "historical_policy",
+}
+
+
+def validate_trust_registry(registry: Any) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(registry, dict):
+        return ["registry must be an object"]
+    extra_registry_fields = sorted(set(registry) - TRUST_REGISTRY_FIELDS)
+    if extra_registry_fields:
+        errors.append("registry has unexpected fields: " + ",".join(extra_registry_fields))
+    if registry.get("schema") != 1:
+        errors.append("registry.schema must be 1")
+    if not _is_nonempty_string(registry.get("registry_id")):
+        errors.append("registry.registry_id required")
+    if "private_key_pem" in registry:
+        errors.append("registry must never contain private_key_pem")
+    keys = registry.get("keys")
+    if not isinstance(keys, list):
+        return errors + ["registry.keys must be an array"]
+
+    ids: list[str] = []
+    for index, entry in enumerate(keys):
+        prefix = f"keys[{index}]"
+        if not isinstance(entry, dict):
+            errors.append(prefix + " must be an object")
+            continue
+        extra_entry_fields = sorted(set(entry) - TRUST_ENTRY_FIELDS)
+        if extra_entry_fields:
+            errors.append(prefix + " has unexpected fields: " + ",".join(extra_entry_fields))
+        key_id = entry.get("key_id")
+        if not isinstance(key_id, str) or not TRUST_KEY_ID_RE.fullmatch(key_id):
+            errors.append(prefix + ".key_id invalid")
+        else:
+            ids.append(key_id)
+        status = entry.get("status")
+        if status not in TRUST_STATUSES:
+            errors.append(prefix + ".status invalid")
+        for name in (
+            "signer_identity",
+            "key_owner",
+            "generation_boundary",
+            "storage_expectation",
+        ):
+            if not _is_nonempty_string(entry.get(name)):
+                errors.append(prefix + f".{name} required")
+        public_key = entry.get("public_key_pem")
+        if (
+            not isinstance(public_key, str)
+            or PUBLIC_KEY_MARKER not in public_key
+            or "PRIVATE KEY-----" in public_key
+        ):
+            errors.append(prefix + ".public_key_pem must contain public key material only")
+
+        valid_from = _parse_datetime(entry.get("valid_from"))
+        valid_until = (
+            None if entry.get("valid_until") is None
+            else _parse_datetime(entry.get("valid_until"))
+        )
+        if valid_from is None:
+            errors.append(prefix + ".valid_from invalid")
+        if entry.get("valid_until") is not None and valid_until is None:
+            errors.append(prefix + ".valid_until invalid")
+        if valid_from is not None and valid_until is not None and valid_until < valid_from:
+            errors.append(prefix + ".valid_until precedes valid_from")
+
+        providers = entry.get("runtime_provider_scope")
+        prefixes = entry.get("runtime_ref_prefixes")
+        if (
+            not isinstance(providers, list)
+            or not providers
+            or any(not _is_nonempty_string(item) for item in providers)
+        ):
+            errors.append(prefix + ".runtime_provider_scope requires at least one provider")
+        elif len(providers) != len(set(providers)):
+            errors.append(prefix + ".runtime_provider_scope must be unique")
+        if (
+            not isinstance(prefixes, list)
+            or not prefixes
+            or any(not _is_nonempty_string(item) for item in prefixes)
+        ):
+            errors.append(prefix + ".runtime_ref_prefixes requires at least one prefix")
+        elif len(prefixes) != len(set(prefixes)):
+            errors.append(prefix + ".runtime_ref_prefixes must be unique")
+
+        historical = entry.get("historical_policy")
+        if historical not in TRUST_HISTORICAL_POLICIES:
+            errors.append(prefix + ".historical_policy invalid")
+
+        if status == "ACTIVE":
+            if any(entry.get(name) is not None for name in ("revoked_at", "compromise_cutoff", "revocation_reason")):
+                errors.append(prefix + " ACTIVE key cannot carry revocation fields")
+            if historical != "ALLOW_WITHIN_VALIDITY":
+                errors.append(prefix + " ACTIVE key historical_policy must be ALLOW_WITHIN_VALIDITY")
+        elif status == "RETIRED":
+            if valid_until is None:
+                errors.append(prefix + " RETIRED key requires valid_until")
+            if any(entry.get(name) is not None for name in ("revoked_at", "compromise_cutoff", "revocation_reason")):
+                errors.append(prefix + " RETIRED key cannot carry revocation fields")
+            if historical != "ALLOW_WITHIN_VALIDITY":
+                errors.append(prefix + " RETIRED key historical_policy must be ALLOW_WITHIN_VALIDITY")
+        elif status == "REVOKED":
+            revoked_at = _parse_datetime(entry.get("revoked_at"))
+            if revoked_at is None:
+                errors.append(prefix + " REVOKED key requires revoked_at")
+            if revoked_at is not None and valid_from is not None and revoked_at < valid_from:
+                errors.append(prefix + ".revoked_at precedes valid_from")
+            if not _is_nonempty_string(entry.get("revocation_reason")):
+                errors.append(prefix + " REVOKED key requires revocation_reason")
+            if historical not in {"REJECT_ALL", "ALLOW_PRE_COMPROMISE"}:
+                errors.append(prefix + " REVOKED key historical_policy must be REJECT_ALL or ALLOW_PRE_COMPROMISE")
+            if historical == "ALLOW_PRE_COMPROMISE":
+                cutoff = _parse_datetime(entry.get("compromise_cutoff"))
+                if cutoff is None:
+                    errors.append(prefix + " ALLOW_PRE_COMPROMISE requires compromise_cutoff")
+                if cutoff is not None and valid_from is not None and cutoff < valid_from:
+                    errors.append(prefix + ".compromise_cutoff precedes valid_from")
+                if revoked_at is not None and cutoff is not None and cutoff > revoked_at:
+                    errors.append(prefix + ".compromise_cutoff cannot be after revoked_at")
+            elif entry.get("compromise_cutoff") is not None:
+                errors.append(prefix + " REJECT_ALL must not carry compromise_cutoff")
+
+    if len(ids) != len(set(ids)):
+        errors.append("registry key_id values must be unique")
+    return errors
+
+
+def resolve_receipt_trust(
+    registry: Any,
+    *,
+    key_id: Any,
+    finished_at: Any,
+    runtime_provider: Any,
+    runtime_ref: Any,
+) -> dict[str, Any]:
+    registry_errors = validate_trust_registry(registry)
+    if registry_errors:
+        return {
+            "ok": False,
+            "reasons": ["TRUST_REGISTRY_INVALID"],
+            "entry": None,
+            "public_key_pem": None,
+            "registry_errors": registry_errors,
+        }
+
+    entry = next(
+        (item for item in registry["keys"] if item.get("key_id") == key_id),
+        None,
+    )
+    if entry is None:
+        return {
+            "ok": False,
+            "reasons": ["UNTRUSTED_KEY_ID"],
+            "entry": None,
+            "public_key_pem": None,
+            "registry_errors": [],
+        }
+
+    reasons: list[str] = []
+    receipt_time = _parse_datetime(finished_at)
+    valid_from = _parse_datetime(entry.get("valid_from"))
+    valid_until = (
+        None if entry.get("valid_until") is None
+        else _parse_datetime(entry.get("valid_until"))
+    )
+    if receipt_time is None:
+        reasons.append("KEY_RECEIPT_TIME_INVALID")
+    else:
+        if valid_from is not None and receipt_time < valid_from:
+            reasons.append("KEY_NOT_YET_VALID")
+        if valid_until is not None and receipt_time > valid_until:
+            reasons.append("KEY_EXPIRED")
+
+    provider = _clean(runtime_provider, 120)
+    runtime_ref_clean = _clean(runtime_ref, 512)
+    providers = [_clean(item, 120) for item in entry["runtime_provider_scope"]]
+    prefixes = [_clean(item, 512) for item in entry["runtime_ref_prefixes"]]
+    if provider not in providers:
+        reasons.append("KEY_RUNTIME_PROVIDER_NOT_ALLOWED")
+    if not any(runtime_ref_clean.startswith(prefix) for prefix in prefixes):
+        reasons.append("KEY_RUNTIME_REF_NOT_ALLOWED")
+
+    if entry["status"] == "REVOKED":
+        if entry["historical_policy"] == "REJECT_ALL":
+            reasons.append("KEY_REVOKED")
+        else:
+            cutoff = _parse_datetime(entry.get("compromise_cutoff"))
+            if receipt_time is None or cutoff is None or receipt_time >= cutoff:
+                reasons.append("KEY_COMPROMISED_AFTER_CUTOFF")
+
+    return {
+        "ok": not reasons,
+        "reasons": _dedupe(reasons),
+        "entry": entry,
+        "public_key_pem": entry["public_key_pem"],
+        "registry_errors": [],
+    }
+
+
 
 def verify_execution_receipt(
     envelope: Any,
     *,
     public_keys: Mapping[str, str] | None = None,
+    trust_registry: Mapping[str, Any] | None = None,
     now: Any,
     max_future_skew_ms: int = 5 * 60 * 1000,
     max_receipt_age_ms: float | None = None,
@@ -391,10 +615,24 @@ def verify_execution_receipt(
         reasons.append("PAYLOAD_HASH_MISMATCH")
 
     key_id = envelope.get("key_id")
-    public_key_pem = public_keys.get(key_id) if isinstance(key_id, str) else None
-    if not _is_nonempty_string(public_key_pem):
-        reasons.append("UNTRUSTED_KEY_ID")
-    elif canonical is not None and _is_nonempty_string(envelope.get("signature_base64")):
+    public_key_pem = None
+    payload_for_trust = envelope.get("payload") if isinstance(envelope.get("payload"), dict) else {}
+    runtime_for_trust = payload_for_trust.get("runtime") if isinstance(payload_for_trust.get("runtime"), dict) else {}
+    if trust_registry is not None:
+        trust = resolve_receipt_trust(
+            trust_registry,
+            key_id=key_id,
+            finished_at=payload_for_trust.get("finished_at"),
+            runtime_provider=runtime_for_trust.get("provider"),
+            runtime_ref=runtime_for_trust.get("runtime_ref"),
+        )
+        reasons.extend(trust["reasons"])
+        public_key_pem = trust["public_key_pem"]
+    else:
+        public_key_pem = public_keys.get(key_id) if isinstance(key_id, str) else None
+        if not _is_nonempty_string(public_key_pem):
+            reasons.append("UNTRUSTED_KEY_ID")
+    if _is_nonempty_string(public_key_pem) and canonical is not None and _is_nonempty_string(envelope.get("signature_base64")):
         try:
             signature = base64.b64decode(envelope["signature_base64"], validate=True)
             public_key = serialization.load_pem_public_key(public_key_pem.encode("utf-8"))
@@ -485,6 +723,11 @@ def verify_receipt_packet(packet: Mapping[str, Any]) -> dict[str, Any]:
         if isinstance(expected.get("receipt_public_keys"), dict)
         else {}
     )
+    trust_registry = (
+        expected.get("receipt_trust_registry")
+        if isinstance(expected.get("receipt_trust_registry"), dict)
+        else None
+    )
     required_states = expected.get("required_receipt_result_states")
     required_states = required_states if isinstance(required_states, list) else []
     consumed = {
@@ -507,6 +750,7 @@ def verify_receipt_packet(packet: Mapping[str, Any]) -> dict[str, Any]:
         check = verify_execution_receipt(
             envelope,
             public_keys=public_keys,
+            trust_registry=trust_registry,
             now=now,
             max_receipt_age_ms=max_age,
             consumed_receipt_refs=consumed,

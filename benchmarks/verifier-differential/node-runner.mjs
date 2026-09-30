@@ -15,6 +15,8 @@ function normalizeReceiptChecks(packet){
   const consumed=new Set(asList(expected.consumed_receipt_refs).map(clean).filter(Boolean));
   const publicKeys=expected.receipt_public_keys && typeof expected.receipt_public_keys==="object" && !Array.isArray(expected.receipt_public_keys)
     ? expected.receipt_public_keys : {};
+  const trustRegistry=expected.receipt_trust_registry && typeof expected.receipt_trust_registry==="object" && !Array.isArray(expected.receipt_trust_registry)
+    ? expected.receipt_trust_registry : null;
   const requiredStates=asList(expected.required_receipt_result_states).map(clean).filter(Boolean);
   const allowedProviders=asList(expected.allowed_receipt_runtime_providers).map(clean).filter(Boolean);
   const allowedPrefixes=asList(expected.allowed_receipt_runtime_ref_prefixes).map(clean).filter(Boolean);
@@ -26,6 +28,7 @@ function normalizeReceiptChecks(packet){
   for(const envelope of (Array.isArray(evidence.signed_receipts)?evidence.signed_receipts:[])){
     const check=verifyExecutionReceipt(envelope,{
       publicKeys,
+      trustRegistry,
       now,
       maxReceiptAgeMs:maxAge,
       consumedReceiptRefs:consumed,
