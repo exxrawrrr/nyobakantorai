@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat9-hermes-live-readiness-hardening",
+  "audit": "v0.5-chat10-codex-live-readiness-hardening",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -390,13 +390,13 @@
       "paths": [
         "packages/codex-execution-adapter"
       ],
-      "rationale": "Codex-specific ephemeral read-only execution is isolated behind RuntimeExecutionAdapter v1, bound to the exact Chat 4 canonical Siti bundle, and stages the exact five canonical skills under .agents/skills.",
+      "rationale": "Codex-specific ephemeral read-only execution is isolated behind RuntimeExecutionAdapter v1, bound to the exact Chat 4 canonical Siti bundle, stages the five canonical skills under .agents/skills, and ignores user config/rules so local configuration cannot silently change the reference case while authentication remains available.",
       "evidence": [
         "packages/codex-execution-adapter/index.mjs",
         "packages/codex-execution-adapter/index.test.mjs",
         "docs/CODEX-EXECUTION-ADAPTER.md"
       ],
-      "next_action": "Run a separately authorized bounded live Codex reference execution later and compare it to an equivalently evidenced Hermes run before any behavioral portability claim."
+      "next_action": "Retry the bounded live Codex reference run under the canonical 10-second policy after Chat 10 hardening; treat timeout as a real reference-case limit rather than promoting partial activity."
     },
     {
       "id": "reference-case-comparator",
