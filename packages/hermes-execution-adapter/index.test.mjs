@@ -52,19 +52,19 @@ test("Hermes adapter binds exact Chat 4 bundle before any provider call",()=>{
   assert.equal(fake.calls.length,0);
   assert.equal(bound.core_bundle_sha256,HERMES_REFERENCE_CORE_SHA256);
   assert.equal(bound.adapter.runtime.provider,"hermes");
-  assert.equal(bound.adapter.runtime.runtime_ref,"hermes:profile:siti");
+  assert.equal(bound.adapter.runtime.runtime_ref,"hermes:profile:default");
   assert.deepEqual(bound.adapter.capabilities,["bounded_process","model_inference","temporary_workspace","evidence_collection"]);
 });
 
-test("Hermes adapter rejects canonical-core, executable, and profile drift",()=>{
+test("Hermes adapter rejects canonical-core, executable, and unsafe runtime profile drift",()=>{
   const changed=structuredClone(reference);
   changed.core_bundle.source_artifact.facts.source_status="VERIFIED";
   assert.throws(()=>createHermesReferenceExecutionAdapter({reference:changed}),/core bundle bytes do not match manifest/);
   assert.throws(()=>createHermesReferenceExecutionAdapter({reference,executable:"powershell.exe"}),/not allowlisted/);
-  assert.throws(()=>createHermesReferenceExecutionAdapter({reference,profile:"default"}),/must use the Siti profile/);
+  assert.throws(()=>createHermesReferenceExecutionAdapter({reference,profile:"bad profile"}),/safe profile identifier/);
 });
 
-test("Hermes fixture execution uses Siti profile, skills-only toolset, exact five skills, and cleans workspace",async()=>{
+test("Hermes fixture execution uses isolated default runtime profile, skills-only toolset, exact five skills, and cleans workspace",async()=>{
   const fake=fakeInvokeFactory();
   const bound=createHermesReferenceExecutionAdapter({reference,invokeImpl:fake.invoke,providerVersion:"fixture",codeCommit:"chat5-fixture"});
   const outcome=await executeBoundedRuntimeTask(bound.adapter,reference.core_bundle.task,{policy});
@@ -73,7 +73,10 @@ test("Hermes fixture execution uses Siti profile, skills-only toolset, exact fiv
   assert.equal(outcome.normalized_result.output.review_state,"FAIL");
   assert.equal(fake.calls.length,1);
   const call=fake.calls[0];
-  assert.deepEqual(call.args.slice(0,3),["-p","siti","chat"]);
+  assert.deepEqual(call.args.slice(0,3),["-p","default","chat"]);
+  assert.ok(call.args.includes("--ignore-rules"));
+  assert.ok(call.args.includes("--source"));
+  assert.ok(call.args.includes("tool"));
   assert.ok(call.args.includes("--oneshot"));
   assert.ok(call.args.includes("--quiet"));
   assert.ok(call.args.includes("stream-json"));
@@ -119,4 +122,15 @@ test("nonzero Hermes process and malformed output never become success",async()=
     assert.equal(outcome.state,"FAILED");
     assert.equal(outcome.cleanup.ok,true);
   }
+});
+
+
+test("Hermes runtime profile remains adapter metadata outside the canonical Siti core",()=>{
+  const fake=fakeInvokeFactory();
+  const bound=createHermesReferenceExecutionAdapter({reference,profile:"qa-runtime",invokeImpl:fake.invoke,providerVersion:"fixture"});
+  assert.equal(bound.profile,"qa-runtime");
+  assert.equal(bound.adapter.runtime.runtime_ref,"hermes:profile:qa-runtime");
+  assert.equal(bound.core_bundle_sha256,HERMES_REFERENCE_CORE_SHA256);
+  assert.equal(reference.core_bundle.worker.id,"siti");
+  assert.equal(fake.calls.length,0);
 });
