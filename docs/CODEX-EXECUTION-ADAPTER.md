@@ -13,7 +13,7 @@ No Codex-specific worker or task fork exists.
 
 The adapter is intentionally Codex-specific and remains outside portable core. It follows the repository's existing cross-harness invocation shape:
 
-codex exec --skip-git-repo-check --sandbox read-only --ephemeral --ignore-user-config --ignore-rules --json -
+codex exec --skip-git-repo-check --sandbox read-only --ephemeral --ignore-user-config --ignore-rules -c model_reasoning_effort="low" --json -
 
 The adapter does not use --dangerously-bypass-approvals-and-sandbox.
 
@@ -43,3 +43,6 @@ Chat 6 proves Codex adapter implementation compatibility and exact Chat 4 input 
 ## Chat 10 live hardening
 
 The live adapter now ignores user config and user/project rules while retaining Codex authentication. This prevents local model/tool/rule configuration from silently changing the reference-case behavior. Cleanup retries bounded deletion to tolerate short Windows file-release delays after process termination.
+
+
+The reference invocation's reasoning effort is explicitly bounded to `low` as runtime metadata. This does not change the canonical worker/task/skill/policy bundle; it constrains runtime latency within the existing 10-second execution policy.
