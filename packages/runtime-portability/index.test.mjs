@@ -14,13 +14,13 @@ test("canonical runtime portability map validates against the repository",async(
   assert.equal(map.audited_release,"v0.4.0");
 });
 
-test("Chat 2 classifications record only enforced boundary improvements",async()=>{
+test("Chat 15 classifications record only executable portability conclusions",async()=>{
   const {map}=await readAndValidateRuntimePortabilityMap({root});
   const byId=Object.fromEntries(map.surfaces.map((surface)=>[surface.id,surface.classification]));
   assert.equal(byId["capability-contracts"],"CORE_PORTABLE");
   assert.equal(byId["evidence-and-receipts"],"CORE_PORTABLE");
   assert.equal(byId["runtime-adapter-sdk"],"ADAPTER_BOUNDARY");
-  assert.equal(byId["employee-definitions"],"UNKNOWN_REQUIRES_PROOF");
+  assert.equal(byId["employee-definitions"],"ADAPTER_BOUNDARY");
   assert.equal(byId["skill-definitions"],"ADAPTER_BOUNDARY");
   assert.equal(byId["task-registry"],"CORE_PORTABLE");
   assert.equal(byId["office-runtime-reconciliation"],"ADAPTER_BOUNDARY");
@@ -36,6 +36,15 @@ test("Chat 2 classifications record only enforced boundary improvements",async()
   assert.equal(byId["independent-python-reference-verifier"],"CORE_PORTABLE");
   assert.equal(byId["verifier-differential-corpus"],"CORE_PORTABLE");
   assert.equal(byId["receipt-trust-registry"],"CORE_PORTABLE");
+  assert.equal(byId["approval-policy"],"CORE_PORTABLE");
+  assert.equal(byId["release-claims"],"CORE_PORTABLE");
+  assert.equal(byId["office-ui-workforce-view"],"ADAPTER_BOUNDARY");
+});
+
+test("Chat 15 leaves no unresolved or Hermes-shaped portability surfaces",async()=>{
+  const {validation}=await readAndValidateRuntimePortabilityMap({root});
+  assert.equal(validation.counts.UNKNOWN_REQUIRES_PROOF,0);
+  assert.equal(validation.counts.HERMES_SHAPED,0);
 });
 
 test("mapped paths fail closed when repository structure drifts",async()=>{
