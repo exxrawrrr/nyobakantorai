@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat13-signing-key-lifecycle-trust-registry",
+  "audit": "v0.5-chat14-immutable-installer-release-integrity",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -246,19 +246,26 @@
     },
     {
       "id": "install-update-remove-lifecycle",
-      "classification": "HERMES_SHAPED",
+      "classification": "ADAPTER_BOUNDARY",
       "paths": [
         "install.sh",
         "install.ps1",
+        "packages/install-integrity",
         "packages/fresh-install-matrix",
-        "scripts/hermes-remove-selected.mjs"
+        "scripts/hermes-remove-selected.mjs",
+        "scripts/build-install-assets.mjs",
+        "scripts/verify-install-assets.mjs",
+        ".github/workflows/release.yml"
       ],
-      "rationale": "The current product installer is core-only when Hermes is absent but the employee install/upgrade/remove lifecycle is still expressed primarily through Hermes bootstrap semantics.",
+      "rationale": "The product installer now separates a runtime-neutral immutable core release channel from runtime-specific employee/profile lifecycle work. Stable source installation resolves tagged release assets, verifies manifest + SHA-256 + exact source commit, records provenance, and has no mutable-main fallback. Hermes profile install/upgrade/remove remains an explicit runtime boundary implemented by Hermes bootstrap/removal tooling rather than core source acquisition.",
       "evidence": [
-        "install.sh",
-        "install.ps1"
+        "packages/install-integrity/index.test.mjs",
+        "packages/install-integrity/installers.test.mjs",
+        "scripts/build-install-assets.test.mjs",
+        "docs/INSTALL-INTEGRITY.md",
+        ".github/workflows/release.yml"
       ],
-      "next_action": "Separate core install channel from runtime profile installation; immutable release work occurs in Chat 12."
+      "next_action": "Keep stable core acquisition runtime-neutral and fail-closed. Keep Hermes profile bootstrap/removal as runtime-specific distribution behavior; do not fold runtime profile lifecycle back into the stable source installer contract."
     },
     {
       "id": "employee-packaging",
