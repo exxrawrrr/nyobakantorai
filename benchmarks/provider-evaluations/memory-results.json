@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "benchmark": "memory-provider-evaluation",
+  "claim": "UNPROVEN until a provider record reaches COMPLETED with evidence and passes the configured acceptance gate.",
+  "providers": [
+    {
+      "provider_id": "cognee-hermes",
+      "integration_id": "cognee-hermes-evaluation",
+      "source_id": "cognee-integrations",
+      "source_commit": "3323e30a71564eccc1794b8c4a0bac84fc3d2b30",
+      "status": "NOT_RUN",
+      "claim_state": "UNPROVEN",
+      "environment": null,
+      "cases": [],
+      "summary": {
+        "note": "Live readiness was checked on GROWTH, but the provider itself was not runnable; no memory evaluation case was executed.",
+        "readiness_evidence_ref": "benchmarks/provider-evaluations/memory-readiness-2026-09-29.json",
+        "blockers": [
+          "Cognee integration/package not installed.",
+          "Hermes model/provider credentials and OAuth are not configured.",
+          "No local or remote Cognee configuration is present."
+        ],
+        "acceptance_passed": false
+      }
+    }
+  ]
+}

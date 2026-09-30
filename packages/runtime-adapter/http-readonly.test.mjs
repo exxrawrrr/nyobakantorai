@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { snapshotRuntime } from "./index.mjs";
 import { createLoopbackHttpAdapter } from "./http-readonly.mjs";
+import { defineAdapterPermissionPolicy } from "./policy.mjs";
 
 test("loopback HTTP adapter rejects remote hosts and embedded credentials", () => {
   assert.throws(() => createLoopbackHttpAdapter({ baseUrl: "https://example.com" }), /http:\/\//);
@@ -57,4 +58,36 @@ test("loopback HTTP adapter fails closed on malformed task responses", async () 
   assert.equal(snapshot.state, "ERROR");
   assert.equal(snapshot.error_category, "ADAPTER_ERROR");
   assert.deepEqual(snapshot.tasks, []);
+});
+
+
+test("loopback HTTP adapter enforces supplied permission policy", () => {
+  const policy = defineAdapterPermissionPolicy({
+    id:"test-http",
+    adapter_ids:["local-http"],
+    executable_basenames:[],
+    allowed_env_keys:[],
+    max_timeout_ms:1000,
+    max_buffer_bytes:0,
+    max_tasks:5,
+    loopback_only:true,
+    loopback_hosts:["127.0.0.1","localhost","[::1]"],
+    allowed_protocols:["http:"],
+    allow_redirects:false,
+  });
+
+  assert.throws(() => createLoopbackHttpAdapter({
+    id:"local-http",
+    baseUrl:"http://127.0.0.1:9999",
+    timeoutMs:2000,
+    permissionPolicy:policy,
+  }), /timeout exceeds policy/);
+
+  assert.throws(() => createLoopbackHttpAdapter({
+    id:"local-http",
+    baseUrl:"http://127.0.0.1:9999",
+    timeoutMs:500,
+    maxTasks:10,
+    permissionPolicy:policy,
+  }), /maxTasks exceeds policy/);
 });

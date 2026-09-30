@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "minimum_cases_for_baseline": 20,
+  "statuses": [
+    "NOT_READY",
+    "COLLECTING",
+    "READY_FOR_REPORT",
+    "PUBLISHED"
+  ],
+  "allowed_source_types": [
+    "owner_real_task",
+    "external_real_request",
+    "repository_real_issue"
+  ],
+  "forbidden_source_types": [
+    "synthetic",
+    "demo",
+    "generated",
+    "benchmark_fixture"
+  ],
+  "required_metrics": [
+    "success",
+    "evidence_complete",
+    "false_success",
+    "human_intervention",
+    "retries",
+    "duration_ms",
+    "cost_known",
+    "verification_passed",
+    "recovered_after_failure"
+  ],
+  "publication_gate": {
+    "minimum_cases": 20,
+    "false_successes_max": 0,
+    "require_all_non_synthetic": true,
+    "require_evidence_refs": true,
+    "require_environment": true,
+    "require_redaction_review": true,
+    "require_direct_non_generated_source": true
+  },
+  "privacy": "Store references/redacted task summaries, not unnecessary raw client/user secrets or full private transcripts.",
+  "required_source_fields": [
+    "source_ref",
+    "source_generated"
+  ]
+}

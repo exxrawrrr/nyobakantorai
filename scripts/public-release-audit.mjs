@@ -13,7 +13,7 @@ const slash = String.fromCharCode(92);
 const binary = new Set([".png",".jpg",".jpeg",".gif",".webp",".ico",".pdf",".zip",".db",".sqlite",".sqlite3",".woff",".woff2"]);
 const forbiddenPathFragments = [
   "ai-office-operations/", "office-next/", "office-preview/", "codex_hermes_prep/",
-  "/packets/", "/receipts/", "/qa-packets/", "/owner-submissions/", "/evidence/screenshots/",
+  "/packets/", "/receipts/", "/qa-packets/", "/owner-submissions/", "/evidence/screenshots/", "/.nyobakantorai/",
 ];
 const forbiddenFileNames = new Set([
   ".env","auth.json","nous_auth.json","credentials.json","secrets.json",
@@ -45,6 +45,9 @@ const findings = [];
 for (const relative of tracked) {
   const normalized = relative.split(slash).join("/").toLowerCase();
   const name = basename(relative).toLowerCase();
+  if (normalized.startsWith("docs/_temp_")) {
+    findings.push(relative + ": temporary planning document must not ship");
+  }
   if (forbiddenFileNames.has(name) || (name.startsWith(".env.") && name !== ".env.example")) {
     findings.push(relative + ": forbidden sensitive filename");
   }
@@ -92,7 +95,8 @@ for (const relative of skillPaths) {
   const nameLine = text.split(String.fromCharCode(10)).find((line) => line.startsWith("name:"));
   const name = nameLine ? nameLine.slice(5).trim() : "";
   if (name !== dir) findings.push(relative + ": frontmatter name does not match directory");
-  if (!text.toLowerCase().includes("platforms: [windows, linux, macos]")) findings.push(relative + ": public skill is not declared cross-platform");
+  if (!/^compatibility:\s*["\']Hermes-first; follows the Agent Skills SKILL[.]md core format[.]["\']\s*$/m.test(text)) findings.push(relative + ": public skill is missing Agent Skills compatibility declaration");
+  if (!/^\s*nyoba-platforms:\s*["\']windows,linux,macos["\']\s*$/m.test(text)) findings.push(relative + ": public skill is not declared cross-platform in namespaced metadata");
 }
 
 const agentPaths = tracked.filter((p) => {
@@ -127,7 +131,7 @@ for (const employee of workforceRegistry.employees) {
     }
   }
 }
-if (tracked.includes("docs/_TEMP_V0.3_REAL_AI_WORKFORCE_PRD.md")) findings.push("temporary v0.3 handoff PRD must not ship");
+// Any docs/_TEMP_* file is rejected generically above.
 
 if (findings.length) {
   console.error("Public-release audit failed:" + String.fromCharCode(10) + [...new Set(findings)].join(String.fromCharCode(10)));

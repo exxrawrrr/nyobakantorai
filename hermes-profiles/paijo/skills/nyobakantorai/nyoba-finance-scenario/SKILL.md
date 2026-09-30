@@ -1,12 +1,13 @@
 ---
 name: nyoba-finance-scenario
-description: Pricing, budgets and cash-flow splits without unauthorized transfers or financial changes.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Pricing, budgets and cash-flow splits without unauthorized transfers or financial changes."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Paijo finance scenarios

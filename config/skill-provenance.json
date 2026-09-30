@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "policy": "Skills listed here are recreated/adapted from upstream concepts and must retain explicit source IDs in Agent Skills metadata. Skills not listed are treated as project-authored unless separately documented.",
+  "skills": {
+    "nyoba-brainstorming-discovery": {
+      "mode": "recreated",
+      "source_ids": [
+        "superpowers"
+      ]
+    },
+    "nyoba-context-prompt-compiler": {
+      "mode": "recreated",
+      "source_ids": [
+        "agent-skills",
+        "markitdown",
+        "docling",
+        "repomix",
+        "llmlingua",
+        "ecc"
+      ]
+    },
+    "nyoba-deep-research-open": {
+      "mode": "recreated",
+      "source_ids": [
+        "ecc"
+      ]
+    },
+    "nyoba-markdown-knowledge-compaction": {
+      "mode": "recreated",
+      "source_ids": [
+        "markitdown",
+        "docling",
+        "jina-reader",
+        "ecc"
+      ]
+    },
+    "nyoba-mcp-builder": {
+      "mode": "recreated",
+      "source_ids": [
+        "anthropic-mcp-builder",
+        "mcp-reference-servers",
+        "superpowers"
+      ]
+    },
+    "nyoba-plan-execute-review": {
+      "mode": "recreated",
+      "source_ids": [
+        "superpowers"
+      ]
+    },
+    "nyoba-reflective-memory-learning": {
+      "mode": "recreated",
+      "source_ids": [
+        "ecc",
+        "mem0",
+        "letta",
+        "mcp-reference-servers"
+      ]
+    },
+    "nyoba-skill-engineering": {
+      "mode": "recreated",
+      "source_ids": [
+        "superpowers",
+        "ecc"
+      ]
+    },
+    "nyoba-strategic-context-compaction": {
+      "mode": "recreated",
+      "source_ids": [
+        "ecc"
+      ]
+    },
+    "nyoba-systematic-debugging": {
+      "mode": "recreated",
+      "source_ids": [
+        "superpowers",
+        "ecc"
+      ]
+    },
+    "nyoba-test-driven-delivery": {
+      "mode": "recreated",
+      "source_ids": [
+        "superpowers",
+        "ecc"
+      ]
+    },
+    "nyoba-verification-before-completion": {
+      "mode": "recreated",
+      "source_ids": [
+        "superpowers"
+      ]
+    }
+  }
+}

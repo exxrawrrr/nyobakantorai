@@ -51,6 +51,37 @@ export function createCapabilityRouter({ catalog, states, autonomyModes, default
     return Object.freeze({ capability_id: capabilityId, ...candidates[0] });
   }
 
+  function authorizeForEmployee({ employee, capabilityId, snapshots = [], autonomy = defaultAutonomy, approvalStatus = "NOT_REQUIRED", delegatedCapabilities = [] }) {
+    const capability = byId.get(capabilityId);
+    if (!capability) throw new Error(`Unknown capability: ${capabilityId}`);
+    const employeeId = nonEmpty(employee?.id) ? employee.id.trim() : null;
+    const scope = employee?.operational_contract?.capability_scope;
+    if (!employeeId || !Array.isArray(scope)) {
+      return Object.freeze({
+        allowed: false,
+        decision: "BLOCKED",
+        reason: "WORKER_CONTRACT_INVALID",
+        employee_id: employeeId,
+        capability,
+        connection: null,
+        autonomy,
+      });
+    }
+    if (!scope.includes(capabilityId)) {
+      return Object.freeze({
+        allowed: false,
+        decision: "BLOCKED",
+        reason: "WORKER_CAPABILITY_OUT_OF_SCOPE",
+        employee_id: employeeId,
+        capability,
+        connection: null,
+        autonomy,
+      });
+    }
+    const decision = authorize({ capabilityId, snapshots, autonomy, approvalStatus, delegatedCapabilities });
+    return Object.freeze({ ...decision, employee_id: employeeId });
+  }
+
   function authorize({ capabilityId, snapshots = [], autonomy = defaultAutonomy, approvalStatus = "NOT_REQUIRED", delegatedCapabilities = [] }) {
     const capability = byId.get(capabilityId);
     if (!capability) throw new Error(`Unknown capability: ${capabilityId}`);
@@ -89,5 +120,6 @@ export function createCapabilityRouter({ catalog, states, autonomyModes, default
     validateSnapshot,
     resolve,
     authorize,
+    authorizeForEmployee,
   });
 }

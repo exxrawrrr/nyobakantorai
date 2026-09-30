@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "benchmark": "cross-harness-live-readiness",
+  "observed_at": "2026-09-29",
+  "claim_state": "UNPROVEN",
+  "environment": {
+    "machine": "GROWTH",
+    "os": "Windows"
+  },
+  "targets": [
+    {
+      "id": "hermes",
+      "installed": true,
+      "version": "0.21.3",
+      "model_configured": false,
+      "provider_credentials_available": false,
+      "live_execution": "NOT_RUN",
+      "blocker": "Hermes has no configured model/provider credential or active OAuth session on GROWTH."
+    },
+    {
+      "id": "gemini-cli",
+      "installed": false,
+      "live_execution": "NOT_RUN",
+      "blocker": "CLI not installed on the evaluated machine."
+    },
+    {
+      "id": "github-copilot",
+      "installed": false,
+      "live_execution": "NOT_RUN",
+      "blocker": "CLI not installed on the evaluated machine."
+    }
+  ],
+  "evaluator_runtime": {
+    "id": "codex-cli",
+    "installed": true,
+    "version": "0.154.0",
+    "authenticated": true,
+    "used_for": "Fikri live-model controlled evaluation only; not claimed as a target-harness parity proof."
+  },
+  "conclusion": "Static packaging evidence remains valid, but behavioral cross-harness parity remains UNPROVEN. No target was upgraded to runtime parity from this readiness check."
+}

@@ -4,6 +4,7 @@ param(
   [switch]$Start,
   [int]$Port = 4322,
   [string]$HermesHome = "",
+  [string]$Employees = "all",
   [string]$Ref = "main"
 )
 $ErrorActionPreference = "Stop"
@@ -110,8 +111,8 @@ Write-Host "Running runtime preflight..."
 if ($LASTEXITCODE -ne 0) { throw "Runtime preflight failed." }
 
 if ($hermesExe) {
-  Write-Host "Installing/upgrading sixteen Hermes employee profiles..."
-  $bootstrap = @((Join-Path $InstallDir "scripts\hermes-bootstrap.mjs"), "--upgrade")
+  Write-Host "Installing/upgrading selected Hermes employee profiles: $Employees"
+  $bootstrap = @((Join-Path $InstallDir "scripts\hermes-bootstrap.mjs"), "--upgrade", "--employees=$Employees")
   if ($HermesHome) { $bootstrap += "--home=$env:NYOBAKANTORAI_HERMES_HOME" }
   & $node @bootstrap
   if ($LASTEXITCODE -ne 0) { throw "Hermes profile bootstrap failed." }
@@ -122,6 +123,7 @@ if ($hermesExe) {
 }
 
 Write-Host ""
+Write-Host "Selected employees: $Employees"
 Write-Host "nyobakantorai installed at: $InstallDir"
 Write-Host "Runtime: $node"
 if ($hermesExe) {

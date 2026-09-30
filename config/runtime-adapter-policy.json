@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "note": "Application-level adapter permission policies. These constrain adapter configuration but are not an operating-system sandbox.",
+  "policies": [
+    {
+      "id": "hermes-readonly",
+      "adapter_ids": [
+        "hermes-readonly"
+      ],
+      "executable_basenames": [
+        "hermes",
+        "hermes.exe"
+      ],
+      "allowed_env_keys": [
+        "HERMES_HOME",
+        "NO_COLOR",
+        "PATH",
+        "SystemRoot",
+        "TEMP",
+        "TMP",
+        "HOME",
+        "USERPROFILE",
+        "APPDATA",
+        "LOCALAPPDATA"
+      ],
+      "max_timeout_ms": 10000,
+      "max_buffer_bytes": 1048576,
+      "max_tasks": 500,
+      "require_shell_false": true,
+      "loopback_only": false,
+      "allow_redirects": false
+    },
+    {
+      "id": "generic-cli-readonly",
+      "adapter_ids": [
+        "cli-local"
+      ],
+      "executable_basenames": [],
+      "allowed_env_keys": [
+        "PATH",
+        "SystemRoot",
+        "TEMP",
+        "TMP",
+        "HOME",
+        "USERPROFILE",
+        "APPDATA",
+        "LOCALAPPDATA"
+      ],
+      "max_timeout_ms": 10000,
+      "max_buffer_bytes": 1048576,
+      "max_tasks": 500,
+      "require_shell_false": true,
+      "loopback_only": false,
+      "allow_redirects": false
+    },
+    {
+      "id": "loopback-http-readonly",
+      "adapter_ids": [
+        "http-local"
+      ],
+      "executable_basenames": [],
+      "allowed_env_keys": [],
+      "max_timeout_ms": 10000,
+      "max_buffer_bytes": 0,
+      "max_tasks": 500,
+      "require_shell_false": true,
+      "loopback_only": true,
+      "loopback_hosts": [
+        "127.0.0.1",
+        "localhost",
+        "[::1]"
+      ],
+      "allowed_protocols": [
+        "http:"
+      ],
+      "allow_redirects": false
+    }
+  ]
+}

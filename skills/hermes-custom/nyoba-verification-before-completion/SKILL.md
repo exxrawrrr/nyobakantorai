@@ -1,13 +1,14 @@
 ---
 name: nyoba-verification-before-completion
-description: Use immediately before claiming a task, change, delivery, deployment, analysis, or handoff is complete, correct, passing, sent, or verified.
-version: 1.0.0
-author: nyobakantorai
+description: "Use immediately before claiming a task, change, delivery, deployment, analysis, or handoff is complete, correct, passing, sent, or verified."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [superpowers]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "superpowers"
 ---
 
 # Verification Before Completion

@@ -1,12 +1,13 @@
 ---
 name: nyoba-task-truth
-description: Keep six-worker task status, receipts and direct ownership honest.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Keep six-worker task status, receipts and direct ownership honest."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Truthful task routing

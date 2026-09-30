@@ -1,11 +1,9 @@
 import { createServer } from "node:http";
-import { execFile } from "node:child_process";
-import { existsSync } from "node:fs";
 import { readFile, stat, writeFile, unlink } from "node:fs/promises";
 import { extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveHermesHome } from "./hermes-home.mjs";
-import { promisify } from "node:util";
+import { createHermesRuntimeAdapter } from "./hermes-runtime-adapter.mjs";
 import { randomBytes } from "node:crypto";
 import { sanitizeRuntimeTask } from "./reconcile.mjs";
 import { createRuntimeSnapshotCache } from "./runtime-cache.mjs";
@@ -18,9 +16,7 @@ const port = Number.isInteger(requestedPort) && requestedPort > 1023 && requeste
 const hermesExe = process.env.NYOBAKANTORAI_HERMES_EXE || process.env.HERMES_EXE || "hermes";
 const hermesDisabled = /^(1|true|yes)$/i.test(process.env.NYOBAKANTORAI_DISABLE_HERMES || "");
 const hermesHome = hermesDisabled ? "" : resolveHermesHome();
-const hermesEnabled = !hermesDisabled && Boolean(hermesHome);
 const board = process.env.NYOBAKANTORAI_BOARD || "nyobakantorai";
-const execFileAsync = promisify(execFile);
 const requestedWorkerPort = Number.parseInt(process.env.NYOBAKANTORAI_WORKER_PORT || "4333", 10);
 const workerPort = Number.isInteger(requestedWorkerPort) && requestedWorkerPort > 1023 && requestedWorkerPort < 65536 ? requestedWorkerPort : 4333;
 const workerBase = "http://127.0.0.1:" + workerPort;
@@ -56,36 +52,29 @@ function json(response, statusCode, value) {
   response.writeHead(statusCode, { ...security, "Content-Type": "application/json; charset=utf-8" });
   response.end(JSON.stringify(value));
 }
-async function runHermes(args) {
-  if (!hermesEnabled) throw new Error("Hermes integration is not configured");
-  const { stdout } = await execFileAsync(hermesExe, args, {
-    env: { ...(hermesHome ? { HERMES_HOME: hermesHome } : {}), NO_COLOR: "1", PATH: process.env.PATH, SystemRoot: process.env.SystemRoot, TEMP: process.env.TEMP, TMP: process.env.TMP, USERPROFILE: process.env.USERPROFILE, APPDATA: process.env.APPDATA, LOCALAPPDATA: process.env.LOCALAPPDATA },
-    timeout: 15_000, maxBuffer: 1024 * 1024, windowsHide: true,
-  });
-  return stdout.trim();
-}
-function parseProfile(id, output) {
-  const model = output.match(/^Model:\s+(.+)$/m)?.[1]?.trim() || "";
-  const gateway = output.match(/^Gateway:\s+(.+)$/m)?.[1]?.trim().toLowerCase() || "unknown";
-  const person = WORKFORCE.find((employee) => employee.id === id);
-  return {
-    id, profile_exists: true, model_configured: Boolean(model), gateway,
-    presence: !model ? "NOT CONNECTED" : gateway === "running" ? "UNKNOWN" : "OFFLINE",
-    external_capabilities: Object.fromEntries((person?.external_capabilities || []).map((capability) => [capability, "NOT_CONNECTED"])),
-  };
-}
+const hermesRuntime = createHermesRuntimeAdapter({
+  executable:hermesExe,
+  hermesHome,
+  board,
+  employeeIds:EMPLOYEE_IDS,
+  disabled:hermesDisabled,
+});
+
 async function employeeSnapshot() {
-  if (!hermesEnabled) return { profiles: EMPLOYEE_IDS.map((id) => ({ id, profile_exists: false, model_configured: false, gateway: "unknown", presence: "NOT CONNECTED", external_capabilities: Object.fromEntries((WORKFORCE.find((employee) => employee.id === id)?.external_capabilities || []).map((capability) => [capability, "NOT_CONNECTED"])) })), version: "not-configured", checked_at: new Date().toISOString() };
-  const profiles = await Promise.all(EMPLOYEE_IDS.map(async (id) => {
-    try { return parseProfile(id, await runHermes(["-p", id, "profile", "show", id])); }
-    catch { return {
-      id, profile_exists: false, model_configured: false, gateway: "unknown", presence: "NOT CONNECTED",
-      external_capabilities: Object.fromEntries((WORKFORCE.find((employee) => employee.id === id)?.external_capabilities || []).map((capability) => [capability, "NOT_CONNECTED"])),
-    }; }
-  }));
-  let version = "unknown";
-  try { version = (await runHermes(["--version"])).split(/\r?\n/, 1)[0]; } catch { /* keep UNKNOWN */ }
-  return { profiles, version, checked_at: new Date().toISOString() };
+  const snapshot = await hermesRuntime.employeeSnapshot();
+  return {
+    profiles:snapshot.profiles.map((profile) => {
+      const person = WORKFORCE.find((employee) => employee.id === profile.id);
+      return {
+        ...profile,
+        external_capabilities:Object.fromEntries(
+          (person?.external_capabilities || []).map((capability) => [capability, "NOT_CONNECTED"])
+        ),
+      };
+    }),
+    version:snapshot.version,
+    checked_at:snapshot.checked_at,
+  };
 }
 
 const EMPLOYEE_CACHE_TTL_MS = 8000;
@@ -97,20 +86,40 @@ const readEmployees = createRuntimeSnapshotCache(employeeSnapshot, {
 
 async function runtimeSnapshot() {
   const employeesPending = readEmployees();
-  let tasks = null;
-  if (hermesEnabled) try { tasks = JSON.parse(await runHermes(["kanban", "--board", board, "list", "--json"])); } catch { /* keep UNKNOWN */ }
-  const employeesReading = await employeesPending;
+  const [runtime, employeesReading] = await Promise.all([
+    hermesRuntime.runtimeSnapshot({ timeoutMs: 10_000, maxTasks: 500 }),
+    employeesPending,
+  ]);
   const { profiles, version } = employeesReading.snapshot;
+  const descriptor = await hermesRuntime.describe(version);
   const employeeAgeMs = Math.max(0, Date.now() - Date.parse(employeesReading.snapshot.checked_at));
+  const boardConnected = runtime.connected === true && Array.isArray(runtime.tasks);
   return {
-    checked_at: new Date().toISOString(), mode: "READ_ONLY / VALIDATE_ONLY",
+    checked_at: runtime.checked_at || new Date().toISOString(), mode: "READ_ONLY / VALIDATE_ONLY",
     employee_snapshot_cache: {
       source: employeesReading.source, age_ms: employeeAgeMs,
       ttl_ms: EMPLOYEE_CACHE_TTL_MS, checked_at: employeesReading.snapshot.checked_at,
       stale: employeeAgeMs >= EMPLOYEE_CACHE_TTL_MS,
     },
-    hermes: { configured: hermesEnabled, installed: hermesEnabled && (version !== "unknown" || existsSync(hermesExe)), version, board, board_connected: Array.isArray(tasks), task_count: Array.isArray(tasks) ? tasks.length : null },
-    tasks: Array.isArray(tasks) ? tasks.map(sanitizeRuntimeTask).filter(Boolean) : null,
+    hermes: {
+      configured: descriptor.configured,
+      installed: descriptor.installed,
+      version: version || descriptor.version,
+      board: descriptor.board,
+      board_connected: boardConnected,
+      task_count: boardConnected ? runtime.tasks.length : null,
+      adapter_id: runtime.adapter_id,
+      adapter_state: runtime.state,
+    },
+    tasks: boardConnected ? runtime.tasks.map((task) => sanitizeRuntimeTask({
+      id:task.id,
+      assignee:task.assignee,
+      status:task.state,
+      created_by:"adapter:hermes",
+      created_at:null,
+      session_id:null,
+      result:null,
+    })).filter(Boolean) : null,
     employees: Object.fromEntries(profiles.map((profile) => [profile.id, profile])),
     dispatch: { enabled: false, state: "BLOCKED", reason: "The office server has no dispatch endpoint and performs no model inference." },
   };
@@ -134,7 +143,7 @@ const server = createServer(async (request, response) => {
     }
     if (pathname === "/api/capabilities" && request.method === "GET") {
       assertLocal(request);
-      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: hermesEnabled ? "hermes-readonly" : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, autonomy_default: DEFAULT_AUTONOMY, autonomy_modes: AUTONOMY_MODES, capability_states: CAPABILITY_STATES, external_capability_catalog: CAPABILITY_CATALOG, employees: EMPLOYEE_IDS, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks"] }); return;
+      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: hermesRuntime.configured ? hermesRuntime.adapter.id : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, autonomy_default: DEFAULT_AUTONOMY, autonomy_modes: AUTONOMY_MODES, capability_states: CAPABILITY_STATES, external_capability_catalog: CAPABILITY_CATALOG, employees: EMPLOYEE_IDS, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks"] }); return;
     }
     if (pathname === "/api/capabilities") throw new PublicError(405, "Method not allowed");
     if (pathname === "/api/workforce" && request.method === "GET") {
@@ -223,6 +232,6 @@ const server = createServer(async (request, response) => {
 server.listen(port, "127.0.0.1", async () => {
   await writeFile(stopFile, stopToken, { encoding: "utf8", mode: 0o600 });
   console.log(`nyobakantorai: http://127.0.0.1:${port}`);
-  console.log(`Local-only · read-only Hermes adapter · dispatch disabled · ${Math.round(process.memoryUsage().rss / 1024 / 1024)} MiB RSS`);
+  console.log(`Local-only · ${hermesRuntime.configured ? hermesRuntime.adapter.id : "no runtime adapter"} · dispatch disabled · ${Math.round(process.memoryUsage().rss / 1024 / 1024)} MiB RSS`);
 });
 for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, () => server.close(async () => { try { await unlink(stopFile); } catch {} process.exit(0); }));

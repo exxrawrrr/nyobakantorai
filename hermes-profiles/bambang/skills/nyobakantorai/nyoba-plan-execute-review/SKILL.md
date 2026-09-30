@@ -1,13 +1,14 @@
 ---
 name: nyoba-plan-execute-review
-description: Use when a task spans multiple files, systems, owners, or dependent steps and needs an implementation plan that another worker can execute and review.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when a task spans multiple files, systems, owners, or dependent steps and needs an implementation plan that another worker can execute and review."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [superpowers]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "superpowers"
 ---
 
 # Plan → Execute → Review

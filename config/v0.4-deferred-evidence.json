@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "candidate": "v0.4.0",
+  "decision": "RELEASE_WITH_ACCEPTED_DEFERRALS",
+  "observed_on": "2026-09-30",
+  "policy": "Deferred evidence remains truthfully open. Owner scope acceptance may remove an item as a v0.4.0 release blocker only when the item is explicitly marked accepted_for_v0_4_scope=true; no evidence status is promoted by that acceptance.",
+  "items": [
+    {
+      "id": "cross-harness-live-parity",
+      "category": "live_evidence",
+      "status": "UNPROVEN",
+      "blocking_stable_promotion": false,
+      "canonical_source": "benchmarks/cross-harness/run-2026-09-29.json",
+      "implemented_surface": "cross-harness self-service parity runner + static Hermes/Codex/Gemini/Copilot skill exports",
+      "completion_criterion": "Reviewed live multi-harness evidence executes the same task/input/constraints/skill across at least two real installed harnesses and is intentionally promoted into the canonical record.",
+      "safe_next_action": "User runs the self-service parity harness on installed/authenticated runtimes, then submits bounded evidence for review.",
+      "accepted_for_v0_4_scope": true
+    },
+    {
+      "id": "cognee-live-provider",
+      "category": "live_evidence",
+      "status": "NOT_RUN_UNPROVEN",
+      "blocking_stable_promotion": false,
+      "canonical_source": "benchmarks/provider-evaluations/memory-results.json",
+      "implemented_surface": "Cognee HTTP self-service eight-case memory runner",
+      "completion_criterion": "Reviewed live Cognee/Hermes provider run completes the canonical eight-case contract with evidence and zero false-success.",
+      "safe_next_action": "User configures an isolated Cognee endpoint and explicitly runs the memory self-test; reviewed provider evidence is promoted separately.",
+      "accepted_for_v0_4_scope": true
+    },
+    {
+      "id": "browser-use-live-provider",
+      "category": "live_evidence",
+      "status": "NOT_RUN_UNPROVEN",
+      "blocking_stable_promotion": false,
+      "canonical_source": "benchmarks/provider-evaluations/browser-results.json",
+      "implemented_surface": "Browser Use self-service six-case runner",
+      "completion_criterion": "Reviewed live Browser Use provider/agent run completes the same canonical six browser cases before any Playwright-vs-Browser-Use comparison claim.",
+      "safe_next_action": "User installs/configures Browser Use and explicitly runs the disposable six-case self-test; reviewed live evidence is promoted separately.",
+      "accepted_for_v0_4_scope": true
+    },
+    {
+      "id": "real-task-baseline",
+      "category": "real_world_evidence",
+      "status": "COLLECTING",
+      "blocking_stable_promotion": false,
+      "canonical_source": "benchmarks/real-tasks/collection-status-2026-09-29.json",
+      "current_value": {
+        "eligible_cases": 1,
+        "minimum_cases_required": 20,
+        "remaining_cases": 19,
+        "false_successes": 0
+      },
+      "implemented_surface": "hash-chained recorder + fail-closed audit/merge/prepare baseline tooling",
+      "completion_criterion": "At least 20 eligible direct non-generated real tasks with complete evidence, independent verification, redaction review, and zero false-successes reach READY_FOR_REPORT.",
+      "safe_next_action": "Collect genuine user work through the recorder; preserve failures and do not bulk-import synthetic fixtures, PR bodies, or commit history.",
+      "accepted_for_v0_4_scope": true
+    },
+    {
+      "id": "department-real-workflow-coverage",
+      "category": "real_world_evidence",
+      "status": "UNPROVEN",
+      "blocking_stable_promotion": false,
+      "canonical_source": "docs/V0.4-RELEASE-DECISION.md",
+      "implemented_surface": "multi-role workforce, approval, verification, memory, provider and task evidence infrastructure",
+      "completion_criterion": "At least one evidence-backed real workflow is demonstrated for each major department included in the intended release claim.",
+      "safe_next_action": "Accumulate genuine department workflows through the real-task recorder rather than generating benchmark substitutes.",
+      "accepted_for_v0_4_scope": true
+    },
+    {
+      "id": "real-clean-machine-hermes-lifecycle",
+      "category": "environment_evidence",
+      "status": "NOT_RUN",
+      "blocking_stable_promotion": false,
+      "canonical_source": "docs/RELEASE-CHECKLIST.md",
+      "implemented_surface": "deterministic one-worker, subset, full-workforce, and upgrade/uninstall/reinstall isolated matrices",
+      "completion_criterion": "The intended release environment completes a real clean-machine Hermes install/upgrade/uninstall/reinstall lifecycle and the final release gate is rerun from the final promoted commit.",
+      "safe_next_action": "Run the documented lifecycle on a clean intended release machine when the owner chooses to supply that environment.",
+      "accepted_for_v0_4_scope": true
+    }
+  ],
+  "non_evidence_scope_items": {
+    "source": "ROADMAP.md",
+    "note": "Live ads provider adapters, original art for ten newer workers, and complete office/UI storage migration remain separate product-scope gaps and are not converted into evidence completion by this ledger."
+  },
+  "owner_scope_accepted_on": "2026-09-30",
+  "owner_scope_note": "Owner explicitly accepted these still-open evidence classes as bounded deferred scope for v0.4.0 stable promotion. Canonical evidence states are not upgraded."
+}

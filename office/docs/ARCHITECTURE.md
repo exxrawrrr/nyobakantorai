@@ -25,7 +25,8 @@ nyobakantorai is a local-first visual office for human-governed multi-agent work
 - `operations/workflow/` — deterministic routing preview and QA request flow.
 - `operations/doctor/` — read-only local environment diagnostics.
 - `packages/task-registry/` — standalone evented task-registry prototype.
-- `packages/runtime-adapter/` — dependency-free runtime contract plus strict loopback HTTP read-only adapter.
+- `packages/runtime-adapter/` — dependency-free runtime contract plus strict loopback HTTP and JSON CLI read-only adapters.
+- `office/hermes-runtime-adapter.mjs` — Hermes-specific read-only adapter boundary; the office server does not execute Hermes commands directly.
 
 ## Runtime contract
 

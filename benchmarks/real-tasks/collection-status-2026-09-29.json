@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "observed_on": "2026-09-29",
+  "canonical_dataset": "benchmarks/real-tasks/dataset.json",
+  "status": "COLLECTING",
+  "claim_state": "COLLECTING",
+  "eligible_cases": 1,
+  "minimum_cases_required": 20,
+  "remaining_cases": 19,
+  "successes": 0,
+  "failures": 1,
+  "verification_passes": 0,
+  "verification_failures": 1,
+  "false_successes": 0,
+  "recovered_after_failure": 0,
+  "cost_known": 0,
+  "distinct_employees": 1,
+  "employees": [
+    "praroro"
+  ],
+  "source_types": [
+    "owner_real_task"
+  ],
+  "publication_gate_passed": false,
+  "source_audit": "benchmarks/real-tasks/source-audit-2026-09-29.json",
+  "preserved_truth": "The only currently eligible historical case is a real owner task that ended NEEDS_EVIDENCE. It remains counted as a truthful failure. Twenty cases are not claimed.",
+  "next": "Collect 19 additional direct, non-generated, independently verified real tasks through the recorder/import flow. Failures must be preserved; synthetic/demo/generated tasks remain ineligible."
+}

@@ -1,13 +1,14 @@
 ---
 name: nyoba-markdown-knowledge-compaction
-description: Use when documents, web pages, meeting notes, reports, PDFs, office files, or long research need a source-preserving Markdown representation or token-efficient working brief.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when documents, web pages, meeting notes, reports, PDFs, office files, or long research need a source-preserving Markdown representation or token-efficient working brief."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [markitdown, docling, jina-reader, ecc]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "markitdown,docling,jina-reader,ecc"
 ---
 
 # Markdown Knowledge Compaction

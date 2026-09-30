@@ -1,13 +1,14 @@
 ---
 name: nyoba-skill-engineering
-description: Use when a repeated lesson, workflow, or failure pattern may deserve promotion from memory into a reusable skill, or when an existing skill needs to be strengthened.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when a repeated lesson, workflow, or failure pattern may deserve promotion from memory into a reusable skill, or when an existing skill needs to be strengthened."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [superpowers, ecc]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "superpowers,ecc"
 ---
 
 # Skill Engineering

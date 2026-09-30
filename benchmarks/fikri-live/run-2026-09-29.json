@@ -1,0 +1,178 @@
+{
+  "schema": 1,
+  "benchmark": "fikri-live-context-compaction",
+  "run_date": "2026-09-29",
+  "claim_state": "LIVE_MODEL_EVALUATED_ON_CONTROLLED_SYNTHETIC_SET",
+  "fixture_source": "benchmarks/context-compaction/fixtures.json",
+  "fixture_type": "synthetic-regression-fixtures-with-live-model-execution",
+  "scope_note": "This is a live-model quality evaluation over controlled synthetic fixtures. It is not the >=20-case real-task baseline and does not prove cross-harness behavioral parity.",
+  "environment": {
+    "machine": "GROWTH",
+    "os": "Windows",
+    "codex_cli": "0.154.0",
+    "model": "gpt-5.6-sol",
+    "compiler_skill": "nyoba-context-prompt-compiler",
+    "compiler_skill_version": "1.1.1",
+    "sandbox": "read-only",
+    "execution_mode": "ephemeral",
+    "downstream_user_config": "ignored",
+    "downstream_rules": "ignored",
+    "known_environment_noise": [
+      "Codex emitted a non-fatal warning for an unrelated malformed global growthops-engineering skill.",
+      "Benchmark payloads were inlined into isolated sessions; no external actions were requested."
+    ]
+  },
+  "method": [
+    "Compile each fixture with Fikri SOUL + canonical compiler skill in a separate live-model session.",
+    "Run a downstream arm from authoritative original context.",
+    "Run a separate downstream arm from compiled context only.",
+    "Score token reduction and machine-detectable protected/source atoms.",
+    "Blind-review original and compiled downstream responses as A/B without revealing which arm is which."
+  ],
+  "acceptance": {
+    "minimum_case_reduction": 0.15,
+    "minimum_protected_atom_recall": 1,
+    "minimum_compiled_required_fact_recall": 1,
+    "compiled_downstream_blind_pass_rate": 1,
+    "maximum_compiled_downstream_critical_losses": 0
+  },
+  "summary": {
+    "cases": 5,
+    "passed": 5,
+    "failed": 0,
+    "average_reduction": 0.411,
+    "minimum_case_reduction": 0.3256,
+    "minimum_strict_protected_atom_recall": 1,
+    "minimum_required_fact_recall_compiled": 1,
+    "blind_original_passed": 5,
+    "blind_compiled_passed": 5,
+    "blind_compiled_critical_losses": 0,
+    "blind_compiled_scores": [
+      5,
+      5,
+      5,
+      4,
+      5
+    ],
+    "exact_required_phrase_recall_diagnostic_minimum": 0.5,
+    "exact_required_phrase_recall_note": "Diagnostic only. Surface-language translation changes exact phrase matching, so semantic downstream acceptance is decided by the blind fidelity review plus exact protected/source atom checks."
+  },
+  "results": [
+    {
+      "id": "paid-media-approval",
+      "original_tokens_est": 210,
+      "compiled_tokens_est": 120,
+      "reduction": 0.4286,
+      "strict_protected_atom_recall": 1,
+      "required_fact_recall_compiled": 1,
+      "exact_category_fidelity": 1,
+      "blind_original": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "blind_compiled": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "compiled_context": "Objective: Prepare a Meta campaign change brief without executing the change.\n\nReview: 26 September 2026 at 13:30 WIB.\nSource: https://example.com/campaign\nObserved CTR reference: 3.7%.\n\nHarus pertahankan budget ceiling persis.\nBudget ceiling: Rp1.500.000.\nJangan execute atau publish sebelum approval owner.\nHarus pisahkan observed platform signal dari causal conclusion.\n\nVerification: Approver must understand the requested change and spend boundary; check evidence afterward.",
+      "downstream_original": "Prepare a Meta campaign change brief for approval owner review on 26 September 2026 at 13:30 WIB. Preserve the budget ceiling exactly at Rp1.500.000 and cite the observed CTR reference as 3.7% from https://example.com/campaign. Do not execute or publish before approval owner approval. Keep the observed platform signal separate from any causal conclusion. Acceptance: the approver can identify the requested change, exact spend boundary, and post-change evidence to check.",
+      "downstream_compiled": "Siapkan brief perubahan kampanye Meta tanpa mengeksekusi perubahan. Review dijadwalkan 26 September 2026 pukul 13:30 WIB. Sumber: https://example.com/campaign. Catat CTR 3.7% sebagai observed platform signal, bukan causal conclusion. Pertahankan budget ceiling tepat Rp1.500.000. Jangan execute atau publish sebelum approval owner. Acceptance: approver memahami perubahan yang diminta dan batas pengeluaran; evidence diperiksa setelahnya."
+    },
+    {
+      "id": "engineering-patch",
+      "original_tokens_est": 185,
+      "compiled_tokens_est": 84,
+      "reduction": 0.5459,
+      "strict_protected_atom_recall": 1,
+      "required_fact_recall_compiled": 1,
+      "exact_category_fidelity": 1,
+      "blind_original": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "blind_compiled": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "compiled_context": "Objective: Prepare a reversible engineering handoff for the failing local service.\n\nSource of truth: D:\\WORK\\service\\config.json\nHealth endpoint: http://127.0.0.1:4322\nCheckpoint: 2026-09-29\n\nHarus buat perubahan sekecil dan reversible mungkin.\nJangan deploy ke production.\nJangan claim fixed sebelum negative test dan smoke test lulus.",
+      "downstream_original": "Prepare a reversible engineering handoff using the current source of truth at D:\\WORK\\service\\config.json, health endpoint http://127.0.0.1:4322, and checkpoint date 2026-09-29. Make the smallest possible reversible change. Jangan deploy ke production. Do not claim the issue is fixed until both the negative test and smoke test pass. Acceptance: exact path and endpoint are retained, restrictions are followed, and both required tests pass.",
+      "downstream_compiled": "Siapkan handoff engineering yang reversible untuk local service yang gagal, dengan perubahan sekecil mungkin. Source of truth: D:\\WORK\\service\\config.json. Health endpoint: http://127.0.0.1:4322. Checkpoint: 2026-09-29. Jangan deploy ke production. Jangan menyatakan fixed sebelum negative test dan smoke test lulus."
+    },
+    {
+      "id": "training-schedule",
+      "original_tokens_est": 172,
+      "compiled_tokens_est": 116,
+      "reduction": 0.3256,
+      "strict_protected_atom_recall": 1,
+      "required_fact_recall_compiled": 1,
+      "exact_category_fidelity": 1,
+      "blind_original": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "blind_compiled": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "compiled_context": "Objective: Compile the training revision into a short execution brief.\n\nTraining date: 14 Oktober 2026.\nMorning block: 08:00 WIB.\nPractical demonstration: 11:00 WIB.\nSession reference value: Rp12.500.000.\n\nWajib pertahankan jam dan nominal apa adanya.\nJangan ubah practical demonstration menjadi full practical assessment.\nHarus bedakan teori, demo, dan verification evidence.\n\nAcceptance: Preserve revision facts, protected terminology, and acceptance boundary.",
+      "downstream_original": "Compile the training revision into a short execution brief for 14 Oktober 2026: morning block starts at 08:00 WIB, practical demonstration starts at 11:00 WIB, and session reference value is Rp12.500.000. Preserve all times and the nominal exactly. Do not change “practical demonstration” into “full practical assessment.” Separate theory, demo, and verification evidence. Acceptance: protected terminology and exact schedule/value remain intact, with distinct verification evidence.",
+      "downstream_compiled": "Susun revisi pelatihan menjadi brief eksekusi singkat. Tanggal pelatihan: 14 Oktober 2026. Morning block: 08:00 WIB. Practical demonstration: 11:00 WIB. Session reference value: Rp12.500.000. Pertahankan jam dan nominal apa adanya; jangan ubah “practical demonstration” menjadi “full practical assessment”. Pisahkan teori, demo, dan verification evidence. Acceptance: fakta revisi, protected terminology, dan acceptance boundary tetap terjaga."
+    },
+    {
+      "id": "research-synthesis",
+      "original_tokens_est": 172,
+      "compiled_tokens_est": 107,
+      "reduction": 0.3779,
+      "strict_protected_atom_recall": 1,
+      "required_fact_recall_compiled": 1,
+      "exact_category_fidelity": 1,
+      "blind_original": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "blind_compiled": {
+        "pass": true,
+        "score": 4,
+        "critical_loss": false
+      },
+      "compiled_context": "Objective: Create a source-traceable research dispatch without flattening disagreement.\n\nPrimary source: https://example.com/source-a\nCounter-source: https://example.org/source-b\n\nHarus pertahankan kedua source pointer.\nJangan paksa dua sumber yang berbeda menjadi satu kesimpulan palsu.\nHarus label uncertainty jika evidence belum cukup.\n\nConstraint: Preserve disagreement; canonical notes remain the detailed source material.",
+      "downstream_original": "Create a source-traceable research dispatch preserving both the primary source https://example.com/source-a and counter-source https://example.org/source-b. Jangan paksa the differing sources into one false conclusion. Preserve their disagreement and label uncertainty where evidence is insufficient. Use canonical notes for detail; this dispatch only orients the next decision and does not replace the sources. Acceptance: both pointers remain traceable and disagreement/uncertainty is explicit.",
+      "downstream_compiled": "Buat research dispatch yang dapat ditelusuri ke sumber tanpa meratakan perbedaan. Primary source: https://example.com/source-a. Counter-source: https://example.org/source-b. Pertahankan kedua source pointer dan paparkan disagreement; jangan memaksanya menjadi satu kesimpulan palsu. Labeli uncertainty bila evidence belum cukup. Canonical notes tetap menjadi detailed source material."
+    },
+    {
+      "id": "document-context",
+      "original_tokens_est": 175,
+      "compiled_tokens_est": 109,
+      "reduction": 0.3771,
+      "strict_protected_atom_recall": 1,
+      "required_fact_recall_compiled": 1,
+      "exact_category_fidelity": 1,
+      "blind_original": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "blind_compiled": {
+        "pass": true,
+        "score": 5,
+        "critical_loss": false
+      },
+      "compiled_context": "Objective: Prepare a compact document-processing handoff with exact source constraints.\n\nOriginal file: D:\\DOCS\\proposal.pdf\nReference page: https://example.net/reference\nComparison threshold: 25%\nQuoted project value: Rp2.200.000\n\nHarus simpan source path dan reference URL.\nJangan hilangkan angka atau approval-related wording saat compaction.\nHarus treat converted Markdown sebagai working representation, bukan original evidence.",
+      "downstream_original": "Prepare a compact document-processing handoff preserving the original file D:\\DOCS\\proposal.pdf, reference page https://example.net/reference, comparison threshold 25%, and quoted project value Rp2.200.000. Do not remove any number or approval-related wording during compaction. Treat converted Markdown only as a working representation, not original evidence. Acceptance: the worker knows exactly what to open, all protected values and approval wording remain exact, and original evidence is distinguished from the working representation.",
+      "downstream_compiled": "Siapkan handoff pemrosesan dokumen yang ringkas dengan batasan sumber yang tepat. Original file: D:\\DOCS\\proposal.pdf. Reference page: https://example.net/reference. Comparison threshold: 25%. Quoted project value: Rp2.200.000. Simpan source path dan reference URL; jangan hilangkan angka atau approval-related wording saat compaction. Perlakukan converted Markdown sebagai working representation, bukan original evidence."
+    }
+  ],
+  "blind_review": {
+    "model": "gpt-5.6-sol",
+    "method": "Separate isolated session; arms labeled A/B and production method hidden from reviewer.",
+    "summary": "All ten downstream responses pass. The compiled arm scores 5,5,5,4,5 with zero critical losses.",
+    "claim_limit": "Model-based blind review supplements deterministic exact-atom/source checks; it is not a substitute for the real-task baseline."
+  }
+}

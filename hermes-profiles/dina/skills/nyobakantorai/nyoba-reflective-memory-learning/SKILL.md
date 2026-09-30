@@ -1,19 +1,31 @@
 ---
 name: nyoba-reflective-memory-learning
-description: Use when a meaningful task finishes, a correction occurs, or prior experience should inform the next run without copying raw transcripts.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when a meaningful task finishes, a correction occurs, or prior experience should inform the next run without copying raw transcripts."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [ecc, mem0, letta, mcp-reference-servers]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "ecc,mem0,letta,mcp-reference-servers"
 ---
 
 # Reflective Memory & Learning
 
 ## Core rule
 Remember **reusable evidence**, not everything. Hermes profile memory/session state remains the default private memory boundary.
+
+## Memory layers
+Use the repository policy in `config/memory-policy.json`:
+
+- **M0 Turn scratch** — temporary task state; not durable.
+- **M1 Profile episodic** — evidence-backed outcomes/corrections for this worker.
+- **M2 Profile semantic** — normalized reusable lessons for this worker.
+- **M3 Shared project knowledge** — explicit reviewed promotion with provenance; never implicit cross-profile memory.
+- **M4 Canonical skill candidate** — proposal only. Requires evidence, human review, repository PR, and tests before it changes a canonical skill.
+
+Runtime learning may improve recall and proposals. It may **not** widen permissions, change approval policy, change verification authority, or silently modify canonical repository skills.
 
 ## Before work
 1. Search profile-scoped memory/session history for the same task, entity, failure, or decision.

@@ -1,5 +1,7 @@
+import { EMPLOYEE_IDS } from "./workforce.mjs";
+
 const TASK_ID = /^t_[a-z0-9]+$/i;
-const EMPLOYEES = new Set(["praroro", "paijo", "subagjo", "alex", "sumiati", "siti"]);
+const EMPLOYEES = new Set(EMPLOYEE_IDS);
 
 export function sanitizeRuntimeTask(task) {
   if (!task || !TASK_ID.test(String(task.id || ""))) return null;

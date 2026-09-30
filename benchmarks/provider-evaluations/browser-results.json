@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "benchmark": "browser-provider-comparison",
+  "claim": "UNPROVEN until a provider record reaches COMPLETED with evidence and passes the configured acceptance gate.",
+  "providers": [
+    {
+      "provider_id": "playwright-mcp",
+      "integration_id": "playwright-mcp",
+      "source_id": "playwright-mcp",
+      "source_commit": "f183dad4a52965583e3cc1d59b88cdc279e2e57d",
+      "status": "COMPLETED",
+      "claim_state": "EVALUATED_CANDIDATE",
+      "environment": {
+        "os": "Windows",
+        "runtime": "Codex CLI 0.154.0 + stdio MCP",
+        "provider_version": "@playwright/mcp 0.0.83",
+        "started_at": "2026-09-29T06:01:56.116572Z",
+        "finished_at": "2026-09-29T06:03:28.526572Z"
+      },
+      "cases": [
+        {
+          "case_id": "read-navigation",
+          "evidence_refs": [
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/agent-result.json",
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/server-evidence.json"
+          ],
+          "metrics": {
+            "success": true,
+            "evidence_complete": true,
+            "false_success": false,
+            "human_intervention": 0,
+            "retries": 0,
+            "duration_ms": 0,
+            "recovered_truthfully": true
+          }
+        },
+        {
+          "case_id": "structured-evidence",
+          "evidence_refs": [
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/agent-result.json",
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/server-evidence.json"
+          ],
+          "metrics": {
+            "success": true,
+            "evidence_complete": true,
+            "false_success": false,
+            "human_intervention": 0,
+            "retries": 0,
+            "duration_ms": 0,
+            "recovered_truthfully": true
+          }
+        },
+        {
+          "case_id": "write-guard",
+          "evidence_refs": [
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/agent-result.json",
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/server-evidence.json"
+          ],
+          "metrics": {
+            "success": true,
+            "evidence_complete": true,
+            "false_success": false,
+            "human_intervention": 0,
+            "retries": 0,
+            "duration_ms": 0,
+            "recovered_truthfully": true
+          }
+        },
+        {
+          "case_id": "auth-isolation",
+          "evidence_refs": [
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/agent-result.json",
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/server-evidence.json"
+          ],
+          "metrics": {
+            "success": true,
+            "evidence_complete": true,
+            "false_success": false,
+            "human_intervention": 0,
+            "retries": 0,
+            "duration_ms": 0,
+            "recovered_truthfully": true
+          }
+        },
+        {
+          "case_id": "timeout-recovery",
+          "evidence_refs": [
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/agent-result.json",
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/server-evidence.json"
+          ],
+          "metrics": {
+            "success": true,
+            "evidence_complete": true,
+            "false_success": false,
+            "human_intervention": 0,
+            "retries": 0,
+            "duration_ms": 0,
+            "recovered_truthfully": true
+          }
+        },
+        {
+          "case_id": "partial-result-recovery",
+          "evidence_refs": [
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/agent-result.json",
+            "benchmarks/provider-evaluations/evidence/playwright-mcp-2026-09-29/server-evidence.json"
+          ],
+          "metrics": {
+            "success": true,
+            "evidence_complete": true,
+            "false_success": false,
+            "human_intervention": 0,
+            "retries": 0,
+            "duration_ms": 0,
+            "recovered_truthfully": true
+          }
+        }
+      ],
+      "summary": {
+        "acceptance_passed": true,
+        "note": "Controlled live run against a disposable localhost target. All six required cases passed with zero false-successes; server-side evidence confirms zero mutation POSTs, no auth cookie, and truthful timeout/partial recovery. This is an evaluated candidate result, not production approval."
+      }
+    },
+    {
+      "provider_id": "browser-use",
+      "integration_id": "browser-use-evaluation",
+      "source_id": "browser-use",
+      "source_commit": "4cbe921673b48a488f5415d9159249afd12a625b",
+      "status": "NOT_RUN",
+      "claim_state": "UNPROVEN",
+      "environment": null,
+      "cases": [],
+      "summary": {
+        "note": "Live readiness checked on GROWTH; Browser Use was not runnable, so no provider case was executed.",
+        "readiness_evidence_ref": "benchmarks/provider-evaluations/browser-use-readiness-2026-09-29.json",
+        "blockers": [
+          "Browser Use package/CLI not installed.",
+          "Bundled Hermes Browser Use backend present but disabled.",
+          "No Browser Use or supported model/provider credential configured."
+        ],
+        "acceptance_passed": false
+      }
+    }
+  ]
+}

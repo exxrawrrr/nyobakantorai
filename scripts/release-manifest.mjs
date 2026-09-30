@@ -2,9 +2,13 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { inspectEvaluationReadiness } from "./evaluation-doctor.mjs";
+import { buildReleaseClaimSnapshot } from "../packages/release-claims/index.mjs";
+import { buildDeferredEvidenceSnapshot, validateDeferredEvidenceLedger } from "../packages/deferred-evidence/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const outPath = resolve(root, "release", "manifest.json");
+const check = process.argv.includes("--check");
 const tracked = execFileSync("git", ["ls-files"], { cwd: root, encoding: "utf8" })
   .split(/\r?\n/).filter(Boolean)
   .filter((file) => file !== "release/manifest.json")
@@ -25,15 +29,38 @@ try {
 } catch {}
 
 const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
+const evaluationReport = await inspectEvaluationReadiness();
+const deferredLedger = JSON.parse(readFileSync(resolve(root, "config", "v0.4-deferred-evidence.json"), "utf8"));
+const crossHarness = JSON.parse(readFileSync(resolve(root, "benchmarks", "cross-harness", "run-2026-09-29.json"), "utf8"));
+const memoryResults = JSON.parse(readFileSync(resolve(root, "benchmarks", "provider-evaluations", "memory-results.json"), "utf8"));
+const browserResults = JSON.parse(readFileSync(resolve(root, "benchmarks", "provider-evaluations", "browser-results.json"), "utf8"));
+const realTaskStatus = JSON.parse(readFileSync(resolve(root, "benchmarks", "real-tasks", "collection-status-2026-09-29.json"), "utf8"));
+const deferredValidation = validateDeferredEvidenceLedger({
+  ledger:deferredLedger,
+  crossHarness,
+  memoryResults,
+  browserResults,
+  realTaskStatus,
+});
+if (!deferredValidation.ok) {
+  throw new Error("deferred evidence ledger invalid: " + deferredValidation.errors.join("; "));
+}
+const deferredEvidence = buildDeferredEvidenceSnapshot({ledger:deferredLedger,validation:deferredValidation});
+const claims = buildReleaseClaimSnapshot(evaluationReport,{deferredEvidence});
 const manifest = {
   schema: 1,
   project: pkg.name,
   version: pkg.version,
   commit,
+  claims,
   tracked_files: files.length,
   files,
 };
 
-mkdirSync(dirname(outPath), { recursive: true });
-writeFileSync(outPath, JSON.stringify(manifest, null, 2) + "\n");
-console.log(`Release manifest written: ${files.length} files @ ${commit.slice(0, 12)}`);
+if (check) {
+  console.log(`Release manifest check passed: ${files.length} files @ ${commit.slice(0, 12)} · live_evaluation_complete=${claims.live_evaluation_complete} · deferred=${claims.deferred_evidence?.open_blockers ?? "n/a"}`);
+} else {
+  mkdirSync(dirname(outPath), { recursive: true });
+  writeFileSync(outPath, JSON.stringify(manifest, null, 2) + "\n");
+  console.log(`Release manifest written: ${files.length} files @ ${commit.slice(0, 12)}`);
+}

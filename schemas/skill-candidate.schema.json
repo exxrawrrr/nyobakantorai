@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/skill-candidate.schema.json",
+  "title": "nyobakantorai skill candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "candidate_id",
+    "employee_id",
+    "skill_name",
+    "created_at",
+    "proposal",
+    "evidence_refs",
+    "observation_ids",
+    "promotion_basis",
+    "status"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{5,127}$"
+    },
+    "employee_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+    },
+    "skill_name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 64
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "proposal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 12000
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    },
+    "observation_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      }
+    },
+    "promotion_basis": {
+      "enum": [
+        "THREE_PLUS_INDEPENDENT_OBSERVATIONS",
+        "EXPLICIT_HUMAN_RULE"
+      ]
+    },
+    "status": {
+      "enum": [
+        "CANDIDATE",
+        "REVIEW_REQUIRED",
+        "REJECTED",
+        "MERGED_VIA_REPOSITORY_PR"
+      ]
+    },
+    "human_rule_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 512
+    },
+    "repository_pr": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 512
+    }
+  }
+}

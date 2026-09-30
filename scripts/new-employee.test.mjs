@@ -11,6 +11,12 @@ test("custom employee defaults are guarded and secret-free", () => {
   assert.equal(employee.verification_policy.self_verify, false);
   assert.equal(employee.learning_profile.memory_mode, "PROFILE_SCOPED_HERMES_FIRST");
   assert.ok(employee.reasoning_profile.mental_models.length >= 3);
+  assert.ok(employee.personality.dialogue_profile.signature_moves.length >= 2);
+  assert.ok(employee.personality.dialogue_profile.avoid.length >= 2);
+  assert.ok(employee.operational_contract.inputs.length > 0);
+  assert.ok(employee.operational_contract.outputs.length > 0);
+  assert.ok(Array.isArray(employee.operational_contract.capability_scope));
+  assert.ok(employee.operational_contract.verification_method);
   assert.deepEqual(employee.optional_integrations, []);
   assert.ok(employee.skills.includes("nyoba-follow-up"));
   assert.equal("auth" in employee, false);

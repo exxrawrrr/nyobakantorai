@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { planProfileAction, USER_OWNED_HERMES_STATE, bootstrapSucceeded } from "./hermes-bootstrap-plan.mjs";
+import { planProfileAction, planSelectedProfileActions, USER_OWNED_HERMES_STATE, bootstrapSucceeded } from "./hermes-bootstrap-plan.mjs";
 import { EMPLOYEE_IDS } from "../office/workforce.mjs";
 
 const v02 = new Set(["praroro","paijo","subagjo","alex","sumiati","siti"]);
@@ -41,4 +41,30 @@ test("bootstrap succeeds only when actions, profiles, and board are all ready", 
     boardOk:true,
     mode:"upgrade",
   }), true);
+});
+
+
+test("selected upgrade plan never includes unselected profiles", () => {
+  const actions = planSelectedProfileActions({
+    selectedIds:["praroro","siti"],
+    existingIds:["praroro","siti","maya","gugun"],
+    mode:"upgrade",
+  });
+  assert.deepEqual(actions,[
+    {profile:"praroro",action:"native-upgrade"},
+    {profile:"siti",action:"native-upgrade"},
+  ]);
+  assert.equal(actions.some((item)=>item.profile==="maya" || item.profile==="gugun"),false);
+});
+
+test("selected install plan is deterministic and deduplicates repeated IDs", () => {
+  const actions = planSelectedProfileActions({
+    selectedIds:["siti","praroro","siti"],
+    existingIds:["praroro"],
+    mode:"install",
+  });
+  assert.deepEqual(actions,[
+    {profile:"siti",action:"install"},
+    {profile:"praroro",action:"skip-existing"},
+  ]);
 });

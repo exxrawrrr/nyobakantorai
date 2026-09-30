@@ -1,12 +1,13 @@
 ---
 name: nyoba-experiment-design
-description: Design low-risk reversible growth/product experiments with criteria and clear stop rules.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Design low-risk reversible growth/product experiments with criteria and clear stop rules."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Alex experiment design

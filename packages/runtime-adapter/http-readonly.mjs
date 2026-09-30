@@ -1,4 +1,5 @@
 import { defineRuntimeAdapter } from "./index.mjs";
+import { authorizeHttpAdapterConfig } from "./policy.mjs";
 
 function assert(condition, message) {
   if (!condition) throw new TypeError(message);
@@ -36,11 +37,25 @@ export function createLoopbackHttpAdapter({
   healthPath = "/api/health",
   tasksPath = "/api/tasks",
   fetchImpl = globalThis.fetch,
+  permissionPolicy = null,
+  timeoutMs = 2_000,
+  maxTasks = 100,
 } = {}) {
   assert(typeof fetchImpl === "function", "fetch implementation is required.");
   const base = parseLoopbackBaseUrl(baseUrl);
   const healthEndpoint = new URL(cleanPath(healthPath, "/api/health"), base);
   const tasksEndpoint = new URL(cleanPath(tasksPath, "/api/tasks"), base);
+
+  if (permissionPolicy) {
+    authorizeHttpAdapterConfig(permissionPolicy, {
+      adapterId:id,
+      baseUrl:base.toString(),
+      method:"GET",
+      redirect:"error",
+      timeoutMs,
+      maxTasks,
+    });
+  }
 
   const readJson = async (url) => {
     const response = await fetchImpl(url, {

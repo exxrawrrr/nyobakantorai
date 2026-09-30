@@ -14,7 +14,8 @@
         "alex",
         "bimo"
       ],
-      "reason": "Optional upstream workflow library with native Hermes plugin integration."
+      "reason": "Optional upstream workflow library with native Hermes plugin integration.",
+      "verification_method": "Hermes plugin list/status plus a disposable skill discovery smoke test; plugin availability never implies task execution."
     },
     {
       "id": "markitdown-mcp",
@@ -32,7 +33,8 @@
         "nara"
       ],
       "security": "Run locally/STDIO or localhost only; it has no authentication and inherits process file/network access.",
-      "capability": "documents.markdown.convert"
+      "capability": "documents.markdown.convert",
+      "verification_method": "Start the local STDIO MCP server and convert a disposable known document; compare output artifact and preserve source reference."
     },
     {
       "id": "ecc-memory-vault",
@@ -45,7 +47,8 @@
         "fikri",
         "bimo"
       ],
-      "security": "Optional cross-harness memory; never a secret store or authorization boundary."
+      "security": "Optional cross-harness memory; never a secret store or authorization boundary.",
+      "verification_method": "Verify isolated test memory write/read/delete without secrets and confirm cross-profile boundaries before operational use."
     },
     {
       "id": "mcp-memory-reference",
@@ -56,7 +59,108 @@
         "fikri",
         "praroro"
       ],
-      "security": "Shared graph memory can cross profile boundaries; do not enable as the default per-agent memory store."
+      "security": "Shared graph memory can cross profile boundaries; do not enable as the default per-agent memory store.",
+      "verification_method": "Reference-only; no operational verification until a concrete isolated deployment is explicitly configured."
+    },
+    {
+      "id": "repomix-cli",
+      "type": "local-context-tool",
+      "source_id": "repomix",
+      "install": "npx repomix",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "fikri",
+        "subagjo",
+        "bimo"
+      ],
+      "security": "May read broad repository contents. Use explicit include/exclude rules and secret scanning; never assume packed context is safe to share.",
+      "capability": "context.repo.pack",
+      "verification_method": "Pack a disposable repository subset with explicit include/exclude rules, verify expected files/tokens, and secret-scan the artifact."
+    },
+    {
+      "id": "llmlingua-experimental",
+      "type": "experimental-local-library",
+      "source_id": "llmlingua",
+      "install": "pip install llmlingua",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "fikri"
+      ],
+      "security": "Lossy semantic compression. Never use as the only representation for approvals, exact numbers, legal/compliance text, credentials/security instructions, or irreversible-action instructions.",
+      "capability": "context.prompt.compress.experimental",
+      "verification_method": "Compare compressed output against protected atoms, exact numbers, source pointers, and downstream task quality; reject on fidelity loss."
+    },
+    {
+      "id": "cognee-hermes-evaluation",
+      "type": "memory-provider-candidate",
+      "source_id": "cognee-integrations",
+      "default_state": "REFERENCE_ONLY",
+      "recommended_for": [
+        "fikri",
+        "praroro",
+        "bimo"
+      ],
+      "security": "Do not adopt as shared default memory until per-profile isolation, deletion/export, provenance, and secret-handling tests pass.",
+      "verification_method": "Evaluation-only; prove per-profile isolation, retrieval, provenance, export, deletion, and secret handling before adoption."
+    },
+    {
+      "id": "playwright-mcp",
+      "type": "mcp-browser",
+      "source_id": "playwright-mcp",
+      "install": "npx @playwright/mcp@latest",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "alex",
+        "siti",
+        "maya",
+        "gugun",
+        "ratri",
+        "caca",
+        "subagjo"
+      ],
+      "security": "Browser automation may inherit authenticated sessions and can perform external writes. Read/inspect and write/interact capabilities must remain policy-separated.",
+      "capability": "browser.structured",
+      "verification_method": "Connect to a disposable/local test target, verify structured read evidence, then separately test guarded interaction without authenticated production sessions."
+    },
+    {
+      "id": "browser-use-evaluation",
+      "type": "browser-agent-candidate",
+      "source_id": "browser-use",
+      "default_state": "REFERENCE_ONLY",
+      "recommended_for": [
+        "alex",
+        "ratri",
+        "bimo"
+      ],
+      "security": "Higher-level browser agent candidate only. Evaluate observability, auth handling, write safety, recovery, and cost before adoption.",
+      "verification_method": "Evaluation-only; benchmark navigation, evidence, failure recovery, auth isolation, and write safety against the same disposable tasks."
+    },
+    {
+      "id": "lighthouse-cli",
+      "type": "local-audit-tool",
+      "source_id": "lighthouse",
+      "install": "npx lighthouse",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "ratri"
+      ],
+      "security": "Read-oriented website audit. Treat scores as measurements with environment variance, not absolute truth.",
+      "capability": "web.audit.lighthouse",
+      "verification_method": "Run against a known test URL and persist machine-readable audit output; record environment because scores vary by runtime conditions."
+    },
+    {
+      "id": "polars-python",
+      "type": "local-data-library",
+      "source_id": "polars",
+      "install": "pip install polars",
+      "default_state": "NOT_INSTALLED",
+      "recommended_for": [
+        "paijo",
+        "nara"
+      ],
+      "security": "Local data processing can expose sensitive input in generated artifacts; preserve data classification and do not publish outputs automatically.",
+      "capability": "data.local.polars",
+      "verification_method": "Run a deterministic local fixture transformation and compare exact output/schema to the expected result."
     }
   ]
 }

@@ -32,6 +32,43 @@ The `-WithHermes` flag is explicit permission to invoke the official Hermes upst
 curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --start
 ```
 
+## Install only selected employees
+
+The default remains the full workforce. You can now select one employee, an arbitrary subset, or a preset.
+
+Windows:
+
+```powershell
+# one
+.\install.ps1 -WithHermes -Employees "siti"
+
+# arbitrary subset
+.\install.ps1 -WithHermes -Employees "praroro,siti"
+
+# preset
+.\install.ps1 -WithHermes -Employees "engineering"
+```
+
+POSIX:
+
+```bash
+./install.sh --with-hermes --employees siti
+./install.sh --with-hermes --employees praroro,siti
+./install.sh --with-hermes --employees engineering
+```
+
+The same selector can be passed directly to bootstrap:
+
+```bash
+node scripts/hermes-bootstrap.mjs --upgrade --employees=siti
+node scripts/hermes-bootstrap.mjs --upgrade --employees=praroro,siti
+node scripts/hermes-bootstrap.mjs --upgrade --employees=growth
+```
+
+Unselected existing profiles are not touched by that bootstrap run.
+
+See [EMPLOYEE-PACKS.md](EMPLOYEE-PACKS.md) for standalone release ZIPs and local pack generation.
+
 ## After installation
 
 If Hermes does not yet have a model/provider configured, run:
@@ -47,7 +84,7 @@ hermes profile list
 hermes kanban boards show
 ```
 
-You should see sixteen baseline `@0.3.0` profile distributions and the `nyobakantorai` board.
+You should see the selected baseline profile distributions and the `nyobakantorai` board. A default install still selects all sixteen.
 
 The office runs at `http://127.0.0.1:4322` by default.
 

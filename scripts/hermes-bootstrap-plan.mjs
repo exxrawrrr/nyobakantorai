@@ -14,3 +14,13 @@ export function bootstrapSucceeded({ results = [], profiles = [], boardOk = fals
   const boardReady = mode === "check" ? true : boardOk === true;
   return actionsOk && profilesOk && boardReady;
 }
+
+
+export function planSelectedProfileActions({ selectedIds = [], existingIds = [], mode = "install", force = false } = {}) {
+  const selected = [...new Set(selectedIds.map((id) => String(id).trim()).filter(Boolean))];
+  const existing = new Set(existingIds.map((id) => String(id).trim()).filter(Boolean));
+  return Object.freeze(selected.map((id) => Object.freeze({
+    profile: id,
+    action: planProfileAction({ mode, exists: existing.has(id), force }),
+  })));
+}

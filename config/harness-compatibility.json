@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "policy": "Compatibility entries describe packaging/discovery compatibility only unless runtime_tested=true. They do not imply identical activation, tool, sandbox, or execution behavior.",
+  "targets": [
+    {
+      "id": "agent-skills-core",
+      "source_id": "agent-skills",
+      "discovery_root": "skills",
+      "export_mode": "canonical",
+      "frontmatter_policy": "agent-skills-core",
+      "runtime_tested": false,
+      "claim": "Canonical SKILL.md conforms to the pinned Agent Skills core format."
+    },
+    {
+      "id": "hermes",
+      "source_id": "project:nyobakantorai",
+      "discovery_root": "hermes-profiles/<employee>/skills/nyobakantorai",
+      "export_mode": "native-generated",
+      "frontmatter_policy": "agent-skills-core-with-nyoba-metadata",
+      "runtime_tested": true,
+      "claim": "Canonical skills are generated into Hermes employee distributions and checked for byte-for-byte drift."
+    },
+    {
+      "id": "codex-cli",
+      "source_id": "codex-cli",
+      "discovery_root": ".agents/skills",
+      "export_mode": "minimal-frontmatter-adapter",
+      "frontmatter_policy": "name-description-only",
+      "runtime_tested": false,
+      "claim": "Static package export matches pinned Codex project .agents/skills discovery and conservative name/description-only frontmatter."
+    },
+    {
+      "id": "gemini-cli",
+      "source_id": "gemini-cli",
+      "discovery_root": ".agents/skills",
+      "export_mode": "minimal-frontmatter-adapter",
+      "frontmatter_policy": "name-description-only",
+      "runtime_tested": false,
+      "claim": "Static package export matches pinned Gemini CLI discovery path and conservative name/description-only frontmatter."
+    },
+    {
+      "id": "github-copilot",
+      "source_id": "awesome-copilot",
+      "discovery_root": ".github/skills",
+      "export_mode": "minimal-frontmatter-adapter",
+      "frontmatter_policy": "name-description-only",
+      "runtime_tested": false,
+      "claim": "Static package export matches pinned GitHub Copilot skill path and documented required name/description fields."
+    }
+  ]
+}

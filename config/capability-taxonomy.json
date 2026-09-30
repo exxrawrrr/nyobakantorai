@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "kinds": [
+    "skill",
+    "tool",
+    "mcp",
+    "plugin",
+    "extension",
+    "workflow",
+    "memory",
+    "hook",
+    "adapter",
+    "policy"
+  ],
+  "usage_modes": [
+    "original",
+    "copied-with-license",
+    "adapted",
+    "recreated-concepts",
+    "optional-upstream-dependency",
+    "reference-only",
+    "excluded-license-boundary",
+    "provider-neutral-contract"
+  ],
+  "integration_type_kind_map": {
+    "hermes-plugin": "plugin",
+    "mcp-stdio": "mcp",
+    "cross-harness-memory": "memory",
+    "mcp-memory": "memory",
+    "local-context-tool": "tool",
+    "experimental-local-library": "tool",
+    "memory-provider-candidate": "memory",
+    "mcp-browser": "mcp",
+    "browser-agent-candidate": "tool",
+    "local-audit-tool": "tool",
+    "local-data-library": "tool"
+  },
+  "provider_contract_kind": "adapter",
+  "canonical_skill_kind": "skill",
+  "rules": {
+    "executable_requires_verification_method": true,
+    "external_source_requires_source_id": true,
+    "unsafe_default_connected_forbidden": true,
+    "optional_integration_default_states": [
+      "NOT_INSTALLED",
+      "REFERENCE_ONLY"
+    ],
+    "capability_default_states": [
+      "NOT_CONNECTED"
+    ],
+    "capability_risk_classes": [
+      "READ_ONLY",
+      "EXTERNAL_WRITE",
+      "PAID_ACTION",
+      "ACCOUNT_CHANGE",
+      "DESTRUCTIVE"
+    ]
+  },
+  "default_states": [
+    "BUNDLED",
+    "NOT_INSTALLED",
+    "REFERENCE_ONLY",
+    "NOT_CONNECTED"
+  ],
+  "inventory_risk_classes": [
+    "PROCEDURAL",
+    "READ_ONLY",
+    "EXTERNAL_WRITE",
+    "PAID_ACTION",
+    "ACCOUNT_CHANGE",
+    "DESTRUCTIVE",
+    "MEMORY"
+  ],
+  "platforms": [
+    "windows",
+    "linux",
+    "macos",
+    "unspecified"
+  ]
+}

@@ -1,13 +1,14 @@
 ---
 name: nyoba-strategic-context-compaction
-description: Use when a long multi-phase task is accumulating low-signal context or crossing a natural research, planning, implementation, debugging, or review boundary.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when a long multi-phase task is accumulating low-signal context or crossing a natural research, planning, implementation, debugging, or review boundary."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [ecc]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "ecc"
 ---
 
 # Strategic Context Compaction

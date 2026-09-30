@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "provider_id": "browser-use",
+  "source_id": "browser-use",
+  "source_commit": "4cbe921673b48a488f5415d9159249afd12a625b",
+  "pinned_package_version": "0.13.10",
+  "python_requirement": ">=3.11,<4.0",
+  "cli_commands": [
+    "browser-use",
+    "browseruse",
+    "bu",
+    "browser"
+  ],
+  "cdp_env": "BU_CDP_URL",
+  "target_host": "127.0.0.1",
+  "default_case_timeout_ms": 15000,
+  "timeout_case_timeout_ms": 2500,
+  "timeout_route_delay_ms": 8000,
+  "required_case_ids": [
+    "read-navigation",
+    "structured-evidence",
+    "write-guard",
+    "auth-isolation",
+    "timeout-recovery",
+    "partial-result-recovery"
+  ],
+  "browser_launch": {
+    "remote_debugging_port": 0,
+    "isolated_profile": true,
+    "headless": true,
+    "extra_args": [
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--disable-background-networking",
+      "--disable-component-update",
+      "--disable-sync",
+      "--metrics-recording-only",
+      "--disable-default-apps",
+      "--disable-extensions"
+    ]
+  },
+  "safety": {
+    "target_must_be_loopback": true,
+    "production_navigation_forbidden": true,
+    "reuse_user_profile_forbidden": true,
+    "write_actions_forbidden": true,
+    "authentication_forbidden": true,
+    "auto_install_forbidden": true,
+    "auto_login_forbidden": true,
+    "telemetry_disabled": true,
+    "cloud_sync_disabled": true,
+    "update_check_disabled": true,
+    "strip_parent_credentials": true,
+    "isolate_browser_harness_home": true,
+    "cleanup_browser_harness_daemon": true
+  },
+  "result_marker": "NYOBA_BROWSER_RESULT=",
+  "install_hint": "Install the pinned package yourself, for example `python -m pip install browser-use==0.13.10`. The repository never installs or logs in automatically.",
+  "claim_limit": "SELF_TEST_PASSED proves the local Browser Use CLI adapter completed the disposable six-case contract. It is not agent-mode/model quality proof and does not automatically change the repository Browser Use provider record from NOT_RUN/UNPROVEN."
+}

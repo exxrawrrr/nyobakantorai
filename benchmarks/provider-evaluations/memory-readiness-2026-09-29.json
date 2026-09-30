@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "benchmark": "cognee-hermes-live-readiness",
+  "observed_on": "2026-09-29",
+  "provider_id": "cognee-hermes",
+  "integration_id": "cognee-hermes-evaluation",
+  "source_id": "cognee-integrations",
+  "source_commit": "3323e30a71564eccc1794b8c4a0bac84fc3d2b30",
+  "evaluation_status": "NOT_RUN",
+  "claim_state": "UNPROVEN",
+  "environment": {
+    "machine": "GROWTH",
+    "os": "Windows",
+    "hermes_version": "0.21.3",
+    "hermes_python": "3.11.16"
+  },
+  "pinned_upstream": {
+    "package": "cognee-integration-hermes-agent",
+    "package_version": "1.3.1",
+    "cognee_version": "1.6.0",
+    "python_requirement": ">=3.10",
+    "install_path": "pip install cognee-integration-hermes-agent && cognee-hermes-install",
+    "local_mode_requirement": "LLM API key plus Hermes memory setup",
+    "remote_mode_requirement": "COGNEE_BASE_URL plus COGNEE_API_KEY"
+  },
+  "live_checks": {
+    "cognee_command": "NOT_FOUND",
+    "cognee_python_module": "NOT_FOUND",
+    "cognee_related_environment_names": "NONE_DETECTED",
+    "local_cognee_directory": "NOT_FOUND",
+    "hermes_env_file": "NOT_FOUND",
+    "hermes_model": "NOT_SET",
+    "hermes_provider_credentials": "NONE_CONFIGURED",
+    "hermes_oauth_session": "NONE_CONFIGURED"
+  },
+  "blockers": [
+    "Cognee package/integration is not installed on GROWTH.",
+    "Hermes has no configured model/provider credential or OAuth session.",
+    "No local or remote Cognee configuration is present, so write/read/export/delete tests cannot execute truthfully."
+  ],
+  "required_cases_not_executed": [
+    "profile-isolation",
+    "cross-profile-contamination-negative",
+    "write-read-roundtrip",
+    "provenance",
+    "export",
+    "delete",
+    "secret-rejection",
+    "shared-promotion-boundary"
+  ],
+  "safety_note": "No package was installed and no credential was created or requested during this readiness check. Provider evaluation remains NOT_RUN/UNPROVEN.",
+  "next_valid_transition": "Install/configure the pinned-compatible Hermes Cognee integration in an isolated evaluation setup, then execute all eight required cases with evidence before changing status."
+}

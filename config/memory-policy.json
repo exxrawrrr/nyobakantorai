@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "default_boundary": "PROFILE_SCOPED",
+  "canonical_skill_mutation": "REPOSITORY_PR_ONLY",
+  "layers": [
+    {
+      "id": "M0",
+      "name": "turn_scratch",
+      "durable": false,
+      "scope": "CURRENT_TASK",
+      "description": "Temporary working state. Never treated as durable memory or authority."
+    },
+    {
+      "id": "M1",
+      "name": "profile_episodic",
+      "durable": true,
+      "scope": "PROFILE_SCOPED",
+      "description": "Task outcomes, corrections, failed approaches, and verified workarounds tied to one employee profile.",
+      "requires_evidence": true
+    },
+    {
+      "id": "M2",
+      "name": "profile_semantic",
+      "durable": true,
+      "scope": "PROFILE_SCOPED",
+      "description": "Normalized reusable lessons derived from evidence-backed episodes.",
+      "requires_evidence": true,
+      "promotion_requires": "SUPPORTED_PATTERN"
+    },
+    {
+      "id": "M3",
+      "name": "shared_project_knowledge",
+      "durable": true,
+      "scope": "EXPLICIT_SHARED",
+      "description": "Knowledge deliberately promoted beyond one worker with provenance, owner, timestamp, confidence, and review.",
+      "requires_evidence": true,
+      "requires_explicit_promotion": true,
+      "requires_human_review": true
+    },
+    {
+      "id": "M4",
+      "name": "canonical_skill_candidate",
+      "durable": true,
+      "scope": "REPOSITORY_CANDIDATE",
+      "description": "A proposed reusable procedure change. Runtime workers may create candidates but cannot silently mutate canonical skills.",
+      "requires_evidence": true,
+      "normally_requires_independent_observations": 3,
+      "requires_human_review": true,
+      "requires_repository_pr": true
+    }
+  ],
+  "prohibited_memory_content": [
+    "credentials",
+    "api_tokens",
+    "passwords",
+    "private_keys",
+    "raw_transcripts_by_default",
+    "unnecessary_private_client_data",
+    "speculative_personality_judgments"
+  ],
+  "promotion_guards": [
+    "memory_is_context_not_authority",
+    "time_sensitive_facts_must_be_rechecked",
+    "cross_profile_access_requires_explicit_handoff_or_promotion",
+    "shared_promotion_requires_provenance",
+    "secrets_must_not_be_promoted",
+    "runtime_learning_must_not_widen_permissions",
+    "runtime_learning_must_not_change_approval_policy",
+    "runtime_learning_must_not_change_verification_authority"
+  ]
+}

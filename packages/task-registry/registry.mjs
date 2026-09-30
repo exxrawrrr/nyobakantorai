@@ -1,11 +1,12 @@
-export const EMPLOYEES = Object.freeze([
-  { id: "praroro", name: "Praroro", role: "COO / Chief of Staff", focus: "Prioritas, delegasi, dan executive brief", accent: "amber" },
-  { id: "paijo", name: "Paijo", role: "Quant, Growth & Finance", focus: "Angka, growth, spreadsheet, dan skenario", accent: "emerald" },
-  { id: "subagjo", name: "Subagjo", role: "Engineering & Operations", focus: "Engineering, integrasi, dan bukti test", accent: "cyan" },
-  { id: "alex", name: "Alex", role: "Strategy & Rapid Execution", focus: "Strategi, opsi, dan quick win", accent: "violet" },
-  { id: "sumiati", name: "Sumiati", role: "Creative & Communications", focus: "Creative direction, copy, dan komunikasi", accent: "rose", pashmina: true },
-  { id: "siti", name: "Siti", role: "QA, Compliance & Knowledge", focus: "QA independen, bukti, dan konsistensi", accent: "blue" },
-]);
+import { WORKFORCE } from "../../lib/workforce.mjs";
+
+export const EMPLOYEES = Object.freeze(WORKFORCE.map((person) => Object.freeze({
+  id: person.id,
+  name: person.name,
+  role: person.role,
+  focus: person.summary,
+  accent: person.visual?.color || "slate",
+})));
 
 export const RISK_CLASSES = Object.freeze(["READ_ONLY", "LOCAL_WRITE", "EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]);
 export const APPROVAL_STATUSES = Object.freeze(["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED"]);
@@ -32,6 +33,16 @@ const ALLOWED_TRANSITIONS = Object.freeze({
 });
 
 const employeeIds = new Set(EMPLOYEES.map(({ id }) => id));
+const employeePolicy = new Map(WORKFORCE.map((employee) => [employee.id, employee]));
+
+function mayVerify(assigneeId, actorId) {
+  if (!employeeIds.has(actorId) || actorId === assigneeId) return false;
+  const policy = employeePolicy.get(assigneeId)?.verification_policy;
+  return policy?.independent_required === true
+    && policy?.self_verify === false
+    && Array.isArray(policy.reviewer_candidates)
+    && policy.reviewer_candidates.includes(actorId);
+}
 
 const clean = (value, max = 4000) => String(value ?? "").trim().slice(0, max);
 const clone = (value) => structuredClone(value);
@@ -110,6 +121,7 @@ export function createTask(registry, input, clock = defaultClock, idFactory = de
     source: clean(input.source, 240) || "manual dashboard",
     output_ref: "",
     evidence_ref: "",
+    execution_receipt_ref: "",
     risk_class: RISK_CLASSES.includes(input.risk_class) ? input.risk_class : "READ_ONLY",
     approval_required: false,
     approval_status: "NOT_REQUIRED",
@@ -182,7 +194,9 @@ export function updateTask(registry, taskId, patch, clock = defaultClock, idFact
   const actor = clean(patch.actor, 80) || "manual:owner";
   const evidence = clean(patch.evidence_ref ?? task.evidence_ref, 1000);
   if (newStatus === "VERIFIED") {
-    assert(actor.toLowerCase() === "siti", "Status VERIFIED hanya dapat dicatat oleh Siti.");
+    const verifier = actor.toLowerCase();
+    assert(verifier !== task.assignee_id, "A worker cannot independently verify its own work.");
+    assert(mayVerify(task.assignee_id, verifier), "Status VERIFIED membutuhkan independent registry-approved reviewer.");
     assert(evidence, "Status VERIFIED membutuhkan evidence reference.");
   }
   if (oldStatus === "VERIFIED" && newStatus === "IN_PROGRESS") {
@@ -203,6 +217,36 @@ export function updateTask(registry, taskId, patch, clock = defaultClock, idFact
     evidenceRef: evidence,
   }, clock, idFactory));
   next.updated_at = task.updated_at;
+  return next;
+}
+
+export function attachExecutionReceipt(registry, taskId, receipt, clock = defaultClock, idFactory = defaultId) {
+  validateRegistry(registry);
+  const next = clone(registry);
+  const task = next.tasks.find(({ id }) => id === taskId);
+  assert(task, "Tugas tidak ditemukan.");
+  const receiptRef = clean(receipt?.receipt_ref, 1000);
+  assert(/^receipt:sha256:[a-f0-9]{64}$/.test(receiptRef), "Execution receipt reference tidak valid.");
+  assert(
+    !next.events.some((event) => event.action === "EXECUTION_RECEIPT_ATTACHED" && event.evidence_ref === receiptRef),
+    "Execution receipt reference sudah pernah digunakan."
+  );
+  assert(task.lifecycle_status !== "VERIFIED", "Execution receipt tidak boleh ditempel setelah task VERIFIED tanpa reopen.");
+  const actor = clean(receipt?.actor, 80).toLowerCase();
+  assert(actor, "Execution receipt actor wajib diisi.");
+  assert(actor === task.assignee_id || actor === "adapter:runtime", "Execution receipt hanya boleh direkam oleh assignee atau runtime adapter.");
+  const at = clock();
+  task.execution_receipt_ref = receiptRef;
+  task.updated_at = at;
+  next.events.push(makeEvent(task.id, "EXECUTION_RECEIPT_ATTACHED", {
+    actor,
+    oldStatus: task.lifecycle_status,
+    newStatus: task.lifecycle_status,
+    source: clean(receipt?.source, 240) || "signed execution receipt",
+    evidenceRef: receiptRef,
+  }, clock, idFactory));
+  next.updated_at = at;
+  validateRegistry(next);
   return next;
 }
 
@@ -239,6 +283,16 @@ export function validateRegistry(registry) {
   assert(registry && typeof registry === "object", "Registry harus berupa object.");
   assert(registry.version === 1, "Versi registry tidak didukung.");
   assert(Array.isArray(registry.tasks) && Array.isArray(registry.events), "Registry tidak lengkap.");
+
+  const seenReceiptRefs = new Set();
+  for (const event of registry.events) {
+    if (event?.action !== "EXECUTION_RECEIPT_ATTACHED") continue;
+    const ref = clean(event.evidence_ref, 1000);
+    assert(/^receipt:sha256:[a-f0-9]{64}$/.test(ref), "Execution receipt attachment event memiliki reference tidak valid.");
+    assert(!seenReceiptRefs.has(ref), "Execution receipt reference replay terdeteksi di event history.");
+    seenReceiptRefs.add(ref);
+  }
+
   for (const task of registry.tasks) {
     assert(clean(task.id), "Task ID kosong.");
     assert(clean(task.title), "Judul task kosong.");
@@ -249,6 +303,25 @@ export function validateRegistry(registry) {
     if (AUTO_APPROVAL_RISKS.has(task.risk_class)) assert(task.approval_required === true, "High-impact task wajib membutuhkan approval.");
     if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(task.lifecycle_status)) {
       assert(task.approval_status === "APPROVED", "Task berisiko tinggi tidak boleh berjalan tanpa approval.");
+    }
+    if (clean(task.execution_receipt_ref, 1000)) {
+      assert(/^receipt:sha256:[a-f0-9]{64}$/.test(task.execution_receipt_ref), "Task memiliki execution receipt reference tidak valid.");
+      const receiptEvent = registry.events.find((event) =>
+        event.task_id === task.id
+        && event.action === "EXECUTION_RECEIPT_ATTACHED"
+        && event.evidence_ref === task.execution_receipt_ref
+      );
+      assert(receiptEvent, "Task execution receipt harus memiliki append-only attachment event.");
+    }
+    if (task.lifecycle_status === "VERIFIED") {
+      const verified = registry.events.find((event) =>
+        event.task_id === task.id
+        && event.action === "STATUS_CHANGED"
+        && event.new_status === "VERIFIED"
+        && clean(event.evidence_ref, 1000)
+        && mayVerify(task.assignee_id, String(event.actor || "").toLowerCase())
+      );
+      assert(verified, "VERIFIED requires an independent reviewer evidence event.");
     }
     if (task.execution_mode === "HERMES") {
       assert(clean(task.runtime_ref, 200).startsWith("hermes-kanban:"), "Task Hermes tidak memiliki runtime reference valid.");

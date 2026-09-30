@@ -46,3 +46,11 @@ Third-party assets or copied code can have unclear licensing.
 ## Non-goals
 
 This project is not an operating-system sandbox, credential vault, multi-tenant authorization server, or guarantee that an external agent runtime is safe.
+
+
+### Adapter configuration escape
+A local runtime adapter can become an unintended privilege bridge if it is allowed to launch arbitrary executables, inherit unrelated environment variables, follow redirects, target non-loopback hosts, or use unbounded time/buffer/task limits.
+
+**Control:** `config/runtime-adapter-policy.json` + `packages/runtime-adapter/policy.mjs` provide application-level permission policies for adapter ID, executable basename, environment keys, timeout, buffer, task bounds, protocols, loopback hosts, shell use, and redirects. Known Hermes usage is bound to the canonical policy and fails closed before command execution when the configuration violates it.
+
+This is a configuration sandbox, **not an operating-system sandbox**. It does not replace containers, OS users, filesystem ACLs, seccomp, AppContainer, or other process-isolation mechanisms.

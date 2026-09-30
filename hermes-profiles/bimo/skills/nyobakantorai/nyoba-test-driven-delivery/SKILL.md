@@ -1,13 +1,14 @@
 ---
 name: nyoba-test-driven-delivery
-description: Use when implementing a feature, bugfix, adapter, workflow, or behavior whose expected outcome can be pinned by executable tests or deterministic checks.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when implementing a feature, bugfix, adapter, workflow, or behavior whose expected outcome can be pinned by executable tests or deterministic checks."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [superpowers, ecc]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "superpowers,ecc"
 ---
 
 # Test-Driven Delivery

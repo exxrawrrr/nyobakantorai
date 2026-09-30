@@ -1,12 +1,13 @@
 ---
 name: nyoba-github-readonly
-description: Compare verified GitHub source, license and compatibility without arbitrary installs or pushes.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Compare verified GitHub source, license and compatibility without arbitrary installs or pushes."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Subagjo GitHub source review

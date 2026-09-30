@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "statuses": {
+    "support": [
+      "SUPPORTED"
+    ],
+    "install": [
+      "INSTALLED",
+      "AVAILABLE_ON_DEMAND",
+      "NOT_INSTALLED"
+    ],
+    "configuration": [
+      "NOT_REQUIRED",
+      "CONFIG_SIGNAL_PRESENT",
+      "UNKNOWN"
+    ],
+    "self_test": [
+      "NOT_RUN"
+    ]
+  },
+  "privacy": "Detection is read-only. Credential values are never printed or persisted; only boolean configuration signals are reported.",
+  "providers": [
+    {
+      "id": "hermes",
+      "label": "Hermes Agent",
+      "category": "runtime",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "hermes"
+        ],
+        "env_any": [
+          "NYOBAKANTORAI_HERMES_EXE",
+          "NYOBAKANTORAI_HERMES_HOME"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install Hermes if needed, then configure a user-owned model/provider with `hermes setup --portal`.",
+      "self_test_hint": "Run `npm run harness:self-test:plan -- --target hermes`, then `npm run harness:self-test -- --target hermes --json --out hermes-parity.json`. The runner preloads a disposable probe skill via a temporary bundled-skill override and does not mutate the user's Hermes home."
+    },
+    {
+      "id": "codex",
+      "label": "Codex CLI",
+      "category": "harness",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "codex"
+        ],
+        "env_any": [
+          "OPENAI_API_KEY"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install/authenticate Codex using the user's own OpenAI account or supported credential flow.",
+      "self_test_hint": "Run `npm run harness:self-test:plan -- --target codex`, then `npm run harness:self-test -- --target codex --json --out codex-parity.json`. The runner uses a temporary workspace, project `.agents/skills`, ephemeral execution, and read-only sandbox mode."
+    },
+    {
+      "id": "gemini-cli",
+      "label": "Gemini CLI",
+      "category": "harness",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "gemini"
+        ],
+        "env_any": [
+          "GEMINI_API_KEY",
+          "GOOGLE_API_KEY"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install Gemini CLI and authenticate with the user's own supported OAuth/API-key flow.",
+      "self_test_hint": "Run `npm run harness:self-test:plan -- --target gemini-cli`, then `npm run harness:self-test -- --target gemini-cli --json --out gemini-parity.json`. The runner uses a temporary workspace, `.agents/skills`, and approval-mode=plan."
+    },
+    {
+      "id": "github-copilot-cli",
+      "label": "GitHub Copilot CLI",
+      "category": "harness",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "copilot",
+          "github-copilot-cli"
+        ],
+        "env_any": [
+          "GH_TOKEN",
+          "GITHUB_TOKEN"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install GitHub Copilot CLI and authenticate through the user's own GitHub/Copilot account.",
+      "self_test_hint": "Run `npm run harness:self-test:plan -- --target github-copilot-cli`, then `npm run harness:self-test -- --target github-copilot-cli --json --out copilot-parity.json`. The runner uses a temporary workspace and `.github/skills`; no login or permission bypass is performed."
+    },
+    {
+      "id": "cognee",
+      "label": "Cognee / Hermes memory integration",
+      "category": "memory",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "cognee"
+        ],
+        "python_modules": [
+          "cognee"
+        ],
+        "env_any": [
+          "COGNEE_BASE_URL",
+          "COGNEE_API_KEY"
+        ],
+        "config_requirement": "provider",
+        "self_test_install_required": false,
+        "self_test_default_local": true
+      },
+      "setup_hint": "For the self-test, a compatible user-owned Cognee HTTP endpoint is sufficient; a local Cognee package is not required in this repository. Full Hermes integration still requires the user's chosen pinned-compatible Cognee/Hermes setup.",
+      "self_test_hint": "Run `npm run memory:self-test:plan` first. When a user-owned compatible Cognee HTTP endpoint is configured, run `npm run memory:self-test -- --json --out cognee-self-test.json`. Remote targets require explicit --allow-remote and COGNEE_API_KEY; the runner never installs, logs in, or mints keys."
+    },
+    {
+      "id": "browser-use",
+      "label": "Browser Use",
+      "category": "browser",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "browser-use"
+        ],
+        "python_modules": [
+          "browser_use"
+        ],
+        "env_any": [
+          "BROWSER_USE_API_KEY"
+        ],
+        "config_requirement": "external-or-oauth"
+      },
+      "setup_hint": "Install Browser Use and configure a user-owned supported model/provider path.",
+      "self_test_hint": "Run `npm run browser:self-test:plan` first. When Browser Use and Chrome/Chromium/Edge are present, run `npm run browser:self-test -- --json --out browser-use-self-test.json`. The runner uses a disposable loopback target and isolated temporary browser profile."
+    },
+    {
+      "id": "playwright-mcp",
+      "label": "Playwright MCP",
+      "category": "browser",
+      "support_state": "SUPPORTED",
+      "detection": {
+        "commands": [
+          "playwright-mcp"
+        ],
+        "node_modules": [
+          "@playwright/mcp"
+        ],
+        "on_demand_commands": [
+          "npm"
+        ],
+        "config_requirement": "none"
+      },
+      "setup_hint": "Use a pinned Playwright MCP package version. On-demand npx availability is reported without downloading anything.",
+      "self_test_hint": "Playwright MCP already has a recorded controlled live candidate result. Use its disposable six-case browser contract as the comparison baseline; the Browser Use self-service runner uses the same six case IDs."
+    }
+  ]
+}

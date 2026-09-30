@@ -1,13 +1,14 @@
 ---
 name: nyoba-mcp-builder
-description: Use when designing, implementing, evaluating, or reviewing an MCP server or connector and the capability, transport, authentication, scopes, and failure semantics must be explicit.
-version: 1.0.0
-author: nyobakantorai
+description: "Use when designing, implementing, evaluating, or reviewing an MCP server or connector and the capability, transport, authentication, scopes, and failure semantics must be explicit."
 license: MIT
-platforms: [windows, linux, macos]
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  provenance_mode: recreated
-  source_ids: [anthropic-mcp-builder, mcp-reference-servers, superpowers]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-provenance-mode: "recreated"
+  nyoba-source-ids: "anthropic-mcp-builder,mcp-reference-servers,superpowers"
 ---
 
 # MCP Builder

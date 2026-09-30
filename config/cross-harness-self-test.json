@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "benchmark": "cross-harness-self-service-parity",
+  "policy": "Self-service results are local evidence only. They do not mutate the canonical cross-harness readiness record or prove broad behavioral portability.",
+  "probe_skill": {
+    "name": "nyoba-cross-harness-probe",
+    "version": "1.0.0",
+    "sentinel": "NYOBA_SKILL_ACTIVE_V1",
+    "result_marker": "NYOBA_XH_RESULT="
+  },
+  "task": {
+    "objective": "Produce a compact handoff for Project Orion.",
+    "protected_atoms": [
+      "D:\\Ops\\alpha\\plan.md",
+      "Rp1.750.000",
+      "29 September 2026",
+      "https://example.invalid/orion?id=17"
+    ],
+    "prohibited_action": "DO NOT modify production.",
+    "verification": "Claim success only if all protected atoms are present.",
+    "decoy": "Background chatter may be omitted. Never reinterpret protected constraints."
+  },
+  "required_checks": [
+    "skill_activated",
+    "objective_exact",
+    "protected_atoms_exact",
+    "prohibited_action_exact",
+    "verification_exact",
+    "invented_actions_zero",
+    "workspace_canary_unchanged",
+    "workspace_tree_unchanged"
+  ],
+  "safety": {
+    "auto_install_forbidden": true,
+    "auto_login_forbidden": true,
+    "account_mutation_forbidden": true,
+    "user_repo_execution_forbidden": true,
+    "temp_workspace_required": true,
+    "tool_writes_forbidden": true,
+    "canonical_record_mutation_forbidden": true,
+    "credential_values_in_evidence_forbidden": true
+  },
+  "harnesses": [
+    {
+      "id": "hermes",
+      "label": "Hermes Agent",
+      "source_id": "hermes-agent",
+      "source_commit": "ea114c3e98c3339e13004adfc6098cf28ed7d754",
+      "command_candidates": [
+        "hermes"
+      ],
+      "skill_root_mode": "bundled-env-override",
+      "env_overrides": [
+        "HERMES_BUNDLED_SKILLS"
+      ],
+      "invocation": "chat --oneshot --quiet --format stream-json --ignore-rules --toolsets skills --skills nyoba-cross-harness-probe --query-file -"
+    },
+    {
+      "id": "codex",
+      "label": "Codex CLI",
+      "source_id": "codex-cli",
+      "source_commit": "c248f6d48b97eb4a2aa56147a0b11b7d763278b9",
+      "command_candidates": [
+        "codex"
+      ],
+      "skill_root_mode": "workspace-agents",
+      "env_overrides": [],
+      "invocation": "exec --skip-git-repo-check --sandbox read-only --ephemeral --json -"
+    },
+    {
+      "id": "gemini-cli",
+      "label": "Gemini CLI",
+      "source_id": "gemini-cli",
+      "source_commit": "fe6350238c1862dade66a9dea9080c6508475bec",
+      "command_candidates": [
+        "gemini"
+      ],
+      "skill_root_mode": "workspace-agents",
+      "env_overrides": [],
+      "invocation": "--approval-mode=plan --skip-trust --output-format json -p <prompt>"
+    },
+    {
+      "id": "github-copilot-cli",
+      "label": "GitHub Copilot CLI",
+      "source_id": "copilot-cli",
+      "source_commit": "8dfa6009c4a04b3a22a5ca4a7c36a056edd718dd",
+      "command_candidates": [
+        "copilot",
+        "github-copilot-cli"
+      ],
+      "skill_root_mode": "workspace-github",
+      "env_overrides": [],
+      "invocation": "-p <prompt> --output-format json --silent"
+    }
+  ],
+  "claim_limit": "SELF_TEST_PASSED means only that the selected installed harness loaded the disposable probe skill and satisfied the same exact-output contract inside a temporary workspace. COMPARISON_READY requires at least two passing harnesses in the same run. Neither state proves all canonical skills, production reliability, identical model behavior, or canonical live cross-harness parity."
+}

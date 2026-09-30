@@ -37,3 +37,42 @@ Each employee carries a structured `reasoning_profile` in the canonical registry
 Each employee also carries a `learning_profile`: profile-scoped memory mode, role-specific learning focus, reflection prompts, and a promotion rule. The shared `nyoba-reflective-memory-learning` skill converts meaningful outcomes/corrections into atomic lessons without storing raw transcripts or secrets.
 
 Upstream-derived workflow skills are attributed through `config/upstream-sources.json`. Optional plugins/MCPs are recommendations, not bundled authority; see `config/integrations.json`.
+
+
+## Dialogue fingerprints
+
+Personality is now an operational conversation contract, not decorative biography. Each employee has a `personality.dialogue_profile` defining register, opening behavior, response shape, sentence rhythm, question style, disagreement style, uncertainty style, humor boundary, closing behavior, signature moves, and anti-patterns.
+
+Generated SOULs explicitly state that the dialogue profile is **behavior, not a script**. Catchphrases must not become repetitive roleplay. User-requested format, factual accuracy, safety, approval policy, and verification rules outrank personality.
+
+`scripts/personality-contract.test.mjs` requires the 16 baseline workers to have distinct fingerprints.
+
+## Standalone employee packs
+
+A worker can be exported independently with:
+
+```bash
+npm run employee:pack -- --employee=siti
+npm run employee:pack -- --employees=praroro,siti
+npm run employee:pack -- --employees=growth
+```
+
+The resulting pack remains a native Hermes distribution and contains pack/provenance/checksum metadata. It contains no credentials, runtime memories, sessions, or provider authorization.
+
+The shared selector in `scripts/employee-selection.mjs` is also used by Hermes bootstrap/installers so selection semantics cannot drift between packaging and installation.
+
+See `docs/EMPLOYEE-PACKS.md`.
+
+## Layered memory
+
+The machine-readable memory policy is `config/memory-policy.json`:
+
+```text
+M0 turn scratch
+M1 profile episodic
+M2 profile semantic
+M3 explicit shared project knowledge
+M4 canonical skill candidate
+```
+
+Runtime learning may produce memories and skill candidates. It may not silently widen permissions, alter approval/verification authority, or edit canonical skills. Canonical skill changes remain repository PR + review + test work.

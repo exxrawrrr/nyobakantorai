@@ -6,6 +6,7 @@ WITH_HERMES=0
 START=0
 PORT=4322
 HERMES_HOME_OVERRIDE=""
+EMPLOYEES="all"
 REF="main"
 REPO_URL="https://github.com/exxrawrrr/nyobakantorai.git"
 ARCHIVE_URL="https://github.com/exxrawrrr/nyobakantorai/archive/refs/heads/main.tar.gz"
@@ -17,6 +18,8 @@ while [[ $# -gt 0 ]]; do
     --dir) INSTALL_DIR="$2"; shift 2 ;;
     --port) PORT="$2"; shift 2 ;;
     --hermes-home) HERMES_HOME_OVERRIDE="$2"; shift 2 ;;
+    --employees) EMPLOYEES="$2"; shift 2 ;;
+    --employees=*) EMPLOYEES="${1#--employees=}"; shift ;;
     --ref) REF="$2"; shift 2 ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
   esac
@@ -74,7 +77,7 @@ echo "Running runtime preflight..."
 "$NODE" "$INSTALL_DIR/scripts/preflight.mjs" --runtime
 
 if command -v hermes >/dev/null 2>&1; then
-  args=("$INSTALL_DIR/scripts/hermes-bootstrap.mjs" "--upgrade")
+  args=("$INSTALL_DIR/scripts/hermes-bootstrap.mjs" "--upgrade" "--employees=$EMPLOYEES")
   [[ -n "$HERMES_HOME_OVERRIDE" ]] && args+=("--home=$HERMES_HOME_OVERRIDE")
   "$NODE" "${args[@]}"
 elif (( WITH_HERMES )); then
@@ -83,6 +86,7 @@ else
   echo "Hermes not detected. Core-only office install is ready; rerun with --with-hermes for the reference runtime."
 fi
 
+echo "Selected employees: $EMPLOYEES"
 echo "nyobakantorai installed at: $INSTALL_DIR"
 echo "Office URL: http://127.0.0.1:$PORT"
 if command -v hermes >/dev/null 2>&1; then echo "If needed, configure your model/provider with: hermes setup --portal"; fi

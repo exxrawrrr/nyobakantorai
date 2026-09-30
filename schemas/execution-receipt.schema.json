@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/execution-receipt.schema.json",
+  "title": "nyobakantorai signed execution receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "alg",
+    "key_id",
+    "payload",
+    "payload_sha256",
+    "signature_base64"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "alg": {
+      "const": "Ed25519"
+    },
+    "key_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "payload_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "signature_base64": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 256
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "receipt_id",
+        "task_id",
+        "employee_id",
+        "action",
+        "risk_class",
+        "autonomy",
+        "authorization",
+        "started_at",
+        "finished_at",
+        "result",
+        "runtime",
+        "usage"
+      ],
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "receipt_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{5,127}$"
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "employee_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,39}$"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "capability_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "risk_class": {
+          "enum": [
+            "READ_ONLY",
+            "LOCAL_WRITE",
+            "EXTERNAL_WRITE",
+            "PAID_ACTION",
+            "ACCOUNT_CHANGE",
+            "DESTRUCTIVE"
+          ]
+        },
+        "autonomy": {
+          "enum": [
+            "OBSERVE",
+            "GUARDED",
+            "DELEGATED"
+          ]
+        },
+        "authorization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "allowed",
+            "reason"
+          ],
+          "properties": {
+            "allowed": {
+              "type": "boolean"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "approval_ref": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 512
+            }
+          }
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "result": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "summary",
+            "artifact_refs",
+            "evidence_refs"
+          ],
+          "properties": {
+            "state": {
+              "enum": [
+                "SUCCEEDED",
+                "FAILED",
+                "PARTIAL",
+                "BLOCKED"
+              ]
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            "artifact_refs": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              }
+            },
+            "evidence_refs": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              }
+            }
+          }
+        },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "runtime_ref"
+          ],
+          "properties": {
+            "provider": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "runtime_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "provider_version": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120
+            }
+          }
+        },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "input_tokens",
+            "output_tokens",
+            "cost_known",
+            "cost_amount",
+            "currency"
+          ],
+          "properties": {
+            "input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "cost_known": {
+              "type": "boolean"
+            },
+            "cost_amount": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "currency": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 3,
+              "maxLength": 3
+            }
+          }
+        },
+        "previous_receipt_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

@@ -1,12 +1,13 @@
 ---
 name: nyoba-research-synthesis
-description: Evidence-led niche/current research with dated sources and honest no-web fallback.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Evidence-led niche/current research with dated sources and honest no-web fallback."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Alex evidence research

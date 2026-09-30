@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "canonical_dataset": "benchmarks/real-tasks/dataset.json",
+  "minimum_cases": 20,
+  "merge": {
+    "require_valid_snapshot": true,
+    "reject_case_id_conflicts": true,
+    "reject_duplicate_source_refs": true,
+    "preserve_failures": true,
+    "canonical_overwrite_forbidden": true
+  },
+  "prepare": {
+    "auto_publish_forbidden": true,
+    "ready_state": "READY_FOR_REPORT",
+    "ready_claim_state": "EVALUATED_BASELINE"
+  },
+  "coverage_recommendations": {
+    "minimum_distinct_employees": 3,
+    "include_at_least_one_failure": true,
+    "include_at_least_one_success": true,
+    "include_at_least_one_verification_failure": true,
+    "note": "Coverage recommendations produce warnings only. They do not weaken or replace the canonical publication gate."
+  },
+  "truth_boundary": "A valid recorder snapshot is not automatically a published baseline. Direct provenance, independent verification, evidence completeness, redaction review, minimum case count, and zero false-success remain required."
+}

@@ -1,12 +1,13 @@
 ---
 name: nyoba-chief-of-staff
-description: Bound complex tasks, choose direct specialists, and distinguish draft versus delivered delegation.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Bound complex tasks, choose direct specialists, and distinguish draft versus delivered delegation."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Praroro chief of staff triage

@@ -12,7 +12,7 @@ permissions:
 jobs:
   release-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
         with:
@@ -25,9 +25,71 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install -r requirements-dev.txt
       - run: npm run release:check
+
+      - name: Verify and build reproducible employee packs
+        run: |
+          npm run employee:pack:check
+          npm run employee:pack -- --employees=all --out=dist/employees
+          mkdir -p dist/employee-zips
+
+          fixed_time="1980-01-01 00:00:00 UTC"
+          find dist/employees -type f -exec touch -d "$fixed_time" {} +
+
+          for dir in dist/employees/*; do
+            id="$(basename "$dir")"
+            (
+              cd "$dir"
+              LC_ALL=C find . -type f -print0 | sort -z | xargs -0 zip -X -q "../../employee-zips/nyobakantorai-${id}.zip"
+            )
+          done
+
+          (
+            cd dist/employees
+            LC_ALL=C find . -type f -print0 | sort -z | xargs -0 zip -X -q "../employee-zips/nyobakantorai-full-workforce.zip"
+          )
+
+          (
+            cd dist/employee-zips
+            LC_ALL=C sha256sum *.zip | sort > SHA256SUMS.txt
+          )
+
       - uses: actions/upload-artifact@v7
         with:
           name: nyobakantorai-manifest
           path: release/manifest.json
           if-no-files-found: error
           retention-days: 30
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: nyobakantorai-employee-packs
+          path: |
+            dist/employee-zips/*.zip
+            dist/employee-zips/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-tagged-release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: release-gate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: nyobakantorai-manifest
+          path: dist/release-manifest
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: nyobakantorai-employee-packs
+          path: dist/employee-zips
+
+      - name: Publish employee packs on tagged releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "$tag" --generate-notes
+          gh release upload "$tag" dist/employee-zips/*.zip dist/employee-zips/SHA256SUMS.txt dist/release-manifest/manifest.json --clobber

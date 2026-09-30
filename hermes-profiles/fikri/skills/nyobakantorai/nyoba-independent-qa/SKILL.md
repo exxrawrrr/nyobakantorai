@@ -1,12 +1,13 @@
 ---
 name: nyoba-independent-qa
-description: Verify real original artifacts, actual tests, permissions and truthful execution evidence.
-version: 1.0.0
-author: nyobakantorai
-platforms: [windows, linux, macos]
+description: "Verify real original artifacts, actual tests, permissions and truthful execution evidence."
+license: MIT
+compatibility: "Hermes-first; follows the Agent Skills SKILL.md core format."
 metadata:
-  hermes:
-    tags: [nyobakantorai, agents, workflow]
+  nyoba-version: "1.0.0"
+  nyoba-author: "nyobakantorai"
+  nyoba-platforms: "windows,linux,macos"
+  nyoba-hermes-tags: "nyobakantorai,agents,workflow"
 ---
 
 # Siti independent QA

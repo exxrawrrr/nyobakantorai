@@ -261,26 +261,45 @@ itu belum kemenangan.
 
 ## Current state
 
-Release publik terakhir tetap **v0.2 Public Preview**. Branch/PR ini adalah kandidat **v0.3.0 — Real AI Workforce** dan belum boleh ditag sampai seluruh CI/release gate hijau.
+Release bertag terbaru tetap **v0.2.0 — Public Preview**. Branch `main` sudah memuat baseline **v0.3 Real AI Workforce**, tetapi belum ada tag/release v0.3 terpisah.
 
-Yang sudah ada di kandidat v0.3 termasuk:
+v0.4 Modular Workforce sudah mencapai **stable-promotion scope**. Pada 30 September 2026 owner secara eksplisit menerima enam evidence gap yang masih terbuka sebagai deferred scope untuk v0.4.0; status `UNPROVEN`, `NOT_RUN`, dan `COLLECTING` tetap dipertahankan apa adanya dan tidak dipoles menjadi bukti selesai.
 
-- localhost-only visual office;
+Yang sudah ada di kandidat v0.4 antara lain:
+
 - 16 specialized Hermes employee profiles dari satu canonical registry;
-- reusable canonical skills + role-specific toolset preferences;
-- evidence-gated task state;
-- explicit human approval gate;
-- manual handoff + receipt protocol;
-- read-only optional runtime adapter;
-- portable diagnostics;
-- public-release guardrails;
-- Linux + Windows CI;
-- deterministic demo;
-- machine-readable capability contract.
+- standalone one/subset/preset/all employee packs;
+- selective installer + reproducible pack/checksum pipeline;
+- signed Ed25519 execution receipts + evidence-verifier integration;
+- evidence-gated task state + explicit human approval gate;
+- application-level runtime permission policy (bukan OS/container isolation);
+- M0–M4 memory/learning policy + deterministic cross-profile isolation;
+- Fikri L0/L1/L2 context compiler;
+- controlled live-model Fikri evaluation;
+- provider evaluation contracts + Playwright MCP controlled-live candidate evidence;
+- anti-synthetic real-task collection gate;
+- local hash-chained Real Task Recorder with independent verification + export;
+- side-effect-free Unified Provider Doctor for user-owned Hermes/Codex/Gemini/Copilot/Cognee/Browser Use/Playwright setup;
+- isolated Browser Use self-service six-case runner with disposable loopback target, temporary browser profile, server-side mutation/auth evidence, and no automatic install/login;
+- isolated Cognee self-service eight-case memory runner with random run-owned datasets, secret pre-write rejection, scoped deletion, cleanup verification, and remote opt-in;
+- cross-harness self-service parity runner for Hermes/Codex/Gemini/Copilot with one disposable skill, exact protected-atom contract, temporary workspaces, and no auto-install/login;
+- isolated release matrices for one worker, arbitrary subset, full workforce, and full upgrade/uninstall/reinstall lifecycle with user-state preservation and byte-integrity checks;
+- Linux + Windows + minimum-version CI.
 
-Fokus v0.3 adalah workforce yang benar-benar installable, registry-driven, capability-honest, upgrade-safe, dan tetap human-governed. Live ads provider adapters, signed execution receipts, dan finished original art untuk 10 worker baru tetap pekerjaan lanjutan.
+Yang **belum** boleh dianggap proven/stable:
 
-Roadmap canonical ada di [ROADMAP.md](ROADMAP.md).
+- canonical live cross-harness behavioral parity across real installed harnesses;
+- canonical live Cognee/Hermes provider-lifecycle evaluation;
+- Browser Use side of the browser comparison;
+- real-task baseline, saat ini baru **1/20 eligible cases**;
+- final real clean-machine Hermes lifecycle coverage on intended release platforms;
+- live ads provider adapters;
+- finished original art untuk 10 worker baru;
+- complete office/UI storage migration.
+
+Stable promotion **AUTHORIZED WITH ACCEPTED DEFERRALS**. Tag stabil hanya boleh dibuat setelah commit yang dipromosikan ke `main` lulus verify lintas platform dan manual release-gate. Lihat [docs/V0.4-RELEASE-DECISION.md](docs/V0.4-RELEASE-DECISION.md), [docs/V0.4-REVIEW-MAP.md](docs/V0.4-REVIEW-MAP.md), dan [ROADMAP.md](ROADMAP.md).
+
+Self-service evidence/setup surfaces: [Real Task Recorder](docs/REAL-TASK-RECORDER.md), [Real-Task Baseline Collection](docs/REAL-TASK-BASELINE.md), [Unified Provider Doctor](docs/PROVIDER-DOCTOR.md), [Browser Use Self-Test](docs/BROWSER-SELF-TEST.md), [Cognee Memory Self-Test](docs/COGNEE-SELF-TEST.md), dan [Cross-Harness Self-Test](docs/CROSS-HARNESS-SELF-TEST.md).
 
 ---
 
@@ -340,7 +359,9 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 
 ## Highlights
 
-- **16 specialized Hermes employees** driven by one canonical registry, with distinct roles, personalities, habits, skills, toolset preferences, routing, approval, and verification policy.
+- **16 specialized Hermes employees** driven by one canonical registry, with distinct dialogue fingerprints, roles, habits, skills, toolset preferences, routing, approval, and verification policy.
+- **Standalone employee packs** so users can install/download one worker, an arbitrary subset, a preset team, or the full workforce.
+- **Signed execution receipts** with Ed25519 tamper detection, task/worker/capability binding, normalized token/cost fields, and evidence-verifier integration.
 - **Canonical reusable skills** spanning task truth, tool safety, ads operations, SEO/CRO, data, integrations, operations, community, governance, and independent QA.
 - **Evidence-gated task state** where VERIFIED requires independent evidence.
 - **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
@@ -352,7 +373,7 @@ The default build is intentionally conservative: localhost-only, no autonomous d
 - **Public-release guardrails** for tests, builds, private-path leakage, sensitive filenames, and credential-shaped strings.
 - **Zero npm runtime dependencies** for the main office server.
 
-## v0.3 workforce
+## Workforce baseline (v0.3, extended by the v0.4 candidate)
 
 ```text
 SOUL    = who the employee is
@@ -379,7 +400,7 @@ Credentials, account access, provider billing state, sessions, memory, and messa
 | **Nara** | Growth / Data | Data / BI / Experimentation | pending-original-art | none required |
 | **Dina** | Operations | Client / Project Operations | pending-original-art | none required |
 | **Bambang** | Engineering / Automation | Automation / Queue Optimizer | pending-original-art | none required |
-| **Fikri** | QA / Governance | Knowledge / Markdown / Policy Steward | pending-original-art | none required |
+| **Fikri** | QA / Governance | Knowledge / Markdown / Context / Prompt Engineer | pending-original-art | none required |
 | **Tari** | Operations | Execution / Follow-Up Specialist | pending-original-art | none required |
 | **Caca** | Creative / Community | Community / Social / Partnerships | pending-original-art | none required |
 
@@ -389,8 +410,10 @@ Maya and Gugun are capability **consumers**, not bundled ads engines. Telegram i
 
 The workforce uses recreated/adapted workflow concepts with explicit provenance from ECC, Superpowers, MarkItDown, Docling, Mem0, Letta, Jina Reader, MCP reference servers, and Anthropic's Apache-2.0 MCP builder. See [UPSTREAM-SOURCE-CATALOG.md](docs/UPSTREAM-SOURCE-CATALOG.md). Restricted Anthropic document skills are not copied or used to create derivatives.
 
-**Fikri** is the default Knowledge / Markdown / Policy Steward. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
+**Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
 ## Install
+
+> **Release topology note:** the commands below use `main`. For reproducible v0.4.0 installs, prefer the `v0.4.0` tag once published; deferred evidence remains explicitly scoped in the release decision and is not implied complete by a stable tag.
 
 ### Hermes-first — recommended
 
@@ -408,6 +431,33 @@ This is the path closest to the author's real setup. Hermes is the reference run
 curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --start
 ```
 
+**Want only part of the office?**
+
+Windows:
+
+```powershell
+# one worker
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "siti"
+
+# arbitrary subset
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "praroro,siti"
+
+# preset
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "growth"
+```
+
+Linux / macOS / WSL2:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees siti
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees praroro,siti
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees growth
+```
+
+Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creative-community`, and `full`.
+
+Tagged releases also publish one ZIP per employee with SHA-256 checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
+
 The installer reuses Hermes when it already exists. Otherwise the explicit `WithHermes` flag invokes the official Nous Research Hermes installer. Bootstrap then safely upgrades existing nyobakantorai distributions with native Hermes profile update, installs missing workers, and creates/switches the `nyobakantorai` Kanban board.
 
 It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
@@ -423,7 +473,7 @@ hermes profile list
 hermes kanban boards show
 ```
 
-You should see every employee listed in `config/employees.json` as a Hermes profile distribution.
+You should see the selected employees as Hermes profile distributions. The default selection is the full workforce.
 
 Full walkthrough: [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md).
 
@@ -475,7 +525,8 @@ No secret is required by the repository itself.
 | Path | Purpose |
 | --- | --- |
 | `config/employees.json` | Canonical workforce registry — source of truth for employee identity/policy/routing |
-| `config/capabilities.json` | Provider-neutral capability states, ads contracts, and autonomy modes |
+| `config/capabilities.json` | Provider-neutral capability states, ads/tool contracts, and autonomy modes |
+| `config/memory-policy.json` | M0–M4 profile/shared learning and canonical-skill promotion policy |
 | `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
 | `agents/` | Registry-derived public SOUL/profile definitions |
 | `hermes-profiles/` | Native Hermes profile distributions generated for the workforce |
@@ -487,7 +538,7 @@ No secret is required by the repository itself.
 | `packages/task-registry/` | Standalone evented task-registry prototype |
 | `packages/runtime-adapter/` | Dependency-free read-only runtime adapter SDK |
 | `docs/` | Architecture, approval model, threat model, privacy, demos, release docs, and adapter contracts |
-| `scripts/` | Security, public-release, and test automation |
+| `scripts/` | Security, public-release, employee-pack, selection, and test automation |
 
 ## Capability endpoint
 
@@ -553,7 +604,7 @@ The CI workflow runs the same verification on Linux and Windows.
 
 ## Project status
 
-**v0.3 development candidate — v0.2 remains the latest tagged public preview**
+**v0.4.0 stable-promotion scope — owner authorization recorded 2026-09-30. The six deferred evidence classes remain explicit; a stable tag is valid only after final `main` verify + manual release-gate succeed.**
 
 See:
 
@@ -561,6 +612,10 @@ See:
 - [office/docs/ARCHITECTURE.md](office/docs/ARCHITECTURE.md)
 - [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md)
 - [docs/EMPLOYEE-ARCHITECTURE.md](docs/EMPLOYEE-ARCHITECTURE.md)
+- [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md)
+- [docs/PERSONALITY-CONTRACT.md](docs/PERSONALITY-CONTRACT.md)
+- [docs/MEMORY-LEARNING.md](docs/MEMORY-LEARNING.md)
+- [docs/EXECUTION-RECEIPTS.md](docs/EXECUTION-RECEIPTS.md)
 - [docs/CAPABILITY-MODEL.md](docs/CAPABILITY-MODEL.md)
 - [docs/AUTONOMY-MODES.md](docs/AUTONOMY-MODES.md)
 - [docs/ADS-WORKERS.md](docs/ADS-WORKERS.md)
