@@ -172,7 +172,7 @@ export function createCodexReferenceExecutionAdapter({
     async executeBoundedTask({prepared,signal}){
       const state=states.get(prepared?.workspace?.ref);
       assert(state,"Codex staged workspace state missing");
-      const args=["exec","--skip-git-repo-check","--sandbox","read-only","--ephemeral","--ignore-user-config","--ignore-rules","--json","-"];
+      const args=["exec","--skip-git-repo-check","--sandbox","read-only","--ephemeral","--ignore-user-config","--ignore-rules","-c",'model_reasoning_effort="low"',"--json","-"];
       const processResult=await invokeImpl({
         executable,args,stdin:state.prompt,cwd:state.workspace,
         env:{...env,NO_COLOR:"1"},signal,
@@ -234,6 +234,7 @@ export function createCodexReferenceExecutionAdapter({
           "codex-session:ephemeral",
           "codex-user-config:ignored",
           "codex-rules:ignored",
+          "codex-reasoning-effort:low",
           "codex-skill-root:.agents/skills",
         ],
         artifact_refs:["sha256:"+hash(canonicalJson(raw_result)),"sha256:"+hash(canonicalJson(normalized_result))],
