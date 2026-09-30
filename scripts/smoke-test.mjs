@@ -118,6 +118,13 @@ try {
   assert.match(home.headers.get("content-type") || "", /^text\/html/);
   assert.match(await home.text(), /nyobakantorai/i);
 
+  for (const modulePath of ["/workforce-view.mjs","/approval-summary.mjs"]) {
+    const moduleResponse = await fetch(base + modulePath);
+    assert.equal(moduleResponse.status, 200, modulePath + " must be shipped in dist");
+    assert.match(moduleResponse.headers.get("content-type") || "", /text\/javascript/);
+    assert.ok((await moduleResponse.text()).length > 100);
+  }
+
   const sprite = await fetch(base + "/assets/generated/characters/praroro/idle.png");
   assert.equal(sprite.status, 200);
   assert.equal(sprite.headers.get("content-type"), "image/png");

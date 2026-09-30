@@ -68,3 +68,13 @@ test("server depends on the runtime composition boundary instead of Hermes imple
   assert.match(adapter, /write:false/);
   assert.match(adapter, /dispatch:false/);
 });
+
+
+test("browser build ships every module imported by the approval/workforce UI boundary", async () => {
+  const app = await read("src/app.mjs");
+  const build = await read("build.mjs");
+  assert.match(app,/from ".\/workforce-view\.mjs"/);
+  assert.match(app,/from ".\/approval-summary\.mjs"/);
+  assert.match(build,/rootFiles = \["registry\.mjs", "reconcile\.mjs", "workforce\.mjs", "workforce-view\.mjs"\]/);
+  assert.match(build,/approval-summary\.mjs/);
+});
