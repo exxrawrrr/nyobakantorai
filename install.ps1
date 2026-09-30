@@ -164,6 +164,9 @@ if ($Channel -eq "stable") {
     if ($manifest.channel -ne "stable") { throw "install manifest channel invalid" }
     if ($manifest.integrity -ne "sha256") { throw "install manifest integrity invalid" }
     if ($manifest.release_tag -ne $Version) { throw "install manifest release tag mismatch" }
+    if ($null -ne $manifest.package_version -and [string]$manifest.package_version -ne $Version.Substring(1)) {
+      throw "install manifest package version mismatch"
+    }
     if ([string]$manifest.source_commit -notmatch '^[a-f0-9]{40}$') {
       throw "install manifest source commit invalid"
     }
