@@ -261,7 +261,7 @@ itu belum kemenangan.
 
 ## Current state
 
-Release bertag terbaru tetap **v0.2.0 — Public Preview**. Branch `main` sudah memuat baseline **v0.3 Real AI Workforce**, tetapi belum ada tag/release v0.3 terpisah.
+Release stable terbaru adalah **v0.4.0**. Workstream v0.5 saat ini masih berada di branch/PR pengembangan dan belum boleh dianggap sebagai release stabil sampai seluruh gate v0.5 selesai.
 
 v0.4 Modular Workforce sudah mencapai **stable-promotion scope**. Pada 30 September 2026 owner secara eksplisit menerima enam evidence gap yang masih terbuka sebagai deferred scope untuk v0.4.0; status `UNPROVEN`, `NOT_RUN`, dan `COLLECTING` tetap dipertahankan apa adanya dan tidak dipoles menjadi bukti selesai.
 
