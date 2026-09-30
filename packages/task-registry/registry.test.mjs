@@ -326,3 +326,26 @@ test("registry import rejects duplicate execution receipt attachment refs", () =
     /replay terdeteksi/
   );
 });
+
+test("approval policy stays fail-closed for arbitrary runtime providers", () => {
+  let registry = createTask(createEmptyRegistry(clock), {
+    title: "Provider-neutral high-impact task",
+    assignee_id: "subagjo",
+    requester: "the owner",
+    risk_class: "EXTERNAL_WRITE",
+  }, clock, ids);
+  const id = registry.tasks[0].id;
+  registry = attachRuntimeTask(registry, id, {
+    provider_id: "runtime-x",
+    runtime_ref: "runtime-x:job_42",
+    assignee: "subagjo",
+    state: "BLOCKED",
+  }, clock, ids);
+  assert.equal(registry.tasks[0].runtime_provider, "runtime-x");
+  assert.equal(registry.tasks[0].approval_required, true);
+  assert.equal(registry.tasks[0].approval_status, "PENDING");
+  assert.throws(
+    () => recordApproval(registry, id, { status: "APPROVED", actor: "owner" }, clock, ids),
+    /runtime-bound/
+  );
+});
