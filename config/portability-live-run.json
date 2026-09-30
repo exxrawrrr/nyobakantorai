@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "id": "v0-5-live-reference-run",
+  "reference_case_id": "siti-portability-reference-v1",
+  "core_bundle_sha256": "0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee",
+  "allowed_runtimes": [
+    "hermes",
+    "codex"
+  ],
+  "allowed_evidence_classes": [
+    "FIXTURE_EVIDENCE",
+    "UNVERIFIED_RUNTIME_ATTEMPT",
+    "LIVE_RUNTIME_EVIDENCE"
+  ],
+  "live_requirements": {
+    "explicit_confirmation": true,
+    "clean_repository": true,
+    "exact_git_commit": true,
+    "provider_command_installed": true,
+    "provider_version_probe": true,
+    "canonical_adapter_path": true,
+    "successful_execution": true,
+    "successful_cleanup": true,
+    "temporary_workspace_only": true,
+    "production_repo_changed": false,
+    "prohibited_action_check_pass": true,
+    "public_safety_scan_pass": true
+  },
+  "forbidden_automation": [
+    "provider_install",
+    "provider_login",
+    "credential_creation",
+    "credential_print",
+    "production_repository_mutation"
+  ],
+  "default_local_output_dir": ".nyobakantorai/portability-live"
+}
