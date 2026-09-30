@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat14-immutable-installer-release-integrity",
+  "audit": "v0.5-chat15-resolve-runtime-portability-unknowns",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -62,15 +62,17 @@
   "surfaces": [
     {
       "id": "employee-definitions",
-      "classification": "UNKNOWN_REQUIRES_PROOF",
+      "classification": "ADAPTER_BOUNDARY",
       "paths": [
-        "config/employees.json"
+        "config/employees.json",
+        "lib/workforce.mjs"
       ],
-      "rationale": "The registry contains portable role, personality, approval, verification and operational contracts, but also preferred runtime toolsets, Hermes-named optional integrations, and PROFILE_SCOPED_HERMES_FIRST memory-mode values.",
+      "rationale": "The source registry intentionally contains both portable worker semantics and runtime distribution preferences. lib/workforce.mjs now exposes an executable split: PORTABLE_WORKFORCE preserves identity, skills, governance and operational contracts while WORKFORCE_RUNTIME_PREFERENCES contains toolsets, optional integrations, distribution metadata and the source runtime-first memory hint.",
       "evidence": [
-        "config/employees.json"
+        "lib/workforce.mjs",
+        "lib/workforce-portability.test.mjs"
       ],
-      "next_action": "Split portable worker contract fields from runtime preferences without changing worker behavior."
+      "next_action": "Keep new portable governance fields in the portable projection and keep runtime/distribution preferences isolated behind the explicit preferences map."
     },
     {
       "id": "skill-definitions",
@@ -114,17 +116,20 @@
     },
     {
       "id": "approval-policy",
-      "classification": "UNKNOWN_REQUIRES_PROOF",
+      "classification": "CORE_PORTABLE",
       "paths": [
         "config/employees.json",
+        "lib/workforce.mjs",
         "packages/task-registry/registry.mjs",
         "docs/APPROVAL-MODEL.md"
       ],
-      "rationale": "Risk classes and owner approval semantics are runtime-neutral, but the current implementation is co-located with Hermes-shaped task mode semantics and worker records.",
+      "rationale": "Risk classes, owner-approval requirements, independent verification rules and fail-closed execution gates operate on the portable worker projection and opaque runtime provider bindings. Tests prove the same approval behavior with an arbitrary runtime provider rather than a Hermes-specific task mode.",
       "evidence": [
+        "lib/workforce-portability.test.mjs",
+        "packages/task-registry/registry.test.mjs",
         "docs/APPROVAL-MODEL.md"
       ],
-      "next_action": "Preserve the policy contract while separating runtime-specific task provenance."
+      "next_action": "Keep provider identity opaque to approval semantics; runtime adapters may bind tasks but may not redefine owner approval authority."
     },
     {
       "id": "evidence-and-receipts",
@@ -296,31 +301,38 @@
     },
     {
       "id": "release-claims",
-      "classification": "UNKNOWN_REQUIRES_PROOF",
+      "classification": "CORE_PORTABLE",
       "paths": [
         "packages/release-claims",
         "packages/deferred-evidence",
         "config/v0.4-deferred-evidence.json"
       ],
-      "rationale": "The mechanism is generic, but current canonical release data contains Hermes lifecycle and provider-specific evidence states; portability of the claims model is plausible but not independently demonstrated.",
+      "rationale": "Release-claim construction and deferred-evidence semantics consume provider IDs, evidence states and truth boundaries without runtime implementation imports. Historical v0.4 Hermes/provider evidence remains data, while synthetic-provider tests independently demonstrate that the claims model itself is provider-neutral.",
       "evidence": [
+        "packages/release-claims/index.mjs",
+        "packages/release-claims/index.test.mjs",
+        "packages/deferred-evidence/index.mjs",
         "config/v0.4-deferred-evidence.json"
       ],
-      "next_action": "Preserve historical v0.4 truth while introducing dimensioned maturity in Chat 13."
+      "next_action": "Keep historical release data truthful and runtime-specific as data; keep claim evaluation logic provider-neutral."
     },
     {
       "id": "office-ui-workforce-view",
-      "classification": "UNKNOWN_REQUIRES_PROOF",
+      "classification": "ADAPTER_BOUNDARY",
       "paths": [
         "office/src/app.mjs",
-        "office/workforce.mjs"
+        "office/registry.mjs",
+        "office/workforce.mjs",
+        "office/workforce-view.mjs"
       ],
-      "rationale": "The visual workforce is broadly reusable, but it exposes preferred Hermes toolsets and consumes a generated workforce object containing runtime-shaped metadata.",
+      "rationale": "The office now consumes a portable WORKFORCE_VIEW for identity, governance and task ownership. Runtime toolsets, optional integrations, distribution metadata and source runtime-first memory hints are available only through an explicit runtime-preference map for labeled UI presentation.",
       "evidence": [
+        "office/workforce-view.mjs",
+        "office/tests/workforce-view.test.mjs",
         "office/src/app.mjs",
-        "office/workforce.mjs"
+        "office/registry.mjs"
       ],
-      "next_action": "Keep UI behavior while decoupling portable worker identity from runtime-specific preferences."
+      "next_action": "Keep runtime preference display optional and explicit; portable UI/task behavior must continue to use WORKFORCE_VIEW rather than the full generated distribution object."
     },
     {
       "id": "workforce-generation-pipeline",
