@@ -90,3 +90,9 @@ Passing Chat 11 supports only this claim:
 It does **not** yet prove that JavaScript and Python agree on every adversarial fixture. That is the differential-corpus gate in the next workstream.
 
 It also does not prove that the external work described by a valid signed receipt actually happened correctly.
+
+## Signing-key lifecycle extension
+
+The Python reference verifier independently implements public trust-registry validation and receipt trust resolution for ACTIVE, RETIRED, and REVOKED keys, including validity windows, runtime scope, `REJECT_ALL` revocation, and `ALLOW_PRE_COMPROMISE` cutoff behavior.
+
+It does not import the JavaScript trust-registry implementation.
