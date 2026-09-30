@@ -150,3 +150,9 @@ Those require later reference-case and live-runtime evidence.
 The first runtime-specific implementation is packages/hermes-execution-adapter/.
 
 It uses the same v1 lifecycle and READ_ONLY policy, binds to the exact Chat 4 Siti core bundle, and passes the generic conformance suite under deterministic fixture execution. Live Hermes evidence remains a separate later gate.
+
+## Chat 6 second implementation
+
+packages/codex-execution-adapter/ implements the same v1 lifecycle and READ_ONLY policy for Codex using an ephemeral read-only sandbox and the exact same canonical Siti bundle used by Hermes.
+
+The two adapters are now structurally comparable, but live runtime evidence remains a separate gate.

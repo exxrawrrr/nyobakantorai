@@ -165,3 +165,9 @@ Chat 5 adds a Hermes-specific RuntimeExecutionAdapter v1 implementation.
 It is bound to core bundle 0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee, targets Siti, preloads exactly the five Chat 4 skills, and exposes only the skills toolset.
 
 Fixture/conformance tests make no real Hermes/provider call. This advances implementation readiness, not live behavioral portability.
+
+## Chat 6 Codex execution-adapter update
+
+Chat 6 adds a Codex-specific RuntimeExecutionAdapter v1 implementation using the repository's existing read-only ephemeral Codex invocation.
+
+Hermes and Codex adapters now both bind to the exact same canonical Siti core bundle 0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee. This proves shared input binding only; fixture tests do not prove live behavioral parity.

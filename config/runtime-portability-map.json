@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat5-hermes-execution-adapter",
+  "audit": "v0.5-chat6-codex-execution-adapter",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -36,7 +36,8 @@
       "portable-worker-contract",
       "runtime-execution-adapter",
       "portability-reference-inputs",
-      "hermes-execution-adapter"
+      "hermes-execution-adapter",
+      "codex-execution-adapter"
     ],
     "forbidden_core_import_fragments": [
       "hermes-bootstrap",
@@ -380,6 +381,20 @@
         "docs/HERMES-EXECUTION-ADAPTER.md"
       ],
       "next_action": "Run a separately authorized bounded live Hermes reference execution later without changing the canonical core bundle or promoting fixture evidence to live portability."
+    },
+    {
+      "id": "codex-execution-adapter",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "packages/codex-execution-adapter"
+      ],
+      "rationale": "Codex-specific ephemeral read-only execution is isolated behind RuntimeExecutionAdapter v1, bound to the exact Chat 4 canonical Siti bundle, and stages the exact five canonical skills under .agents/skills.",
+      "evidence": [
+        "packages/codex-execution-adapter/index.mjs",
+        "packages/codex-execution-adapter/index.test.mjs",
+        "docs/CODEX-EXECUTION-ADAPTER.md"
+      ],
+      "next_action": "Run a separately authorized bounded live Codex reference execution later and compare it to an equivalently evidenced Hermes run before any behavioral portability claim."
     }
   ]
 }
