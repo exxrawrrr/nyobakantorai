@@ -2,7 +2,7 @@
 
 All notable public changes to nyobakantorai are documented here.
 
-## [0.4.0-rc.1] - Unreleased
+## [0.4.0] - 2026-09-30
 
 ### Added
 - Modular one/subset/preset/all employee packs with reproducible checksums and tagged-release packaging.
@@ -34,8 +34,9 @@ All notable public changes to nyobakantorai are documented here.
 - PR #11 release topology is explicit: staging merge is not stable v0.4 shipment.
 
 ### Release status
-- Stable v0.4 promotion is **HOLD** pending the deferred evidence scope recorded in `docs/V0.4-RELEASE-DECISION.md`.
-- No v0.4 stable tag should be created from the current Draft candidate.
+- Stable v0.4 promotion is **AUTHORIZED WITH ACCEPTED DEFERRALS** by the owner decision recorded on 2026-09-30 in `docs/V0.4-RELEASE-DECISION.md`.
+- The six deferred evidence classes remain truthfully `UNPROVEN` / `NOT_RUN` / `COLLECTING` where applicable; stable scope acceptance does not convert them into completed evidence.
+- The `v0.4.0` stable tag is permitted only after the promoted `main` commit passes final cross-platform verify and the manual release-gate.
 
 ## [0.3.0] - Unreleased
 
