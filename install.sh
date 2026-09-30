@@ -124,6 +124,7 @@ if [[ "$CHANNEL" == "stable" ]]; then
     const fail=(msg)=>{console.error(msg);process.exit(3)};
     if(m.schema!==1||m.project!=="nyobakantorai"||m.channel!=="stable"||m.integrity!=="sha256") fail("install manifest contract invalid");
     if(m.release_tag!==tag) fail("install manifest release tag mismatch");
+    if(m.package_version!=null&&m.package_version!==tag.slice(1)) fail("install manifest package version mismatch");
     if(!/^[a-f0-9]{40}$/.test(m.source_commit||"")) fail("install manifest source commit invalid");
     const a=Array.isArray(m.artifacts)?m.artifacts.find(x=>x&&x.name===name):null;
     if(!a||!/^[a-f0-9]{64}$/.test(a.sha256||"")) fail("artifact missing from install manifest");
