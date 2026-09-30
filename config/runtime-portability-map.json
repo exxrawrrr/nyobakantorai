@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat6-codex-execution-adapter",
+  "audit": "v0.5-chat7-reference-case-comparator",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -37,7 +37,8 @@
       "runtime-execution-adapter",
       "portability-reference-inputs",
       "hermes-execution-adapter",
-      "codex-execution-adapter"
+      "codex-execution-adapter",
+      "reference-case-comparator"
     ],
     "forbidden_core_import_fragments": [
       "hermes-bootstrap",
@@ -395,6 +396,20 @@
         "docs/CODEX-EXECUTION-ADAPTER.md"
       ],
       "next_action": "Run a separately authorized bounded live Codex reference execution later and compare it to an equivalently evidenced Hermes run before any behavioral portability claim."
+    },
+    {
+      "id": "reference-case-comparator",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/portability-comparator/index.mjs"
+      ],
+      "rationale": "Runtime-neutral comparator checks canonical core identity, Hermes+Codex runtime pairing, evidence completeness, protected expected atoms, prohibited-action/workspace state, exact live commit binding, and independent verification state before allowing a reference-case portability claim.",
+      "evidence": [
+        "packages/portability-comparator/index.test.mjs",
+        "scripts/portability-compare.mjs",
+        "docs/PORTABILITY-COMPARATOR.md"
+      ],
+      "next_action": "Feed separately collected live Hermes/Codex run records into this comparator. Fixture evidence must remain PARTIAL and live evidence without independent verification must remain PORTABILITY_CANDIDATE."
     }
   ]
 }

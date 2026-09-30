@@ -171,3 +171,9 @@ Fixture/conformance tests make no real Hermes/provider call. This advances imple
 Chat 6 adds a Codex-specific RuntimeExecutionAdapter v1 implementation using the repository's existing read-only ephemeral Codex invocation.
 
 Hermes and Codex adapters now both bind to the exact same canonical Siti core bundle 0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee. This proves shared input binding only; fixture tests do not prove live behavioral parity.
+
+## Chat 7 reference-case comparator update
+
+Chat 7 adds a runtime-neutral comparator that checks the exact canonical core/component hashes, Hermes+Codex pairing, evidence completeness, protected expected atoms, prohibited-action/workspace state, code-commit identity, and independent-verifier state.
+
+Fixture evidence is intentionally capped at PARTIAL. Complete live evidence without independent verification is capped at PORTABILITY_CANDIDATE. Only two complete live runs plus independent PASS verification may reach PORTABILITY_VERIFIED_FOR_REFERENCE_CASE.
