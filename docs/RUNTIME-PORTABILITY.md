@@ -177,3 +177,11 @@ Hermes and Codex adapters now both bind to the exact same canonical Siti core bu
 Chat 7 adds a runtime-neutral comparator that checks the exact canonical core/component hashes, Hermes+Codex pairing, evidence completeness, protected expected atoms, prohibited-action/workspace state, code-commit identity, and independent-verifier state.
 
 Fixture evidence is intentionally capped at PARTIAL. Complete live evidence without independent verification is capped at PORTABILITY_CANDIDATE. Only two complete live runs plus independent PASS verification may reach PORTABILITY_VERIFIED_FOR_REFERENCE_CASE.
+
+## Chat 8 bounded live-run harness update
+
+Chat 8 adds a one-runtime-at-a-time live evidence harness with explicit confirmation, clean-commit/provider/version preflight, canonical-adapter-only execution, public-safety scanning, and comparator-compatible records.
+
+Fixture evidence remains fixture evidence. Provider-unverified attempts use a separate `UNVERIFIED_RUNTIME_ATTEMPT` class. Only a successful canonical live path satisfying every qualification gate may emit `LIVE_RUNTIME_EVIDENCE`.
+
+CI does not execute provider/model calls, so Chat 8 does not itself create live portability evidence.
