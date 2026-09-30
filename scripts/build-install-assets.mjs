@@ -1,5 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { resolve, pathToFileURL } from "node:path";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { buildInstallManifest, formatChecksumFile } from "../packages/install-integrity/index.mjs";
 
 function arg(name) {
