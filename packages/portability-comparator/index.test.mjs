@@ -259,3 +259,15 @@ test("PASS from a non-independent verifier is capped at PORTABILITY_CANDIDATE",a
   assert.equal(report.state,"PORTABILITY_CANDIDATE");
   assert.equal(report.parity_claim_allowed,false);
 });
+
+
+test("unverified runtime attempt remains PARTIAL and is distinct from fixture evidence",async()=>{
+  const {hermesOutcome,codexOutcome}=await buildOutcomes();
+  const hermes=record(hermesOutcome,"UNVERIFIED_RUNTIME_ATTEMPT","PASS");
+  const codex=record(codexOutcome,"LIVE_RUNTIME_EVIDENCE","PASS");
+  const report=comparePortabilityReferenceRuns({reference,runs:[hermes,codex]});
+  assert.equal(report.state,"PARTIAL");
+  assert.equal(report.parity_claim_allowed,false);
+  assert.ok(report.blocking_reasons.includes("UNVERIFIED_RUNTIME_EVIDENCE"));
+  assert.equal(report.blocking_reasons.includes("FIXTURE_ONLY_EVIDENCE"),false);
+});
