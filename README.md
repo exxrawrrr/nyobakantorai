@@ -413,52 +413,66 @@ The workforce uses recreated/adapted workflow concepts with explicit provenance 
 **Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
 ## Install
 
-> **Release topology note:** the commands below use `main`. For reproducible v0.4.0 installs, prefer the `v0.4.0` tag once published; deferred evidence remains explicitly scoped in the release decision and is not implied complete by a stable tag.
+> **Stable means immutable here.** Starting with v0.5.0, the recommended installer resolves a tagged GitHub release, downloads a core release artifact, verifies `install-manifest.json` + SHA-256 checksums, and only then unpacks it. Stable mode never falls back to mutable `main`.
 
-### Hermes-first — recommended
+### Hermes-first — recommended stable path
 
-This is the path closest to the author's real setup. Hermes is the reference runtime; nyobakantorai adds the visual office, sixteen role profiles, role skills, human approval, evidence rules, deterministic routing, and a conservative runtime view around it.
+Hermes remains the reference runtime. The installer can reuse an existing Hermes installation or, only when you explicitly pass `WithHermes` / `--with-hermes`, invoke the official upstream installer.
 
 **Windows PowerShell**
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Start
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Start
 ```
 
 **Linux / macOS / WSL2**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --start
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --start
 ```
 
-**Want only part of the office?**
+The latest-release URL resolves the current stable release. The installer then verifies the immutable release artifact before installation.
+
+To pin an exact release, download that release's installer asset and pass the same version explicitly:
+
+```bash
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.0/install.sh | bash -s -- --version v0.5.0 --with-hermes
+```
+
+```powershell
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.0/install.ps1))) -Version v0.5.0 -WithHermes
+```
+
+### Install only part of the office
+
+The selector remains independent from the stable source channel.
 
 Windows:
 
 ```powershell
 # one worker
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "siti"
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "siti"
 
 # arbitrary subset
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "praroro,siti"
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "praroro,siti"
 
 # preset
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "growth"
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "growth"
 ```
 
 Linux / macOS / WSL2:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees siti
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees praroro,siti
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees growth
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees siti
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees praroro,siti
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees growth
 ```
 
 Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creative-community`, and `full`.
 
-Tagged releases also publish one ZIP per employee with SHA-256 checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
+Tagged releases also publish standalone employee ZIPs with their own checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
 
-The installer reuses Hermes when it already exists. Otherwise the explicit `WithHermes` flag invokes the official Nous Research Hermes installer. Bootstrap then safely upgrades existing nyobakantorai distributions with native Hermes profile update, installs missing workers, and creates/switches the `nyobakantorai` Kanban board.
+Every successful install writes `.nyobakantorai-install.json` with the install channel, version/ref, exact source commit, stable artifact checksum when applicable, integrity state, timestamp, and selected employees. See [docs/INSTALL-INTEGRITY.md](docs/INSTALL-INTEGRITY.md).
 
 It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
 
@@ -466,22 +480,29 @@ It never copies the author's API keys, provider credentials, billing configurati
 hermes setup --portal
 ```
 
-Then verify:
+### Mutable development path — explicit opt-in only
+
+`main` is no longer the stable default. Contributors who intentionally want mutable source must opt in.
+
+POSIX:
 
 ```bash
-hermes profile list
-hermes kanban boards show
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --channel development --ref main
 ```
 
-You should see the selected employees as Hermes profile distributions. The default selection is the full workforce.
+PowerShell:
 
-Full walkthrough: [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md).
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -Channel development -Ref main
+```
+
+A stable integrity failure does **not** downgrade to this path.
 
 ### Core-only / contributor path
 
-The office can also run without Hermes. This is useful for reviewing the UI, state machine, approval model, or developing adapters.
+The office can run without Hermes. Runtime requires **Node.js 20+**. Python 3.10+ and PyYAML are needed only for contributor/release utilities.
 
-Runtime requires **Node.js 20+**. Python 3.10+ and PyYAML are needed only for contributor/release utilities.
+For a source checkout used for development:
 
 ```bash
 git clone https://github.com/exxrawrrr/nyobakantorai.git
@@ -501,7 +522,7 @@ python -m pip install -r requirements-dev.txt
 npm run ready
 ```
 
-The root package keeps `"private": true` intentionally to prevent accidental publication to npm; it does **not** make the GitHub repository private.
+The root package keeps `"private": true` intentionally to prevent accidental npm publication; it does **not** make the GitHub repository private.
 
 ## Hermes runtime configuration
 
