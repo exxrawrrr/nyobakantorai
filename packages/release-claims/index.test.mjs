@@ -34,7 +34,7 @@ test("release claims fail closed when evaluation records are invalid", () => {
 });
 
 
-test("release claims carry HOLD deferred-evidence snapshot when supplied", async () => {
+test("release claims carry owner-accepted deferred-evidence snapshot when supplied", async () => {
   const readJson=async(path)=>JSON.parse(await readFile(new URL(path,import.meta.url),"utf8"));
   const [ledger,crossHarness,memoryResults,browserResults,realTaskStatus]=await Promise.all([
     readJson("../../config/v0.4-deferred-evidence.json"),
@@ -48,7 +48,8 @@ test("release claims carry HOLD deferred-evidence snapshot when supplied", async
   const deferredEvidence=buildDeferredEvidenceSnapshot({ledger,validation});
   const report=await inspectEvaluationReadiness();
   const snapshot=buildReleaseClaimSnapshot(report,{deferredEvidence});
-  assert.equal(snapshot.deferred_evidence.decision,"HOLD");
-  assert.equal(snapshot.deferred_evidence.open_blockers,6);
-  assert.equal(snapshot.deferred_evidence.stable_promotion_allowed,false);
+  assert.equal(snapshot.deferred_evidence.decision,"RELEASE_WITH_ACCEPTED_DEFERRALS");
+  assert.equal(snapshot.deferred_evidence.open_blockers,0);
+  assert.equal(snapshot.deferred_evidence.accepted_deferred,6);
+  assert.equal(snapshot.deferred_evidence.stable_promotion_allowed,true);
 });
