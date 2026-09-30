@@ -25,6 +25,7 @@ test("Chat 2 classifications record only enforced boundary improvements",async()
   assert.equal(byId["task-registry"],"CORE_PORTABLE");
   assert.equal(byId["office-runtime-reconciliation"],"ADAPTER_BOUNDARY");
   assert.equal(byId["hermes-bootstrap"],"RUNTIME_SPECIFIC_BY_DESIGN");
+  assert.equal(byId["install-update-remove-lifecycle"],"ADAPTER_BOUNDARY");
   assert.equal(byId["portable-worker-contract"],"CORE_PORTABLE");
   assert.equal(byId["runtime-execution-adapter"],"ADAPTER_BOUNDARY");
   assert.equal(byId["portability-reference-inputs"],"CORE_PORTABLE");
