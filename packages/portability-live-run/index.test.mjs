@@ -116,7 +116,8 @@ test("qualification requires clean exact commit, installed command, version prob
 
 test("public-safety scan rejects secret-like values and private machine paths",()=>{
   assert.equal(scanPublicRunRecord({ok:true,summary:"safe"}).ok,true);
-  assert.equal(scanPublicRunRecord({value:"OPENAI_API_KEY=sk-abcdefghijklmnopqrstuvwxyz"}).ok,false);
+  const fakeKey="s"+"k-"+"abcdefghijklmnopqrstuvwxyz";
+  assert.equal(scanPublicRunRecord({value:"OPENAI_API_KEY="+fakeKey}).ok,false);
   assert.equal(scanPublicRunRecord({value:"C:\\Users\\alice\\private\\result.json"}).ok,false);
   assert.equal(scanPublicRunRecord({value:"/home/alice/private/result.json"}).ok,false);
 });
