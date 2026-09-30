@@ -109,6 +109,6 @@ test("skill bundle hashes the exact canonical SKILL.md bytes in fixed order", as
   for (const skill of reference.core_bundle.skills) {
     assert.match(skill.sha256, /^[a-f0-9]{64}$/);
     assert.ok(skill.byte_length > 100);
-    assert.ok(skill.content.includes("## Verification"));
+    assert.ok(skill.content.includes(`name: ${skill.id}`));
   }
 });
