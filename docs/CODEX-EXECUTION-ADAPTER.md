@@ -13,7 +13,7 @@ No Codex-specific worker or task fork exists.
 
 The adapter is intentionally Codex-specific and remains outside portable core. It follows the repository's existing cross-harness invocation shape:
 
-codex exec --skip-git-repo-check --sandbox read-only --ephemeral --json -
+codex exec --skip-git-repo-check --sandbox read-only --ephemeral --ignore-user-config --ignore-rules --json -
 
 The adapter does not use --dangerously-bypass-approvals-and-sandbox.
 
@@ -38,3 +38,8 @@ Chat 6 CI injects a fake Codex process implementation. Tests validate exact invo
 ## Claim boundary
 
 Chat 6 proves Codex adapter implementation compatibility and exact Chat 4 input binding under deterministic fixture execution. It does not prove Codex installation, account/provider auth, a live model call, real Codex behavior, Hermes/Codex parity, or general portability.
+
+
+## Chat 10 live hardening
+
+The live adapter now ignores user config and user/project rules while retaining Codex authentication. This prevents local model/tool/rule configuration from silently changing the reference-case behavior. Cleanup retries bounded deletion to tolerate short Windows file-release delays after process termination.
