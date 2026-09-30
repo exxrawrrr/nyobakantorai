@@ -263,6 +263,8 @@ itu belum kemenangan.
 
 Release stable terbaru adalah **v0.4.0**. Workstream v0.5 saat ini masih berada di branch/PR pengembangan dan belum boleh dianggap sebagai release stabil sampai seluruh gate v0.5 selesai.
 
+**v0.5 release readiness: `BLOCKED` (4 blocker).** Canonical Hermes+Codex reference portability masih `UNPROVEN`, LIVE_RUNTIME evidence growth masih `OPEN_REQUIRED`, package masih `0.4.0`, dan final promoted-`main` verify/manual release gate belum dijalankan. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json). `npm run v0.5:readiness:require-ready` sengaja harus gagal sampai semuanya benar-benar beres.
+
 **Snapshot maturity v0.5 saat ini (candidate, bukan release stable):**
 
 | Dimension | State |
@@ -662,6 +664,7 @@ See:
 - [docs/RUNTIME-ADAPTER-SPEC.md](docs/RUNTIME-ADAPTER-SPEC.md)
 - [docs/APPROVAL-MODEL.md](docs/APPROVAL-MODEL.md)
 - [docs/DEMO.md](docs/DEMO.md)
+- [docs/V0.5-RELEASE-READINESS.md](docs/V0.5-RELEASE-READINESS.md)
 - [docs/RELEASE-CHECKLIST.md](docs/RELEASE-CHECKLIST.md)
 - [docs/PUBLICATION-RUNBOOK.md](docs/PUBLICATION-RUNBOOK.md)
 - [docs/THREAT-MODEL.md](docs/THREAT-MODEL.md)

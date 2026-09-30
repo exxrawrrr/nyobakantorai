@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "candidate": "v0.5.0",
+  "observed_on": "2026-09-30",
+  "decision": "BLOCKED",
+  "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. A green CI run may validate a truthful BLOCKED decision; only the explicit require-ready command may authorize the next release step.",
+  "release_blockers": [
+    {
+      "id": "canonical-reference-portability",
+      "category": "LIVE_RUNTIME_EVIDENCE",
+      "status": "OPEN",
+      "required_state": "SUPPORTED",
+      "current_state": "UNPROVEN",
+      "canonical_source": "config/evidence-classification.json",
+      "reason": "The canonical Siti reference case has not produced qualifying successful LIVE_RUNTIME_EVIDENCE through both Hermes and Codex under the unchanged core bundle.",
+      "safe_next_action": "Collect separately authorized Hermes and Codex live reference records through the canonical harness, preserve the exact core bundle, complete independent verification, and rerun the comparator."
+    },
+    {
+      "id": "live-runtime-evidence-growth",
+      "category": "EVIDENCE_GROWTH",
+      "status": "OPEN",
+      "required_state": "INCREASED",
+      "current_state": "OPEN_REQUIRED",
+      "canonical_source": "config/evidence-classification.json",
+      "reason": "v0.5 increased black-box and cross-implementation evidence, but the required canonical live-runtime evidence growth is still open.",
+      "safe_next_action": "Promote only newly qualifying canonical reference-run records after public-safety/redaction review; existing bounded Fikri/Playwright records do not substitute for Hermes+Codex portability."
+    },
+    {
+      "id": "package-version-v0.5",
+      "category": "RELEASE_ARTIFACT",
+      "status": "OPEN",
+      "required_state": "0.5.0",
+      "current_state": "0.4.0",
+      "canonical_source": "package.json",
+      "reason": "The development branch still declares package version 0.4.0 and therefore is not a final v0.5.0 release artifact.",
+      "safe_next_action": "Bump the version only after the live portability/release decision is reconciled, then regenerate/verify release metadata and immutable assets."
+    },
+    {
+      "id": "final-main-release-gate",
+      "category": "PROMOTION",
+      "status": "PENDING",
+      "required_state": "PASS",
+      "current_state": "PENDING",
+      "canonical_source": "docs/RELEASE-CHECKLIST.md",
+      "reason": "The candidate has not been promoted to main and the exact promoted main commit has not passed final cross-platform verification plus the manual release gate.",
+      "safe_next_action": "After blockers are resolved and reviewed, merge through the explicit PR path, rerun verify on exact main, run the manual release gate, then create the stable tag/release."
+    }
+  ],
+  "promotion": {
+    "target_branch": "main",
+    "final_main_verify": "PENDING",
+    "manual_release_gate": "PENDING",
+    "stable_tag": "PENDING",
+    "merge_authorized": false
+  },
+  "nonblocking_open_evidence": [
+    {
+      "id": "real-world-workflow-baseline",
+      "state": "COLLECTING",
+      "current": "1/20",
+      "canonical_source": "benchmarks/real-tasks/collection-status-2026-09-29.json",
+      "claim_limit": "Real-world workflow maturity remains collecting; v0.5 must not claim demonstrated general reliability."
+    },
+    {
+      "id": "provider-lifecycle",
+      "state": "PARTIAL",
+      "canonical_source": "config/maturity-model.json",
+      "claim_limit": "Playwright has bounded evidence while Browser Use and Cognee remain open; provider lifecycle must not be called validated."
+    },
+    {
+      "id": "real-clean-machine-hermes-lifecycle",
+      "state": "NOT_RUN",
+      "canonical_source": "config/v0.4-deferred-evidence.json",
+      "claim_limit": "Deterministic install lifecycle matrices do not equal real clean-machine Hermes lifecycle evidence."
+    }
+  ],
+  "durable_requirement_surfaces": [
+    "config/runtime-portability-map.json",
+    "docs/RUNTIME-PORTABILITY.md",
+    "packages/runtime-execution-adapter/index.test.mjs",
+    "packages/hermes-execution-adapter/index.test.mjs",
+    "packages/codex-execution-adapter/index.test.mjs",
+    "packages/portability-comparator/index.test.mjs",
+    "docs/PORTABILITY-LIVE-RUN.md",
+    "reference-verifier/python/test_verifier.py",
+    "benchmarks/verifier-differential/run.mjs",
+    "config/receipt-trust-registry.json",
+    "docs/SIGNING-KEY-LIFECYCLE.md",
+    "docs/INSTALL-INTEGRITY.md",
+    "docs/APPROVAL-OVERSIGHT.md",
+    "config/evidence-classification.json",
+    "docs/EVIDENCE-CLASSIFICATION.md",
+    "config/maturity-model.json",
+    "docs/STABILITY-MODEL.md",
+    "config/complexity-budget.json",
+    "docs/COMPLEXITY-BUDGET.md",
+    "ROADMAP.md",
+    "docs/V0.5-RELEASE-READINESS.md",
+    "docs/RELEASE-CHECKLIST.md"
+  ],
+  "retired_temporary_prd": {
+    "path": "docs/V0.5-IMPLEMENTATION-PRD.md",
+    "must_be_absent": true,
+    "retired_on": "2026-09-30",
+    "successor": "docs/V0.5-RELEASE-READINESS.md"
+  },
+  "claim_language": {
+    "allowed": "v0.5 candidate adds runtime-neutral contracts, cross-implementation verification, immutable-install integrity, anomaly-first approval oversight, evidence classification, multidimensional maturity, and complexity pruning; canonical Hermes+Codex reference portability remains unproven until qualifying live evidence exists.",
+    "forbidden": [
+      "nyobakantorai works identically on all AI runtimes",
+      "signed receipts prove the external action happened correctly",
+      "v0.5 is production-proven because CI passed"
+    ]
+  }
+}

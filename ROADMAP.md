@@ -81,6 +81,35 @@
 - [ ] final real clean-machine Hermes coverage
 - [x] explicit stable-promotion decision recorded — owner accepted the six deferred evidence classes for v0.4.0 scope on 2026-09-30; final `main` verify + manual release-gate remain mandatory before tagging
 
+## v0.5 — Proof Over Machinery
+
+- [x] machine-readable runtime portability map with zero unresolved/Hermes-shaped architectural surfaces
+- [x] runtime-neutral execution contract plus Hermes and Codex reference adapters
+- [x] immutable canonical Siti reference-case bundle and comparator
+- [x] bounded live reference-run harness with explicit confirmation, no auto-install/login, temporary workspace, and public-safety scan
+- [ ] qualifying canonical Hermes live reference evidence
+- [ ] qualifying canonical Codex live reference evidence under the current bounded execution policy
+- [ ] comparator reaches `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`
+- [ ] v0.5 `LIVE_RUNTIME_EVIDENCE` growth promoted from `OPEN_REQUIRED` only after qualifying reference evidence
+- [x] independent Python reference verifier plus Node/Python adversarial differential corpus
+- [x] receipt trust registry with ACTIVE/RETIRED/REVOKED, rotation, revocation, and compromise semantics
+- [x] immutable stable-install material with manifest/checksum/exact-source verification and no mutable-main fallback
+- [x] anomaly-first approval oversight with untrusted agent prose excluded from safety decisions
+- [x] machine-readable evidence classification and fail-closed behavioral-claim mapping
+- [x] multidimensional maturity model
+- [x] executable complexity budget and delete test
+- [x] pruning pass merged the redundant deferred-evidence package boundary into release-claims
+- [x] final convergence moved surviving requirements into permanent readiness/roadmap surfaces and retired the temporary implementation PRD
+- [ ] real-world baseline remains `COLLECTING 1/20` — do not claim demonstrated
+- [ ] provider lifecycle remains `partial` — do not claim validated
+- [ ] bump package/release metadata to `0.5.0`
+- [ ] explicit readiness ledger reaches `READY`
+- [ ] promote reviewed candidate through PR to `main`
+- [ ] exact promoted-`main` Linux/Windows/minimum-version verify + manual release gate
+- [ ] create v0.5.0 tag/release only after the final gate passes
+
+Permanent readiness source: `docs/V0.5-RELEASE-READINESS.md` + `config/v0.5-release-readiness.json`.
+
 ## Non-goals
 
 nyobakantorai will not silently enable autonomous production writes, scrape credentials from local machines, or treat model output as verified evidence.
