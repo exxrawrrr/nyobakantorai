@@ -30,8 +30,8 @@ const fixtureTask = Object.freeze({
   expected_output:{ type:"object", required:["status","finding"] },
 });
 
-export async function runRuntimeExecutionAdapterConformance(adapter, { policy } = {}) {
-  const outcome = await executeBoundedRuntimeTask(adapter, fixtureTask, { policy });
+export async function runRuntimeExecutionAdapterConformance(adapter, { policy, task = fixtureTask } = {}) {
+  const outcome = await executeBoundedRuntimeTask(adapter, task, { policy });
   const results = new Map();
 
   results.set("declared-capabilities-only",

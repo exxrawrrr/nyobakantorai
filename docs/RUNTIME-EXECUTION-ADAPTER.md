@@ -144,3 +144,9 @@ It does **not** prove:
 - general runtime portability.
 
 Those require later reference-case and live-runtime evidence.
+
+## Chat 5 implementation
+
+The first runtime-specific implementation is packages/hermes-execution-adapter/.
+
+It uses the same v1 lifecycle and READ_ONLY policy, binds to the exact Chat 4 Siti core bundle, and passes the generic conformance suite under deterministic fixture execution. Live Hermes evidence remains a separate later gate.

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat4-canonical-siti-byte-identity-inputs",
+  "audit": "v0.5-chat5-hermes-execution-adapter",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -35,7 +35,8 @@
       "workforce-generation-pipeline",
       "portable-worker-contract",
       "runtime-execution-adapter",
-      "portability-reference-inputs"
+      "portability-reference-inputs",
+      "hermes-execution-adapter"
     ],
     "forbidden_core_import_fragments": [
       "hermes-bootstrap",
@@ -365,6 +366,20 @@
         "docs/PORTABILITY-REFERENCE-CASE.md"
       ],
       "next_action": "Hermes and Codex execution adapters must consume this exact core bundle hash unchanged. Any drift blocks reference-case portability evidence."
+    },
+    {
+      "id": "hermes-execution-adapter",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "packages/hermes-execution-adapter"
+      ],
+      "rationale": "Hermes-specific one-shot execution is isolated behind RuntimeExecutionAdapter v1, bound to the Chat 4 canonical Siti core bundle, and exposes only the skills toolset under fixture/conformance proof.",
+      "evidence": [
+        "packages/hermes-execution-adapter/index.mjs",
+        "packages/hermes-execution-adapter/index.test.mjs",
+        "docs/HERMES-EXECUTION-ADAPTER.md"
+      ],
+      "next_action": "Run a separately authorized bounded live Hermes reference execution later without changing the canonical core bundle or promoting fixture evidence to live portability."
     }
   ]
 }

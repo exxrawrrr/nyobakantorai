@@ -157,3 +157,11 @@ Current aggregate core bundle SHA-256:
 Hermes and Codex runtime metadata is explicitly outside that core hash. Future adapter/live-run evidence must fail closed if the canonical core input bytes differ.
 
 This is byte-identity/input-binding evidence only. It does not upgrade live cross-runtime behavioral portability.
+
+## Chat 5 Hermes execution-adapter update
+
+Chat 5 adds a Hermes-specific RuntimeExecutionAdapter v1 implementation.
+
+It is bound to core bundle 0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee, targets Siti, preloads exactly the five Chat 4 skills, and exposes only the skills toolset.
+
+Fixture/conformance tests make no real Hermes/provider call. This advances implementation readiness, not live behavioral portability.
