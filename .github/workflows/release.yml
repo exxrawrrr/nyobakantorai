@@ -91,5 +91,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag="${GITHUB_REF_NAME}"
-          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "$tag" --generate-notes
-          gh release upload "$tag" dist/employee-zips/*.zip dist/employee-zips/SHA256SUMS.txt dist/release-manifest/manifest.json --clobber
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$tag" --repo "$GITHUB_REPOSITORY" --title "$tag" --generate-notes
+          gh release upload "$tag" dist/employee-zips/*.zip dist/employee-zips/SHA256SUMS.txt dist/release-manifest/manifest.json --clobber --repo "$GITHUB_REPOSITORY"
