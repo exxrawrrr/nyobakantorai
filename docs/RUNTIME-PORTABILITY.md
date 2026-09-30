@@ -131,3 +131,12 @@ Priority extraction targets:
 4. Office runtime composition.
 
 Do not move Hermes-specific code into a generically named file and call the problem solved. The boundary must be backed by imports, tests, and later live portability evidence.
+
+
+## Chat 3 execution-boundary update
+
+Chat 3 adds a separately scoped `RuntimeExecutionAdapter v1` boundary. The existing `packages/runtime-adapter/` snapshot SDK remains read-only and is not widened into a dispatch/write API.
+
+The execution contract enforces a narrow READ_ONLY reference policy, declared capabilities, isolated temporary workspace metadata, bounded timeout/output, normalized results, evidence completeness, prohibited-action checks, and mandatory cleanup. Runtime-reported success is downgraded when policy/evidence/cleanup fails.
+
+This is contract/conformance evidence only. Live Hermes execution, live Codex execution, and cross-runtime behavioral parity remain unproven until later chats.

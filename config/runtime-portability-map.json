@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat2-enforced-core-runtime-boundary",
+  "audit": "v0.5-chat3-runtime-execution-adapter-contract",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -33,7 +33,8 @@
       "release-claims",
       "office-ui-workforce-view",
       "workforce-generation-pipeline",
-      "portable-worker-contract"
+      "portable-worker-contract",
+      "runtime-execution-adapter"
     ],
     "forbidden_core_import_fragments": [
       "hermes-bootstrap",
@@ -173,7 +174,7 @@
         "packages/runtime-adapter/index.mjs",
         "config/runtime-adapter-policy.json"
       ],
-      "next_action": "Chat 3 should add a separately scoped execution adapter contract rather than broadening the read-only API."
+      "next_action": "Keep v1 read-only. Execution now uses the separate runtime-execution-adapter contract."
     },
     {
       "id": "hermes-office-adapter",
@@ -331,6 +332,22 @@
         "lib/workforce-portability.test.mjs"
       ],
       "next_action": "Use PORTABLE_WORKFORCE for runtime-neutral core and portability hashes; keep full WORKFORCE only where runtime packaging or UI compatibility needs it."
+    },
+    {
+      "id": "runtime-execution-adapter",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "packages/runtime-execution-adapter",
+        "config/runtime-execution-policy.json"
+      ],
+      "rationale": "A separately scoped fail-closed execution contract provides bounded prepare/execute/normalize/evidence/cleanup semantics without widening the read-only Runtime Adapter SDK.",
+      "evidence": [
+        "packages/runtime-execution-adapter/index.mjs",
+        "packages/runtime-execution-adapter/index.test.mjs",
+        "packages/runtime-execution-adapter/conformance.mjs",
+        "docs/RUNTIME-EXECUTION-ADAPTER.md"
+      ],
+      "next_action": "Implement Hermes and Codex reference adapters against this contract, then collect reference-case and live-runtime evidence before any portability promotion."
     }
   ]
 }

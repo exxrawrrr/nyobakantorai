@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "id": "v0-5-reference-readonly-execution",
+  "contract": "runtime-execution-adapter-v1",
+  "note": "Application-level execution boundary for the v0.5 portability reference case. This is not an OS/container sandbox and does not grant provider authorization.",
+  "allowed_risk_classes": [
+    "READ_ONLY"
+  ],
+  "allowed_capabilities": [
+    "bounded_process",
+    "model_inference",
+    "temporary_workspace",
+    "evidence_collection"
+  ],
+  "forbidden_capabilities": [
+    "external_write",
+    "paid_action",
+    "account_change",
+    "destructive",
+    "install",
+    "login",
+    "production_repo_write",
+    "unbounded_shell"
+  ],
+  "max_timeout_ms": 10000,
+  "default_timeout_ms": 2000,
+  "max_output_bytes": 262144,
+  "max_evidence_refs": 32,
+  "max_artifact_refs": 32,
+  "require_temporary_workspace": true
+}
