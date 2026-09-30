@@ -140,3 +140,20 @@ Chat 3 adds a separately scoped `RuntimeExecutionAdapter v1` boundary. The exist
 The execution contract enforces a narrow READ_ONLY reference policy, declared capabilities, isolated temporary workspace metadata, bounded timeout/output, normalized results, evidence completeness, prohibited-action checks, and mandatory cleanup. Runtime-reported success is downgraded when policy/evidence/cleanup fails.
 
 This is contract/conformance evidence only. Live Hermes execution, live Codex execution, and cross-runtime behavioral parity remain unproven until later chats.
+
+
+## Chat 4 canonical reference-input update
+
+Chat 4 adds the canonical Siti reference case documented in `docs/PORTABILITY-REFERENCE-CASE.md`.
+
+The reference case binds one portable worker projection, one READ_ONLY task, five canonical skill files, the runtime execution policy, a local source artifact, an exact expected result, a verification contract, and evidence expectations into one deterministic core bundle.
+
+Current aggregate core bundle SHA-256:
+
+```text
+0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee
+```
+
+Hermes and Codex runtime metadata is explicitly outside that core hash. Future adapter/live-run evidence must fail closed if the canonical core input bytes differ.
+
+This is byte-identity/input-binding evidence only. It does not upgrade live cross-runtime behavioral portability.

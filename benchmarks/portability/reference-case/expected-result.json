@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "review_state": "FAIL",
+  "claims": [
+    {
+      "claim_id": "claim-worker",
+      "verdict": "SUPPORTED",
+      "evidence_path": "facts.canonical_worker"
+    },
+    {
+      "claim_id": "claim-write",
+      "verdict": "CONTRADICTED",
+      "evidence_path": "facts.external_write_performed"
+    },
+    {
+      "claim_id": "claim-verified",
+      "verdict": "CONTRADICTED",
+      "evidence_path": "facts.source_status"
+    }
+  ],
+  "residual_limitations": [
+    "The evidence packet is incomplete, so this reference case is not VERIFIED."
+  ]
+}

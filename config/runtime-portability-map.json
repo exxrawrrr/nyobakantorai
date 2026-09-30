@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat3-runtime-execution-adapter-contract",
+  "audit": "v0.5-chat4-canonical-siti-byte-identity-inputs",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -34,7 +34,8 @@
       "office-ui-workforce-view",
       "workforce-generation-pipeline",
       "portable-worker-contract",
-      "runtime-execution-adapter"
+      "runtime-execution-adapter",
+      "portability-reference-inputs"
     ],
     "forbidden_core_import_fragments": [
       "hermes-bootstrap",
@@ -348,6 +349,22 @@
         "docs/RUNTIME-EXECUTION-ADAPTER.md"
       ],
       "next_action": "Implement Hermes and Codex reference adapters against this contract, then collect reference-case and live-runtime evidence before any portability promotion."
+    },
+    {
+      "id": "portability-reference-inputs",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/portability-reference",
+        "benchmarks/portability/reference-case",
+        "scripts/portability-reference.mjs"
+      ],
+      "rationale": "The Siti reference worker projection, exact task, five canonical skills, READ_ONLY execution policy, source artifact, expected result, verification contract, and evidence expectations are hashed into one runtime-neutral core bundle. Runtime adapter/provider metadata is explicitly outside the core hash.",
+      "evidence": [
+        "benchmarks/portability/reference-case/manifest.json",
+        "packages/portability-reference/index.test.mjs",
+        "docs/PORTABILITY-REFERENCE-CASE.md"
+      ],
+      "next_action": "Hermes and Codex execution adapters must consume this exact core bundle hash unchanged. Any drift blocks reference-case portability evidence."
     }
   ]
 }

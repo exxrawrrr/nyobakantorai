@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "contract_id": "siti-portability-evidence-v1",
+  "required": [
+    "raw_result_ref",
+    "normalized_result_ref",
+    "adapter_id",
+    "adapter_version",
+    "runtime_provider",
+    "runtime_ref",
+    "runtime_provider_version_if_known",
+    "workspace_before_sha256",
+    "workspace_after_sha256",
+    "production_repo_changed=false",
+    "temporary_workspace_only=true",
+    "prohibited_action_check=pass",
+    "capabilities_used",
+    "code_commit",
+    "started_at",
+    "finished_at"
+  ],
+  "runtime_actions_must_equal": {
+    "install": false,
+    "login": false,
+    "account_mutation": false,
+    "external_write": false
+  },
+  "claim_limit": "A valid evidence packet supports only the bounded reference-case run. It does not prove global runtime parity or external-world correctness."
+}

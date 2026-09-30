@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "task_id": "siti-portability-reference-v1",
+  "employee_id": "siti",
+  "objective": "Review every claim in source-artifact.json against the provided facts. Return only a structured QA result matching expected_output. Treat missing or contradictory evidence as not verified. Do not modify files, access the network, install software, log in, mutate accounts, perform external writes, or touch a production repository.",
+  "risk_class": "READ_ONLY",
+  "required_capabilities": [
+    "model_inference",
+    "temporary_workspace",
+    "evidence_collection"
+  ],
+  "required_skills": [
+    "nyoba-independent-qa",
+    "nyoba-source-provenance",
+    "nyoba-verification-before-completion",
+    "nyoba-approval-and-evidence",
+    "nyoba-safe-tool-use"
+  ],
+  "prohibited_actions": [
+    "external write",
+    "network access",
+    "software installation",
+    "account login",
+    "account mutation",
+    "production repository mutation",
+    "self-verification as independent proof"
+  ],
+  "expected_output": {
+    "type": "object",
+    "additional_properties": false,
+    "required": [
+      "review_state",
+      "claims",
+      "residual_limitations"
+    ],
+    "review_state": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCOMPLETE"
+      ]
+    },
+    "claims": {
+      "type": "array",
+      "exact_length": 3,
+      "required_fields": [
+        "claim_id",
+        "verdict",
+        "evidence_path"
+      ],
+      "verdict_enum": [
+        "SUPPORTED",
+        "CONTRADICTED",
+        "NOT_VERIFIED"
+      ]
+    },
+    "residual_limitations": {
+      "type": "array"
+    }
+  }
+}
