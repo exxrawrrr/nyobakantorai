@@ -53,6 +53,12 @@ export function buildInstallManifest({
     throw new Error("artifacts must be non-empty");
   }
 
+  const normalizedPackageVersion = packageVersion == null ? null : clean(packageVersion, 80);
+  const tagVersion = releaseTag.slice(1);
+  if (normalizedPackageVersion !== null && normalizedPackageVersion !== tagVersion) {
+    throw new Error("packageVersion must exactly match releaseTag without the leading v");
+  }
+
   const rows = artifacts.map((artifact) => {
     const name = clean(artifact?.name, 240);
     if (!name || name.includes("/") || name.includes("\\")) {
@@ -87,7 +93,7 @@ export function buildInstallManifest({
     integrity: INSTALL_INTEGRITY,
     release_tag: releaseTag,
     source_commit: sourceCommit,
-    package_version: packageVersion == null ? null : clean(packageVersion, 80),
+    package_version: normalizedPackageVersion,
     artifacts: Object.freeze(rows),
   });
 }
@@ -126,6 +132,9 @@ export function verifyInstallArtifact({
   if (manifest.integrity !== INSTALL_INTEGRITY) reasons.push("MANIFEST_INTEGRITY_INVALID");
   if (!isStableReleaseTag(manifest.release_tag)) reasons.push("MANIFEST_RELEASE_TAG_INVALID");
   if (tag && manifest.release_tag !== tag) reasons.push("MANIFEST_RELEASE_TAG_MISMATCH");
+  if (typeof manifest.package_version === "string" && manifest.package_version !== manifest.release_tag?.slice(1)) {
+    reasons.push("MANIFEST_PACKAGE_VERSION_MISMATCH");
+  }
   if (!COMMIT.test(clean(manifest.source_commit, 40))) reasons.push("MANIFEST_SOURCE_COMMIT_INVALID");
   if (!Array.isArray(manifest.artifacts) || manifest.artifacts.length === 0) {
     reasons.push("MANIFEST_ARTIFACTS_INVALID");
