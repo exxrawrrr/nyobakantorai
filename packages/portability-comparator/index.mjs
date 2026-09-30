@@ -9,6 +9,7 @@ export const PORTABILITY_CLAIM_STATES = Object.freeze([
 
 export const PORTABILITY_EVIDENCE_CLASSES = Object.freeze([
   "FIXTURE_EVIDENCE",
+  "UNVERIFIED_RUNTIME_ATTEMPT",
   "LIVE_RUNTIME_EVIDENCE",
 ]);
 
@@ -254,8 +255,11 @@ export function comparePortabilityReferenceRuns({reference,runs=[]}={}) {
   });
   if(!protectedAtomAgreement) blockers.push("CROSS_RUNTIME_PROTECTED_ATOM_DISAGREEMENT");
 
-  const hasFixture=supplied.some((run)=>run.evidence_class!=="LIVE_RUNTIME_EVIDENCE");
+  const hasFixture=supplied.some((run)=>run.evidence_class==="FIXTURE_EVIDENCE");
+  const hasUnverified=supplied.some((run)=>run.evidence_class==="UNVERIFIED_RUNTIME_ATTEMPT");
+  const hasNonLive=supplied.some((run)=>run.evidence_class!=="LIVE_RUNTIME_EVIDENCE");
   if(hasFixture) blockers.push("FIXTURE_ONLY_EVIDENCE");
+  if(hasUnverified) blockers.push("UNVERIFIED_RUNTIME_EVIDENCE");
 
   const verifierFailed=supplied.some((run)=>run.external_verification.status==="FAIL");
   if(verifierFailed) blockers.push("INDEPENDENT_VERIFIER_FAILED");
@@ -268,7 +272,7 @@ export function comparePortabilityReferenceRuns({reference,runs=[]}={}) {
 
   const hardBlockers=blockers.filter((reason)=>reason!=="FIXTURE_ONLY_EVIDENCE");
   let state="PARTIAL";
-  if(!hasFixture && hardBlockers.length===0){
+  if(!hasNonLive && hardBlockers.length===0){
     state=independentPending ? "PORTABILITY_CANDIDATE" : "PORTABILITY_VERIFIED_FOR_REFERENCE_CASE";
   }
 
