@@ -11,12 +11,12 @@ The adapter refuses initialization when supplied core bytes do not reproduce tha
 
 ## Runtime boundary
 
-The adapter is intentionally Hermes-specific and remains outside portable core. It targets profile Siti and preloads exactly the five canonical reference skills. The one-shot invocation exposes only the skills toolset.
+The adapter is intentionally Hermes-specific and remains outside portable core. The portable worker remains Siti, while the local Hermes profile is runtime metadata outside the canonical core hash. The default runtime profile is `default`, and another safe profile identifier may be supplied explicitly. The adapter preloads exactly the five canonical reference skills and exposes only the skills toolset.
 
 No terminal, web, browser, install, login, account mutation, external write, paid action, destructive action, or production repository write capability is declared.
 
 Invocation shape:
-hermes -p siti chat --oneshot --quiet --format stream-json --toolsets skills --skills <five canonical skills> --query-file -
+hermes -p <runtime-profile> chat --oneshot --quiet --format stream-json --toolsets skills --ignore-rules --source tool --skills <five canonical skills> --query-file -
 
 The exact five SKILL.md files are staged byte-for-byte in a temporary HERMES_BUNDLED_SKILLS root.
 
@@ -26,7 +26,7 @@ The full canonical bundle is staged for hash and evidence purposes. The model-fa
 
 ## Evidence and mutation guard
 
-The staged temporary workspace is hashed before and after invocation. Any tree change fails closed. Evidence contains content hashes, before/after workspace hashes, code commit, Siti profile identity, and skills-only toolset identity. Environment credential values are not persisted.
+The staged temporary workspace is hashed before and after invocation. Any tree change fails closed. Evidence contains content hashes, before/after workspace hashes, code commit, runtime profile identity, and skills-only toolset identity. `--ignore-rules` prevents profile/workspace rules and memory from replacing the canonical Siti contract while retaining user-owned provider configuration. Environment credential values are not persisted.
 
 ## Fixture/conformance proof
 
