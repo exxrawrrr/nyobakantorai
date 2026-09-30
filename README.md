@@ -263,7 +263,7 @@ itu belum kemenangan.
 
 Release bertag terbaru tetap **v0.2.0 — Public Preview**. Branch `main` sudah memuat baseline **v0.3 Real AI Workforce**, tetapi belum ada tag/release v0.3 terpisah.
 
-PR #11 di branch `v0.4/modular-workforce` adalah **kandidat v0.4 Modular Workforce** dan masih **Draft**. PR ini menargetkan `prd/next-modular-workforce` sebagai staging/design base; merge ke staging **bukan** berarti v0.4 sudah shipped.
+v0.4 Modular Workforce sudah mencapai **stable-promotion scope**. Pada 30 September 2026 owner secara eksplisit menerima enam evidence gap yang masih terbuka sebagai deferred scope untuk v0.4.0; status `UNPROVEN`, `NOT_RUN`, dan `COLLECTING` tetap dipertahankan apa adanya dan tidak dipoles menjadi bukti selesai.
 
 Yang sudah ada di kandidat v0.4 antara lain:
 
@@ -297,7 +297,7 @@ Yang **belum** boleh dianggap proven/stable:
 - finished original art untuk 10 worker baru;
 - complete office/UI storage migration.
 
-Stable promotion saat ini **HOLD**. Lihat [docs/V0.4-RELEASE-DECISION.md](docs/V0.4-RELEASE-DECISION.md), [docs/V0.4-REVIEW-MAP.md](docs/V0.4-REVIEW-MAP.md), dan [ROADMAP.md](ROADMAP.md).
+Stable promotion **AUTHORIZED WITH ACCEPTED DEFERRALS**. Tag stabil hanya boleh dibuat setelah commit yang dipromosikan ke `main` lulus verify lintas platform dan manual release-gate. Lihat [docs/V0.4-RELEASE-DECISION.md](docs/V0.4-RELEASE-DECISION.md), [docs/V0.4-REVIEW-MAP.md](docs/V0.4-REVIEW-MAP.md), dan [ROADMAP.md](ROADMAP.md).
 
 Self-service evidence/setup surfaces: [Real Task Recorder](docs/REAL-TASK-RECORDER.md), [Real-Task Baseline Collection](docs/REAL-TASK-BASELINE.md), [Unified Provider Doctor](docs/PROVIDER-DOCTOR.md), [Browser Use Self-Test](docs/BROWSER-SELF-TEST.md), [Cognee Memory Self-Test](docs/COGNEE-SELF-TEST.md), dan [Cross-Harness Self-Test](docs/CROSS-HARNESS-SELF-TEST.md).
 
@@ -413,7 +413,7 @@ The workforce uses recreated/adapted workflow concepts with explicit provenance 
 **Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
 ## Install
 
-> **Release topology note:** the commands below use `main`, so they install the current public-main code, **not** the Draft v0.4 candidate in PR #11. Reviewers evaluating v0.4 should clone the repository and explicitly checkout `v0.4/modular-workforce` rather than treating the raw-`main` installer as v0.4 evidence.
+> **Release topology note:** the commands below use `main`. For reproducible v0.4.0 installs, prefer the `v0.4.0` tag once published; deferred evidence remains explicitly scoped in the release decision and is not implied complete by a stable tag.
 
 ### Hermes-first — recommended
 
@@ -604,7 +604,7 @@ The CI workflow runs the same verification on Linux and Windows.
 
 ## Project status
 
-**v0.4.0-rc.1 Draft candidate — `main` contains the v0.3 workforce baseline; v0.2.0 remains the latest tagged public preview. Stable v0.4 promotion is HOLD pending the explicitly deferred evidence scope.**
+**v0.4.0 stable-promotion scope — owner authorization recorded 2026-09-30. The six deferred evidence classes remain explicit; a stable tag is valid only after final `main` verify + manual release-gate succeed.**
 
 See:
 
