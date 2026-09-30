@@ -79,7 +79,7 @@
 - [x] full-workforce isolated fresh-install matrix: every canonical employee pack verified, exact 16-profile registry parity, exact per-worker skill/integration closure, native-upgrade rerun for all profiles, user-owned state preserved across every profile, no extra/missing profile or pack directory
 - [x] deterministic full-workforce upgrade/uninstall/reinstall lifecycle matrix: 16-profile existing install -> native-upgrade refresh with user-state preservation -> previewed selective removal -> previewed/confirmed full uninstall -> clean 16-profile reinstall -> native-upgrade rerun; no real Hermes/provider machine claim
 - [ ] final real clean-machine Hermes coverage
-- [ ] explicit stable promotion to `main` + final main-based release gate — HOLD until deferred evidence scope is re-approved
+- [x] explicit stable-promotion decision recorded — owner accepted the six deferred evidence classes for v0.4.0 scope on 2026-09-30; final `main` verify + manual release-gate remain mandatory before tagging
 
 ## Non-goals
 
