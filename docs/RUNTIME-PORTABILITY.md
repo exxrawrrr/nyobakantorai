@@ -209,3 +209,15 @@ Chat 13 adds a runtime-neutral public receipt trust registry with explicit ACTIV
 The registry is authoritative when supplied to the verifier; a legacy public-key map cannot bypass a revoked or out-of-scope registry key.
 
 The JavaScript/Python differential corpus is extended to v2 with lifecycle cases so cross-implementation agreement now covers the tested trust-registry semantics as well as the original signed-receipt cases.
+
+
+## Chat 15 — remaining UNKNOWN resolution
+
+Chat 15 resolves the four remaining `UNKNOWN_REQUIRES_PROOF` surfaces with executable evidence rather than cosmetic relabeling:
+
+- `employee-definitions` → `ADAPTER_BOUNDARY`: portable worker governance is projected by `lib/workforce.mjs`; runtime toolsets/integrations/distribution metadata stay in `WORKFORCE_RUNTIME_PREFERENCES`.
+- `approval-policy` → `CORE_PORTABLE`: task approval/verification gates use portable worker policy plus opaque runtime provider bindings; arbitrary-provider tests remain fail-closed.
+- `release-claims` → `CORE_PORTABLE`: the claims model is exercised with synthetic provider IDs; v0.4 Hermes/provider records remain historical data, not implementation coupling.
+- `office-ui-workforce-view` → `ADAPTER_BOUNDARY`: the UI consumes `WORKFORCE_VIEW`; runtime preferences are surfaced only through an explicit preference boundary.
+
+The result is **0 `UNKNOWN_REQUIRES_PROOF`** and **0 `HERMES_SHAPED`** surfaces. This is an architectural coupling claim only; it does not upgrade live Hermes/Codex evidence or the final reference-case portability claim.
