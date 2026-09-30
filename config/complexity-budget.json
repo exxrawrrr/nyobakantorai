@@ -1,0 +1,455 @@
+{
+  "schema": 1,
+  "candidate": "v0.5.0",
+  "observed_on": "2026-09-30",
+  "measured_at_commit": "a737e87dbcff76fd114a6e3ef4f1107d96ad7e3c",
+  "question": "If this project started today, would we still build this?",
+  "allowed_decisions": [
+    "KEEP",
+    "SIMPLIFY",
+    "MERGE",
+    "DELETE",
+    "DEFER DECISION"
+  ],
+  "subsystems": [
+    {
+      "subsystem": "runtime-adapters",
+      "problem_solved": "Separate provider/runtime-specific invocation and read-only transport from portable workforce and task policy.",
+      "property_bought": "Provider-neutral core plus explicit runtime edge boundaries for read-only observation and bounded execution.",
+      "risk_reduced": "Reduces Hermes lock-in and prevents provider-specific invocation semantics from leaking into portable governance.",
+      "evidence": [
+        "config/runtime-portability-map.json",
+        "packages/runtime-adapter/index.test.mjs",
+        "packages/runtime-execution-adapter/index.test.mjs",
+        "packages/hermes-execution-adapter/index.test.mjs",
+        "packages/codex-execution-adapter/index.test.mjs"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 16,
+        "approx_bytes": 122335,
+        "primary_paths": [
+          "packages/runtime-adapter/",
+          "packages/runtime-execution-adapter/",
+          "packages/hermes-execution-adapter/",
+          "packages/codex-execution-adapter/"
+        ]
+      },
+      "runtime_coupling": "EDGE_ONLY_WITH_PROVIDER_SPECIFIC_ADAPTERS",
+      "failure_modes": [
+        "Provider CLI/API drift",
+        "Adapter normalization drift",
+        "Read-only/write boundary regression",
+        "False portability inference from conformance-only tests"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — the project still needs an explicit runtime boundary even if implemented today.",
+      "owner_review_note": "Keep boundaries explicit until canonical live portability evidence exists; do not collapse adapters merely to reduce file count."
+    },
+    {
+      "subsystem": "cross-harness-runner",
+      "problem_solved": "Provide a disposable, same-contract path for comparing multiple installed agent harnesses without auto-install/login.",
+      "property_bought": "A repeatable route toward cross-harness behavioral evidence using identical protected atoms and temporary workspaces.",
+      "risk_reduced": "Reduces hand-wavy parity claims and limits benchmark mutation of user workspaces.",
+      "evidence": [
+        "packages/cross-harness-self-test/index.test.mjs",
+        "config/cross-harness-self-test.json",
+        "benchmarks/cross-harness/run-2026-09-29.json",
+        "config/v0.4-deferred-evidence.json"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 5,
+        "approx_bytes": 36384,
+        "primary_paths": [
+          "packages/cross-harness-self-test/",
+          "scripts/cross-harness-self-test.mjs",
+          "config/cross-harness-self-test.json",
+          "benchmarks/cross-harness/"
+        ]
+      },
+      "runtime_coupling": "MULTI_RUNTIME_EDGE",
+      "failure_modes": [
+        "CLI argument drift",
+        "Provider output format drift",
+        "False comparison readiness",
+        "Unavailable/authless runtimes"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — it is the explicit collection mechanism for a still-open cross-harness proof debt.",
+      "owner_review_note": "Do not delete while live parity remains an explicit unproven claim; deleting it would remove the supported path to collect that evidence."
+    },
+    {
+      "subsystem": "provider-doctor",
+      "problem_solved": "Report provider install/config/readiness state without provider calls, login, or credential disclosure.",
+      "property_bought": "Side-effect-free readiness diagnostics with explicit configured-versus-executed truth boundaries.",
+      "risk_reduced": "Reduces unsafe auto-install/login behavior and prevents environment detection from being mislabeled as execution.",
+      "evidence": [
+        "packages/provider-doctor/index.test.mjs",
+        "config/provider-doctor.json",
+        "docs/PROVIDER-DOCTOR.md",
+        "config/evidence-classification.json"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 4,
+        "approx_bytes": 23951,
+        "primary_paths": [
+          "packages/provider-doctor/",
+          "scripts/provider-doctor.mjs",
+          "config/provider-doctor.json"
+        ]
+      },
+      "runtime_coupling": "PROVIDER_AWARE_DIAGNOSTIC_ONLY",
+      "failure_modes": [
+        "Executable detection drift",
+        "False readiness from weak environment signals",
+        "Platform PATH differences"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — user-owned provider setup needs a safe diagnostic boundary even if rebuilt today.",
+      "owner_review_note": "Keep, but never use doctor output alone as behavioral evidence; Chat 17 enforces this."
+    },
+    {
+      "subsystem": "evidence-verifier",
+      "problem_solved": "Verify evidence packets/receipts and independently compare verdict semantics across Node and Python.",
+      "property_bought": "Tamper-aware evidence verification plus cross-implementation consistency testing.",
+      "risk_reduced": "Reduces single-implementation bugs and false VERIFIED states from malformed evidence.",
+      "evidence": [
+        "packages/evidence-verifier/index.test.mjs",
+        "benchmarks/verifier-differential/run.mjs",
+        "reference-verifier/python/test_verifier.py",
+        "config/evidence-classification.json"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 8,
+        "approx_bytes": 216856,
+        "primary_paths": [
+          "packages/evidence-verifier/",
+          "reference-verifier/python/",
+          "benchmarks/verifier-differential/"
+        ]
+      },
+      "runtime_coupling": "NONE",
+      "failure_modes": [
+        "Spec drift between implementations",
+        "Corpus blind spots",
+        "Cryptographic/parser edge cases"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — independent verification is a core trust property, not presentation machinery.",
+      "owner_review_note": "Large byte surface is mostly corpus/reference implementation; retain because it buys cross-implementation evidence that cannot be replaced by self-tests."
+    },
+    {
+      "subsystem": "execution-receipts",
+      "problem_solved": "Bind task, worker, capability, result/evidence metadata, signing identity, and provenance into tamper-evident receipts.",
+      "property_bought": "Cryptographic authenticity/integrity of execution records with explicit claim limits.",
+      "risk_reduced": "Reduces silent receipt tampering and ambiguous task/worker/capability attribution.",
+      "evidence": [
+        "packages/execution-receipt/index.test.mjs",
+        "schemas/execution-receipt.schema.json",
+        "docs/EXECUTION-RECEIPTS.md",
+        "packages/receipt-trust-registry/integration.test.mjs"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 3,
+        "approx_bytes": 28936,
+        "primary_paths": [
+          "packages/execution-receipt/",
+          "schemas/execution-receipt.schema.json"
+        ]
+      },
+      "runtime_coupling": "NONE",
+      "failure_modes": [
+        "Key misuse",
+        "Schema drift",
+        "Receipt authenticity confused with external-world correctness"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — provenance/authenticity remains necessary even with a different runtime architecture.",
+      "owner_review_note": "Keep with the existing truth boundary: a valid signature never substitutes for independent external correctness."
+    },
+    {
+      "subsystem": "memory-policy-isolation",
+      "problem_solved": "Define what may enter per-worker/shared learning and test deterministic cross-profile isolation.",
+      "property_bought": "Bounded memory promotion plus protection against accidental worker-to-worker state leakage.",
+      "risk_reduced": "Reduces unsafe long-lived memory contamination, secret promotion, and personality/context leakage.",
+      "evidence": [
+        "config/memory-policy.json",
+        "scripts/memory-policy.test.mjs",
+        "packages/memory-learning/index.test.mjs",
+        "benchmarks/memory-isolation/run.mjs"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 6,
+        "approx_bytes": 29148,
+        "primary_paths": [
+          "config/memory-policy.json",
+          "packages/memory-learning/",
+          "benchmarks/memory-isolation/",
+          "scripts/memory-policy.test.mjs"
+        ]
+      },
+      "runtime_coupling": "POLICY_PORTABLE_RUNTIME_STORAGE_EXTERNAL",
+      "failure_modes": [
+        "Policy/storage mismatch",
+        "Over-broad promotion",
+        "Cross-profile contamination",
+        "Provider memory semantics drift"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — multi-worker memory without explicit isolation would weaken the product's trust model.",
+      "owner_review_note": "Keep policy portable; provider-specific memory lifecycle stays separate and is still only partial/unproven."
+    },
+    {
+      "subsystem": "employee-packs",
+      "problem_solved": "Package one/subset/preset/full worker distributions reproducibly with exact skill/integration closure.",
+      "property_bought": "Selective installability and reproducible employee artifacts instead of all-or-nothing deployment.",
+      "risk_reduced": "Reduces accidental over-installation and distribution drift between workforce definitions and shipped packs.",
+      "evidence": [
+        "scripts/employee-pack.test.mjs",
+        "docs/EMPLOYEE-PACKS.md",
+        "packages/fresh-install-matrix/index.test.mjs"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 3,
+        "approx_bytes": 19194,
+        "primary_paths": [
+          "scripts/employee-pack.mjs",
+          "scripts/employee-pack.test.mjs",
+          "docs/EMPLOYEE-PACKS.md"
+        ]
+      },
+      "runtime_coupling": "DISTRIBUTION_EDGE",
+      "failure_modes": [
+        "Registry/pack drift",
+        "Missing skill closure",
+        "Checksum mismatch"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — selective workforce installation is a deliberate user-facing distribution property.",
+      "owner_review_note": "Keep; generated duplication is accepted only where byte/reproducibility checks bind it to canonical sources."
+    },
+    {
+      "subsystem": "install-lifecycle-matrices",
+      "problem_solved": "Exercise one-worker, subset, full, upgrade, uninstall, and reinstall semantics in isolated profile homes.",
+      "property_bought": "Deterministic regression coverage for selection, idempotency, user-state preservation, removal safety, and byte integrity.",
+      "risk_reduced": "Reduces destructive installer regressions before real clean-machine testing.",
+      "evidence": [
+        "packages/fresh-install-matrix/index.test.mjs",
+        "scripts/fresh-install-matrix.mjs",
+        "docs/RELEASE-CHECKLIST.md"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 3,
+        "approx_bytes": 55527,
+        "primary_paths": [
+          "packages/fresh-install-matrix/",
+          "scripts/fresh-install-matrix.mjs"
+        ]
+      },
+      "runtime_coupling": "SIMULATED_DISTRIBUTION_LIFECYCLE",
+      "failure_modes": [
+        "Simulation diverges from real Hermes environment",
+        "Fixture drift",
+        "False equivalence with clean-machine evidence"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — destructive lifecycle behavior warrants deterministic pre-release regression coverage.",
+      "owner_review_note": "Keep but preserve its SELF_OBSERVATION classification; it does not replace the deferred clean-machine lifecycle."
+    },
+    {
+      "subsystem": "real-task-recorder",
+      "problem_solved": "Capture direct non-generated owner work with append-only/hash-linked evidence and preserve failures for baseline collection.",
+      "property_bought": "A truth-preserving path from real work to an independently reviewable dataset.",
+      "risk_reduced": "Reduces synthetic benchmark laundering, cherry-picking, and false-success reporting.",
+      "evidence": [
+        "packages/real-task-recorder/index.test.mjs",
+        "benchmarks/real-tasks/collection-status-2026-09-29.json",
+        "docs/REAL-TASK-RECORDER.md",
+        "config/evidence-classification.json"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 9,
+        "approx_bytes": 44525,
+        "primary_paths": [
+          "packages/real-task-recorder/",
+          "scripts/real-task-recorder.mjs",
+          "config/real-task-recorder.json",
+          "benchmarks/real-tasks/"
+        ]
+      },
+      "runtime_coupling": "NONE",
+      "failure_modes": [
+        "Incomplete evidence",
+        "Source eligibility mistakes",
+        "Redaction failures",
+        "Pressure to discard failures"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — real-world evidence cannot be substituted by generated fixtures or repository self-observation.",
+      "owner_review_note": "Keep; current 1/20 failure is evidence of the recorder preserving truth rather than a reason to remove it."
+    },
+    {
+      "subsystem": "deferred-evidence-release-claims",
+      "problem_solved": "Preserve historical v0.4 accepted-deferral truth while producing compact release claim snapshots.",
+      "property_bought": "Machine-readable separation between release-scope acceptance and actual evidence completion.",
+      "risk_reduced": "Reduces retroactive rewriting of UNPROVEN/NOT_RUN/COLLECTING states when a release is authorized.",
+      "evidence": [
+        "config/v0.4-deferred-evidence.json",
+        "packages/deferred-evidence/index.test.mjs",
+        "packages/release-claims/index.test.mjs",
+        "scripts/release-manifest.mjs",
+        "docs/DEFERRED-EVIDENCE.md"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 6,
+        "approx_bytes": 28452,
+        "primary_paths": [
+          "packages/deferred-evidence/",
+          "packages/release-claims/",
+          "config/v0.4-deferred-evidence.json",
+          "scripts/release-manifest.mjs"
+        ]
+      },
+      "runtime_coupling": "NONE",
+      "failure_modes": [
+        "Historical ledger drift",
+        "Duplicate package boundary",
+        "Release manifest orchestration drift",
+        "Accidental evidence promotion"
+      ],
+      "keep_simplify_delete": "MERGE",
+      "delete_test_answer": "YES to the behavior, NO to two top-level package boundaries — the historical validator/snapshot can live under release-claims.",
+      "owner_review_note": "Merge package boundaries in Chat 19 only after dependency scan stays bounded. Preserve config/v0.4-deferred-evidence.json and historical docs unchanged."
+    },
+    {
+      "subsystem": "approval-queue",
+      "problem_solved": "Gate high-impact work on owner approval and surface anomalies/missing evidence before descriptive agent prose.",
+      "property_bought": "Human authority over risky actions with structured anomaly-first oversight.",
+      "risk_reduced": "Reduces self-approval, hidden anomalies, and approval decisions based solely on agent-authored summaries.",
+      "evidence": [
+        "packages/task-registry/registry.test.mjs",
+        "office/tests/approval-summary.test.mjs",
+        "docs/APPROVAL-OVERSIGHT.md"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 6,
+        "approx_bytes": 59796,
+        "primary_paths": [
+          "packages/task-registry/",
+          "office/src/approval-summary.mjs",
+          "office/tests/approval-summary.test.mjs",
+          "docs/APPROVAL-OVERSIGHT.md"
+        ]
+      },
+      "runtime_coupling": "PORTABLE_GOVERNANCE_WITH_RUNTIME_READONLY_STATE",
+      "failure_modes": [
+        "Approval bypass",
+        "Untrusted summary input",
+        "UI hides anomalies",
+        "Runtime claim mutated locally"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — human authority is a core product constraint, not optional UI polish.",
+      "owner_review_note": "Keep. Chat 16 reduced review burden without weakening the owner gate."
+    },
+    {
+      "subsystem": "office-runtime-reconciliation",
+      "problem_solved": "Reconcile imported/local runtime-looking claims against authoritative read-only runtime snapshots.",
+      "property_bought": "Explicit LOCAL_CLAIM vs AUTHORITATIVE_RUNTIME provenance with quarantine on mismatch.",
+      "risk_reduced": "Reduces fabricated/stale runtime state being displayed as authoritative execution.",
+      "evidence": [
+        "office/tests/reconcile.test.mjs",
+        "office/reconcile.mjs",
+        "office/runtime-cache.mjs",
+        "office/server.mjs"
+      ],
+      "maintenance_surface": {
+        "tracked_files": 5,
+        "approx_bytes": 20942,
+        "primary_paths": [
+          "office/reconcile.mjs",
+          "office/runtime-cache.mjs",
+          "office/runtime-composition.mjs",
+          "office/server.mjs",
+          "office/tests/reconcile.test.mjs"
+        ]
+      },
+      "runtime_coupling": "RUNTIME_EDGE_READ_ONLY",
+      "failure_modes": [
+        "Stale snapshot accepted",
+        "ID/assignee/status mismatch",
+        "Cache freshness bugs",
+        "Provider mapping drift"
+      ],
+      "keep_simplify_delete": "KEEP",
+      "delete_test_answer": "YES — without reconciliation the UI would collapse claim and runtime truth into one unsafe state.",
+      "owner_review_note": "Keep fail-closed and read-only; runtime write/dispatch remains out of this boundary."
+    }
+  ],
+  "deep_evaluations": [
+    {
+      "id": "merge-deferred-evidence-package-boundary",
+      "subsystem": "deferred-evidence-release-claims",
+      "decision": "MERGE",
+      "current_surface": {
+        "top_level_packages": [
+          "packages/deferred-evidence",
+          "packages/release-claims"
+        ],
+        "package_files": 4,
+        "package_bytes": 18605,
+        "measured_at_commit": "a737e87dbcff76fd114a6e3ef4f1107d96ad7e3c"
+      },
+      "concrete_change": "Move v0.4 deferred-ledger validation/snapshot code and its tests under packages/release-claims/, update internal imports, then remove the separate packages/deferred-evidence/ boundary.",
+      "dependency_scan": {
+        "targets": [
+          {
+            "module": "packages/deferred-evidence/index.mjs",
+            "expected_importers": [
+              "packages/deferred-evidence/index.test.mjs",
+              "packages/release-claims/index.test.mjs",
+              "scripts/release-manifest.mjs"
+            ]
+          },
+          {
+            "module": "packages/release-claims/index.mjs",
+            "expected_importers": [
+              "packages/release-claims/index.test.mjs",
+              "scripts/release-manifest.mjs"
+            ]
+          }
+        ],
+        "require_private_root_package": true,
+        "require_no_package_exports": true
+      },
+      "preserved_surfaces": [
+        "config/v0.4-deferred-evidence.json",
+        "docs/DEFERRED-EVIDENCE.md",
+        "docs/V0.4-RELEASE-DECISION.md",
+        "historical v0.4 evidence statuses",
+        "release manifest deferred-evidence snapshot semantics"
+      ],
+      "planned_changes": [
+        "Relocate deferred validator/snapshot module under release-claims",
+        "Move/retain all negative drift tests",
+        "Update release-manifest import",
+        "Fold test:deferred-evidence into release-claims test surface",
+        "Delete only the obsolete top-level deferred-evidence package directory"
+      ],
+      "risks": [
+        "Accidentally changing v0.4 historical decision semantics",
+        "Dropping a negative drift test",
+        "Breaking an unknown internal importer"
+      ],
+      "replacement_test_plan": [
+        "Exact dependency scan must match expected importers before prune",
+        "All deferred-evidence negative tests must pass from new location",
+        "Release-claims tests must preserve snapshot values",
+        "Release manifest must still report the same deferred decision/open-blocker counts",
+        "Full Linux/Windows/minimum-version verify"
+      ],
+      "migration_note": "Internal-only module move: the repository root package is private and has no package exports. Historical JSON/docs remain at their existing paths.",
+      "rollback_recovery": "Revert the Chat 19 pruning commit; the historical JSON ledger and docs are not moved or rewritten.",
+      "execute_in": "Chat 19"
+    }
+  ]
+}

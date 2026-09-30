@@ -641,6 +641,8 @@ The CI workflow runs the same verification on Linux and Windows.
 
 **v0.4.0 stable-promotion scope — owner authorization recorded 2026-09-30. The six deferred evidence classes remain explicit; a stable tag is valid only after final `main` verify + manual release-gate succeed.**
 
+v0.5 also carries an executable [complexity budget](config/complexity-budget.json): 12 required subsystems have explicit delete-test decisions. Current result is **11 KEEP / 1 MERGE**; the selected Chat 19 simplification is to merge the internal `deferred-evidence` package boundary into `release-claims` while preserving the historical v0.4 ledger and docs unchanged. See [Complexity Budget](docs/COMPLEXITY-BUDGET.md).
+
 See:
 
 - [ROADMAP.md](ROADMAP.md)
