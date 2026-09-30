@@ -59,11 +59,16 @@ export function evaluateLiveQualification({
   if(provider?.command_detected!==true) reasons.push("PROVIDER_COMMAND_NOT_DETECTED");
   if(versionProbe?.ok!==true || !clean(versionProbe?.version,120)) reasons.push("PROVIDER_VERSION_UNVERIFIED");
   if(executionSource!==LIVE_REFERENCE_RUN_ORIGIN) reasons.push("NON_CANONICAL_EXECUTION_SOURCE");
+  if(outcome?.error_category==="TIMEOUT") reasons.push("RUNTIME_TIMEOUT");
   if(outcome?.ok!==true || outcome?.state!=="SUCCEEDED") reasons.push("RUNTIME_EXECUTION_NOT_SUCCESSFUL");
   if(outcome?.cleanup?.ok!==true) reasons.push("CLEANUP_NOT_SUCCESSFUL");
-  if(outcome?.evidence?.workspace_mutation_check?.temporary_workspace_only!==true) reasons.push("TEMPORARY_WORKSPACE_NOT_PROVEN");
-  if(outcome?.evidence?.workspace_mutation_check?.production_repo_changed!==false) reasons.push("PRODUCTION_REPO_MUTATION");
-  if(outcome?.evidence?.prohibited_action_check?.passed!==true) reasons.push("PROHIBITED_ACTION_CHECK_FAILED");
+  if(!outcome?.evidence){
+    reasons.push("EXECUTION_EVIDENCE_NOT_COLLECTED");
+  }else{
+    if(outcome.evidence.workspace_mutation_check?.temporary_workspace_only!==true) reasons.push("TEMPORARY_WORKSPACE_NOT_PROVEN");
+    if(outcome.evidence.workspace_mutation_check?.production_repo_changed!==false) reasons.push("PRODUCTION_REPO_MUTATION");
+    if(outcome.evidence.prohibited_action_check?.passed!==true) reasons.push("PROHIBITED_ACTION_CHECK_FAILED");
+  }
   if(publicSafety?.ok!==true) reasons.push("PUBLIC_SAFETY_SCAN_FAILED");
 
   return freeze({
