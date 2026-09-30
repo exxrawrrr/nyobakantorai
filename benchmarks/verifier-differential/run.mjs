@@ -34,6 +34,13 @@ if(nodeResult.corpus_sha256!==corpusSha) failures.push("Node corpus SHA mismatch
 if(pythonResult.corpus_sha256!==corpusSha) failures.push("Python corpus SHA mismatch");
 
 function stable(value){return JSON.stringify(value);}
+function sameCase(left,right){
+  return left?.id===right?.id
+    && left?.accept===right?.accept
+    && stable(left?.packet_reason_codes||[])===stable(right?.packet_reason_codes||[])
+    && stable(left?.receipt_reason_sets||[])===stable(right?.receipt_reason_sets||[]);
+}
+let agreementCount=0;
 for(const testCase of corpus.cases){
   const id=testCase.id;
   const expected=expectedById.get(id);
@@ -49,13 +56,15 @@ for(const testCase of corpus.cases){
     packet_reason_codes:[...expected.packet_reason_codes].sort(),
     receipt_reason_sets:expected.receipt_reason_sets.map((set)=>[...set].sort()),
   };
-  if(stable(node)!==stable(expectedNormalized)){
+  if(!sameCase(node,expectedNormalized)){
     failures.push(id+": Node != corpus expected\n  expected="+stable(expectedNormalized)+"\n  actual="+stable(node));
   }
-  if(stable(pyCase)!==stable(expectedNormalized)){
+  if(!sameCase(pyCase,expectedNormalized)){
     failures.push(id+": Python != corpus expected\n  expected="+stable(expectedNormalized)+"\n  actual="+stable(pyCase));
   }
-  if(stable(node)!==stable(pyCase)){
+  if(sameCase(node,pyCase)){
+    agreementCount+=1;
+  }else{
     failures.push(id+": Node/Python disagreement\n  node="+stable(node)+"\n  python="+stable(pyCase));
   }
 }
@@ -65,7 +74,7 @@ const summary={
   corpus_id:corpus.id,
   corpus_sha256:corpusSha,
   case_count:corpus.cases.length,
-  agreement_count:corpus.cases.length-failures.filter((item)=>item.includes("Node/Python disagreement")).length,
+  agreement_count:agreementCount,
   expected_match:failures.length===0,
   failures,
 };
