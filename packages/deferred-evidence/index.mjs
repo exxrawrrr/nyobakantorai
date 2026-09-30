@@ -1,5 +1,8 @@
 const nonEmpty=(v)=>typeof v==="string"&&v.trim().length>0;
 
+const DECISION_HOLD="HOLD";
+const DECISION_ACCEPTED="RELEASE_WITH_ACCEPTED_DEFERRALS";
+
 export function validateDeferredEvidenceLedger({
   ledger,
   crossHarness,
@@ -9,7 +12,11 @@ export function validateDeferredEvidenceLedger({
 }={}){
   const errors=[];
   if(ledger?.schema!==1) errors.push("ledger schema must be 1");
-  if(ledger?.decision!=="HOLD") errors.push("ledger decision must remain HOLD while blockers are open");
+
+  const decision=ledger?.decision;
+  if(![DECISION_HOLD,DECISION_ACCEPTED].includes(decision)){
+    errors.push("ledger decision must be HOLD or RELEASE_WITH_ACCEPTED_DEFERRALS");
+  }
   if(!Array.isArray(ledger?.items)||ledger.items.length<1) errors.push("ledger items required");
 
   const ids=new Set();
@@ -17,11 +24,26 @@ export function validateDeferredEvidenceLedger({
     if(!nonEmpty(item?.id)) errors.push("deferred item id required");
     else if(ids.has(item.id)) errors.push("duplicate deferred item id "+item.id);
     else ids.add(item.id);
-    if(item?.blocking_stable_promotion!==true) errors.push((item?.id||"unknown")+": blocking_stable_promotion must be true");
+    if(typeof item?.blocking_stable_promotion!=="boolean") errors.push((item?.id||"unknown")+": blocking_stable_promotion must be boolean");
     if(!nonEmpty(item?.status)) errors.push((item?.id||"unknown")+": status required");
     if(!nonEmpty(item?.canonical_source)) errors.push((item?.id||"unknown")+": canonical_source required");
     if(!nonEmpty(item?.completion_criterion)) errors.push((item?.id||"unknown")+": completion_criterion required");
     if(!nonEmpty(item?.safe_next_action)) errors.push((item?.id||"unknown")+": safe_next_action required");
+  }
+
+  if(decision===DECISION_HOLD){
+    for(const item of ledger?.items||[]){
+      if(item.blocking_stable_promotion!==true) errors.push(item.id+": HOLD requires blocking_stable_promotion=true");
+      if(item.accepted_for_v0_4_scope===true) errors.push(item.id+": HOLD cannot mark item accepted_for_v0_4_scope=true");
+    }
+  }
+
+  if(decision===DECISION_ACCEPTED){
+    if(!nonEmpty(ledger?.owner_scope_accepted_on)) errors.push("owner_scope_accepted_on required for accepted-deferrals release");
+    for(const item of ledger?.items||[]){
+      if(item.accepted_for_v0_4_scope!==true) errors.push(item.id+": accepted release requires accepted_for_v0_4_scope=true");
+      if(item.blocking_stable_promotion!==false) errors.push(item.id+": accepted release requires blocking_stable_promotion=false");
+    }
   }
 
   const byId=new Map((ledger?.items||[]).map(x=>[x.id,x]));
@@ -76,14 +98,20 @@ export function validateDeferredEvidenceLedger({
   }
 
   const openItems=(ledger?.items||[]).filter(x=>x.blocking_stable_promotion===true);
-  const stablePromotionAllowed=ledger?.decision!=="HOLD"&&openItems.length===0;
+  const acceptedItems=(ledger?.items||[]).filter(x=>x.accepted_for_v0_4_scope===true);
+  const stablePromotionAllowed=
+    decision===DECISION_ACCEPTED &&
+    openItems.length===0 &&
+    acceptedItems.length===(ledger?.items||[]).length;
 
   return Object.freeze({
     ok:errors.length===0,
     errors:Object.freeze(errors),
-    decision:ledger?.decision||"UNKNOWN",
+    decision:decision||"UNKNOWN",
     open_blockers:openItems.length,
+    accepted_deferred:acceptedItems.length,
     blocker_ids:Object.freeze(openItems.map(x=>x.id)),
+    accepted_ids:Object.freeze(acceptedItems.map(x=>x.id)),
     stable_promotion_allowed:stablePromotionAllowed,
   });
 }
@@ -95,13 +123,16 @@ export function buildDeferredEvidenceSnapshot({ledger,validation}){
     candidate:ledger.candidate,
     decision:validation.decision,
     open_blockers:validation.open_blockers,
+    accepted_deferred:validation.accepted_deferred,
     stable_promotion_allowed:validation.stable_promotion_allowed,
+    owner_scope_accepted_on:ledger.owner_scope_accepted_on||null,
     items:Object.freeze(ledger.items.map(item=>Object.freeze({
       id:item.id,
       category:item.category,
       status:item.status,
       blocking_stable_promotion:item.blocking_stable_promotion,
+      accepted_for_v0_4_scope:item.accepted_for_v0_4_scope===true,
     }))),
-    truth_boundary:"deterministic/self-service evidence != canonical live evidence",
+    truth_boundary:"release-scope acceptance != canonical evidence completion",
   });
 }
