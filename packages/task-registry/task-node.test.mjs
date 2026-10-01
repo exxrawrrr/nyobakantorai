@@ -83,21 +83,27 @@ test("required approval blocks RUNNING until approval status and evidence ref bo
 
   assert.throws(() => assertTaskNodeTransition(pending, "READY"), /requires APPROVED status/);
 
-  const approved = normalizeTaskNode({
-    ...pending,
-    approval:{ required:true, status:"APPROVED", approval_ref:"approval:owner:v06" },
-  });
-  assert.equal(assertTaskNodeTransition(approved, "READY"), true);
+  assert.equal(
+    assertTaskNodeTransition(pending, "READY", {
+      approval:{ required:true, status:"APPROVED", approval_ref:"approval:owner:v06" },
+    }),
+    true,
+  );
 
-  const ready = transitionTaskNode(approved, "READY", { clock:() => stamp(1) });
+  const ready = transitionTaskNode(pending, "READY", {
+    approval:{ required:true, status:"APPROVED", approval_ref:"approval:owner:v06" },
+    clock:() => stamp(1),
+  });
   assert.equal(ready.blocking, null);
+  assert.equal(ready.approval.status, "APPROVED");
   assert.equal(assertTaskNodeTransition(ready, "RUNNING"), true);
 
-  const missingRef = normalizeTaskNode({
-    ...ready,
-    approval:{ required:true, status:"APPROVED", approval_ref:null },
-  });
-  assert.throws(() => assertTaskNodeTransition(missingRef, "RUNNING"), /approval_ref/);
+  assert.throws(
+    () => assertTaskNodeTransition(pending, "READY", {
+      approval:{ required:true, status:"APPROVED", approval_ref:null },
+    }),
+    /approval_ref/,
+  );
 });
 
 test("TaskNode VERIFIED requires approved independent reviewer and evidence", () => {
