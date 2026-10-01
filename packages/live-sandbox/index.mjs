@@ -247,3 +247,154 @@ export function admitLiveSandboxDispatch(policyInput,declarationInput){
     sandbox_admission_ref:contentRef("sandbox-admission",payload),
   });
 }
+
+
+function nullableCounter(value,label,{min=0,max=Number.MAX_SAFE_INTEGER}={}){
+  if(value==null) return null;
+  return int(value,label,{min,max});
+}
+
+function normalizeActualUsage(input={}){
+  assert(input&&typeof input==="object"&&!Array.isArray(input),"actual usage must be an object.");
+  return Object.freeze({
+    duration_ms:int(input.duration_ms,"actual_usage.duration_ms",{min:0,max:86_400_000}),
+    tool_calls:nullableCounter(input.tool_calls,"actual_usage.tool_calls",{min:0,max:100_000}),
+    input_tokens:nullableCounter(input.input_tokens,"actual_usage.input_tokens",{min:0,max:100_000_000}),
+    output_tokens:nullableCounter(input.output_tokens,"actual_usage.output_tokens",{min:0,max:100_000_000}),
+    cost:normalizeCost(input.cost,"actual_usage.cost"),
+  });
+}
+
+function sandboxRecordPayload(value){
+  return Object.freeze({
+    schema:value.schema,
+    sandbox_admission_ref:value.sandbox_admission_ref,
+    mission_id:value.mission_id,
+    task_id:value.task_id,
+    provider_id:value.provider_id,
+    model_identity:value.model_identity,
+    status:value.status,
+    execution_state:value.execution_state,
+    execution_ok:value.execution_ok,
+    quota_status:value.quota_status,
+    teardown_verified:value.teardown_verified,
+    reason_codes:value.reason_codes,
+    unverified_dimensions:value.unverified_dimensions,
+    projected_usage:value.projected_usage,
+    actual_usage:value.actual_usage,
+    runtime:value.runtime,
+    cleanup:value.cleanup,
+    workspace_evidence:value.workspace_evidence,
+  });
+}
+
+export function validateSandboxRecord(input={}){
+  assert(input&&typeof input==="object"&&!Array.isArray(input),"Sandbox record must be an object.");
+  const ref=clean(input.sandbox_record_ref,1000);
+  assert(/^sandbox-record:sha256:[a-f0-9]{64}$/.test(ref),"Sandbox record has invalid sandbox_record_ref.");
+  const expected=contentRef("sandbox-record",sandboxRecordPayload(input));
+  assert(expected===ref,"Sandbox record ref does not match record payload content.");
+  return true;
+}
+
+export function settleLiveSandbox(admissionInput,outcomeInput,actualUsageInput){
+  validateSandboxAdmission(admissionInput);
+  assert(admissionInput.allowed===true,"Sandbox settlement requires an admitted dispatch.");
+  assert(outcomeInput&&typeof outcomeInput==="object"&&!Array.isArray(outcomeInput),"Runtime outcome is required for sandbox settlement.");
+
+  const policy=defineLiveSandboxPolicy(admissionInput.policy);
+  const actualUsage=normalizeActualUsage(actualUsageInput);
+  const reasons=[];
+  const unverified=[];
+
+  const runtimeProvider=clean(outcomeInput.runtime?.provider,120).toLowerCase();
+  const runtimeRef=clean(outcomeInput.runtime?.runtime_ref,512);
+  const providerVersion=outcomeInput.runtime?.provider_version==null?null:clean(outcomeInput.runtime.provider_version,120);
+  if(runtimeProvider!==admissionInput.provider_id) reasons.push("RUNTIME_PROVIDER_MISMATCH");
+  if(outcomeInput.ok!==true||clean(outcomeInput.state,40).toUpperCase()!=="SUCCEEDED"){
+    reasons.push("RUNTIME_EXECUTION_NOT_SUCCESSFUL");
+  }
+
+  if(actualUsage.duration_ms>policy.max_duration_ms) reasons.push("ACTUAL_DURATION_LIMIT_EXCEEDED");
+  if(actualUsage.tool_calls==null) unverified.push("TOOL_CALLS");
+  else if(actualUsage.tool_calls>policy.max_tool_calls) reasons.push("ACTUAL_TOOL_CALL_LIMIT_EXCEEDED");
+
+  if(actualUsage.input_tokens==null) unverified.push("INPUT_TOKENS");
+  else if(actualUsage.input_tokens>policy.max_input_tokens) reasons.push("ACTUAL_INPUT_TOKEN_LIMIT_EXCEEDED");
+
+  if(actualUsage.output_tokens==null) unverified.push("OUTPUT_TOKENS");
+  else if(actualUsage.output_tokens>policy.max_output_tokens) reasons.push("ACTUAL_OUTPUT_TOKEN_LIMIT_EXCEEDED");
+
+  if(actualUsage.input_tokens==null||actualUsage.output_tokens==null){
+    unverified.push("TOTAL_TOKENS");
+  }else if(actualUsage.input_tokens+actualUsage.output_tokens>policy.max_total_tokens){
+    reasons.push("ACTUAL_TOTAL_TOKEN_LIMIT_EXCEEDED");
+  }
+
+  if(policy.max_cost_usd!=null){
+    if(actualUsage.cost.status==="UNKNOWN") unverified.push("COST");
+    else if(actualUsage.cost.amount_usd>policy.max_cost_usd) reasons.push("ACTUAL_COST_LIMIT_EXCEEDED");
+  }
+
+  const cleanup=Object.freeze({
+    attempted:outcomeInput.cleanup?.attempted===true,
+    ok:outcomeInput.cleanup?.ok===true,
+  });
+  if(!cleanup.attempted||!cleanup.ok) reasons.push("CLEANUP_NOT_VERIFIED");
+
+  const workspace=Object.freeze({
+    temporary_workspace_only:outcomeInput.evidence?.workspace_mutation_check?.temporary_workspace_only===true,
+    production_repo_changed:outcomeInput.evidence?.workspace_mutation_check?.production_repo_changed===true,
+  });
+  if(policy.require_temporary_workspace&&!workspace.temporary_workspace_only) reasons.push("TEMPORARY_WORKSPACE_NOT_PROVEN");
+  if(workspace.production_repo_changed) reasons.push("PRODUCTION_REPO_MUTATION");
+
+  if(policy.forbid_external_write&&outcomeInput.evidence?.runtime_actions?.external_write===true){
+    reasons.push("EXTERNAL_WRITE_OBSERVED");
+  }
+
+  const uniqueReasons=Object.freeze([...new Set(reasons)]);
+  const uniqueUnverified=Object.freeze([...new Set(unverified)].sort());
+
+  const quotaReasonPrefixes=[
+    "ACTUAL_DURATION_LIMIT_EXCEEDED",
+    "ACTUAL_TOOL_CALL_LIMIT_EXCEEDED",
+    "ACTUAL_INPUT_TOKEN_LIMIT_EXCEEDED",
+    "ACTUAL_OUTPUT_TOKEN_LIMIT_EXCEEDED",
+    "ACTUAL_TOTAL_TOKEN_LIMIT_EXCEEDED",
+    "ACTUAL_COST_LIMIT_EXCEEDED",
+  ];
+  const quotaFailed=uniqueReasons.some((reason)=>quotaReasonPrefixes.includes(reason));
+  const quotaStatus=quotaFailed?"FAIL":uniqueUnverified.length?"PARTIAL":"PASS";
+  const status=uniqueReasons.length?"FAIL":uniqueUnverified.length?"PARTIAL":"PASS";
+  const teardownVerified=cleanup.attempted&&cleanup.ok&&workspace.temporary_workspace_only&&!workspace.production_repo_changed;
+
+  const value=Object.freeze({
+    schema:LIVE_SANDBOX_API,
+    sandbox_admission_ref:admissionInput.sandbox_admission_ref,
+    mission_id:admissionInput.mission_id,
+    task_id:admissionInput.task_id,
+    provider_id:admissionInput.provider_id,
+    model_identity:admissionInput.model_identity,
+    status,
+    execution_state:clean(outcomeInput.state,40).toUpperCase()||"UNKNOWN",
+    execution_ok:outcomeInput.ok===true,
+    quota_status:quotaStatus,
+    teardown_verified:teardownVerified,
+    reason_codes:uniqueReasons,
+    unverified_dimensions:uniqueUnverified,
+    projected_usage:admissionInput.projected_usage,
+    actual_usage:actualUsage,
+    runtime:Object.freeze({
+      provider:runtimeProvider,
+      runtime_ref:runtimeRef,
+      provider_version:providerVersion,
+    }),
+    cleanup,
+    workspace_evidence:workspace,
+  });
+  return Object.freeze({
+    ...value,
+    sandbox_record_ref:contentRef("sandbox-record",sandboxRecordPayload(value)),
+  });
+}
