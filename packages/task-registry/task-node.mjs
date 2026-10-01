@@ -196,6 +196,11 @@ export function assertTaskNodeTransition(nodeInput, nextStateInput, {
     assert(node.approval.status !== "APPROVED", "Approved TaskNode cannot enter WAITING_APPROVAL.");
   }
 
+  if (node.state === "WAITING_APPROVAL" && nextState === "READY") {
+    assert(node.approval.status === "APPROVED", "WAITING_APPROVAL TaskNode requires APPROVED status before READY.");
+    assert(node.approval.approval_ref, "WAITING_APPROVAL TaskNode requires approval_ref before READY.");
+  }
+
   if (nextState === "VERIFIED") {
     const refs = unique([...node.evidence_refs, ...(Array.isArray(evidence_refs) ? evidence_refs : [])]);
     assert(node.state === "SUCCEEDED", "Only SUCCEEDED TaskNode may become VERIFIED.");
