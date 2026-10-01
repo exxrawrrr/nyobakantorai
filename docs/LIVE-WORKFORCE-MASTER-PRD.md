@@ -271,6 +271,8 @@ The product may target very low operating cost, but **must not promise permanent
 
 ### 8.2 Mission Engine
 
+CHAT 03 planning source: [v0.6 Mission Planner](V0.6-MISSION-PLANNER.md). The current planner is deterministic/rule-based with explicit-work-item support; it produces validated Mission/TaskNode DAGs but does not execute them.
+
 A mission is the top-level work object derived from a user objective.
 
 Minimum mission contract:
