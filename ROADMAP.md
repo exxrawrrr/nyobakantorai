@@ -122,6 +122,7 @@ Planning source of truth:
 Execution progress:
 
 - [x] CHAT 01 — baseline audit + architecture lock; canonical task domain stays `packages/task-registry`, Mission becomes an orchestration layer, existing approval/evidence/runtime/capability boundaries are reused.
+- [x] CHAT 02 — Mission/TaskNode/Attempt v1 schemas + state machines + legacy migration projection; no Mission execution yet. See [v0.6 Mission Contracts](docs/V0.6-MISSION-CONTRACTS.md).
 
 Planned release sequence:
 

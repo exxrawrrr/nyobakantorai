@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "attempt_id": "attempt-fixture-v06-001",
+  "task_id": "task-fixture-v06-001",
+  "ordinal": 1,
+  "state": "PLANNED",
+  "runtime": {
+    "provider": "fixture-runtime",
+    "runtime_ref": "fixture:planned",
+    "provider_version": "1.0"
+  },
+  "model_route_ref": null,
+  "capability_route_refs": [],
+  "started_at": null,
+  "finished_at": null,
+  "error_category": null,
+  "cleanup": {
+    "attempted": false,
+    "ok": null
+  },
+  "receipt_ref": null,
+  "evidence_refs": [],
+  "artifact_refs": [],
+  "previous_attempt_id": null,
+  "recovery_checkpoint_ref": null
+}

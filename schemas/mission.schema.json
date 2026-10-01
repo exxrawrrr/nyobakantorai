@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/mission.schema.json",
+  "title": "nyobakantorai Mission v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "mission_id",
+    "objective",
+    "constraints",
+    "risk_class",
+    "budget",
+    "autonomy",
+    "task_ids",
+    "artifact_refs",
+    "evidence_refs",
+    "approval_refs",
+    "state",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "mission_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "constraints": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "risk_class": {
+      "enum": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_WRITE",
+        "PAID_ACTION",
+        "ACCOUNT_CHANGE",
+        "DESTRUCTIVE"
+      ]
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hard_limit_amount",
+        "currency"
+      ],
+      "properties": {
+        "hard_limit_amount": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Z]{3}$"
+        }
+      }
+    },
+    "autonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "delegated_capabilities"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "OBSERVE",
+            "GUARDED",
+            "DELEGATED"
+          ]
+        },
+        "delegated_capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        }
+      }
+    },
+    "task_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      }
+    },
+    "artifact_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "approval_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "state": {
+      "enum": [
+        "PLANNED",
+        "READY",
+        "RUNNING",
+        "WAITING_APPROVAL",
+        "BLOCKED",
+        "PARTIAL",
+        "FAILED",
+        "RETRYING",
+        "RECOVERED",
+        "SUCCEEDED",
+        "VERIFIED",
+        "CANCELLED"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

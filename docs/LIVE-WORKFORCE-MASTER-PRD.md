@@ -821,6 +821,8 @@ Exact folders are implementation choices, not requirements. Existing package bou
 
 ## 16. Canonical data objects
 
+CHAT 02 implementation source: [v0.6 Mission Contracts](V0.6-MISSION-CONTRACTS.md). Mission, TaskNode, and Execution Attempt now have versioned v1 contracts; planning/execution behavior remains staged for later chats.
+
 Minimum new/extended entities:
 
 - Mission;
