@@ -245,7 +245,7 @@ test("bounded concurrency rejects invalid values before any runtime resolution",
   assert.equal(called, false);
 });
 
-test("runtime policy failure becomes a FAILED Attempt and blocks dependents instead of throwing success", async () => {
+test("runtime contract rejection becomes a BLOCKED Attempt and blocks dependents without claiming execution failure", async () => {
   const plan = planMission({
     objective:"Exercise runtime policy failure truth.",
     risk_class:"READ_ONLY",
@@ -265,8 +265,9 @@ test("runtime policy failure becomes a FAILED Attempt and blocks dependents inst
   });
 
   assert.equal(result.attempts.length, 1);
-  assert.equal(result.attempts[0].state, "FAILED");
+  assert.equal(result.attempts[0].state, "BLOCKED");
   assert.equal(result.attempts[0].error_category, "CAPABILITY_NOT_DECLARED");
-  assert.deepEqual(result.tasks.map((task) => task.state), ["FAILED","BLOCKED"]);
-  assert.equal(result.mission.state, "FAILED");
+  assert.deepEqual(result.tasks.map((task) => task.state), ["BLOCKED","BLOCKED"]);
+  assert.equal(result.tasks[0].blocking.kind, "POLICY");
+  assert.equal(result.mission.state, "BLOCKED");
 });
