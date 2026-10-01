@@ -341,3 +341,67 @@ test("REASONING and CODING class support are enforced independently", () => {
   ]);
   assert.equal(coding.selected.model_id, "coder");
 });
+
+
+test("semantic set ordering does not change route ref", () => {
+  const candidatesA=[
+    candidate({
+      task_classes:["FAST","CODING","REASONING"],
+      modalities:["text","image"],
+    }),
+  ];
+  const candidatesB=[
+    candidate({
+      task_classes:["REASONING","FAST","CODING"],
+      modalities:["image","text"],
+    }),
+  ];
+  const reqA=request({
+    modalities:["text"],
+    budget_usd:null,
+    latency_target_ms:null,
+    user_policy:{
+      allowed_providers:["provider-alt","provider-local"],
+      denied_providers:["provider-cloud","provider-x"],
+      allow_cloud:true,
+    },
+  });
+  const reqB=request({
+    modalities:["text"],
+    budget_usd:null,
+    latency_target_ms:null,
+    user_policy:{
+      allowed_providers:["provider-local","provider-alt"],
+      denied_providers:["provider-x","provider-cloud"],
+      allow_cloud:true,
+    },
+  });
+
+  assert.equal(routeModel(reqA,candidatesA).model_route_ref, routeModel(reqB,candidatesB).model_route_ref);
+});
+
+test("equal model IDs across providers use provider/runtime deterministic tie-breaks", () => {
+  const a=candidate({
+    model_id:"shared-model",
+    provider_id:"provider-local",
+    runtime_id:"runtime-z",
+    locality:"LOCAL",
+    p95_latency_ms:800,
+    pricing_usd_per_million:{input:1,output:2},
+  });
+  const b=candidate({
+    model_id:"shared-model",
+    provider_id:"provider-cloud",
+    runtime_id:"runtime-a",
+    locality:"CLOUD",
+    p95_latency_ms:800,
+    pricing_usd_per_million:{input:1,output:2},
+  });
+  const req=request({budget_usd:null,latency_target_ms:null});
+
+  const first=routeModel(req,[a,b]);
+  const second=routeModel(req,[b,a]);
+
+  assert.equal(first.model_route_ref, second.model_route_ref);
+  assert.deepEqual(first.selected, second.selected);
+});
