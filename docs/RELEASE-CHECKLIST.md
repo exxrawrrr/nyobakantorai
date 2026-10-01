@@ -12,7 +12,7 @@ The repository is **already PUBLIC**. The old private-to-public visibility trans
 
 For v0.4.0, the owner explicitly accepted the six still-open evidence classes as deferred scope on 2026-09-30. Stable promotion is authorized only after the exact promoted `main` commit passes cross-platform verify and the manual release-gate. See `docs/V0.4-RELEASE-DECISION.md`.
 
-For v0.5.1, the current decision is **READY pending final attestation re-verification and tagged publication**. Canonical Hermes+Codex reference portability remains `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, v0.5 LIVE_RUNTIME evidence growth remains `INCREASED`, package candidate declares `0.5.1`, promoted-main verify #576 passed, and manual release-gate run `36811165894` passed. The immutable `v0.5.0` tag remains a failed publication attempt and was not published as a GitHub Release. See `docs/V0.5-RELEASE-READINESS.md` and `config/v0.5-release-readiness.json`.
+For v0.5.1, the release is **READY and PUBLISHED**. Final-main verify #578 passed on exact source commit `3004220522fee1971453f63bb50e6f9ed1264687`, manual release-gate `36811702004` passed, fresh-clone require-ready exited 0, tagged release-gate `36812543303` verified immutable assets, and the GitHub Release published 25 assets. The immutable `v0.5.0` tag remains a failed publication attempt and was not published as a GitHub Release.
 
 ## Code and tests
 - [ ] `npm run doctor` passes on the release machine.
@@ -24,9 +24,9 @@ For v0.5.1, the current decision is **READY pending final attestation re-verific
 - [x] Full-workforce isolated fresh-install matrix passes (`npm run release:matrix:full`): every canonical employee pack verifies, the installed profile set exactly matches the 16-worker registry, every worker keeps its exact skill/integration closure, rerun resolves to native-upgrade for all profiles, and seeded user-owned state survives byte-for-byte. Deterministic simulation only; no real Hermes/provider machine claim.
 - [x] Deterministic full-workforce upgrade/uninstall/reinstall lifecycle matrix passes (`npm run release:matrix:lifecycle`): all 16 profiles upgrade from drifted distribution state while user-owned state survives, selective removal is preview-first and preserves every survivor byte-for-byte, full uninstall is preview-first and requires explicit destructive confirmation, reinstall restores exactly 16 clean profiles without resurrecting deleted user state, and pack artifacts remain byte-identical. This is isolated release-matrix evidence, not real Hermes/provider machine coverage.
 - [ ] Final real clean-machine Hermes lifecycle coverage is complete on the intended release machine.
-- [ ] Linux and Windows CI are green on the final v0.5.1 promoted commit.
-- [ ] Minimum-version CI is green on the final v0.5.1 promoted commit.
-- [ ] Manual `release-gate` passes from the final v0.5.1 promoted commit.
+- [x] Linux and Windows CI are green on the final v0.5.1 promoted commit (#578).
+- [x] Minimum-version CI is green on the final v0.5.1 promoted commit (#578).
+- [x] Manual `release-gate` passes from the final v0.5.1 promoted commit (`36811702004`).
 - [ ] `npm run demo` completes using synthetic data only.
 
 ## Privacy and security
@@ -55,6 +55,6 @@ For v0.5.1, the current decision is **READY pending final attestation re-verific
 - [ ] Verify the repository from an unauthenticated/public view.
 - [ ] Confirm public screenshots/assets/docs render correctly.
 - [x] Promote the reviewed candidate to `main` through an explicit PR/merge path.
-- [ ] Rerun verification and manual release-gate from the final v0.5.1 `main` commit.
-- [ ] Create the stable tag only after the final gate passes.
-- [ ] The tagged-release workflow verifies immutable install assets and publishes the GitHub Release successfully.
+- [x] Rerun verification and manual release-gate from the final v0.5.1 `main` commit.
+- [x] Create immutable `v0.5.1` stable tag only after the final gate passes.
+- [x] Tagged release-gate `36812543303` verifies immutable install assets and publishes the GitHub Release successfully.
