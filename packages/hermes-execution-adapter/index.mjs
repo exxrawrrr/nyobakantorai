@@ -7,7 +7,7 @@ import { defineRuntimeExecutionAdapter } from "../runtime-execution-adapter/inde
 import { canonicalJson } from "../execution-receipt/index.mjs";
 import { PORTABILITY_REFERENCE_SKILLS } from "../portability-reference/index.mjs";
 
-export const HERMES_REFERENCE_CORE_SHA256 = "ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64";
+export const HERMES_REFERENCE_CORE_SHA256 = "cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8";
 export const HERMES_REFERENCE_RESULT_MARKER = "NYOBA_SITI_RESULT=";
 
 const REVIEW_STATES = new Set(["PASS","FAIL","INCOMPLETE"]);

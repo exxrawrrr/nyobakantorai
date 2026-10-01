@@ -271,3 +271,14 @@ test("unverified runtime attempt remains PARTIAL and is distinct from fixture ev
   assert.ok(report.blocking_reasons.includes("UNVERIFIED_RUNTIME_EVIDENCE"));
   assert.equal(report.blocking_reasons.includes("FIXTURE_ONLY_EVIDENCE"),false);
 });
+
+
+test("equivalent enumerated evidence paths may differ across runtimes",async()=>{
+  const {hermesOutcome,codexOutcome}=await buildOutcomes();
+  const hermes=record(hermesOutcome,"LIVE_RUNTIME_EVIDENCE","PASS");
+  const codex=structuredClone(record(codexOutcome,"LIVE_RUNTIME_EVIDENCE","PASS"));
+  codex.normalized_result.output.claims.find((item)=>item.claim_id==="claim-verified").evidence_path="facts.evidence_packet_complete";
+  const report=comparePortabilityReferenceRuns({reference,runs:[hermes,codex]});
+  assert.equal(report.state,"PORTABILITY_VERIFIED_FOR_REFERENCE_CASE");
+  assert.equal(report.protected_atom_agreement,true);
+});

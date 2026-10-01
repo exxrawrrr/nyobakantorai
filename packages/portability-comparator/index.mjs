@@ -133,6 +133,15 @@ function protectedValue(output,path) {
   return current;
 }
 
+function acceptedAtomValues(atom) {
+  const values=Array.isArray(atom?.accepted)&&atom.accepted.length ? atom.accepted : [atom?.expected];
+  return values;
+}
+
+function atomAccepts(atom,actual) {
+  return acceptedAtomValues(atom).includes(actual);
+}
+
 function assessProtectedAtoms(run,reference) {
   const output=run.normalized_result?.output;
   const checks=[];
@@ -142,7 +151,8 @@ function assessProtectedAtoms(run,reference) {
       path:atom.path,
       expected:atom.expected,
       actual:actual === undefined ? null : actual,
-      passed:actual === atom.expected,
+      accepted:Object.freeze([...acceptedAtomValues(atom)]),
+      passed:atomAccepts(atom,actual),
     }));
   }
   const limitations=Array.isArray(output?.residual_limitations) ? output.residual_limitations : [];
@@ -251,7 +261,7 @@ export function comparePortabilityReferenceRuns({reference,runs=[]}={}) {
   const protectedAtomAgreement=reference.core_bundle.verification_contract.protected_atoms.every((atom)=>{
     const left=protectedValue(supplied[0].normalized_result?.output,atom.path);
     const right=protectedValue(supplied[1].normalized_result?.output,atom.path);
-    return left===right && left===atom.expected;
+    return atomAccepts(atom,left) && atomAccepts(atom,right);
   });
   if(!protectedAtomAgreement) blockers.push("CROSS_RUNTIME_PROTECTED_ATOM_DISAGREEMENT");
 

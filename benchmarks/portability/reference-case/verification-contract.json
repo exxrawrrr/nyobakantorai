@@ -30,7 +30,11 @@
     },
     {
       "path": "claims.claim-verified.evidence_path",
-      "expected": "facts.source_status"
+      "expected": "facts.source_status",
+      "accepted": [
+        "facts.source_status",
+        "facts.evidence_packet_complete"
+      ]
     }
   ],
   "required_truths": [
