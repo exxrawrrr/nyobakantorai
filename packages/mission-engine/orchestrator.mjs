@@ -105,12 +105,14 @@ function transitionFromAttempt(taskInput, attemptInput, clock) {
   const task = normalizeTaskNode(taskInput);
   const attempt = normalizeExecutionAttempt(attemptInput);
   if (attempt.state === "BLOCKED") {
+    const category = attempt.error_category || "UNKNOWN";
+    const policyLike = /POLICY|CAPABILITY|TASK_|ADAPTER_INVALID/.test(category);
     return transitionTaskNode(task, "BLOCKED", {
       clock,
       evidence_refs:attempt.evidence_refs,
       blocking:{
-        kind:"RUNTIME",
-        reason:`Runtime attempt blocked: ${attempt.error_category || "UNKNOWN"}`,
+        kind:policyLike ? "POLICY" : "RUNTIME",
+        reason:`Execution attempt blocked: ${category}`,
       },
     });
   }
@@ -253,38 +255,65 @@ export async function executeMissionPlan(planInput, {
       employee_id:running.employee_id,
     }));
 
-    const outcome = await executeBoundedRuntimeTask(
-      resolution.adapter,
-      runtimeTaskFromHandoff(envelope),
-      {
-        policy:resolution.policy,
-        timeoutMs:resolution.timeout_ms,
-        clock,
-      },
-    );
-
     const ordinal = running.attempt_ids.length + 1;
     const attemptId = clean(idFactory("attempt", taskId, ordinal), 160);
     assert(attemptId, "Mission orchestrator idFactory returned an empty Attempt ID.");
-    const receiptRef = receiptRefFactory == null
-      ? null
-      : await receiptRefFactory(Object.freeze({
-        mission,
-        task:running,
-        handoff:envelope,
-        outcome,
-        attempt_id:attemptId,
-        ordinal,
-      }));
+    const dispatchStartedAt = clock();
 
-    let attempt = attemptFromRuntimeOutcome(outcome, {
-      attempt_id:attemptId,
-      task_id:taskId,
-      ordinal,
-      model_route_ref:resolution.model_route_ref,
-      capability_route_refs:resolution.capability_route_refs,
-      receipt_ref:receiptRef,
-    });
+    let outcome = null;
+    let attempt = null;
+    try {
+      outcome = await executeBoundedRuntimeTask(
+        resolution.adapter,
+        runtimeTaskFromHandoff(envelope),
+        {
+          policy:resolution.policy,
+          timeoutMs:resolution.timeout_ms,
+          clock,
+        },
+      );
+
+      const receiptRef = receiptRefFactory == null
+        ? null
+        : await receiptRefFactory(Object.freeze({
+          mission,
+          task:running,
+          handoff:envelope,
+          outcome,
+          attempt_id:attemptId,
+          ordinal,
+        }));
+
+      attempt = attemptFromRuntimeOutcome(outcome, {
+        attempt_id:attemptId,
+        task_id:taskId,
+        ordinal,
+        model_route_ref:resolution.model_route_ref,
+        capability_route_refs:resolution.capability_route_refs,
+        receipt_ref:receiptRef,
+      });
+    } catch (error) {
+      if (!clean(error?.code, 120)) throw error;
+      attempt = normalizeExecutionAttempt({
+        schema:1,
+        attempt_id:attemptId,
+        task_id:taskId,
+        ordinal,
+        state:"BLOCKED",
+        runtime:resolution.adapter.runtime,
+        model_route_ref:resolution.model_route_ref,
+        capability_route_refs:resolution.capability_route_refs,
+        started_at:dispatchStartedAt,
+        finished_at:clock(),
+        error_category:clean(error.code, 120).toUpperCase(),
+        cleanup:{ attempted:false, ok:null },
+        receipt_ref:null,
+        evidence_refs:[],
+        artifact_refs:[],
+        previous_attempt_id:null,
+        recovery_checkpoint_ref:null,
+      });
+    }
     attempts.push(attempt);
 
     let terminalTask = transitionFromAttempt(running, attempt, clock);
