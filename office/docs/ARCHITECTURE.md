@@ -12,6 +12,12 @@ nyobakantorai is a local-first visual office for human-governed multi-agent work
 - High-impact tasks remain PENDING and cannot enter execution until the owner records APPROVED.
 - VERIFIED state requires independent evidence.
 
+## v0.6 architecture ownership
+
+The v0.6 Live Workforce implementation must follow [../../docs/V0.6-ARCHITECTURE-LOCK.md](../../docs/V0.6-ARCHITECTURE-LOCK.md) and [../../docs/ADR-0001-LIVE-WORKFORCE-DOMAIN-OWNERSHIP.md](../../docs/ADR-0001-LIVE-WORKFORCE-DOMAIN-OWNERSHIP.md).
+
+The current browser-local `office/registry.mjs` is a compatibility/UI projection pending a reviewed migration. The canonical future task-domain core is `packages/task-registry/`; v0.6 must not introduce a third task lifecycle. The localhost office server remains a local/read-only runtime trust boundary and is not the future public execution service.
+
 ## Main components
 
 - `office/` — visual dashboard and read-only runtime surface.
