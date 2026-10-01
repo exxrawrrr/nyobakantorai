@@ -61,6 +61,9 @@ Exit gate: schemas fail closed and current v0.5 task truth is preserved.
 
 ### CHAT 03 — Mission Planner + Task Graph
 
+**Status: ✅ COMPLETED — 2026-10-01.**  
+Planner/DAG spec: `docs/V0.6-MISSION-PLANNER.md`
+
 Goal: turn one objective into an inspectable DAG without executing it.
 
 Deliverables:
