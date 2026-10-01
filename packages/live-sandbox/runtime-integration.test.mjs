@@ -241,3 +241,32 @@ test("sandbox admission is bound to exact runtime task identity and risk before 
   );
   assert.deepEqual(counter,{prepare:0,execute:0,cleanup:0});
 });
+
+
+test("usage reporter cannot under-report duration below runtime timestamps",async()=>{
+  let tick=0;
+  const clock=()=>{
+    const values=["2026-10-01T10:00:00.000Z","2026-10-01T10:00:05.000Z"];
+    return values[Math.min(tick++,values.length-1)];
+  };
+  const result=await executeLiveSandboxedTask({
+    sandbox_policy:sandboxPolicy({max_duration_ms:2000}),
+    declaration:declaration({
+      projected_usage:{...declaration().projected_usage,duration_ms:2000},
+    }),
+    adapter:adapter(),
+    task:runtimeTask(),
+    runtime_policy:runtimePolicy,
+    clock,
+    usage_reporter:async()=>({
+      duration_ms:1,
+      tool_calls:0,
+      input_tokens:900,
+      output_tokens:400,
+      cost:{status:"UNKNOWN",amount_usd:null},
+    }),
+  });
+  assert.equal(result.record.status,"FAIL");
+  assert.ok(result.record.reason_codes.includes("ACTUAL_DURATION_LIMIT_EXCEEDED"));
+  assert.equal(result.record.actual_usage.duration_ms,5000);
+});
