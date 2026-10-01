@@ -6,20 +6,20 @@ Canonical source: `config/maturity-model.json`.
 
 | Dimension | States | Current v0.5 candidate |
 | --- | --- | --- |
-| Artifact | experimental / candidate / stable | **candidate** |
-| Contract/API | experimental / candidate / stable | **candidate** |
-| Runtime adapter | experimental / candidate / stable | **candidate** |
+| Artifact | experimental / candidate / stable | **stable** |
+| Contract/API | experimental / candidate / stable | **stable** |
+| Runtime adapter | experimental / candidate / stable | **stable** |
 | Behavioral evidence | unproven / evaluated-case / repeated | **evaluated-case** |
 | Real-world workflow | unproven / collecting / demonstrated | **collecting** |
 | Provider lifecycle | not-run / partial / validated | **partial** |
 
 These dimensions are independent: `stable artifact != stable behavior`; `stable API != validated provider lifecycle`; `evaluated-case != repeated`; `collecting != demonstrated`.
 
-**Artifact candidate:** immutable installer machinery and tamper tests exist. The immutable `v0.5.0` tag failed before publication during tagged asset verification, so `v0.5.1` remains the current artifact candidate until the complete tagged-release pipeline succeeds.
+**Artifact stable:** `v0.5.1` is a published official GitHub Release. Tagged workflow `36812543303` built and verified immutable core assets, and a post-release isolated install reproduced the exact tagged source commit and checksum.
 
-**Contract/API candidate:** runtime, receipt/trust, approval, and portability contracts are executable/tested but unreleased as v0.5 stable contracts.
+**Contract/API stable:** the v0.5 runtime, receipt/trust, approval, and portability contracts are shipped in the published v0.5.1 artifact. This does not promote behavioral or provider maturity.
 
-**Runtime adapter candidate:** Hermes/Codex adapters pass conformance; canonical successful live reference execution across both remains unproven.
+**Runtime adapter stable:** Hermes/Codex reference adapters are shipped in v0.5.1 after conformance tests and the bounded canonical Siti case reached `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`. This does not imply global runtime parity.
 
 **Behavioral evidence evaluated-case:** bounded Fikri/Playwright live cases and black-box office checks exist; they do not establish general/repeated behavior.
 
