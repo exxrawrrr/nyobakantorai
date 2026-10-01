@@ -7,7 +7,7 @@
 - Added a regression test that executes the verifier CLI against generated immutable install assets.
 
 ### Release status
-- **BLOCKED** pending the v0.5.1 final promotion gate and a successful tagged-release asset verification run.
+- **READY** after promoted-main verify #576 and manual release-gate run `36811165894`; final attestation re-verification and a successful tagged-release asset verification run remain mandatory before publication.
 - The immutable `v0.5.0` tag is preserved as a failed publication attempt; its tagged workflow stopped before GitHub Release/assets were published.
 
 All notable public changes to nyobakantorai are documented here.
