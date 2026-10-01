@@ -1,5 +1,5 @@
 import { executeBoundedRuntimeTask } from "../runtime-execution-adapter/index.mjs";
-import { normalizeExecutionAttempt, attemptFromRuntimeOutcome, transitionMission } from "./contracts.mjs";
+import { normalizeExecutionAttempt, normalizeMission, attemptFromRuntimeOutcome, transitionMission } from "./contracts.mjs";
 import { normalizeMissionPlan } from "./planner.mjs";
 import { normalizeTaskNode, transitionTaskNode } from "../task-registry/task-node.mjs";
 import { buildHandoffEnvelope, normalizeHandoffResult, resultFromAttempt } from "./handoff.mjs";
@@ -345,7 +345,7 @@ export async function executeMissionPlan(planInput, {
   }
 
   while (true) {
-    propagateDependencyBlocks();
+    while (propagateDependencyBlocks()) {}
 
     if (await shouldCancel(Object.freeze({
       mission,
@@ -377,7 +377,7 @@ export async function executeMissionPlan(planInput, {
     }));
   }
 
-  propagateDependencyBlocks();
+  while (propagateDependencyBlocks()) {}
 
   const finalTasks = plan.graph.task_ids.map((id) => taskById.get(id));
   const aggregateArtifacts = unique(returns.flatMap((item) => item.artifact_refs));
@@ -393,10 +393,10 @@ export async function executeMissionPlan(planInput, {
     throw new Error("Orchestrator cannot resume a WAITING_APPROVAL Mission inside the same run.");
   }
 
-  mission = Object.freeze({
+  mission = normalizeMission({
     ...mission,
-    artifact_refs:Object.freeze(aggregateArtifacts),
-    evidence_refs:Object.freeze(unique([...mission.evidence_refs, ...aggregateEvidence])),
+    artifact_refs:aggregateArtifacts,
+    evidence_refs:unique([...mission.evidence_refs, ...aggregateEvidence]),
   });
 
   events.push(event("MISSION_SETTLED", clock, {
