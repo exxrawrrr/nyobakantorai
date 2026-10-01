@@ -114,7 +114,6 @@ export function defineLiveSandboxPolicy(input={}){
   const maxInput=int(input.max_input_tokens,"max_input_tokens",{min:0,max:100_000_000});
   const maxOutput=int(input.max_output_tokens,"max_output_tokens",{min:0,max:100_000_000});
   const maxTotal=int(input.max_total_tokens,"max_total_tokens",{min:0,max:200_000_000});
-  assert(maxTotal>=maxInput||maxTotal>=maxOutput,"max_total_tokens must allow at least one configured token ceiling.");
 
   const risks=sortedUnique(input.allowed_risk_classes,(value)=>clean(value,40).toUpperCase());
   assert(risks.length>0,"allowed_risk_classes must be non-empty.");
@@ -230,6 +229,9 @@ export function admitLiveSandboxDispatch(policyInput,declarationInput){
   if(declaration.tool_ids.some((id)=>!policy.allowed_tool_ids.includes(id))) reasons.push("TOOL_NOT_ALLOWLISTED");
   if(declaration.network_hosts.some((host)=>!policy.allowed_network_hosts.includes(host))) reasons.push("NETWORK_HOST_NOT_ALLOWLISTED");
   if(!policy.allow_fallback&&declaration.fallback_models.length>0) reasons.push("FALLBACK_NOT_ALLOWED");
+  if(declaration.fallback_models.some((item)=>!policy.allowed_runtime_providers.includes(item.provider_id))){
+    reasons.push("FALLBACK_PROVIDER_NOT_ALLOWED");
+  }
   if(policy.forbid_credentials_exposure&&declaration.credentials_exposed_to_task) reasons.push("CREDENTIAL_EXPOSURE_FORBIDDEN");
 
   const allowed=reasons.length===0;
