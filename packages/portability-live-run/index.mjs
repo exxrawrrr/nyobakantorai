@@ -1,6 +1,7 @@
 import { containsSecretLikeContent, sha256 } from "../execution-receipt/index.mjs";
 import { createPortabilityRunRecord } from "../portability-comparator/index.mjs";
 import { executeBoundedRuntimeTask } from "../runtime-execution-adapter/index.mjs";
+import { executeLiveSandboxedTask } from "../live-sandbox/runtime-integration.mjs";
 import { createHermesReferenceExecutionAdapter } from "../hermes-execution-adapter/index.mjs";
 import { createCodexReferenceExecutionAdapter } from "../codex-execution-adapter/index.mjs";
 
@@ -118,6 +119,9 @@ export async function runReferenceEvidence({
   executable,
   invokeImpl,
   clock,
+  sandboxPolicy=null,
+  sandboxDeclaration=null,
+  sandboxUsageReporter=null,
 }={}){
   const runtimeId=clean(runtime,64).toLowerCase();
   assert(["hermes","codex"].includes(runtimeId),"runtime must be hermes or codex");
@@ -143,11 +147,28 @@ export async function runReferenceEvidence({
     invokeImpl,
   });
 
-  const outcome=await executeBoundedRuntimeTask(bound.adapter,reference.core_bundle.task,{
-    policy,
-    timeoutMs:policy.max_timeout_ms,
-    clock,
-  });
+  let sandbox=null;
+  let outcome=null;
+  if(sandboxPolicy!=null||sandboxDeclaration!=null){
+    assert(sandboxPolicy&&sandboxDeclaration,"sandboxPolicy and sandboxDeclaration must be provided together");
+    sandbox=await executeLiveSandboxedTask({
+      sandbox_policy:sandboxPolicy,
+      declaration:sandboxDeclaration,
+      adapter:bound.adapter,
+      task:reference.core_bundle.task,
+      runtime_policy:policy,
+      usage_reporter:sandboxUsageReporter,
+      clock,
+    });
+    assert(sandbox.executed===true,"live sandbox admission blocked: "+(sandbox.admission?.reason_codes||[]).join(", "));
+    outcome=sandbox.outcome;
+  }else{
+    outcome=await executeBoundedRuntimeTask(bound.adapter,reference.core_bundle.task,{
+      policy,
+      timeoutMs:policy.max_timeout_ms,
+      clock,
+    });
+  }
   const provisionalClass=mode==="fixture" ? "FIXTURE_EVIDENCE" : "UNVERIFIED_RUNTIME_ATTEMPT";
   let record=createPortabilityRunRecord({
     reference,
@@ -209,5 +230,6 @@ export async function runReferenceEvidence({
     record:publicRecord,
     record_sha256:sha256(JSON.stringify(publicRecord)),
     qualification:finalQualification,
+    sandbox,
   });
 }

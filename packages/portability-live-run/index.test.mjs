@@ -165,3 +165,64 @@ test("timeout without evidence is reported truthfully instead of inventing mutat
   assert.equal(result.reasons.includes("PRODUCTION_REPO_MUTATION"),false);
   assert.equal(result.reasons.includes("PROHIBITED_ACTION_CHECK_FAILED"),false);
 });
+
+
+test("canonical reference runner can execute through Live Sandbox without changing fixture evidence class",async()=>{
+  const sandboxPolicy={
+    schema:1,
+    id:"v0-6-live-sandbox",
+    allowed_risk_classes:["READ_ONLY"],
+    max_duration_ms:45000,
+    max_tool_calls:0,
+    max_input_tokens:12000,
+    max_output_tokens:4000,
+    max_total_tokens:16000,
+    max_cost_usd:null,
+    allowed_tool_ids:[],
+    allowed_network_hosts:[],
+    allowed_runtime_providers:["codex"],
+    allow_fallback:false,
+    require_temporary_workspace:true,
+    forbid_external_write:true,
+    forbid_credentials_exposure:true,
+  };
+  const sandboxDeclaration={
+    schema:1,
+    mission_id:"mission-portability-fixture",
+    task_id:reference.core_bundle.task.task_id,
+    risk_class:"READ_ONLY",
+    provider_id:"codex",
+    model_identity:{status:"UNKNOWN",model_id:null},
+    model_route_ref:null,
+    capability_route_refs:[],
+    tool_ids:[],
+    network_hosts:[],
+    fallback_models:[],
+    credentials_exposed_to_task:false,
+    projected_usage:{
+      duration_ms:45000,
+      tool_calls:0,
+      input_tokens:12000,
+      output_tokens:4000,
+      cost:{status:"UNKNOWN",amount_usd:null},
+    },
+  };
+  const result=await runReferenceEvidence({
+    runtime:"codex",
+    mode:"fixture",
+    reference,
+    policy,
+    repository:repo,
+    provider,
+    versionProbe:version,
+    executable:"codex",
+    invokeImpl:fake(CODEX_REFERENCE_RESULT_MARKER),
+    sandboxPolicy,
+    sandboxDeclaration,
+  });
+  assert.equal(result.record.evidence_class,"FIXTURE_EVIDENCE");
+  assert.equal(result.sandbox.executed,true);
+  assert.equal(result.sandbox.record.teardown_verified,true);
+  assert.equal(result.sandbox.record.status,"PARTIAL");
+  assert.ok(result.sandbox.record.unverified_dimensions.includes("INPUT_TOKENS"));
+});

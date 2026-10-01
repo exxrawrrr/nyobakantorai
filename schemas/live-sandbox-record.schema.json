@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/live-sandbox-record.schema.json",
+  "title": "nyobakantorai Live Sandbox Record v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "sandbox_admission_ref",
+    "mission_id",
+    "task_id",
+    "provider_id",
+    "model_identity",
+    "status",
+    "execution_state",
+    "execution_ok",
+    "quota_status",
+    "teardown_verified",
+    "reason_codes",
+    "unverified_dimensions",
+    "projected_usage",
+    "actual_usage",
+    "runtime",
+    "cleanup",
+    "workspace_evidence",
+    "sandbox_record_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "sandbox_admission_ref": {
+      "type": "string",
+      "pattern": "^sandbox-admission:sha256:[a-f0-9]{64}$"
+    },
+    "mission_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_identity": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "PARTIAL",
+        "FAIL"
+      ]
+    },
+    "execution_state": {
+      "type": "string",
+      "minLength": 1
+    },
+    "execution_ok": {
+      "type": "boolean"
+    },
+    "quota_status": {
+      "enum": [
+        "PASS",
+        "PARTIAL",
+        "FAIL"
+      ]
+    },
+    "teardown_verified": {
+      "type": "boolean"
+    },
+    "reason_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "unverified_dimensions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "projected_usage": {
+      "type": "object"
+    },
+    "actual_usage": {
+      "type": "object"
+    },
+    "runtime": {
+      "type": "object"
+    },
+    "cleanup": {
+      "type": "object"
+    },
+    "workspace_evidence": {
+      "type": "object"
+    },
+    "sandbox_record_ref": {
+      "type": "string",
+      "pattern": "^sandbox-record:sha256:[a-f0-9]{64}$"
+    }
+  }
+}

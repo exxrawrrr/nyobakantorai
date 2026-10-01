@@ -398,6 +398,9 @@ Routing must verify:
 
 ### 8.7 Live AI Sandbox
 
+CHAT 07 implementation/status source: [v0.6 Live Sandbox + Minimum Cost/Quota Guard](V0.6-LIVE-SANDBOX.md). The application-level sandbox now enforces bounded read-only admission, quota/cost truth semantics, exact task/provider binding, disposable workspace settlement, teardown checks, and canonical live-run integration. One explicit Codex live attempt was fail-closed and teardown-safe but did not complete successfully, so the real-model success exit gate remains open.
+
+
 The live demo/runtime sandbox must provide:
 
 - per-mission temporary workspace;
