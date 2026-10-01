@@ -50,6 +50,22 @@ export async function executeLiveSandboxedTask({
     });
   }
 
+  const runtimeTaskId=String(task?.task_id??"").trim();
+  if(runtimeTaskId!==admission.task_id){
+    throw sandboxError(
+      "SANDBOX_TASK_BINDING_MISMATCH",
+      `Sandbox admission task ${admission.task_id} does not match runtime task ${runtimeTaskId||"(empty)"}.`,
+    );
+  }
+
+  const runtimeRisk=String(task?.risk_class??"").trim().toUpperCase();
+  if(runtimeRisk!==admission.risk_class){
+    throw sandboxError(
+      "SANDBOX_RISK_BINDING_MISMATCH",
+      `Sandbox admission risk ${admission.risk_class} does not match runtime task risk ${runtimeRisk||"(empty)"}.`,
+    );
+  }
+
   const adapterProvider=String(adapter?.runtime?.provider??"").trim().toLowerCase();
   if(adapterProvider!==admission.provider_id){
     throw sandboxError(
