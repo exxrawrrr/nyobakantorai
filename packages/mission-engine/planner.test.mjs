@@ -16,7 +16,7 @@ const schema = JSON.parse(await readFile(new URL("schemas/mission-plan.schema.js
 const canonicalPlanFixture = JSON.parse(await readFile(new URL("packages/mission-engine/fixtures/mission-plan-v1.json", root), "utf8"));
 
 const fixedClock = () => "2026-10-01T06:30:00.000Z";
-const stableIds = (kind, index, label) => `${kind}-fixture-${String(index + 1).padStart(2, "0")}-${String(label).replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`;
+const stableIds = (kind, index, label) => `${kind === "task" ? "tnode" : kind}-fixture-${String(index + 1).padStart(2, "0")}-${String(label).replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`;
 
 function seoRequest(overrides = {}) {
   return {
@@ -50,15 +50,15 @@ test("rule-based planner creates a deterministic four-node DAG with a parallel f
   assert.equal(plan.task_nodes.length, 4);
   assert.deepEqual(plan.task_nodes.map((task) => task.employee_id), ["alex","ratri","praroro","siti"]);
   assert.deepEqual(plan.graph.topological_layers, [
-    ["task-fixture-01-evidence","task-fixture-02-domain"],
-    ["task-fixture-03-synthesis"],
-    ["task-fixture-04-verify"],
+    ["tnode-fixture-01-evidence","tnode-fixture-02-domain"],
+    ["tnode-fixture-03-synthesis"],
+    ["tnode-fixture-04-verify"],
   ]);
   assert.deepEqual(plan.graph.parallel_groups, [
-    ["task-fixture-01-evidence","task-fixture-02-domain"],
+    ["tnode-fixture-01-evidence","tnode-fixture-02-domain"],
   ]);
-  assert.deepEqual(plan.graph.roots, ["task-fixture-01-evidence","task-fixture-02-domain"]);
-  assert.deepEqual(plan.graph.leaves, ["task-fixture-04-verify"]);
+  assert.deepEqual(plan.graph.roots, ["tnode-fixture-01-evidence","tnode-fixture-02-domain"]);
+  assert.deepEqual(plan.graph.leaves, ["tnode-fixture-04-verify"]);
   assert.equal(validateMissionPlan(plan), true);
 });
 
@@ -90,7 +90,7 @@ test("unknown objective falls back to one coordinator task instead of inventing 
   assert.equal(plan.task_nodes.length, 1);
   assert.equal(plan.task_nodes[0].employee_id, "praroro");
   assert.deepEqual(plan.graph.edges, []);
-  assert.deepEqual(plan.graph.topological_layers, [["task-fixture-01-coordinate"]]);
+  assert.deepEqual(plan.graph.topological_layers, [["tnode-fixture-01-coordinate"]]);
   assert.ok(plan.unknowns.some((item) => /decomposed/i.test(item)));
 });
 
@@ -122,7 +122,7 @@ test("explicit work items preserve human assignment and dependency intent", () =
   assert.deepEqual(plan.task_nodes.map((task) => task.employee_id), ["paijo","siti"]);
   assert.deepEqual(plan.node_meta.map((meta) => meta.route.source), ["HUMAN_ASSIGNMENT","HUMAN_ASSIGNMENT"]);
   assert.deepEqual(plan.graph.edges, [
-    { from:"task-fixture-01-metrics", to:"task-fixture-02-qa" },
+    { from:"tnode-fixture-01-metrics", to:"tnode-fixture-02-qa" },
   ]);
 });
 
@@ -187,18 +187,18 @@ test("explicit planner work item cycle fails closed", () => {
 test("readyTaskIds derives runnable frontier only from completed dependencies", () => {
   const plan = planMission(seoRequest(), { clock:fixedClock, idFactory:stableIds });
   assert.deepEqual(readyTaskIds(plan), [
-    "task-fixture-01-evidence",
-    "task-fixture-02-domain",
+    "tnode-fixture-01-evidence",
+    "tnode-fixture-02-domain",
   ]);
   assert.deepEqual(readyTaskIds(plan, [
-    "task-fixture-01-evidence",
-    "task-fixture-02-domain",
-  ]), ["task-fixture-03-synthesis"]);
+    "tnode-fixture-01-evidence",
+    "tnode-fixture-02-domain",
+  ]), ["tnode-fixture-03-synthesis"]);
   assert.deepEqual(readyTaskIds(plan, [
-    "task-fixture-01-evidence",
-    "task-fixture-02-domain",
-    "task-fixture-03-synthesis",
-  ]), ["task-fixture-04-verify"]);
+    "tnode-fixture-01-evidence",
+    "tnode-fixture-02-domain",
+    "tnode-fixture-03-synthesis",
+  ]), ["tnode-fixture-04-verify"]);
   assert.throws(() => readyTaskIds(plan, ["task-does-not-exist"]), /not in plan/);
 });
 
