@@ -290,12 +290,23 @@ export function createCapabilityRouter({ catalog, states, autonomyModes, default
     assert(ACCESS_MODE_SET.has(normalizedAccessMode), "Capability action accessMode must be READ or WRITE.");
     assert(nonEmpty(now) && !Number.isNaN(Date.parse(now)), "Capability action now must be a valid timestamp.");
 
-    const candidateGrants = normalizedGrants.filter((grant) =>
+    const actionGrants = normalizedGrants.filter((grant) =>
       grant.employee_id === employeeId
       && grant.capability_id === capabilityId
       && grant.access_modes.includes(normalizedAccessMode)
       && grant.actions.includes(normalizedAction)
-      && grant.targets.some((item) =>
+    );
+
+    if (!actionGrants.length) {
+      return Object.freeze({
+        allowed:false, decision:"BLOCKED", reason:"RESOURCE_GRANT_MISSING",
+        employee_id:employeeId, capability, connection:null, grant:null,
+        action:normalizedAction, access_mode:normalizedAccessMode, target:normalizedTarget, autonomy,
+      });
+    }
+
+    const candidateGrants = actionGrants.filter((grant) =>
+      grant.targets.some((item) =>
         item.resource_type === normalizedTarget.resource_type
         && item.resource_id === normalizedTarget.resource_id
       )
@@ -303,7 +314,7 @@ export function createCapabilityRouter({ catalog, states, autonomyModes, default
 
     if (!candidateGrants.length) {
       return Object.freeze({
-        allowed:false, decision:"BLOCKED", reason:"RESOURCE_GRANT_MISSING",
+        allowed:false, decision:"BLOCKED", reason:"TARGET_RESOURCE_OUT_OF_SCOPE",
         employee_id:employeeId, capability, connection:null, grant:null,
         action:normalizedAction, access_mode:normalizedAccessMode, target:normalizedTarget, autonomy,
       });
