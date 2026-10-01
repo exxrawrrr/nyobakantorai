@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/execution-attempt.schema.json",
+  "title": "nyobakantorai Execution Attempt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "attempt_id",
+    "task_id",
+    "ordinal",
+    "state",
+    "runtime",
+    "model_route_ref",
+    "capability_route_refs",
+    "started_at",
+    "finished_at",
+    "error_category",
+    "cleanup",
+    "receipt_ref",
+    "evidence_refs",
+    "artifact_refs",
+    "previous_attempt_id",
+    "recovery_checkpoint_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "state": {
+      "enum": [
+        "PLANNED",
+        "RUNNING",
+        "BLOCKED",
+        "PARTIAL",
+        "FAILED",
+        "SUCCEEDED",
+        "CANCELLED"
+      ]
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "runtime_ref",
+        "provider_version"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "runtime_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "provider_version": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        }
+      }
+    },
+    "model_route_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    },
+    "capability_route_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "error_category": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempted",
+        "ok"
+      ],
+      "properties": {
+        "attempted": {
+          "type": "boolean"
+        },
+        "ok": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "receipt_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^receipt:sha256:[a-f0-9]{64}$"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "artifact_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "previous_attempt_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 160
+    },
+    "recovery_checkpoint_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    }
+  }
+}
