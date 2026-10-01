@@ -91,22 +91,12 @@ function routePayload(input) {
   return Object.freeze({
     schema:1,
     employee_id:input.employee_id,
-    capability_id:input.capability.id,
-    capability_risk_class:input.capability.risk_class,
+    capability:Object.freeze(structuredClone(input.capability)),
     action:input.action,
     access_mode:input.access_mode,
     target:input.target,
-    connection:Object.freeze({
-      provider_id:input.connection.provider_id,
-      checked_at:input.connection.checked_at,
-      evidence_ref:input.connection.evidence_ref,
-    }),
-    grant:Object.freeze({
-      grant_id:input.grant.grant_id,
-      evidence_ref:input.grant.evidence_ref,
-      issued_at:input.grant.issued_at,
-      expires_at:input.grant.expires_at,
-    }),
+    connection:Object.freeze(structuredClone(input.connection)),
+    grant:Object.freeze(structuredClone(input.grant)),
     autonomy:input.autonomy,
     approval_status:input.approval_status,
     approval_ref:input.approval_ref,
@@ -321,7 +311,15 @@ export function createCapabilityRouter({ catalog, states, autonomyModes, default
     }
 
     const grant = [...candidateGrants].sort((a,b) => a.grant_id.localeCompare(b.grant_id))[0];
-    if (grant.expires_at != null && Date.parse(grant.expires_at) < Date.parse(now)) {
+    const nowMs = Date.parse(now);
+    if (Date.parse(grant.issued_at) > nowMs) {
+      return Object.freeze({
+        allowed:false, decision:"BLOCKED", reason:"RESOURCE_GRANT_NOT_YET_VALID",
+        employee_id:employeeId, capability, connection:null, grant,
+        action:normalizedAction, access_mode:normalizedAccessMode, target:normalizedTarget, autonomy,
+      });
+    }
+    if (grant.expires_at != null && Date.parse(grant.expires_at) <= nowMs) {
       return Object.freeze({
         allowed:false, decision:"BLOCKED", reason:"RESOURCE_GRANT_EXPIRED",
         employee_id:employeeId, capability, connection:null, grant,
