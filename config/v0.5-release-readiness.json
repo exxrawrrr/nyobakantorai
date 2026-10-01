@@ -3,19 +3,19 @@
   "candidate": "v0.5.1",
   "observed_on": "2026-10-01",
   "decision": "READY",
-  "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. The immutable v0.5.0 tag is preserved as a failed publication attempt; v0.5.1 must pass its own exact-main verification, manual release-gate, require-ready check, and tagged-release asset verification before publication.",
+  "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. v0.5.1 passed exact-main verification, manual release-gate, fresh-clone require-ready, tagged immutable asset verification, publication, and post-release install smoke. The immutable v0.5.0 tag remains preserved as a failed publication attempt.",
   "release_blockers": [],
   "promotion": {
     "target_branch": "main",
     "final_main_verify": "PASS",
     "manual_release_gate": "PASS",
-    "stable_tag": "AUTHORIZED",
+    "stable_tag": "PUBLISHED",
     "merge_authorized": true,
-    "verified_main_sha": "c8b8da5487a5201b89793ce8a09cf6f2912c1585",
-    "verify_run_id": 36810990252,
-    "verify_run_number": 576,
+    "verified_main_sha": "3004220522fee1971453f63bb50e6f9ed1264687",
+    "verify_run_id": 36811509569,
+    "verify_run_number": 578,
     "verify_conclusion": "success",
-    "manual_release_gate_run_id": 36811165894,
+    "manual_release_gate_run_id": 36811702004,
     "manual_release_gate_conclusion": "success",
     "attested_on": "2026-10-01",
     "previous_failed_publication": {
@@ -25,7 +25,18 @@
       "result": "FAILED_BEFORE_PUBLICATION",
       "reason": "verify-install-assets.mjs imported pathToFileURL from node:path instead of node:url",
       "github_release_published": false
-    }
+    },
+    "tag": "v0.5.1",
+    "tag_source_commit": "3004220522fee1971453f63bb50e6f9ed1264687",
+    "tagged_release_gate_run_id": 36812543303,
+    "tagged_release_gate_conclusion": "success",
+    "github_release_published": true,
+    "github_release_id": 400636550,
+    "github_release_url": "https://github.com/exxrawrrr/nyobakantorai/releases/tag/v0.5.1",
+    "published_asset_count": 25,
+    "post_release_smoke": "PASS",
+    "post_release_smoke_source_commit": "3004220522fee1971453f63bb50e6f9ed1264687",
+    "post_release_smoke_artifact_sha256": "973c939db4710b6a7255ae4b8834a1107238367878f7d898899948d931ce8d93"
   },
   "nonblocking_open_evidence": [
     {
@@ -81,7 +92,7 @@
     "successor": "docs/V0.5-RELEASE-READINESS.md"
   },
   "claim_language": {
-    "allowed": "v0.5 candidate includes verified bounded Hermes+Codex portability for the canonical Siti reference case, cross-implementation verification, immutable-install integrity, anomaly-first approval oversight, evidence classification, multidimensional maturity, and complexity pruning; this does not imply global runtime parity, broad production reliability, or external-world correctness.",
+    "allowed": "v0.5.1 is a published stable artifact with verified bounded Hermes+Codex portability for the canonical Siti reference case, cross-implementation verification, immutable-install integrity, anomaly-first approval oversight, evidence classification, multidimensional maturity, and complexity pruning; this does not imply global runtime parity, broad production reliability, or external-world correctness.",
     "forbidden": [
       "nyobakantorai works identically on all AI runtimes",
       "signed receipts prove the external action happened correctly",
@@ -104,8 +115,8 @@
     {
       "id": "final-main-release-gate",
       "state": "PASS",
-      "source": "GitHub Actions verify #576 + manual release-gate run 36811165894",
-      "scope": "promoted main commit c8b8da5487a5201b89793ce8a09cf6f2912c1585"
+      "source": "GitHub Actions verify #578 + manual release-gate run 36811702004 + tagged release-gate run 36812543303",
+      "scope": "published v0.5.1 source commit 3004220522fee1971453f63bb50e6f9ed1264687"
     }
   ]
 }
