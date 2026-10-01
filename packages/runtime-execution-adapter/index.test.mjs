@@ -232,3 +232,13 @@ test("conformance helper covers every required contract check without live crede
   assert.deepEqual(result.checks.map((item) => item.id), RUNTIME_EXECUTION_CONFORMANCE_REQUIREMENTS);
   assert.equal(result.outcome.ok, true);
 });
+
+
+test("45-second policy ceiling is accepted and wider execution remains rejected", () => {
+  const accepted=defineRuntimeExecutionPolicy({...policy,max_timeout_ms:45_000});
+  assert.equal(accepted.max_timeout_ms,45_000);
+  assert.throws(
+    () => defineRuntimeExecutionPolicy({...policy,max_timeout_ms:45_001}),
+    /max_timeout_ms must be 1\.\.45000/,
+  );
+});

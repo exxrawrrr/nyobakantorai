@@ -12,8 +12,8 @@
       "required_state": "SUPPORTED",
       "current_state": "UNPROVEN",
       "canonical_source": "config/evidence-classification.json",
-      "reason": "The canonical Siti reference case has not produced qualifying successful LIVE_RUNTIME_EVIDENCE through both Hermes and Codex under the unchanged core bundle.",
-      "safe_next_action": "Collect separately authorized Hermes and Codex live reference records through the canonical harness, preserve the exact core bundle, complete independent verification, and rerun the comparator."
+      "reason": "The canonical Siti reference case has not yet produced qualifying successful LIVE_RUNTIME_EVIDENCE through both Hermes and Codex on the reviewed 45-second re-baselined policy/core bundle.",
+      "safe_next_action": "Collect separately authorized Hermes and Codex live reference records on the exact reviewed GitHub head using the 45-second canonical policy/core bundle, complete independent verification, and rerun the comparator."
     },
     {
       "id": "live-runtime-evidence-growth",
@@ -23,7 +23,7 @@
       "current_state": "OPEN_REQUIRED",
       "canonical_source": "config/evidence-classification.json",
       "reason": "v0.5 increased black-box and cross-implementation evidence, but the required canonical live-runtime evidence growth is still open.",
-      "safe_next_action": "Promote only newly qualifying canonical reference-run records after public-safety/redaction review; existing bounded Fikri/Playwright records do not substitute for Hermes+Codex portability."
+      "safe_next_action": "Promote only newly qualifying canonical Hermes+Codex reference records collected after the 45-second policy re-baseline and public-safety review; earlier diagnostic or bounded Fikri/Playwright records do not substitute for this scope."
     },
     {
       "id": "package-version-v0.5",

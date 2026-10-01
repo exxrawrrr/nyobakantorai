@@ -5,7 +5,7 @@ Status: fixture/conformance proven; live Codex execution not yet claimed.
 The Codex execution adapter implements RuntimeExecutionAdapter v1 for the exact same Chat 4 Siti reference case used by the Hermes adapter.
 
 Locked core bundle SHA-256:
-0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee
+ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64
 
 No Codex-specific worker or task fork exists.
 
@@ -45,4 +45,4 @@ Chat 6 proves Codex adapter implementation compatibility and exact Chat 4 input 
 The live adapter now ignores user config and user/project rules while retaining Codex authentication. This prevents local model/tool/rule configuration from silently changing the reference-case behavior. Cleanup retries bounded deletion to tolerate short Windows file-release delays after process termination.
 
 
-The reference invocation's reasoning effort is explicitly bounded to `low` as runtime metadata. This does not change the canonical worker/task/skill/policy bundle; it constrains runtime latency within the existing 10-second execution policy.
+The reference invocation's reasoning effort is explicitly bounded to `low` as runtime metadata. On 2026-10-01 the canonical execution policy was deliberately re-baselined from 10 seconds to a 45-second bounded maximum after authorized live diagnostics showed real Hermes/Codex latency exceeded 10 and sometimes 30 seconds. That timeout is now part of the canonical policy/core hash; it is not an adapter-only exception.

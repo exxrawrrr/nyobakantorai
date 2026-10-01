@@ -151,7 +151,7 @@ The reference case binds one portable worker projection, one READ_ONLY task, fiv
 Current aggregate core bundle SHA-256:
 
 ```text
-0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee
+ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64
 ```
 
 Hermes and Codex runtime metadata is explicitly outside that core hash. Future adapter/live-run evidence must fail closed if the canonical core input bytes differ.
@@ -162,7 +162,7 @@ This is byte-identity/input-binding evidence only. It does not upgrade live cros
 
 Chat 5 adds a Hermes-specific RuntimeExecutionAdapter v1 implementation.
 
-It is bound to core bundle 0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee, targets Siti, preloads exactly the five Chat 4 skills, and exposes only the skills toolset.
+It is bound to core bundle ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64, targets Siti, preloads exactly the five Chat 4 skills, and exposes only the skills toolset.
 
 Fixture/conformance tests make no real Hermes/provider call. This advances implementation readiness, not live behavioral portability.
 
@@ -170,7 +170,7 @@ Fixture/conformance tests make no real Hermes/provider call. This advances imple
 
 Chat 6 adds a Codex-specific RuntimeExecutionAdapter v1 implementation using the repository's existing read-only ephemeral Codex invocation.
 
-Hermes and Codex adapters now both bind to the exact same canonical Siti core bundle 0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee. This proves shared input binding only; fixture tests do not prove live behavioral parity.
+Hermes and Codex adapters now both bind to the exact same canonical Siti core bundle ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64. This proves shared input binding only; fixture tests do not prove live behavioral parity.
 
 ## Chat 7 reference-case comparator update
 

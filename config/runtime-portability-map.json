@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-chat19-prune-release-claims-boundary",
+  "audit": "v0.5-timeout-rebaseline-2026-10-01",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -398,13 +398,13 @@
       "paths": [
         "packages/hermes-execution-adapter"
       ],
-      "rationale": "Hermes-specific one-shot execution is isolated behind RuntimeExecutionAdapter v1 and bound to the exact Chat 4 canonical Siti core bundle. Portable worker identity is independent from the local Hermes runtime profile; the adapter defaults to the safe local `default` profile, exposes only the skills toolset, and ignores runtime rules that could replace the canonical worker contract.",
+      "rationale": "Hermes-specific one-shot execution is isolated behind RuntimeExecutionAdapter v1 and bound to the re-baselined canonical Siti core bundle. Portable worker identity is independent from the local Hermes runtime profile; the adapter defaults to the safe local `default` profile, exposes only the skills toolset, and ignores runtime rules that could replace the canonical worker contract.",
       "evidence": [
         "packages/hermes-execution-adapter/index.mjs",
         "packages/hermes-execution-adapter/index.test.mjs",
         "docs/HERMES-EXECUTION-ADAPTER.md"
       ],
-      "next_action": "Collect separately authorized live Hermes evidence only after a user-owned provider/auth path is configured. Runtime profile choice remains adapter metadata and must not alter the canonical core bundle."
+      "next_action": "Run the separately authorized live Hermes reference case under the reviewed 45-second canonical execution policy; runtime profile/auth remains adapter metadata and must not alter the re-baselined core bundle."
     },
     {
       "id": "codex-execution-adapter",
@@ -412,13 +412,13 @@
       "paths": [
         "packages/codex-execution-adapter"
       ],
-      "rationale": "Codex-specific ephemeral read-only execution is isolated behind RuntimeExecutionAdapter v1, bound to the exact Chat 4 canonical Siti bundle, stages the five canonical skills under .agents/skills, and ignores user config/rules so local configuration cannot silently change the reference case while authentication remains available.",
+      "rationale": "Codex-specific ephemeral read-only execution is isolated behind RuntimeExecutionAdapter v1, bound to the re-baselined canonical Siti bundle, stages the five canonical skills under .agents/skills, and ignores user config/rules so local configuration cannot silently change the reference case while authentication remains available.",
       "evidence": [
         "packages/codex-execution-adapter/index.mjs",
         "packages/codex-execution-adapter/index.test.mjs",
         "docs/CODEX-EXECUTION-ADAPTER.md"
       ],
-      "next_action": "Retry the bounded live Codex reference run under the canonical 10-second policy after Chat 10 hardening; treat timeout as a real reference-case limit rather than promoting partial activity."
+      "next_action": "Run the bounded live Codex reference case under the reviewed 45-second canonical execution policy. This timeout was re-baselined from measured runtime latency and is part of the new core hash; do not promote partial/timeout attempts."
     },
     {
       "id": "reference-case-comparator",

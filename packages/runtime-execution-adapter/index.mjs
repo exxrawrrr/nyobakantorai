@@ -105,7 +105,7 @@ export function defineRuntimeExecutionPolicy(spec = {}) {
   const maxOutputBytes = Number(spec.max_output_bytes);
   const maxEvidenceRefs = Number(spec.max_evidence_refs);
   const maxArtifactRefs = Number(spec.max_artifact_refs);
-  assertContract(Number.isInteger(maxTimeoutMs) && maxTimeoutMs >= 1 && maxTimeoutMs <= 30_000, "POLICY_INVALID", "max_timeout_ms must be 1..30000");
+  assertContract(Number.isInteger(maxTimeoutMs) && maxTimeoutMs >= 1 && maxTimeoutMs <= 45_000, "POLICY_INVALID", "max_timeout_ms must be 1..45000");
   assertContract(Number.isInteger(defaultTimeoutMs) && defaultTimeoutMs >= 1 && defaultTimeoutMs <= maxTimeoutMs, "POLICY_INVALID", "default_timeout_ms must be within max_timeout_ms");
   assertContract(Number.isInteger(maxOutputBytes) && maxOutputBytes >= 1024 && maxOutputBytes <= 1024 * 1024, "POLICY_INVALID", "max_output_bytes must be 1024..1048576");
   assertContract(Number.isInteger(maxEvidenceRefs) && maxEvidenceRefs >= 1 && maxEvidenceRefs <= 64, "POLICY_INVALID", "max_evidence_refs must be 1..64");

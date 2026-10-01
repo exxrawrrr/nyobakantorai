@@ -22,7 +22,7 @@
     "production_repo_write",
     "unbounded_shell"
   ],
-  "max_timeout_ms": 10000,
+  "max_timeout_ms": 45000,
   "default_timeout_ms": 2000,
   "max_output_bytes": 262144,
   "max_evidence_refs": 32,

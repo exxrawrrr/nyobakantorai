@@ -5,7 +5,7 @@ Status: fixture/conformance proven; live provider execution not yet claimed.
 The Hermes execution adapter implements RuntimeExecutionAdapter v1 for the canonical Siti reference case from Chat 4.
 
 Locked core bundle SHA-256:
-0c32963e42471e3ab14c74dc99f627cab254d45cfbc2de07bfe870abd7811fee
+ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64
 
 The adapter refuses initialization when supplied core bytes do not reproduce that manifest hash.
 
