@@ -113,6 +113,9 @@ Exit gate: sensitive-local work cannot silently fail over to cloud and every rou
 
 ### CHAT 06 — Tool / Capability Router
 
+**Status: ✅ COMPLETED — 2026-10-01.**  
+Capability policy spec: `docs/V0.6-CAPABILITY-POLICY.md`
+
 Goal: resolve task capability needs to allowed tools/connectors.
 
 Deliverables:
