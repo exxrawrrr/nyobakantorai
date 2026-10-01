@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/model-route-decision.schema.json",
+  "title": "nyobakantorai Model Route Decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "request",
+    "selected",
+    "fallbacks",
+    "rejected",
+    "model_route_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "request": {
+      "type": "object"
+    },
+    "selected": {
+      "type": "object"
+    },
+    "fallbacks": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "rejected": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "model_route_ref": {
+      "type": "string",
+      "pattern": "^model-route:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
