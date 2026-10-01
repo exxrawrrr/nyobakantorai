@@ -262,6 +262,27 @@ function routeRef(payload) {
   return `model-route:sha256:${digest}`;
 }
 
+export function validateModelRouteDecision(input = {}) {
+  assert(input && typeof input === "object" && !Array.isArray(input), "Model route decision must be an object.");
+  assert(input.schema === MODEL_ROUTER_API, "Model route decision schema must be 1.");
+  const ref = clean(input.model_route_ref, 1000);
+  assert(/^model-route:sha256:[a-f0-9]{64}$/.test(ref), "Model route decision has invalid model_route_ref.");
+  assert(input.request && typeof input.request === "object", "Model route decision request is required.");
+  assert(input.selected && typeof input.selected === "object", "Model route decision selected candidate is required.");
+  assert(Array.isArray(input.fallbacks), "Model route decision fallbacks must be an array.");
+  assert(Array.isArray(input.rejected), "Model route decision rejected must be an array.");
+
+  const payload = {
+    schema:input.schema,
+    request:input.request,
+    selected:input.selected,
+    fallbacks:input.fallbacks,
+    rejected:input.rejected,
+  };
+  assert(routeRef(payload) === ref, "Model route ref does not match decision payload content.");
+  return true;
+}
+
 export class ModelRouteUnavailableError extends Error {
   constructor({ request, rejected }) {
     super("No eligible model/runtime candidate satisfies the route request.");
