@@ -261,15 +261,15 @@ itu belum kemenangan.
 
 ## Current state
 
-Release stable terbaru adalah **v0.4.0**. Workstream v0.5 saat ini masih berada di branch/PR pengembangan dan belum boleh dianggap sebagai release stabil sampai seluruh gate v0.5 selesai.
+Release stable terbaru adalah **v0.5.0**. Release ini membawa bounded Hermes+Codex reference portability, independent verification, immutable stable-install integrity, anomaly-first approval oversight, evidence classification, dan complexity pruning tanpa mengubah evidence gap terbuka menjadi klaim palsu.
 
-**v0.5 release readiness: `BLOCKED` (1 blocker).** Canonical Hermes+Codex Siti reference case sudah mencapai `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, LIVE_RUNTIME evidence growth sudah `INCREASED`, dan package candidate sudah `0.5.0`. Tinggal final promoted-`main` verify + manual release gate yang belum dijalankan. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json). `npm run v0.5:readiness:require-ready` sengaja harus gagal sampai semuanya benar-benar beres.
+**v0.5 release readiness: `READY`.** Canonical Hermes+Codex Siti reference case mencapai `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, LIVE_RUNTIME evidence growth `INCREASED`, package version `0.5.0`, exact promoted-main verify #571 lulus, dan manual release-gate juga lulus. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json).
 
-**Snapshot maturity v0.5 saat ini (candidate, bukan release stable):**
+**Snapshot maturity v0.5 release:**
 
 | Dimension | State |
 | --- | --- |
-| Artifact | `candidate` |
+| Artifact | `stable` |
 | Contract/API | `candidate` |
 | Runtime adapter | `candidate` |
 | Behavioral evidence | `evaluated-case` |
@@ -641,7 +641,7 @@ The CI workflow runs the same verification on Linux and Windows.
 
 ## Project status
 
-**v0.4.0 stable-promotion scope — owner authorization recorded 2026-09-30. The six deferred evidence classes remain explicit; a stable tag is valid only after final `main` verify + manual release-gate succeed.**
+**v0.5.0 stable release scope — final promoted-main verify and manual release-gate passed on 2026-10-01. Behavioral/real-world/provider maturity remains explicitly scoped; stable artifact does not imply universal runtime parity or broad production proof.**
 
 v0.5 also carries an executable [complexity budget](config/complexity-budget.json): 12 required subsystems have explicit delete-test decisions. Current delete-test result is **11 KEEP / 1 MERGE**; Chat 19 executed that MERGE by folding the internal `deferred-evidence` module/tests into `release-claims` while preserving the historical v0.4 ledger and docs unchanged. See [Complexity Budget](docs/COMPLEXITY-BUDGET.md).
 

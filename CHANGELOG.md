@@ -2,7 +2,7 @@
 
 All notable public changes to nyobakantorai are documented here.
 
-## [0.5.0] - Unreleased
+## [0.5.0] - 2026-10-01
 
 ### Added
 - Runtime-portability inventory, bounded execution contract, Hermes/Codex adapters, immutable Siti reference case, live harness, and comparator.
@@ -17,11 +17,10 @@ All notable public changes to nyobakantorai are documented here.
 - Temporary v0.5 implementation PRD was retired after permanent transfer.
 
 ### Release status
-- **BLOCKED** as of 2026-10-01 pending only the final promoted-`main` release gate.
+- **READY** for scoped stable publication on 2026-10-01 after exact promoted-main verify #571 and manual release-gate run `36808904291` both passed.
 - Canonical Hermes+Codex Siti reference case is `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`; v0.5 LIVE_RUNTIME evidence growth is `INCREASED`.
-- Package candidate declares `0.5.0`; final promoted-`main` verify/manual release gate have not run.
-- Real-world baseline remains `COLLECTING 1/20`; provider lifecycle remains `partial`.
-- Green feature-branch CI does not authorize merge/tag/release.
+- Package version is `0.5.0`; immutable stable installer assets are produced only from the tagged release commit.
+- Real-world baseline remains `COLLECTING 1/20`; provider lifecycle remains `partial`; those states are intentionally not promoted by this release.
 
 ## [0.4.0] - 2026-09-30
 
