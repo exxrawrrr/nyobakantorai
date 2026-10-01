@@ -110,6 +110,25 @@
 
 Permanent readiness source: `docs/V0.5-RELEASE-READINESS.md` + `config/v0.5-release-readiness.json`.
 
+## v0.6+ — Live Workforce
+
+Planning source of truth:
+
+- [Live Workforce Master PRD](docs/LIVE-WORKFORCE-MASTER-PRD.md)
+- [Live Workforce 30-Chat Execution Plan](docs/LIVE-WORKFORCE-30-CHAT-PLAN.md)
+
+Planned release sequence:
+
+- `v0.6.0` — Live Workforce: public demo, live AI sandbox, Mission Engine, model/tool routing, Siti verification/evidence UI;
+- `v0.6.1` — Reliability: cost governor, artifact workspace, replay, checkpoint/recovery, Project Brain;
+- `v0.7.0` — Connected Office: connector grants, browser, scheduler, Approval Center 2.0, skills store, connected-workflow evidence;
+- `v0.7.1` — Geo Intelligence: policy-aware Places discovery, dedupe, enrichment, verification, map missions;
+- `v0.8+` — Lead Intelligence and Mission Control;
+- `v0.9.0` — Team / multi-user office;
+- `v1.0.0` — evidence-gated Production Workforce.
+
+These are **planned milestones, not completed claims**. The implementation plan intentionally begins with existing v0.5.1 foundations and preserves current evidence, approval, release-integrity, and maturity boundaries.
+
 ## Non-goals
 
 nyobakantorai will not silently enable autonomous production writes, scrape credentials from local machines, or treat model output as verified evidence.
