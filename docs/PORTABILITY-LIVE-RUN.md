@@ -100,3 +100,16 @@ Changing the timeout changes the canonical policy component and therefore the ca
 `ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64`
 
 The diagnostic runs used to select the bound are explicitly **not** release portability evidence because they ran on local diagnostic commits. Qualifying evidence must be recollected on the exact reviewed GitHub head after this re-baseline.
+
+
+## 2026-10-01 QA semantics re-baseline
+
+Authorized live diagnostics after the timeout re-baseline showed that the original task wording under-specified the distinction between `CONTRADICTED` and `NOT_VERIFIED`, residual limitation wording, and evidence-path normalization.
+
+The task now defines generic verdict/review-state rules, canonical `facts.<field>` evidence paths, and an explicit incomplete-evidence residual limitation. The verification contract also allows only explicitly enumerated equivalent evidence paths where multiple source facts independently establish the same verdict.
+
+This changes the canonical core bundle from `ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64` to:
+
+`cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8`
+
+Local diagnostic runs reached `PORTABILITY_CANDIDATE` with zero comparison blockers under this final contract. Those diagnostic runs are not release evidence; qualifying records must be recollected on the exact reviewed GitHub head.

@@ -5,7 +5,7 @@ Status: fixture/conformance proven; live Codex execution not yet claimed.
 The Codex execution adapter implements RuntimeExecutionAdapter v1 for the exact same Chat 4 Siti reference case used by the Hermes adapter.
 
 Locked core bundle SHA-256:
-ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64
+cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8
 
 No Codex-specific worker or task fork exists.
 

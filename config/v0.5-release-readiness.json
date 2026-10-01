@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "candidate": "v0.5.0",
-  "observed_on": "2026-09-30",
+  "observed_on": "2026-10-01",
   "decision": "BLOCKED",
   "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. A green CI run may validate a truthful BLOCKED decision; only the explicit require-ready command may authorize the next release step.",
   "release_blockers": [
@@ -12,8 +12,8 @@
       "required_state": "SUPPORTED",
       "current_state": "UNPROVEN",
       "canonical_source": "config/evidence-classification.json",
-      "reason": "The canonical Siti reference case has not yet produced qualifying successful LIVE_RUNTIME_EVIDENCE through both Hermes and Codex on the reviewed 45-second re-baselined policy/core bundle.",
-      "safe_next_action": "Collect separately authorized Hermes and Codex live reference records on the exact reviewed GitHub head using the 45-second canonical policy/core bundle, complete independent verification, and rerun the comparator."
+      "reason": "The final re-baselined Siti reference case has not yet produced exact-reviewed-GitHub-head Hermes+Codex LIVE_RUNTIME_EVIDENCE with independent PASS verification and comparator state PORTABILITY_VERIFIED_FOR_REFERENCE_CASE.",
+      "safe_next_action": "Recollect Hermes and Codex live reference records on the exact reviewed GitHub head using core bundle cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8, independently verify both, and rerun the comparator."
     },
     {
       "id": "live-runtime-evidence-growth",

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-timeout-rebaseline-2026-10-01",
+  "audit": "v0.5-portability-qa-semantics-rebaseline-2026-10-01",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -390,7 +390,7 @@
         "packages/portability-reference/index.test.mjs",
         "docs/PORTABILITY-REFERENCE-CASE.md"
       ],
-      "next_action": "Hermes and Codex execution adapters must consume this exact core bundle hash unchanged. Any drift blocks reference-case portability evidence."
+      "next_action": "Hermes and Codex execution adapters must consume the final re-baselined core bundle unchanged. Verdict/evidence-path semantics are explicit; any further core drift invalidates prior live evidence."
     },
     {
       "id": "hermes-execution-adapter",
@@ -426,13 +426,13 @@
       "paths": [
         "packages/portability-comparator/index.mjs"
       ],
-      "rationale": "Runtime-neutral comparator checks canonical core identity, Hermes+Codex runtime pairing, evidence completeness, protected expected atoms, prohibited-action/workspace state, exact live commit binding, and independent verification state before allowing a reference-case portability claim.",
+      "rationale": "Runtime-neutral comparator checks canonical core identity, Hermes+Codex runtime pairing, evidence completeness, strict protected verdict atoms, explicitly enumerated equivalent evidence paths, prohibited-action/workspace state, exact live commit binding, and independent verification state before allowing a reference-case portability claim.",
       "evidence": [
         "packages/portability-comparator/index.test.mjs",
         "scripts/portability-compare.mjs",
         "docs/PORTABILITY-COMPARATOR.md"
       ],
-      "next_action": "Feed separately collected live Hermes/Codex run records into this comparator. Fixture evidence must remain PARTIAL and live evidence without independent verification must remain PORTABILITY_CANDIDATE."
+      "next_action": "Collect exact-head live Hermes/Codex records under the final re-baselined core, then attach genuinely independent verification. Live evidence without independent PASS remains PORTABILITY_CANDIDATE."
     },
     {
       "id": "live-reference-run-harness",

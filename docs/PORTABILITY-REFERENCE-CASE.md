@@ -110,7 +110,7 @@ five-skill bundle
 The aggregate canonical core bundle is:
 
 ```text
-ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64
+cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8
 ```
 
 Canonical byte length:
@@ -179,3 +179,16 @@ It does **not** prove:
 - that the application contract is an OS/container sandbox.
 
 Live behavioral proof belongs to the later Hermes/Codex execution phases.
+
+
+## Verdict and evidence-path semantics
+
+The canonical task now defines provider-neutral QA semantics explicitly:
+
+- `SUPPORTED` only when facts directly support a statement;
+- `CONTRADICTED` when facts directly falsify it;
+- `NOT_VERIFIED` only when available facts neither support nor falsify it;
+- `FAIL` if any claim is contradicted;
+- `INCOMPLETE` only when no claim is contradicted and at least one remains not verified.
+
+Evidence paths use canonical `facts.<field>` notation. Equivalent paths are allowed only when the verification contract explicitly enumerates them.

@@ -70,3 +70,10 @@ The CLI exits successfully only for PORTABILITY_VERIFIED_FOR_REFERENCE_CASE. NOT
 ## Claim boundary
 
 Chat 7 proves comparator logic and state gating under deterministic adapter fixture outputs. It does not create live runtime evidence and therefore does not upgrade the repository's portability claim.
+
+
+## Equivalent evidence paths
+
+Protected verdict semantics remain strict. For an evidence-path atom, the canonical verification contract may explicitly enumerate more than one accepted source fact only when multiple facts independently support the same verdict. The comparator accepts only that enumerated set; it never accepts an arbitrary runtime-selected path.
+
+For `claim-verified`, both `facts.source_status` and `facts.evidence_packet_complete` independently contradict the statement that the source artifact already proves VERIFIED. Hermes and Codex may therefore cite different members of that explicit set without creating a false behavioral disagreement.
