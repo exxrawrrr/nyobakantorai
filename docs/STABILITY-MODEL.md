@@ -15,7 +15,7 @@ Canonical source: `config/maturity-model.json`.
 
 These dimensions are independent: `stable artifact != stable behavior`; `stable API != validated provider lifecycle`; `evaluated-case != repeated`; `collecting != demonstrated`.
 
-**Artifact candidate:** immutable installer machinery and tamper tests exist, but v0.5.0 is not promoted/tagged stable.
+**Artifact candidate:** immutable installer machinery and tamper tests exist. The immutable `v0.5.0` tag failed before publication during tagged asset verification, so `v0.5.1` remains the current artifact candidate until the complete tagged-release pipeline succeeds.
 
 **Contract/API candidate:** runtime, receipt/trust, approval, and portability contracts are executable/tested but unreleased as v0.5 stable contracts.
 
