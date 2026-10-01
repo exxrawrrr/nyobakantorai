@@ -13,12 +13,16 @@ function compute(claim,byId){
  const qualified=referenced.filter((item)=>QUALIFYING.has(item.status)&&(item.supports_claims||[]).includes(claim.id));
  const classes=new Set(qualified.map((item)=>item.class));
  const classOk=(claim.required_classes||[]).every((cls)=>classes.has(cls));
+ const requiredIds=Array.isArray(claim.required_evidence_ids)?claim.required_evidence_ids:[];
+ const qualifiedIds=new Set(qualified.map((item)=>item.id));
+ const requiredEvidenceOk=requiredIds.every((id)=>qualifiedIds.has(id));
  const units=qualified.reduce((n,item)=>n+Number(item.units||0),0);
  const minUnits=Math.max(1,Number(claim.minimum_qualifying_units||1));
  const minRecords=Math.max(1,Number(claim.minimum_qualifying_records||1));
- if(classOk&&units>=minUnits&&qualified.length>=minRecords)return{status:"SUPPORTED",qualified,units};
- if(referenced.some((item)=>item.status==="COLLECTING"))return{status:"COLLECTING",qualified,units};
- return{status:"UNPROVEN",qualified,units};
+ if(classOk&&requiredEvidenceOk&&units>=minUnits&&qualified.length>=minRecords)return{status:"SUPPORTED",qualified,units,missingRequiredEvidence:[]};
+ const missingRequiredEvidence=requiredIds.filter((id)=>!qualifiedIds.has(id));
+ if(referenced.some((item)=>item.status==="COLLECTING"))return{status:"COLLECTING",qualified,units,missingRequiredEvidence};
+ return{status:"UNPROVEN",qualified,units,missingRequiredEvidence};
 }
 export async function validateEvidenceInventory(inventory,{root=resolve(import.meta.dirname,"../..")}={}){
  const errors=[];
@@ -49,9 +53,16 @@ export async function validateEvidenceInventory(inventory,{root=resolve(import.m
   for(const cls of claim.required_classes||[])if(!EVIDENCE_CLASSES.includes(cls))errors.push(claim.id+": invalid required class "+cls);
   if(!Array.isArray(claim.evidence_ids))errors.push(claim.id+": evidence_ids required");
   for(const id of claim.evidence_ids||[])if(!byId.has(id))errors.push(claim.id+": unknown evidence id "+id);
+  if(claim.required_evidence_ids!==undefined&&!Array.isArray(claim.required_evidence_ids))errors.push(claim.id+": required_evidence_ids must be an array");
+  const requiredEvidenceIds=Array.isArray(claim.required_evidence_ids)?claim.required_evidence_ids:[];
+  if(new Set(requiredEvidenceIds).size!==requiredEvidenceIds.length)errors.push(claim.id+": required_evidence_ids must not contain duplicates");
+  for(const id of requiredEvidenceIds){
+   if(!byId.has(id))errors.push(claim.id+": unknown required evidence id "+id);
+   if(Array.isArray(claim.evidence_ids)&&!claim.evidence_ids.includes(id))errors.push(claim.id+": required evidence must also appear in evidence_ids: "+id);
+  }
   if(!nonEmpty(claim.claim))errors.push(claim.id+": claim text required");
   const result=compute(claim,byId);
-  claimResults[claim.id]=Object.freeze({expected_status:claim.expected_status,computed_status:result.status,qualifying_units:result.units,qualifying_evidence:Object.freeze(result.qualified.map((x)=>x.id)),qualifying_classes:Object.freeze([...new Set(result.qualified.map((x)=>x.class))].sort())});
+  claimResults[claim.id]=Object.freeze({expected_status:claim.expected_status,computed_status:result.status,qualifying_units:result.units,qualifying_evidence:Object.freeze(result.qualified.map((x)=>x.id)),qualifying_classes:Object.freeze([...new Set(result.qualified.map((x)=>x.class))].sort()),missing_required_evidence:Object.freeze(result.missingRequiredEvidence||[])});
   if(result.status!==claim.expected_status)errors.push(claim.id+": expected "+claim.expected_status+" but computed "+result.status);
   if(claim.kind==="BEHAVIORAL"&&result.status==="SUPPORTED"&&!result.qualified.some((x)=>NON_SELF.has(x.class)))errors.push(claim.id+": behavioral claim cannot be supported only by internal/self-observation evidence");
   if(claim.kind==="REAL_WORLD"&&result.status==="SUPPORTED"&&!result.qualified.some((x)=>x.class==="REAL_WORLD_EVIDENCE"))errors.push(claim.id+": real-world claim requires REAL_WORLD_EVIDENCE");
@@ -63,7 +74,7 @@ export async function validateEvidenceInventory(inventory,{root=resolve(import.m
   if(!entry||!["INCREASED","OPEN_REQUIRED"].includes(entry.state)){errors.push("v0_5_evidence_growth."+cls+" must be INCREASED or OPEN_REQUIRED");continue;}
   const ids=Array.isArray(entry.evidence_ids)?entry.evidence_ids:[];
   if(entry.state==="INCREASED"&&!ids.length)errors.push("v0_5_evidence_growth."+cls+" INCREASED requires evidence_ids");
-  for(const id of ids){const item=byId.get(id);if(!item)errors.push("v0_5_evidence_growth."+cls+": unknown evidence "+id);else if(item.class!==cls)errors.push("v0_5_evidence_growth."+cls+": evidence class mismatch for "+id);}
+  for(const id of ids){const item=byId.get(id);if(!item)errors.push("v0_5_evidence_growth."+cls+": unknown evidence "+id);else{if(item.class!==cls)errors.push("v0_5_evidence_growth."+cls+": evidence class mismatch for "+id);if(entry.state==="INCREASED"&&!QUALIFYING.has(item.status))errors.push("v0_5_evidence_growth."+cls+": evidence not qualifying "+id);}}
   growth[cls]=Object.freeze({state:entry.state,evidence_ids:Object.freeze(ids),note:entry.note||""});
  }
  const counts=Object.fromEntries(EVIDENCE_CLASSES.map((cls)=>[cls,(inventory?.evidence||[]).filter((x)=>x.class===cls).length]));

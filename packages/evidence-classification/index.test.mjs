@@ -28,9 +28,23 @@ test("removing one canonical live runtime evidence record demotes portability fa
  changed.evidence.find((x)=>x.id==="codex-canonical-live-reference").status="NOT_RUN";
  const validation=await validateEvidenceInventory(changed,{root});
  assert.equal(validation.ok,false);
+ assert.equal(validation.claims["reference-case-portability"].computed_status,"UNPROVEN");
+ assert.deepEqual(validation.claims["reference-case-portability"].missing_required_evidence,["codex-canonical-live-reference"]);
  assert.ok(validation.errors.some((e)=>/reference-case-portability: expected SUPPORTED but computed UNPROVEN/.test(e)));
+ assert.ok(validation.errors.some((e)=>/v0_5_evidence_growth\.LIVE_RUNTIME_EVIDENCE: evidence not qualifying codex-canonical-live-reference/.test(e)));
 });
 test("missing evidence source fails closed",async()=>{
  const {inventory}=await readAndValidateEvidenceInventory({root});const changed=structuredClone(inventory);changed.evidence[0].source_paths.push("does-not-exist/chat17-proof.json");
  const validation=await validateEvidenceInventory(changed,{root});assert.equal(validation.ok,false);assert.ok(validation.errors.some((e)=>/source path missing/.test(e)));
+});
+
+
+test("required evidence id must be known and listed in the claim evidence set",async()=>{
+ const {inventory}=await readAndValidateEvidenceInventory({root});const changed=structuredClone(inventory);
+ const claim=changed.claims.find((x)=>x.id==="reference-case-portability");
+ claim.required_evidence_ids=[...claim.required_evidence_ids,"missing-runtime-proof"];
+ const validation=await validateEvidenceInventory(changed,{root});
+ assert.equal(validation.ok,false);
+ assert.ok(validation.errors.some((e)=>/unknown required evidence id missing-runtime-proof/.test(e)));
+ assert.ok(validation.errors.some((e)=>/required evidence must also appear in evidence_ids: missing-runtime-proof/.test(e)));
 });

@@ -389,7 +389,12 @@
         "codex-canonical-live-reference",
         "canonical-portability-independent-comparison"
       ],
-      "claim": "The bounded canonical Siti reference case completed through both Hermes and Codex with identical core inputs, independent PASS verification, and a comparator result of PORTABILITY_VERIFIED_FOR_REFERENCE_CASE."
+      "claim": "The bounded canonical Siti reference case completed through both Hermes and Codex with identical core inputs, independent PASS verification, and a comparator result of PORTABILITY_VERIFIED_FOR_REFERENCE_CASE.",
+      "required_evidence_ids": [
+        "hermes-canonical-live-reference",
+        "codex-canonical-live-reference",
+        "canonical-portability-independent-comparison"
+      ]
     },
     {
       "id": "real-world-workflow-demonstrated",

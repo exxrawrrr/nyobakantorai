@@ -56,3 +56,16 @@ Tracked evidence:
 Evidence directory: `benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/`.
 
 This increases both `LIVE_RUNTIME_EVIDENCE` and `CROSS_IMPLEMENTATION` for v0.5. It does **not** promote real-world workflow maturity, provider lifecycle completeness, or general runtime parity.
+
+
+## Required named evidence
+
+Evidence classes are necessary but not always sufficient. A claim may also declare `required_evidence_ids` when the wording requires specific independent observations rather than merely any record from a class.
+
+The canonical reference portability claim requires all three named records to remain qualifying:
+
+- `hermes-canonical-live-reference`;
+- `codex-canonical-live-reference`;
+- `canonical-portability-independent-comparison`.
+
+If any one becomes `NOT_RUN`, `BLOCKED`, or otherwise non-qualifying, the claim falls back to `UNPROVEN`. Likewise, a v0.5 evidence-growth class cannot be `INCREASED` using a non-qualifying record.
