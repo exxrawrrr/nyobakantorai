@@ -4,6 +4,7 @@ import { basename, dirname, resolve } from "node:path";
 import { buildPortabilityReferenceCase } from "../packages/portability-reference/index.mjs";
 import { findExecutable, inspectProviders } from "../packages/provider-doctor/index.mjs";
 import { runReferenceEvidence } from "../packages/portability-live-run/index.mjs";
+import { buildReferenceSandboxDeclaration } from "../packages/live-sandbox/reference.mjs";
 
 const root=resolve(import.meta.dirname,"..");
 const argv=process.argv.slice(2);
@@ -14,13 +15,19 @@ const runtime=String(flag("--runtime")||"").trim().toLowerCase();
 if(!["hermes","codex"].includes(runtime)) throw new Error("provide --runtime hermes|codex");
 
 const readJson=async(rel)=>JSON.parse(await readFile(resolve(root,rel),"utf8"));
-const [catalog,policy,livePolicy]=await Promise.all([
+const [catalog,policy,livePolicy,sandboxPolicy]=await Promise.all([
   readJson("config/provider-doctor.json"),
   readJson("config/runtime-execution-policy.json"),
   readJson("config/portability-live-run.json"),
+  readJson("config/live-sandbox-policy.json"),
 ]);
 const reference=await buildPortabilityReferenceCase({root});
 if(reference.manifest.core_bundle_sha256!==livePolicy.core_bundle_sha256) throw new Error("live-run policy core hash drift");
+const sandboxDeclaration=buildReferenceSandboxDeclaration({
+  reference,
+  runtime,
+  sandboxPolicy,
+});
 
 function git(args){
   return execFileSync("git",args,{cwd:root,encoding:"utf8",windowsHide:true}).trim();
@@ -50,6 +57,11 @@ const plan={
   runtime,
   reference_case_id:reference.manifest.reference_case_id,
   core_bundle_sha256:reference.manifest.core_bundle_sha256,
+  reference_task_id:reference.core_bundle.task.task_id,
+  sandbox:{
+    policy_id:sandboxPolicy.id,
+    declaration:sandboxDeclaration,
+  },
   repository,
   provider,
   version_probe:versionProbe,
@@ -80,7 +92,9 @@ const result=await runReferenceEvidence({
   repository,
   provider,
   versionProbe,
-  executable
+  executable,
+  sandboxPolicy,
+  sandboxDeclaration
 });
 
 const out=resolve(flag("--out")||resolve(root,livePolicy.default_local_output_dir,runtime+"-"+repository.commit+".json"));
@@ -92,6 +106,15 @@ process.stdout.write(JSON.stringify({
   evidence_class:result.record.evidence_class,
   record_sha256:result.record_sha256,
   out:basename(out),
-  qualification:result.qualification
+  qualification:result.qualification,
+  sandbox:result.sandbox ? {
+    admission_ref:result.sandbox.admission.sandbox_admission_ref,
+    executed:result.sandbox.executed,
+    status:result.sandbox.record?.status||null,
+    quota_status:result.sandbox.record?.quota_status||null,
+    teardown_verified:result.sandbox.record?.teardown_verified===true,
+    unverified_dimensions:result.sandbox.record?.unverified_dimensions||[],
+    record_ref:result.sandbox.record?.sandbox_record_ref||null,
+  } : null
 },null,2)+"\n");
 if(result.record.evidence_class!=="LIVE_RUNTIME_EVIDENCE") process.exitCode=3;
