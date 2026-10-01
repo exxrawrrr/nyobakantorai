@@ -1,3 +1,5 @@
+import { validateModelRouteDecision } from "./index.mjs";
+
 const ROUTE_REF = /^model-route:sha256:[a-f0-9]{64}$/;
 
 const clean = (value, max = 4000) => String(value ?? "").trim().slice(0, max);
@@ -23,6 +25,7 @@ export function bindModelRouteToRuntime(routeDecision = {}, {
 } = {}) {
   assert(routeDecision && typeof routeDecision === "object" && !Array.isArray(routeDecision), "Model route decision is required.");
   assert(ROUTE_REF.test(clean(routeDecision.model_route_ref, 1000)), "Model route decision has invalid model_route_ref.");
+  validateModelRouteDecision(routeDecision);
   assert(routeDecision.selected && typeof routeDecision.selected === "object", "Model route decision selected candidate is required.");
   assert(adapter && typeof adapter === "object", "Model route runtime adapter is required.");
   assert(policy && typeof policy === "object", "Model route runtime policy is required.");
