@@ -352,6 +352,8 @@ CANCELLED
 
 ### 8.5 Model Router
 
+CHAT 05 implementation source: [v0.6 Model Router](V0.6-MODEL-ROUTER.md). The current router is provider-neutral and decision-only: it filters/ranks supplied model/runtime candidates and emits an inspectable content-addressed route decision; it does not execute inference.
+
 Employees declare model requirements, not hardcoded global providers.
 
 Routing inputs may include:
