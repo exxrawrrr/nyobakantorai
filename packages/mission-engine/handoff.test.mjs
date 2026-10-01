@@ -55,7 +55,7 @@ test("handoff envelope carries dependency sources, bounded scope and artifact in
 
   assert.equal(normalizeHandoffEnvelope(envelope).destination_employee_id, "praroro");
   assert.deepEqual(envelope.source.task_ids, sourceTaskIds);
-  assert.deepEqual(envelope.source.employee_ids.sort(), ["alex","ratri"]);
+  assert.deepEqual([...envelope.source.employee_ids].sort(), ["alex","ratri"]);
   assert.deepEqual(envelope.input_artifact_refs, ["artifact:research","artifact:seo"]);
   assert.ok(envelope.required_evidence.includes("source provenance"));
 });
