@@ -58,6 +58,7 @@ function normalizeCost(input={},label="cost"){
     assert(input.amount_usd==null,`${label} UNKNOWN must not carry amount_usd.`);
     return Object.freeze({status:"UNKNOWN",amount_usd:null});
   }
+  assert(input.amount_usd!=null,`${label} KNOWN requires amount_usd.`);
   const amount=Number(input.amount_usd);
   assert(Number.isFinite(amount)&&amount>=0,`${label} KNOWN requires a non-negative amount_usd.`);
   return Object.freeze({status:"KNOWN",amount_usd:amount});
@@ -79,7 +80,7 @@ function normalizeModelIdentity(input={},label="model_identity"){
 function normalizeProjectedUsage(input={}){
   assert(input&&typeof input==="object"&&!Array.isArray(input),"projected_usage must be an object.");
   return Object.freeze({
-    duration_ms:int(input.duration_ms,"projected_usage.duration_ms",{min:1,max:45_000}),
+    duration_ms:int(input.duration_ms,"projected_usage.duration_ms",{min:1,max:86_400_000}),
     tool_calls:int(input.tool_calls,"projected_usage.tool_calls",{min:0,max:100_000}),
     input_tokens:int(input.input_tokens,"projected_usage.input_tokens",{min:0,max:100_000_000}),
     output_tokens:int(input.output_tokens,"projected_usage.output_tokens",{min:0,max:100_000_000}),
