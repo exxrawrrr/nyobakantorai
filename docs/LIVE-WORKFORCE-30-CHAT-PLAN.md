@@ -130,9 +130,10 @@ Exit gate: disconnected/unauthorized tools cannot appear executed and write rout
 
 ### CHAT 07 — Live Sandbox + Minimum Cost/Quota Guard
 
-**Status: ⚠️ IMPLEMENTED — CHAT 07B DIAGNOSED PROVIDER QUOTA BLOCKER; REAL-MODEL SUCCESS EXIT GATE BLOCKED — 2026-10-01.**
+**Status: COMPLETE — IMPLEMENTED, VERIFIED, EXTERNAL PROVIDER LIMITATION DOCUMENTED — 2026-10-01.**
 Sandbox spec/status: `docs/V0.6-LIVE-SANDBOX.md`
 Diagnosis: `docs/V0.6-CODEX-RUNTIME-DIAGNOSIS.md`
+Closure decision: CHAT 07 is closed for repository delivery. The current provider quota limitation remains documented evidence, but it does not require waiting or further adapter changes before CHAT 08.
 
 Goal: make real-model execution safe enough for bounded live use.
 
@@ -146,7 +147,9 @@ Deliverables:
 - no external writes;
 - no hidden paid fallback.
 
-Exit gate: one bounded real-model task runs in disposable state, teardown is verified, and hard ceilings fail closed.
+Original live-observation target: one bounded real-model task runs in disposable state, teardown is verified, and hard ceilings fail closed.
+
+Closure basis: implementation and CI are verified; earlier canonical live evidence exists; the fresh CHAT 07B attempt terminated on explicit external provider quota exhaustion while teardown and fail-closed behavior remained safe. The missing fresh provider-success observation is retained as an operational limitation, not unfinished repository work.
 
 ### CHAT 08 — Public Interactive Demo Backend + UI
 
