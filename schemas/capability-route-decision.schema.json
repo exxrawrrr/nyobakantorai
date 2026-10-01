@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/capability-route-decision.schema.json",
+  "title": "nyobakantorai Capability Route Decision v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "allowed",
+    "decision",
+    "reason",
+    "employee_id",
+    "capability",
+    "connection",
+    "grant",
+    "action",
+    "access_mode",
+    "target",
+    "autonomy",
+    "approval_status",
+    "approval_ref",
+    "required_evidence",
+    "capability_route_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "allowed": {
+      "const": true
+    },
+    "decision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "employee_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+    },
+    "capability": {
+      "type": "object"
+    },
+    "connection": {
+      "type": "object"
+    },
+    "grant": {
+      "type": "object"
+    },
+    "action": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "access_mode": {
+      "enum": [
+        "READ",
+        "WRITE"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_type",
+        "resource_id"
+      ],
+      "properties": {
+        "resource_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resource_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "autonomy": {
+      "enum": [
+        "OBSERVE",
+        "GUARDED",
+        "DELEGATED"
+      ]
+    },
+    "approval_status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approval_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "required_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "capability_route_ref": {
+      "type": "string",
+      "pattern": "^capability-route:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
