@@ -39,3 +39,20 @@ Historical bounded Fikri/Playwright live evidence stays valid in its scope, but 
 Run `npm run evidence:inventory:check`.
 
 The inventory is evidence governance, not provider permission or an external-action grant.
+
+
+## Canonical live portability evidence — 2026-10-01
+
+The bounded Siti reference-case portability claim is now **SUPPORTED** at reference-case scope.
+
+Tracked evidence:
+
+- Hermes exact-commit live record + independent Python PASS verification;
+- Codex exact-commit live record + independent Python PASS verification;
+- identical canonical core bundle `cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8`;
+- comparator state `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`;
+- comparator blocking reasons: none.
+
+Evidence directory: `benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/`.
+
+This increases both `LIVE_RUNTIME_EVIDENCE` and `CROSS_IMPLEMENTATION` for v0.5. It does **not** promote real-world workflow maturity, provider lifecycle completeness, or general runtime parity.

@@ -18,7 +18,7 @@ All notable public changes to nyobakantorai are documented here.
 
 ### Release status
 - **BLOCKED** as of 2026-09-30.
-- Canonical Hermes+Codex portability remains `UNPROVEN`; LIVE_RUNTIME evidence growth remains `OPEN_REQUIRED`.
+- Canonical Hermes+Codex Siti reference case is `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`; v0.5 LIVE_RUNTIME evidence growth is `INCREASED`.
 - Package still declares `0.4.0`; final promoted-`main` verify/manual release gate have not run.
 - Real-world baseline remains `COLLECTING 1/20`; provider lifecycle remains `partial`.
 - Green feature-branch CI does not authorize merge/tag/release.

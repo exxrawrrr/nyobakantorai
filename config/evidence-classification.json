@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "candidate": "v0.5.0",
-  "observed_on": "2026-09-30",
+  "observed_on": "2026-10-01",
   "policy": "Evidence class describes how a check observes behavior, not how impressive the result sounds. Internal/self-observation evidence cannot be the sole support for a SUPPORTED behavioral claim.",
   "classes": [
     "INTERNAL_UNIT",
@@ -235,6 +235,52 @@
       ],
       "supports_claims": [],
       "claim_limit": "Deterministic isolated lifecycle matrix is not a real clean-machine Hermes lifecycle."
+    },
+    {
+      "id": "hermes-canonical-live-reference",
+      "class": "LIVE_RUNTIME_EVIDENCE",
+      "status": "EVALUATED",
+      "units": 1,
+      "source_paths": [
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/hermes.run.json",
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/hermes.verification.json",
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/hermes.verified.json"
+      ],
+      "supports_claims": [
+        "reference-case-portability"
+      ],
+      "claim_limit": "One bounded canonical Siti reference run through Hermes on exact source commit 30b3be36...; independently verified and safe only for this reference-case scope."
+    },
+    {
+      "id": "codex-canonical-live-reference",
+      "class": "LIVE_RUNTIME_EVIDENCE",
+      "status": "EVALUATED",
+      "units": 1,
+      "source_paths": [
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/codex.run.json",
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/codex.verification.json",
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/codex.verified.json"
+      ],
+      "supports_claims": [
+        "reference-case-portability"
+      ],
+      "claim_limit": "One bounded canonical Siti reference run through Codex on the same exact source commit and core bundle; independently verified and safe only for this reference-case scope."
+    },
+    {
+      "id": "canonical-portability-independent-comparison",
+      "class": "CROSS_IMPLEMENTATION",
+      "status": "EVALUATED",
+      "units": 1,
+      "source_paths": [
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/comparison.json",
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/hermes.verification.json",
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/codex.verification.json",
+        "reference-verifier/python/portability_run_verifier.py"
+      ],
+      "supports_claims": [
+        "reference-case-portability"
+      ],
+      "claim_limit": "Independent Python verification plus runtime-neutral comparison supports PORTABILITY_VERIFIED_FOR_REFERENCE_CASE only; it does not prove global runtime parity or external-world correctness."
     }
   ],
   "claims": [
@@ -327,19 +373,23 @@
     {
       "id": "reference-case-portability",
       "kind": "BEHAVIORAL",
-      "expected_status": "UNPROVEN",
+      "expected_status": "SUPPORTED",
       "required_classes": [
-        "LIVE_RUNTIME_EVIDENCE"
+        "LIVE_RUNTIME_EVIDENCE",
+        "CROSS_IMPLEMENTATION"
       ],
-      "minimum_qualifying_units": 2,
-      "minimum_qualifying_records": 2,
+      "minimum_qualifying_units": 3,
+      "minimum_qualifying_records": 3,
       "evidence_ids": [
         "runtime-execution-adapter-conformance",
         "hermes-reference-adapter-conformance",
         "codex-reference-adapter-conformance",
-        "portability-reference-byte-identity"
+        "portability-reference-byte-identity",
+        "hermes-canonical-live-reference",
+        "codex-canonical-live-reference",
+        "canonical-portability-independent-comparison"
       ],
-      "claim": "One canonical Siti worker/task executes successfully through both Hermes and Codex with unchanged core inputs and policy."
+      "claim": "The bounded canonical Siti reference case completed through both Hermes and Codex with identical core inputs, independent PASS verification, and a comparator result of PORTABILITY_VERIFIED_FOR_REFERENCE_CASE."
     },
     {
       "id": "real-world-workflow-demonstrated",
@@ -383,14 +433,18 @@
     "CROSS_IMPLEMENTATION": {
       "state": "INCREASED",
       "evidence_ids": [
-        "node-python-verifier-differential"
+        "node-python-verifier-differential",
+        "canonical-portability-independent-comparison"
       ],
-      "note": "v0.5 added an independently implemented Python verifier and shared differential corpus."
+      "note": "v0.5 includes the independent receipt verifier/differential corpus plus an independent Python verifier for canonical portability run records and a verified cross-runtime comparison."
     },
     "LIVE_RUNTIME_EVIDENCE": {
-      "state": "OPEN_REQUIRED",
-      "evidence_ids": [],
-      "note": "Existing bounded live records are inventoried, but the v0.5 canonical Hermes+Codex portability proof still lacks qualifying successful live evidence."
+      "state": "INCREASED",
+      "evidence_ids": [
+        "hermes-canonical-live-reference",
+        "codex-canonical-live-reference"
+      ],
+      "note": "v0.5 now includes qualifying exact-commit canonical Hermes and Codex live reference records under the same final core bundle, both independently verified."
     }
   }
 }

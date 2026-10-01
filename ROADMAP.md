@@ -87,10 +87,10 @@
 - [x] runtime-neutral execution contract plus Hermes and Codex reference adapters
 - [x] immutable canonical Siti reference-case bundle and comparator
 - [x] bounded live reference-run harness with explicit confirmation, no auto-install/login, temporary workspace, and public-safety scan
-- [ ] qualifying canonical Hermes live reference evidence
-- [ ] qualifying canonical Codex live reference evidence under the current bounded execution policy
-- [ ] comparator reaches `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`
-- [ ] v0.5 `LIVE_RUNTIME_EVIDENCE` growth promoted from `OPEN_REQUIRED` only after qualifying reference evidence
+- [x] qualifying canonical Hermes live reference evidence
+- [x] qualifying canonical Codex live reference evidence under the reviewed bounded execution policy
+- [x] comparator reaches `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`
+- [x] v0.5 `LIVE_RUNTIME_EVIDENCE` growth promoted to `INCREASED` from qualifying reference evidence
 - [x] independent Python reference verifier plus Node/Python adversarial differential corpus
 - [x] receipt trust registry with ACTIVE/RETIRED/REVOKED, rotation, revocation, and compromise semantics
 - [x] immutable stable-install material with manifest/checksum/exact-source verification and no mutable-main fallback

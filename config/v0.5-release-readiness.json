@@ -6,26 +6,6 @@
   "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. A green CI run may validate a truthful BLOCKED decision; only the explicit require-ready command may authorize the next release step.",
   "release_blockers": [
     {
-      "id": "canonical-reference-portability",
-      "category": "LIVE_RUNTIME_EVIDENCE",
-      "status": "OPEN",
-      "required_state": "SUPPORTED",
-      "current_state": "UNPROVEN",
-      "canonical_source": "config/evidence-classification.json",
-      "reason": "The final re-baselined Siti reference case has not yet produced exact-reviewed-GitHub-head Hermes+Codex LIVE_RUNTIME_EVIDENCE with independent PASS verification and comparator state PORTABILITY_VERIFIED_FOR_REFERENCE_CASE.",
-      "safe_next_action": "Recollect Hermes and Codex live reference records on the exact reviewed GitHub head, independently verify each with python-portability-run-verifier-v1, then rerun the comparator."
-    },
-    {
-      "id": "live-runtime-evidence-growth",
-      "category": "EVIDENCE_GROWTH",
-      "status": "OPEN",
-      "required_state": "INCREASED",
-      "current_state": "OPEN_REQUIRED",
-      "canonical_source": "config/evidence-classification.json",
-      "reason": "v0.5 increased black-box and cross-implementation evidence, but the required canonical live-runtime evidence growth is still open.",
-      "safe_next_action": "Promote only newly qualifying canonical Hermes+Codex reference records collected after the 45-second policy re-baseline and public-safety review; earlier diagnostic or bounded Fikri/Playwright records do not substitute for this scope."
-    },
-    {
       "id": "package-version-v0.5",
       "category": "RELEASE_ARTIFACT",
       "status": "OPEN",
@@ -113,5 +93,19 @@
       "signed receipts prove the external action happened correctly",
       "v0.5 is production-proven because CI passed"
     ]
-  }
+  },
+  "resolved_evidence": [
+    {
+      "id": "canonical-reference-portability",
+      "state": "SUPPORTED",
+      "source": "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/comparison.json",
+      "scope": "PORTABILITY_VERIFIED_FOR_REFERENCE_CASE"
+    },
+    {
+      "id": "live-runtime-evidence-growth",
+      "state": "INCREASED",
+      "source": "config/evidence-classification.json",
+      "scope": "canonical Hermes+Codex bounded reference case"
+    }
+  ]
 }

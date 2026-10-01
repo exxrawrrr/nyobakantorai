@@ -2,7 +2,7 @@
   "schema": 1,
   "candidate": "v0.5.0",
   "baseline_release": "v0.4.0",
-  "observed_on": "2026-09-30",
+  "observed_on": "2026-10-01",
   "rule": "Each maturity dimension is independent. Promotion in one dimension MUST NOT promote another dimension.",
   "dimensions": {
     "artifact": {
@@ -27,18 +27,20 @@
       "basis": [
         "packages/hermes-execution-adapter/index.test.mjs",
         "packages/codex-execution-adapter/index.test.mjs",
-        "config/runtime-portability-map.json"
+        "config/runtime-portability-map.json",
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/comparison.json"
       ],
-      "rationale": "Hermes and Codex reference adapters pass conformance, while canonical successful live reference execution across both runtimes remains unproven."
+      "rationale": "Hermes and Codex reference adapters pass conformance and the bounded canonical Siti case is verified across both runtimes, but the adapter contract remains an unreleased v0.5 candidate."
     },
     "behavioral_evidence": {
       "state": "evaluated-case",
       "basis": [
         "benchmarks/fikri-live/run-2026-09-29.json",
         "benchmarks/provider-evaluations/browser-results.json",
-        "config/evidence-classification.json"
+        "config/evidence-classification.json",
+        "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/comparison.json"
       ],
-      "rationale": "Bounded controlled live cases and black-box checks exist. This does not imply repeated or general behavior, and reference-case portability remains UNPROVEN."
+      "rationale": "Bounded controlled live cases now include a verified Hermes+Codex Siti portability reference case. This remains evaluated-case evidence, not repeated/general behavior, and does not promote real-world workflow or provider-lifecycle maturity."
     },
     "real_world_workflow": {
       "state": "collecting",
