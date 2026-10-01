@@ -19,10 +19,10 @@
       "delegated_capabilities": []
     },
     "task_ids": [
-      "task-fixture-01-evidence",
-      "task-fixture-02-domain",
-      "task-fixture-03-synthesis",
-      "task-fixture-04-verify"
+      "tnode-fixture-01-evidence",
+      "tnode-fixture-02-domain",
+      "tnode-fixture-03-synthesis",
+      "tnode-fixture-04-verify"
     ],
     "artifact_refs": [],
     "evidence_refs": [],
@@ -34,7 +34,7 @@
   "task_nodes": [
     {
       "schema": 1,
-      "task_id": "task-fixture-01-evidence",
+      "task_id": "tnode-fixture-01-evidence",
       "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
       "title": "Collect source evidence",
       "objective": "Collect bounded source evidence relevant to: Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
@@ -56,7 +56,7 @@
     },
     {
       "schema": 1,
-      "task_id": "task-fixture-02-domain",
+      "task_id": "tnode-fixture-02-domain",
       "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
       "title": "Analyze domain requirements",
       "objective": "Analyze the domain-specific requirements and risks for: Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
@@ -78,7 +78,7 @@
     },
     {
       "schema": 1,
-      "task_id": "task-fixture-03-synthesis",
+      "task_id": "tnode-fixture-03-synthesis",
       "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
       "title": "Synthesize mission result",
       "objective": "Synthesize a bounded result for: Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
@@ -100,7 +100,7 @@
     },
     {
       "schema": 1,
-      "task_id": "task-fixture-04-verify",
+      "task_id": "tnode-fixture-04-verify",
       "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
       "title": "Verify mission evidence",
       "objective": "Independently verify the synthesized result for: Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
@@ -123,7 +123,7 @@
   ],
   "node_meta": [
     {
-      "task_id": "task-fixture-01-evidence",
+      "task_id": "tnode-fixture-01-evidence",
       "key": "evidence",
       "depends_on": [],
       "constraints": [
@@ -163,7 +163,7 @@
       }
     },
     {
-      "task_id": "task-fixture-02-domain",
+      "task_id": "tnode-fixture-02-domain",
       "key": "domain",
       "depends_on": [],
       "constraints": [
@@ -198,11 +198,11 @@
       }
     },
     {
-      "task_id": "task-fixture-03-synthesis",
+      "task_id": "tnode-fixture-03-synthesis",
       "key": "synthesis",
       "depends_on": [
-        "task-fixture-01-evidence",
-        "task-fixture-02-domain"
+        "tnode-fixture-01-evidence",
+        "tnode-fixture-02-domain"
       ],
       "constraints": [
         "read-only planning",
@@ -241,10 +241,10 @@
       }
     },
     {
-      "task_id": "task-fixture-04-verify",
+      "task_id": "tnode-fixture-04-verify",
       "key": "verify",
       "depends_on": [
-        "task-fixture-03-synthesis"
+        "tnode-fixture-03-synthesis"
       ],
       "constraints": [
         "read-only planning",
@@ -288,49 +288,49 @@
   "graph": {
     "ok": true,
     "task_ids": [
-      "task-fixture-01-evidence",
-      "task-fixture-02-domain",
-      "task-fixture-03-synthesis",
-      "task-fixture-04-verify"
+      "tnode-fixture-01-evidence",
+      "tnode-fixture-02-domain",
+      "tnode-fixture-03-synthesis",
+      "tnode-fixture-04-verify"
     ],
     "edges": [
       {
-        "from": "task-fixture-01-evidence",
-        "to": "task-fixture-03-synthesis"
+        "from": "tnode-fixture-01-evidence",
+        "to": "tnode-fixture-03-synthesis"
       },
       {
-        "from": "task-fixture-02-domain",
-        "to": "task-fixture-03-synthesis"
+        "from": "tnode-fixture-02-domain",
+        "to": "tnode-fixture-03-synthesis"
       },
       {
-        "from": "task-fixture-03-synthesis",
-        "to": "task-fixture-04-verify"
+        "from": "tnode-fixture-03-synthesis",
+        "to": "tnode-fixture-04-verify"
       }
     ],
     "topological_layers": [
       [
-        "task-fixture-01-evidence",
-        "task-fixture-02-domain"
+        "tnode-fixture-01-evidence",
+        "tnode-fixture-02-domain"
       ],
       [
-        "task-fixture-03-synthesis"
+        "tnode-fixture-03-synthesis"
       ],
       [
-        "task-fixture-04-verify"
+        "tnode-fixture-04-verify"
       ]
     ],
     "parallel_groups": [
       [
-        "task-fixture-01-evidence",
-        "task-fixture-02-domain"
+        "tnode-fixture-01-evidence",
+        "tnode-fixture-02-domain"
       ]
     ],
     "roots": [
-      "task-fixture-01-evidence",
-      "task-fixture-02-domain"
+      "tnode-fixture-01-evidence",
+      "tnode-fixture-02-domain"
     ],
     "leaves": [
-      "task-fixture-04-verify"
+      "tnode-fixture-04-verify"
     ]
   },
   "assumptions": [
