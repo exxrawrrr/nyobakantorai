@@ -154,12 +154,17 @@ export function assertMissionTransition(missionInput, nextStateInput, {
   reopen = false,
   verification_satisfied = false,
   evidence_refs = [],
+  approvals_satisfied = false,
 } = {}) {
   const mission = normalizeMission(missionInput);
   const nextState = clean(nextStateInput, 40).toUpperCase();
   assert(MISSION_STATE_SET.has(nextState), "Mission next state is invalid.");
   assert(nextState !== mission.state, "Mission transition must change state.");
   assert(MISSION_TRANSITIONS[mission.state].includes(nextState), `Mission transition ${mission.state} -> ${nextState} is not allowed.`);
+
+  if (mission.state === "WAITING_APPROVAL" && nextState === "READY") {
+    assert(approvals_satisfied === true, "WAITING_APPROVAL Mission requires approvals_satisfied=true before READY.");
+  }
 
   if (nextState === "VERIFIED") {
     const refs = unique([...mission.evidence_refs, ...(Array.isArray(evidence_refs) ? evidence_refs : [])]);
@@ -239,6 +244,8 @@ export function normalizeExecutionAttempt(input = {}) {
     assert(startedAt == null && finishedAt == null, "PLANNED Attempt cannot claim start/finish timestamps.");
   } else if (state === "RUNNING") {
     assert(startedAt != null && finishedAt == null, "RUNNING Attempt requires started_at and no finished_at.");
+  } else if (state === "CANCELLED") {
+    assert(finishedAt != null, "CANCELLED Attempt requires finished_at.");
   } else {
     assert(startedAt != null && finishedAt != null, "Terminal Attempt requires started_at and finished_at.");
   }
@@ -250,8 +257,13 @@ export function normalizeExecutionAttempt(input = {}) {
   if (ordinal === 1) assert(previousAttemptId == null, "First Execution Attempt cannot have previous_attempt_id.");
 
   const errorCategory = input.error_category == null ? null : clean(input.error_category, 120).toUpperCase();
-  if (state === "FAILED") assert(errorCategory, "FAILED Attempt requires error_category.");
+  if (["FAILED","PARTIAL","BLOCKED"].includes(state)) assert(errorCategory, `${state} Attempt requires error_category.`);
   if (state === "SUCCEEDED") assert(errorCategory == null, "SUCCEEDED Attempt cannot carry error_category.");
+
+  const cleanup = normalizeCleanup(input.cleanup || { attempted:false, ok:null });
+  if (state === "SUCCEEDED") {
+    assert(cleanup.attempted === true && cleanup.ok === true, "SUCCEEDED Attempt requires successful cleanup.");
+  }
 
   return Object.freeze({
     schema:EXECUTION_ATTEMPT_SCHEMA,
@@ -265,7 +277,7 @@ export function normalizeExecutionAttempt(input = {}) {
     started_at:startedAt == null ? null : new Date(startedAt).toISOString(),
     finished_at:finishedAt == null ? null : new Date(finishedAt).toISOString(),
     error_category:errorCategory,
-    cleanup:normalizeCleanup(input.cleanup || { attempted:false, ok:null }),
+    cleanup,
     receipt_ref:receiptRef,
     evidence_refs:unique(input.evidence_refs),
     artifact_refs:unique(input.artifact_refs),
