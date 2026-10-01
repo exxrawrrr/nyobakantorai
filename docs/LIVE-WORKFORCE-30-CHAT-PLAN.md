@@ -79,6 +79,9 @@ Exit gate: deterministic fixtures produce valid acyclic plans with assumptions/u
 
 ### CHAT 04 — Handoff Bus + Mission Orchestrator
 
+**Status: ✅ COMPLETED — 2026-10-01.**  
+Orchestration spec: `docs/V0.6-MISSION-ORCHESTRATOR.md`
+
 Goal: execute the DAG through typed employee handoffs.
 
 Deliverables:
