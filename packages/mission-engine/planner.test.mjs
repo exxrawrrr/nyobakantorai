@@ -13,6 +13,7 @@ import {
 
 const root = new URL("../../", import.meta.url);
 const schema = JSON.parse(await readFile(new URL("schemas/mission-plan.schema.json", root), "utf8"));
+const canonicalPlanFixture = JSON.parse(await readFile(new URL("packages/mission-engine/fixtures/mission-plan-v1.json", root), "utf8"));
 
 const fixedClock = () => "2026-10-01T06:30:00.000Z";
 const stableIds = (kind, index, label) => `${kind}-fixture-${String(index + 1).padStart(2, "0")}-${String(label).replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`;
@@ -30,6 +31,12 @@ function seoRequest(overrides = {}) {
     ...overrides,
   };
 }
+
+test("canonical Mission Plan preview fixture exactly matches deterministic planner output", () => {
+  const plan = planMission(seoRequest(), { clock:fixedClock, idFactory:stableIds });
+  assert.equal(validateMissionPlan(canonicalPlanFixture), true);
+  assert.deepEqual(plan, canonicalPlanFixture);
+});
 
 test("Mission Plan schema exposes the exact planner strategies", () => {
   assert.equal(MISSION_PLAN_SCHEMA, 1);
