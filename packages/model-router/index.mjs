@@ -29,7 +29,10 @@ function assert(condition, message) {
 }
 
 function unique(values, normalize = (x) => x) {
-  return Object.freeze([...new Set((Array.isArray(values) ? values : []).map(normalize).filter(Boolean))]);
+  return Object.freeze(
+    [...new Set((Array.isArray(values) ? values : []).map(normalize).filter(Boolean))]
+      .sort((a,b) => String(a).localeCompare(String(b))),
+  );
 }
 
 function nullableFinite(value, name, { min = 0 } = {}) {
@@ -234,7 +237,9 @@ function compareEligible(a, b) {
   if (ac !== bc) return ac - bc;
 
   if (a.p95_latency_ms !== b.p95_latency_ms) return a.p95_latency_ms - b.p95_latency_ms;
-  return a.model_id.localeCompare(b.model_id);
+  return a.model_id.localeCompare(b.model_id)
+    || a.provider_id.localeCompare(b.provider_id)
+    || a.runtime_id.localeCompare(b.runtime_id);
 }
 
 function canonicalize(value) {
