@@ -1,8 +1,18 @@
 # Changelog
 
+## [0.5.1] - Unreleased
+
+### Fixed
+- Corrected the tagged-release asset verifier CLI to import `pathToFileURL` from `node:url` instead of `node:path`.
+- Added a regression test that executes the verifier CLI against generated immutable install assets.
+
+### Release status
+- **BLOCKED** pending the v0.5.1 final promotion gate and a successful tagged-release asset verification run.
+- The immutable `v0.5.0` tag is preserved as a failed publication attempt; its tagged workflow stopped before GitHub Release/assets were published.
+
 All notable public changes to nyobakantorai are documented here.
 
-## [0.5.0] - 2026-10-01
+## [0.5.0] - 2026-10-01 — failed publication attempt
 
 ### Added
 - Runtime-portability inventory, bounded execution contract, Hermes/Codex adapters, immutable Siti reference case, live harness, and comparator.
@@ -17,9 +27,9 @@ All notable public changes to nyobakantorai are documented here.
 - Temporary v0.5 implementation PRD was retired after permanent transfer.
 
 ### Release status
-- **READY** for scoped stable publication on 2026-10-01 after exact promoted-main verify #571 and manual release-gate run `36808904291` both passed.
+- Promoted-main verification and manual release-gate passed, but tagged-release workflow `36809825093` failed before publication during immutable asset verification.
 - Canonical Hermes+Codex Siti reference case is `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`; v0.5 LIVE_RUNTIME evidence growth is `INCREASED`.
-- Package version is `0.5.0`; immutable stable installer assets are produced only from the tagged release commit.
+- No GitHub Release or downloadable v0.5.0 assets were published; the tag remains immutable and is not the current stable release.
 - Real-world baseline remains `COLLECTING 1/20`; provider lifecycle remains `partial`; those states are intentionally not promoted by this release.
 
 ## [0.4.0] - 2026-09-30

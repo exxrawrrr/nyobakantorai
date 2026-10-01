@@ -7,7 +7,7 @@ async function exists(path){try{await access(path);return true;}catch{return fal
 export async function assessV05ReleaseReadiness(config,{root=resolve(import.meta.dirname,"../..")}={}){
   const errors=[];
   if(config?.schema!==1)errors.push("release readiness schema must be 1");
-  if(config?.candidate!=="v0.5.0")errors.push("candidate must be v0.5.0");
+  if(config?.candidate!=="v0.5.1")errors.push("candidate must be v0.5.1");
   if(!["BLOCKED","READY"].includes(config?.decision))errors.push("decision must be BLOCKED or READY");
 
   const readJson=async(path)=>JSON.parse(await readFile(resolve(root,path),"utf8"));
@@ -34,7 +34,7 @@ export async function assessV05ReleaseReadiness(config,{root=resolve(import.meta
   const computed=[];
   if(claim?.expected_status!=="SUPPORTED")computed.push("canonical-reference-portability");
   if(liveGrowth?.state!=="INCREASED")computed.push("live-runtime-evidence-growth");
-  if(pkg?.version!=="0.5.0")computed.push("package-version-v0.5");
+  if(pkg?.version!=="0.5.1")computed.push("package-version-v0.5");
   const promotion=config?.promotion||{};
   if(promotion.final_main_verify!=="PASS"||promotion.manual_release_gate!=="PASS")computed.push("final-main-release-gate");
 

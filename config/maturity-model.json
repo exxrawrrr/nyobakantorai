@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "candidate": "v0.5.0",
+  "candidate": "v0.5.1",
   "baseline_release": "v0.4.0",
   "observed_on": "2026-10-01",
   "rule": "Each maturity dimension is independent. Promotion in one dimension MUST NOT promote another dimension.",
@@ -11,7 +11,7 @@
         "docs/INSTALL-INTEGRITY.md",
         "packages/install-integrity/index.test.mjs"
       ],
-      "rationale": "Immutable stable-install machinery and negative integrity tests exist on the v0.5 development branch, but v0.5.0 has not been promoted/tagged as the stable release."
+      "rationale": "Immutable stable-install machinery and negative integrity tests exist, but the v0.5.0 tag failed before publication because the tagged asset verifier CLI could not start. v0.5.1 is the current hotfix candidate and remains artifact-candidate until its tagged release succeeds."
     },
     "contract_api": {
       "state": "candidate",

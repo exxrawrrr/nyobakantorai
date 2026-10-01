@@ -3,13 +3,14 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { spawnSync } from "node:child_process";
 import { buildInstallAssets } from "./build-install-assets.mjs";
 import { verifyInstallArtifact } from "../packages/install-integrity/index.mjs";
 
 test("builder emits manifest and checksums for both immutable core archive formats", async () => {
   const dir = await mkdtemp(join(tmpdir(), "nyoba-install-assets-"));
   try {
-    const tag = "v0.5.0";
+    const tag = "v0.5.1";
     const zipName = "nyobakantorai-core-" + tag + ".zip";
     const tarName = "nyobakantorai-core-" + tag + ".tar.gz";
     await writeFile(resolve(dir, zipName), Buffer.from("zip-fixture"));
@@ -19,7 +20,7 @@ test("builder emits manifest and checksums for both immutable core archive forma
       dir,
       releaseTag: tag,
       sourceCommit: "c".repeat(40),
-      packageVersion: "0.5.0",
+      packageVersion: "0.5.1",
     });
 
     assert.equal(manifest.artifacts.length, 2);
@@ -37,6 +38,19 @@ test("builder emits manifest and checksums for both immutable core archive forma
       expectedReleaseTag: tag,
     });
     assert.equal(check.ok, true, check.reasons.join(","));
+
+    const cli = spawnSync(
+      process.execPath,
+      [
+        resolve(import.meta.dirname, "verify-install-assets.mjs"),
+        "--dir", dir,
+        "--tag", tag,
+        "--commit", "c".repeat(40),
+      ],
+      { encoding: "utf8" }
+    );
+    assert.equal(cli.status, 0, cli.stderr || cli.stdout);
+    assert.match(cli.stdout, /Immutable install assets verified: v0\.5\.1/);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

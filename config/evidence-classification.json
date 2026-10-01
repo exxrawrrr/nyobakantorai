@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "candidate": "v0.5.0",
+  "candidate": "v0.5.1",
   "observed_on": "2026-10-01",
   "policy": "Evidence class describes how a check observes behavior, not how impressive the result sounds. Internal/self-observation evidence cannot be the sole support for a SUPPORTED behavioral claim.",
   "classes": [
