@@ -45,6 +45,9 @@ Exit gate: architecture review merged, no unexplained duplicate task/mission abs
 
 ### CHAT 02 — Mission Schema + Execution State Machine
 
+**Status: ✅ COMPLETED — 2026-10-01.**  
+Contract/migration spec: `docs/V0.6-MISSION-CONTRACTS.md`
+
 Goal: define versioned Mission, TaskNode, and Attempt contracts.
 
 Deliverables:
