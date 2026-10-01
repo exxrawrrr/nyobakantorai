@@ -46,3 +46,11 @@ The live adapter now ignores user config and user/project rules while retaining 
 
 
 The reference invocation's reasoning effort is explicitly bounded to `low` as runtime metadata. On 2026-10-01 the canonical execution policy was deliberately re-baselined from 10 seconds to a 45-second bounded maximum after authorized live diagnostics showed real Hermes/Codex latency exceeded 10 and sometimes 30 seconds. That timeout is now part of the canonical policy/core hash; it is not an adapter-only exception.
+
+## CHAT 07B quota diagnosis
+
+A 2026-10-01 follow-up proved that the current non-zero live Codex exit is provider quota exhaustion, not an adapter invocation regression. Auth, provider reachability, WebSocket handshake, sandbox provisioning, and CLI flag compatibility passed read-only diagnostics. A historical successful canonical run used the same Codex 0.154.0 and the exact same adapter blob.
+
+For non-zero process results the adapter now emits a static `provider_failure_category`. Recognized quota-limit text maps to `PROVIDER_QUOTA_EXHAUSTED`; other failures remain `PROVIDER_FAILURE_UNCLASSIFIED`. Raw provider diagnostics are not copied into normalized/public evidence.
+
+See `docs/V0.6-CODEX-RUNTIME-DIAGNOSIS.md`.

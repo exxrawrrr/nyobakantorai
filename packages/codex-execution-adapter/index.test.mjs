@@ -153,3 +153,20 @@ test("nonzero Codex process and malformed output never become success",async()=>
     assert.equal(outcome.cleanup.ok,true);
   }
 });
+
+test("Codex quota exhaustion is safely classified without exposing provider stderr",async()=>{
+  const invoke=async()=>({
+    status:1,signal:null,aborted:false,
+    stdout:'{"type":"error","message":"You have hit your usage limit. Purchase more credits and try again later."}\n',
+    stderr:"provider diagnostic should not be published",
+    error:null,
+  });
+  const bound=createCodexReferenceExecutionAdapter({reference,invokeImpl:invoke,providerVersion:"fixture"});
+  const outcome=await executeBoundedRuntimeTask(bound.adapter,reference.core_bundle.task,{policy});
+  assert.equal(outcome.ok,false);
+  assert.equal(outcome.error_category,"RUNTIME_REPORTED_FAILURE");
+  assert.equal(outcome.normalized_result.output.provider_failure_category,"PROVIDER_QUOTA_EXHAUSTED");
+  const serialized=JSON.stringify(outcome.normalized_result);
+  assert.equal(serialized.includes("Purchase more credits"),false);
+  assert.equal(serialized.includes("provider diagnostic"),false);
+});

@@ -130,8 +130,9 @@ Exit gate: disconnected/unauthorized tools cannot appear executed and write rout
 
 ### CHAT 07 — Live Sandbox + Minimum Cost/Quota Guard
 
-**Status: ⚠️ IMPLEMENTED — REAL-MODEL SUCCESS EXIT GATE BLOCKED — 2026-10-01.**  
+**Status: ⚠️ IMPLEMENTED — CHAT 07B DIAGNOSED PROVIDER QUOTA BLOCKER; REAL-MODEL SUCCESS EXIT GATE BLOCKED — 2026-10-01.**
 Sandbox spec/status: `docs/V0.6-LIVE-SANDBOX.md`
+Diagnosis: `docs/V0.6-CODEX-RUNTIME-DIAGNOSIS.md`
 
 Goal: make real-model execution safe enough for bounded live use.
 
