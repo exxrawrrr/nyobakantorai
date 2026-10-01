@@ -12,7 +12,7 @@ It combines a visual office, a canonical workforce registry, installable employe
 
 | Item | Current state |
 | --- | --- |
-| Latest stable release | `v0.5.1` |
+| Latest stable release | [`v0.5.1`](https://github.com/exxrawrrr/nyobakantorai/releases/tag/v0.5.1) |
 | Release source commit | `3004220522fee1971453f63bb50e6f9ed1264687` |
 | Published release assets | 25 |
 | Artifact maturity | `stable` |
@@ -682,7 +682,3 @@ berarti kantornya tambah ramai.
 Belum tentu tambah pintar.
 
 **Oke. Balik kerja.**
-
----
-
-<br/>
