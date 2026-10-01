@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "audit": "v0.5-portability-qa-semantics-rebaseline-2026-10-01",
+  "audit": "v0.5-independent-portability-run-verifier-2026-10-01",
   "audited_release": "v0.4.0",
   "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
   "observed_on": "2026-09-30",
@@ -455,12 +455,14 @@
       "paths": [
         "reference-verifier/python"
       ],
-      "rationale": "Python independently verifies the signed receipt/evidence trust surface without importing or invoking the JavaScript verifier, providing a second implementation boundary for payload hash, Ed25519, bindings, freshness, replay, runtime scope, and receipt-reference checks.",
+      "rationale": "Python independently verifies both the signed receipt/evidence trust surface and the bounded canonical live portability-run record surface without importing or invoking JavaScript verdict-producing implementations.",
       "evidence": [
         "reference-verifier/python/test_verifier.py",
-        "docs/INDEPENDENT-REFERENCE-VERIFIER.md"
+        "docs/INDEPENDENT-REFERENCE-VERIFIER.md",
+        "reference-verifier/python/portability_run_verifier.py",
+        "reference-verifier/python/test_portability_run_verifier.py"
       ],
-      "next_action": "Build the shared adversarial differential corpus and require JavaScript/Python accept-reject agreement before claiming cross-implementation verification."
+      "next_action": "Use the Python portability-run verifier on each exact-head live Hermes/Codex record before comparator promotion; keep signed-receipt differential verification and portability-run verification as separate evidence domains."
     },
     {
       "id": "verifier-differential-corpus",

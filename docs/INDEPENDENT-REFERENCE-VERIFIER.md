@@ -96,3 +96,12 @@ It also does not prove that the external work described by a valid signed receip
 The Python reference verifier independently implements public trust-registry validation and receipt trust resolution for ACTIVE, RETIRED, and REVOKED keys, including validity windows, runtime scope, `REJECT_ALL` revocation, and `ALLOW_PRE_COMPROMISE` cutoff behavior.
 
 It does not import the JavaScript trust-registry implementation.
+
+
+## Portability-run verifier extension
+
+v0.5 also includes a separate Python verifier for canonical live portability run records: `reference-verifier/python/portability_run_verifier.py`.
+
+It is independent from the JavaScript portability comparator and ignores self-attested verification state. See `docs/PORTABILITY-RUN-VERIFIER.md`.
+
+This is a second verification domain alongside signed receipt verification; neither domain proves external-world correctness.

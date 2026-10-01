@@ -123,6 +123,8 @@
     "complexity:check": "node scripts/complexity-budget.mjs --check",
     "test:release-readiness": "node --test packages/release-readiness/index.test.mjs",
     "v0.5:readiness:check": "node scripts/v0.5-release-readiness.mjs",
-    "v0.5:readiness:require-ready": "node scripts/v0.5-release-readiness.mjs --require-ready"
+    "v0.5:readiness:require-ready": "node scripts/v0.5-release-readiness.mjs --require-ready",
+    "test:portability-run-verifier": "python reference-verifier/python/test_portability_run_verifier.py",
+    "portability:verify-run": "python reference-verifier/python/portability_run_verifier.py"
   }
 }

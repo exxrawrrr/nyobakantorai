@@ -13,7 +13,7 @@
       "current_state": "UNPROVEN",
       "canonical_source": "config/evidence-classification.json",
       "reason": "The final re-baselined Siti reference case has not yet produced exact-reviewed-GitHub-head Hermes+Codex LIVE_RUNTIME_EVIDENCE with independent PASS verification and comparator state PORTABILITY_VERIFIED_FOR_REFERENCE_CASE.",
-      "safe_next_action": "Recollect Hermes and Codex live reference records on the exact reviewed GitHub head using core bundle cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8, independently verify both, and rerun the comparator."
+      "safe_next_action": "Recollect Hermes and Codex live reference records on the exact reviewed GitHub head, independently verify each with python-portability-run-verifier-v1, then rerun the comparator."
     },
     {
       "id": "live-runtime-evidence-growth",
@@ -96,7 +96,9 @@
     "docs/COMPLEXITY-BUDGET.md",
     "ROADMAP.md",
     "docs/V0.5-RELEASE-READINESS.md",
-    "docs/RELEASE-CHECKLIST.md"
+    "docs/RELEASE-CHECKLIST.md",
+    "reference-verifier/python/portability_run_verifier.py",
+    "docs/PORTABILITY-RUN-VERIFIER.md"
   ],
   "retired_temporary_prd": {
     "path": "docs/V0.5-IMPLEMENTATION-PRD.md",
