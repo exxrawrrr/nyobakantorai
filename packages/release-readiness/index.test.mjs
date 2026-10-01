@@ -14,12 +14,12 @@ test("canonical v0.5.1 readiness is truthfully READY after the final promotion g
   assert.equal(assessment.canonical.reference_case_portability,"SUPPORTED");
   assert.equal(assessment.canonical.live_runtime_growth,"INCREASED");
   assert.equal(assessment.canonical.package_version,"0.5.1");
-  assert.equal(assessment.canonical.artifact_maturity,"candidate");
+  assert.equal(assessment.canonical.artifact_maturity,"stable");
   assert.equal(assessment.canonical.real_task_cases,1);
   assert.equal(assessment.canonical.real_task_required,20);
   const snapshot=buildV05ReadinessSnapshot({config,assessment});
   assert.equal(snapshot.merge_authorized,true);
-  assert.match(snapshot.truth_boundary,/READY still requires exact promoted-main verify \+ manual release gate/);
+  assert.match(snapshot.truth_boundary,/READY does not imply publication/);
 });
 
 test("temporary PRD is retired and durable successor contains surviving final rules",async()=>{

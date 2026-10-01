@@ -261,17 +261,17 @@ itu belum kemenangan.
 
 ## Current state
 
-Release stable terbaru tetap **v0.4.0**. Kandidat v0.5.0 sudah lolos promoted-main verification dan manual release-gate, tetapi tagged-release workflow gagal **sebelum GitHub Release dan assets dipublish** karena bug CLI verifier asset. Tag `v0.5.0` dipertahankan immutable sebagai failed publication attempt; hotfix sekarang ditargetkan ke **v0.5.1**.
+Release stable terbaru adalah **v0.5.1**. Tag ini menunjuk exact source commit `3004220522fee1971453f63bb50e6f9ed1264687`; tagged release-gate `36812543303` berhasil membangun dan memverifikasi immutable install assets sebelum GitHub Release dipublish. Tag `v0.5.0` tetap dipertahankan immutable sebagai failed publication attempt dan tidak pernah dipoles menjadi release sukses.
 
-**v0.5.1 release readiness: `READY` pending final attestation re-verification and tagged publication.** Canonical Hermes+Codex Siti reference case tetap `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, LIVE_RUNTIME evidence growth tetap `INCREASED`, package candidate `0.5.1`, exact promoted-main verify #576 lulus, dan manual release-gate run `36811165894` lulus. Setelah attestation ini masuk `main`, exact-main verify + manual gate + `v0.5:readiness:require-ready` tetap harus diulang sebelum tag dibuat. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json).
+**v0.5.1 is published and stable as an artifact.** Exact final-main verify #578 passed, manual release-gate run `36811702004` passed, fresh-clone `v0.5:readiness:require-ready` exited 0, tagged release-gate `36812543303` passed, and the official release published 25 assets. A post-release isolated install reproduced the exact source commit and verified core artifact checksum. Canonical Hermes+Codex Siti portability remains scoped to the bounded reference case; real-world/provider evidence limits remain unchanged. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json).
 
-**Snapshot maturity v0.5.1 candidate:**
+**Snapshot maturity v0.5.1 published release:**
 
 | Dimension | State |
 | --- | --- |
-| Artifact | `candidate` |
-| Contract/API | `candidate` |
-| Runtime adapter | `candidate` |
+| Artifact | `stable` |
+| Contract/API | `stable` |
+| Runtime adapter | `stable` |
 | Behavioral evidence | `evaluated-case` |
 | Real-world workflow | `collecting` |
 | Provider lifecycle | `partial` |
@@ -641,7 +641,7 @@ The CI workflow runs the same verification on Linux and Windows.
 
 ## Project status
 
-**v0.5.1 hotfix candidate — v0.5.0 publication failed before release assets were published, so v0.4.0 remains the latest stable release until v0.5.1 completes the full release pipeline. Behavioral/real-world/provider maturity remains explicitly scoped.**
+**v0.5.1 is the current stable release.** Its tagged immutable install assets were verified and published successfully; behavioral evidence remains `evaluated-case`, real-world workflow remains `collecting`, and provider lifecycle remains `partial`.
 
 v0.5 also carries an executable [complexity budget](config/complexity-budget.json): 12 required subsystems have explicit delete-test decisions. Current delete-test result is **11 KEEP / 1 MERGE**; Chat 19 executed that MERGE by folding the internal `deferred-evidence` module/tests into `release-claims` while preserving the historical v0.4 ledger and docs unchanged. See [Complexity Budget](docs/COMPLEXITY-BUDGET.md).
 

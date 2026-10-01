@@ -6,31 +6,31 @@
   "rule": "Each maturity dimension is independent. Promotion in one dimension MUST NOT promote another dimension.",
   "dimensions": {
     "artifact": {
-      "state": "candidate",
+      "state": "stable",
       "basis": [
         "docs/INSTALL-INTEGRITY.md",
         "packages/install-integrity/index.test.mjs"
       ],
-      "rationale": "Immutable stable-install machinery and negative integrity tests exist, but the v0.5.0 tag failed before publication because the tagged asset verifier CLI could not start. v0.5.1 is the current hotfix candidate and remains artifact-candidate until its tagged release succeeds."
+      "rationale": "v0.5.1 is published as the latest official GitHub Release. Its immutable core ZIP/TAR assets were built and verified by tagged workflow run 36812543303, and an isolated post-release install reproduced the tagged source commit and verified artifact checksum."
     },
     "contract_api": {
-      "state": "candidate",
+      "state": "stable",
       "basis": [
         "packages/runtime-execution-adapter/index.mjs",
         "office/src/approval-summary.mjs",
         "packages/receipt-trust-registry/index.mjs"
       ],
-      "rationale": "Portable contracts are executable and tested, but their v0.5 versions remain unreleased candidate contracts."
+      "rationale": "The v0.5 runtime, receipt/trust, approval, and portability contracts are now shipped in the published v0.5.1 stable artifact. This contract stability does not promote behavioral evidence, real-world workflow maturity, or provider lifecycle."
     },
     "runtime_adapter": {
-      "state": "candidate",
+      "state": "stable",
       "basis": [
         "packages/hermes-execution-adapter/index.test.mjs",
         "packages/codex-execution-adapter/index.test.mjs",
         "config/runtime-portability-map.json",
         "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/comparison.json"
       ],
-      "rationale": "Hermes and Codex reference adapters pass conformance and the bounded canonical Siti case is verified across both runtimes, but the adapter contract remains an unreleased v0.5 candidate."
+      "rationale": "Hermes and Codex reference adapters are shipped in v0.5.1 after conformance tests and the bounded canonical Siti cross-runtime reference case reached PORTABILITY_VERIFIED_FOR_REFERENCE_CASE. Stable adapter status remains scoped and does not imply global runtime parity."
     },
     "behavioral_evidence": {
       "state": "evaluated-case",
