@@ -1,14 +1,14 @@
 # Changelog
 
-## [0.5.1] - Unreleased
+## [0.5.1] - 2026-10-01
 
 ### Fixed
 - Corrected the tagged-release asset verifier CLI to import `pathToFileURL` from `node:url` instead of `node:path`.
 - Added a regression test that executes the verifier CLI against generated immutable install assets.
 
 ### Release status
-- **READY** after promoted-main verify #576 and manual release-gate run `36811165894`; final attestation re-verification and a successful tagged-release asset verification run remain mandatory before publication.
-- The immutable `v0.5.0` tag is preserved as a failed publication attempt; its tagged workflow stopped before GitHub Release/assets were published.
+- **PUBLISHED** after final-main verify #578, manual release-gate run `36811702004`, fresh-clone readiness exit 0, and tagged release-gate run `36812543303` all passed.
+- GitHub Release `v0.5.1` published 25 assets from exact source commit `3004220522fee1971453f63bb50e6f9ed1264687`; post-release isolated install verification passed. The immutable `v0.5.0` tag remains preserved as a failed publication attempt.
 
 All notable public changes to nyobakantorai are documented here.
 
