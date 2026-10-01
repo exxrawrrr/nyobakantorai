@@ -18,7 +18,7 @@
       "const": 1
     },
     "candidate": {
-      "const": "v0.5.0"
+      "const": "v0.5.1"
     },
     "decision": {
       "enum": [
