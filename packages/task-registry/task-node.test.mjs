@@ -20,6 +20,7 @@ import {
 
 const root = new URL("../../", import.meta.url);
 const schema = JSON.parse(await readFile(new URL("schemas/task-node.schema.json", root), "utf8"));
+const canonicalFixture = JSON.parse(await readFile(new URL("packages/task-registry/fixtures/task-node-v1.json", root), "utf8"));
 
 const stamp = (seconds = 0) => `2026-10-01T05:00:${String(seconds).padStart(2, "0")}.000Z`;
 
@@ -44,6 +45,11 @@ function baseNode(overrides = {}) {
     ...overrides,
   };
 }
+
+test("canonical TaskNode fixture validates against runtime contract", () => {
+  assert.equal(validateTaskNode(canonicalFixture), true);
+  assert.equal(canonicalFixture.state, "READY");
+});
 
 test("TaskNode runtime state catalog matches the public schema", () => {
   assert.deepEqual(schema.properties.state.enum, TASK_NODE_STATES);
