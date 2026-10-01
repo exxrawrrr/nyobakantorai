@@ -5,14 +5,14 @@ A release is not ready because the UI looks good. It is ready only when the publ
 The repository is **already PUBLIC**. The old private-to-public visibility transition is historical; current releases must validate the already-public repository rather than pretending publication has not happened.
 
 ## Candidate decision
-- [ ] Release decision document allows stable promotion.
-- [ ] Candidate is on the intended final release branch/commit.
-- [ ] Evidence-dependent gaps are either completed for the release scope or explicitly accepted/deferred by the owner without inflating claims.
-- [ ] README, changelog, roadmap, evaluation docs, and release notes describe the same capability/evidence state.
+- [x] Release decision document allows stable promotion.
+- [x] Candidate is on the intended final release branch/commit.
+- [x] Evidence-dependent gaps are either completed for the release scope or explicitly accepted/deferred by the owner without inflating claims.
+- [x] README, changelog, roadmap, evaluation docs, and release notes describe the same capability/evidence state.
 
 For v0.4.0, the owner explicitly accepted the six still-open evidence classes as deferred scope on 2026-09-30. Stable promotion is authorized only after the exact promoted `main` commit passes cross-platform verify and the manual release-gate. See `docs/V0.4-RELEASE-DECISION.md`.
 
-For v0.5.0, the current decision is **BLOCKED only by the final promotion gate**. Canonical Hermes+Codex reference portability is `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, v0.5 LIVE_RUNTIME evidence growth is `INCREASED`, and the package candidate declares `0.5.0`. Final promoted-`main` verify + manual release gate remain pending. See `docs/V0.5-RELEASE-READINESS.md` and `config/v0.5-release-readiness.json`.
+For v0.5.0, the current decision is **READY for stable publication after final attestation re-verification**. Canonical Hermes+Codex reference portability is `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, v0.5 LIVE_RUNTIME evidence growth is `INCREASED`, package candidate declares `0.5.0`, exact promoted-main verify #571 passed, and manual release-gate run `36808904291` passed. See `docs/V0.5-RELEASE-READINESS.md` and `config/v0.5-release-readiness.json`.
 
 ## Code and tests
 - [ ] `npm run doctor` passes on the release machine.
@@ -24,9 +24,9 @@ For v0.5.0, the current decision is **BLOCKED only by the final promotion gate**
 - [x] Full-workforce isolated fresh-install matrix passes (`npm run release:matrix:full`): every canonical employee pack verifies, the installed profile set exactly matches the 16-worker registry, every worker keeps its exact skill/integration closure, rerun resolves to native-upgrade for all profiles, and seeded user-owned state survives byte-for-byte. Deterministic simulation only; no real Hermes/provider machine claim.
 - [x] Deterministic full-workforce upgrade/uninstall/reinstall lifecycle matrix passes (`npm run release:matrix:lifecycle`): all 16 profiles upgrade from drifted distribution state while user-owned state survives, selective removal is preview-first and preserves every survivor byte-for-byte, full uninstall is preview-first and requires explicit destructive confirmation, reinstall restores exactly 16 clean profiles without resurrecting deleted user state, and pack artifacts remain byte-identical. This is isolated release-matrix evidence, not real Hermes/provider machine coverage.
 - [ ] Final real clean-machine Hermes lifecycle coverage is complete on the intended release machine.
-- [ ] Linux and Windows CI are green.
-- [ ] Minimum-version CI is green.
-- [ ] Manual `release-gate` passes from the final promoted commit.
+- [x] Linux and Windows CI are green.
+- [x] Minimum-version CI is green.
+- [x] Manual `release-gate` passes from the final promoted commit.
 - [ ] `npm run demo` completes using synthetic data only.
 
 ## Privacy and security
@@ -48,12 +48,12 @@ For v0.5.0, the current decision is **BLOCKED only by the final promotion gate**
 - [ ] Description, topics, README, changelog, security policy, support policy, roadmap, review map, and release decision are current.
 - [ ] Required CI checks protect `main` where the GitHub plan supports it.
 - [ ] Dependency update PRs are reviewed rather than blindly auto-merged.
-- [ ] Temporary planning docs are absent from the release tree.
+- [x] Temporary planning docs are absent from the release tree.
 - [ ] Release tag and notes are created only after the final promoted commit is fully verified.
 
 ## Publication / stable release
 - [ ] Verify the repository from an unauthenticated/public view.
 - [ ] Confirm public screenshots/assets/docs render correctly.
-- [ ] Promote the reviewed candidate to `main` through an explicit PR/merge path.
-- [ ] Rerun verification and manual release-gate from that final `main` commit.
+- [x] Promote the reviewed candidate to `main` through an explicit PR/merge path.
+- [x] Rerun verification and manual release-gate from that final `main` commit.
 - [ ] Create the stable tag/release only after the final gate passes.
