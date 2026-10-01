@@ -381,6 +381,8 @@ Fallback is policy-controlled and must preserve privacy/capability constraints. 
 
 ### 8.6 Tool / Capability Router
 
+CHAT 06 implementation source: [v0.6 Capability Router / Tool Policy](V0.6-CAPABILITY-POLICY.md). The existing capability router now binds employee, action, READ/WRITE mode, exact resource target, connection evidence, grant evidence, autonomy, approval evidence, and required post-action evidence into a content-addressed capability route decision. It still does not execute tools.
+
 Tools and connectors are selected from explicit employee/task capability requirements.
 
 Routing must verify:
