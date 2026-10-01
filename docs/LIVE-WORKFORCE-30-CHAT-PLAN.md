@@ -97,6 +97,9 @@ Exit gate: a 3+ node synthetic mission including parallel work completes without
 
 ### CHAT 05 — Model Router
 
+**Status: ✅ COMPLETED — 2026-10-01.**  
+Model Router spec: `docs/V0.6-MODEL-ROUTER.md`
+
 Goal: route task classes to allowed model/runtime choices.
 
 Deliverables:
