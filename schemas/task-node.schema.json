@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/task-node.schema.json",
+  "title": "nyobakantorai TaskNode v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "task_id",
+    "mission_id",
+    "title",
+    "objective",
+    "employee_id",
+    "risk_class",
+    "state",
+    "approval",
+    "attempt_ids",
+    "evidence_refs",
+    "receipt_refs",
+    "blocking",
+    "legacy",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "mission_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "employee_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+    },
+    "risk_class": {
+      "enum": [
+        "READ_ONLY",
+        "LOCAL_WRITE",
+        "EXTERNAL_WRITE",
+        "PAID_ACTION",
+        "ACCOUNT_CHANGE",
+        "DESTRUCTIVE"
+      ]
+    },
+    "state": {
+      "enum": [
+        "PLANNED",
+        "READY",
+        "RUNNING",
+        "WAITING_APPROVAL",
+        "BLOCKED",
+        "PARTIAL",
+        "FAILED",
+        "RETRYING",
+        "RECOVERED",
+        "SUCCEEDED",
+        "VERIFIED",
+        "CANCELLED"
+      ]
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "status",
+        "approval_ref"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "NOT_REQUIRED",
+            "PENDING",
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+        "approval_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000
+        }
+      }
+    },
+    "attempt_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "receipt_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^receipt:sha256:[a-f0-9]{64}$"
+      }
+    },
+    "blocking": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "reason"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "APPROVAL",
+                "USER_INPUT",
+                "DEPENDENCY",
+                "POLICY",
+                "RUNTIME",
+                "OTHER"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            }
+          }
+        }
+      ]
+    },
+    "legacy": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source",
+            "lifecycle_status"
+          ],
+          "properties": {
+            "source": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "lifecycle_status": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            }
+          }
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
