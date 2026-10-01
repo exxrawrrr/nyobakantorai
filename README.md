@@ -1,5 +1,381 @@
 # nyobakantorai
 
+**nyobakantorai is a local-first, human-governed multi-agent office for coordinating role-based AI workers with explicit evidence, provenance, and approval boundaries.**
+
+It combines a visual office, a canonical workforce registry, installable employee profiles, runtime adapters, execution receipts, and release/evidence checks. The project is designed so that a configured model, a moving avatar, or a task label is **not** treated as proof that work actually happened.
+
+![nyobakantorai office overview](docs/assets/office-overview.png)
+
+## Current release — v0.5.1
+
+`v0.5.1` is the current published stable release.
+
+| Item | Current state |
+| --- | --- |
+| Latest stable release | `v0.5.1` |
+| Release source commit | `3004220522fee1971453f63bb50e6f9ed1264687` |
+| Published release assets | 25 |
+| Artifact maturity | `stable` |
+| Contract/API maturity | `stable` |
+| Runtime-adapter maturity | `stable` |
+| Behavioral evidence | `evaluated-case` |
+| Real-world workflow evidence | `collecting` — 1/20 eligible cases |
+| Provider lifecycle | `partial` |
+
+The release passed Linux, Windows, and minimum-version verification, an exact-main manual release gate, immutable tagged-asset verification, and a post-release isolated installer smoke test. The published install manifest points back to the exact tagged source commit, and the published core ZIP/TAR checksums match the release checksum file.
+
+This **does not** mean the project is broadly production-proven, that every provider lifecycle is complete, or that all runtimes behave identically. Those claims remain outside the evidence currently available.
+
+The earlier `v0.5.0` tag is intentionally preserved as a failed publication attempt. It was not rewritten or presented as a successful release.
+
+## What the project currently provides
+
+- a local visual office for seeing workers, tasks, state, and evidence;
+- 16 role-specific employee profiles from one canonical registry;
+- installable one-worker, subset, preset-team, and full-workforce packages;
+- human approval gates for external writes, paid actions, account changes, and destructive actions;
+- signed execution receipts and evidence-verification paths;
+- a Hermes-first reference runtime plus provider-neutral runtime-adapter contracts;
+- explicit states for configured / connected / executed / succeeded / verified;
+- local diagnostics, release checks, public-safety scans, and immutable stable-install verification;
+- machine-readable capability, maturity, evidence, and release-readiness surfaces.
+
+## What it does not claim
+
+nyobakantorai is **not** presented as a finished autonomous company or a broadly production-proven agent platform.
+
+The current evidence does not justify claims of universal runtime parity, repeated real-world reliability, complete provider lifecycle validation, or automatic correctness of external actions. External credentials, provider accounts, billing state, sessions, and user data remain user-owned.
+
+## Core model
+
+```text
+human intent
+    ↓
+scoped task
+    ↓
+agent role / runtime
+    ↓
+work product
+    ↓
+evidence + provenance
+    ↓
+independent verification
+```
+
+A task state, model response, or named reviewer is not treated as independent evidence by itself.
+
+## Highlights
+
+- **16 role-specific employee profiles** driven by one canonical registry, with distinct roles, skills, routing, approval, verification policy, and installable profile distributions.
+- **Standalone employee packs** so users can install/download one worker, an arbitrary subset, a preset team, or the full workforce.
+- **Signed execution receipts** with Ed25519 tamper detection, task/worker/capability binding, normalized token/cost fields, and evidence-verifier integration.
+- **Canonical reusable skills** spanning task truth, tool safety, ads operations, SEO/CRO, data, integrations, operations, community, governance, and independent QA.
+- **Evidence-gated task state** where VERIFIED requires independent evidence.
+- **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
+- **Hermes-first reference runtime** with sixteen installable Hermes profile distributions and an idempotent, v0.2-upgrade-safe bootstrap.
+- **Read-only runtime adapter SDK** with a strict loopback HTTP adapter for plugging in other local runtimes without granting write or dispatch authority.
+- **Manual handoff + receipt protocol** for provenance-aware work across surfaces.
+- **Portable diagnostics** that check expected safety boundaries without printing secrets.
+- **Machine-readable capabilities** through `GET /api/capabilities`.
+- **Public-release guardrails** for tests, builds, private-path leakage, sensitive filenames, and credential-shaped strings.
+- **Zero npm runtime dependencies** for the main office server.
+
+## Workforce
+
+```text
+SOUL    = who the employee is
+SKILL   = reusable procedure / knowledge
+TOOL    = executable Hermes capability
+MCP     = external capability connection
+PROFILE = complete installable employee package
+```
+
+Credentials, account access, provider billing state, sessions, memory, and messaging tokens remain **user-owned**. A preferred toolset or external-capability declaration does not mean it is connected.
+
+| Employee | Department | Role | Visual | External capability default |
+| --- | --- | --- | --- | --- |
+| **Praroro** | Leadership / Coordination | COO / Chief of Staff | owner-authored | none required |
+| **Paijo** | Growth / Data | Quant / Growth / Finance | owner-authored | none required |
+| **Subagjo** | Engineering / Automation | Engineering / Operations | owner-authored | none required |
+| **Alex** | Strategy / Research | Strategy / Research | owner-authored | none required |
+| **Sumiati** | Creative / Community | Creative / Communications | owner-authored | none required |
+| **Siti** | QA / Governance | QA / Compliance / Knowledge | owner-authored | none required |
+| **Maya** | Paid Media | Meta Ads Operator | pending-original-art | `ads.meta.read`, `ads.meta.insights`, `ads.meta.creative`, `ads.meta.write`, `ads.meta.media` → NOT_CONNECTED |
+| **Gugun** | Paid Media | Google Ads Operator | pending-original-art | `ads.google.read`, `ads.google.insights`, `ads.google.keywords`, `ads.google.creative`, `ads.google.write`, `ads.google.verify` → NOT_CONNECTED |
+| **Ratri** | Growth / Data | SEO / CRO / Web Analyst | pending-original-art | none required |
+| **Bimo** | Engineering / Automation | Automation / MCP / Integrations Engineer | pending-original-art | none required |
+| **Nara** | Growth / Data | Data / BI / Experimentation | pending-original-art | none required |
+| **Dina** | Operations | Client / Project Operations | pending-original-art | none required |
+| **Bambang** | Engineering / Automation | Automation / Queue Optimizer | pending-original-art | none required |
+| **Fikri** | QA / Governance | Knowledge / Markdown / Context / Prompt Engineer | pending-original-art | none required |
+| **Tari** | Operations | Execution / Follow-Up Specialist | pending-original-art | none required |
+| **Caca** | Creative / Community | Community / Social / Partnerships | pending-original-art | none required |
+
+Maya and Gugun are capability **consumers**, not bundled ads engines. Telegram is an optional Hermes gateway path. See the dedicated docs below.
+
+### Upstream skill enrichment
+
+The workforce uses recreated/adapted workflow concepts with explicit provenance from ECC, Superpowers, MarkItDown, Docling, Mem0, Letta, Jina Reader, MCP reference servers, and Anthropic's Apache-2.0 MCP builder. See [UPSTREAM-SOURCE-CATALOG.md](docs/UPSTREAM-SOURCE-CATALOG.md). Restricted Anthropic document skills are not copied or used to create derivatives.
+
+**Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
+## Install
+
+> **Stable means immutable here.** In v0.5.1, the recommended installer resolves a tagged GitHub release, downloads the core release artifact, verifies `install-manifest.json` + SHA-256 checksums, and only then unpacks it. Stable mode never falls back to mutable `main`.
+
+### Hermes-first — recommended stable path
+
+Hermes remains the reference runtime. The installer can reuse an existing Hermes installation or, only when you explicitly pass `WithHermes` / `--with-hermes`, invoke the official upstream installer.
+
+**Windows PowerShell**
+
+```powershell
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Start
+```
+
+**Linux / macOS / WSL2**
+
+```bash
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --start
+```
+
+The latest-release URL resolves the current stable release. The installer verifies the immutable release artifact before installation. If Hermes is already installed and discoverable, the installer can reuse it and bootstrap the selected employee profiles; `-WithHermes` / `--with-hermes` is only required when you want the installer to install Hermes itself.
+
+To pin an exact release, download that release's installer asset and pass the same version explicitly:
+
+```bash
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.1/install.sh | bash -s -- --version v0.5.1 --with-hermes
+```
+
+```powershell
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.1/install.ps1))) -Version v0.5.1 -WithHermes
+```
+
+### Install only part of the office
+
+The selector remains independent from the stable source channel.
+
+Windows:
+
+```powershell
+# one worker
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "siti"
+
+# arbitrary subset
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "praroro,siti"
+
+# preset
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "growth"
+```
+
+Linux / macOS / WSL2:
+
+```bash
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees siti
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees praroro,siti
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees growth
+```
+
+Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creative-community`, and `full`.
+
+Tagged releases also publish standalone employee ZIPs with their own checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
+
+Every successful install writes `.nyobakantorai-install.json` with the install channel, version/ref, exact source commit, stable artifact checksum when applicable, integrity state, timestamp, and selected employees. See [docs/INSTALL-INTEGRITY.md](docs/INSTALL-INTEGRITY.md).
+
+For v0.5.1, the published core ZIP SHA-256 is `973c939db4710b6a7255ae4b8834a1107238367878f7d898899948d931ce8d93`, and the published TAR.GZ SHA-256 is `ba85b324e811db50ddb497a185874c881b1cf33ab0a1ad81b9a85899d5c4537e`. Both match `INSTALL-SHA256SUMS.txt` from the release.
+
+It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
+
+```bash
+hermes setup --portal
+```
+
+### Mutable development path — explicit opt-in only
+
+`main` is no longer the stable default. Contributors who intentionally want mutable source must opt in.
+
+POSIX:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --channel development --ref main
+```
+
+PowerShell:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -Channel development -Ref main
+```
+
+A stable integrity failure does **not** downgrade to this path.
+
+### Core-only / contributor path
+
+The office can run without Hermes. Runtime requires **Node.js 20+**. Python 3.10+ and PyYAML are needed only for contributor/release utilities.
+
+For a source checkout used for development:
+
+```bash
+git clone https://github.com/exxrawrrr/nyobakantorai.git
+cd nyobakantorai
+
+node scripts/preflight.mjs --runtime
+npm run smoke
+npm start
+```
+
+Open `http://127.0.0.1:4322`.
+
+For contributor/release verification:
+
+```bash
+python -m pip install -r requirements-dev.txt
+npm run ready
+```
+
+The root package keeps `"private": true` intentionally to prevent accidental npm publication; it does **not** make the GitHub repository private.
+
+## Hermes runtime configuration
+
+Normally the installer and auto-discovery are enough. Advanced overrides:
+
+```text
+NYOBAKANTORAI_DISABLE_HERMES=0
+NYOBAKANTORAI_HERMES_EXE=/absolute/path/to/hermes
+NYOBAKANTORAI_HERMES_HOME=/absolute/path/to/hermes-data
+NYOBAKANTORAI_BOARD=nyobakantorai
+NYOBAKANTORAI_PORT=4322
+NYOBAKANTORAI_WORKER_PORT=4333
+```
+
+On native Windows the office detects the upstream Hermes data location under `%LOCALAPPDATA%\hermes`; on POSIX it checks `~/.hermes`. Explicit environment overrides always win.
+
+No secret is required by the repository itself.
+
+## Public project layout
+
+| Path | Purpose |
+| --- | --- |
+| `config/employees.json` | Canonical workforce registry — source of truth for employee identity/policy/routing |
+| `config/capabilities.json` | Provider-neutral capability states, ads/tool contracts, and autonomy modes |
+| `config/memory-policy.json` | M0–M4 profile/shared learning and canonical-skill promotion policy |
+| `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
+| `agents/` | Registry-derived public SOUL/profile definitions |
+| `hermes-profiles/` | Native Hermes profile distributions generated for the workforce |
+| `skills/canonical/` | Reusable portable skills |
+| `operations/taskctl/` | Blocked owner-controlled Hermes task intake |
+| `operations/handoff/` | Manual handoff, receipts, and source-evidence gates |
+| `operations/workflow/` | Deterministic routing preview and QA request flow |
+| `operations/doctor/` | Read-only environment diagnostics |
+| `packages/task-registry/` | Standalone evented task-registry prototype |
+| `packages/runtime-adapter/` | Dependency-free read-only runtime adapter SDK |
+| `docs/` | Architecture, approval model, threat model, privacy, demos, release docs, and adapter contracts |
+| `scripts/` | Security, public-release, employee-pack, selection, and test automation |
+
+## Capability endpoint
+
+```http
+GET /api/capabilities
+```
+
+Example contract:
+
+```json
+{
+  "app": "nyobakantorai",
+  "api": 1,
+  "runtime_adapter_api": 1,
+  "local_only": true,
+  "dispatch": false,
+  "runtime_adapter": "none",
+  "evidence_gated_verification": true,
+  "human_approval_gate": true,
+  "approval_risk_classes": ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]
+}
+```
+
+This endpoint is discovery metadata, not authorization.
+
+## Upstreams and credits
+
+- **Hermes Agent** — reference agent runtime: https://github.com/NousResearch/hermes-agent
+- **Pixel Agents** — visual/interaction inspiration for representing active agents as workers in an office: https://github.com/pixel-agents-hq/pixel-agents
+
+nyobakantorai does not vendor Hermes itself and is not presented as a fork of Pixel Agents. See [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) for the exact relationship and provenance notes.
+
+## Safety model
+
+nyobakantorai is designed around **least privilege and honest state**.
+
+Skills are procedures, not permissions. A configured provider is not proof that inference happened. A task card is not an execution receipt. A named reviewer is not proof that an independent review happened. External writes require explicit scoped human approval. Runtime claims that cannot be reconciled degrade to UNKNOWN / NOT CONNECTED.
+
+The office server binds to localhost and rejects cross-site mutation attempts. Credentials, runtime databases, logs, private paths, and personal workspace artifacts are excluded from the public release.
+
+Run the full release gate before every release candidate:
+
+```bash
+npm run ready
+```
+
+## Development
+
+```bash
+npm run doctor
+npm run audit
+npm test
+npm run demo
+npm run demo:adapter
+npm run smoke
+npm run build
+npm start
+```
+
+`npm run demo` executes a deterministic synthetic multi-agent flow without contacting a model or external service.
+
+The CI workflow runs the same verification on Linux and Windows.
+
+## Project status
+
+**v0.5.1 is the current stable release.** The release artifact, public contract/API surfaces, and runtime-adapter layer are marked `stable`. Behavioral evidence remains `evaluated-case`; real-world workflow evidence remains `collecting` at 1/20 eligible cases; provider lifecycle remains `partial`. These states are intentionally independent.
+
+v0.5 also carries an executable [complexity budget](config/complexity-budget.json): 12 required subsystems have explicit delete-test decisions. Current delete-test result is **11 KEEP / 1 MERGE**; Chat 19 executed that MERGE by folding the internal `deferred-evidence` module/tests into `release-claims` while preserving the historical v0.4 ledger and docs unchanged. See [Complexity Budget](docs/COMPLEXITY-BUDGET.md).
+
+See:
+
+- [ROADMAP.md](ROADMAP.md)
+- [office/docs/ARCHITECTURE.md](office/docs/ARCHITECTURE.md)
+- [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md)
+- [docs/EMPLOYEE-ARCHITECTURE.md](docs/EMPLOYEE-ARCHITECTURE.md)
+- [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md)
+- [docs/PERSONALITY-CONTRACT.md](docs/PERSONALITY-CONTRACT.md)
+- [docs/MEMORY-LEARNING.md](docs/MEMORY-LEARNING.md)
+- [docs/EXECUTION-RECEIPTS.md](docs/EXECUTION-RECEIPTS.md)
+- [docs/CAPABILITY-MODEL.md](docs/CAPABILITY-MODEL.md)
+- [docs/AUTONOMY-MODES.md](docs/AUTONOMY-MODES.md)
+- [docs/ADS-WORKERS.md](docs/ADS-WORKERS.md)
+- [docs/TELEGRAM-OFFICE.md](docs/TELEGRAM-OFFICE.md)
+- [docs/V0.3-UPGRADE.md](docs/V0.3-UPGRADE.md)
+- [docs/ADDING-EMPLOYEE.md](docs/ADDING-EMPLOYEE.md)
+- [docs/RUNTIME-ADAPTER-SPEC.md](docs/RUNTIME-ADAPTER-SPEC.md)
+- [docs/APPROVAL-MODEL.md](docs/APPROVAL-MODEL.md)
+- [docs/DEMO.md](docs/DEMO.md)
+- [docs/V0.5-RELEASE-READINESS.md](docs/V0.5-RELEASE-READINESS.md)
+- [docs/RELEASE-CHECKLIST.md](docs/RELEASE-CHECKLIST.md)
+- [docs/PUBLICATION-RUNBOOK.md](docs/PUBLICATION-RUNBOOK.md)
+- [docs/THREAT-MODEL.md](docs/THREAT-MODEL.md)
+- [docs/PRIVACY.md](docs/PRIVACY.md)
+- [SECURITY.md](SECURITY.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md)
+
+MIT licensed.
+
+---
+
+**A visible agent is not the same thing as a verified worker.**
+
+---
+
+# Owner's notes / Catatan buat gue sendiri
+
 > **Catatan buat gue sendiri.**
 >
 > Iki kantor AI.
@@ -259,65 +635,35 @@ itu belum kemenangan.
 
 ---
 
-## Current state
+## Posisi sekarang — 1 Oktober 2026
 
-Release stable terbaru adalah **v0.5.1**. Tag ini menunjuk exact source commit `3004220522fee1971453f63bb50e6f9ed1264687`; tagged release-gate `36812543303` berhasil membangun dan memverifikasi immutable install assets sebelum GitHub Release dipublish. Tag `v0.5.0` tetap dipertahankan immutable sebagai failed publication attempt dan tidak pernah dipoles menjadi release sukses.
+v0.5.1 akhirnya benar-benar publish.
 
-**v0.5.1 is published and stable as an artifact.** Exact final-main verify #578 passed, manual release-gate run `36811702004` passed, fresh-clone `v0.5:readiness:require-ready` exited 0, tagged release-gate `36812543303` passed, and the official release published 25 assets. A post-release isolated install reproduced the exact source commit and verified core artifact checksum. Canonical Hermes+Codex Siti portability remains scoped to the bounded reference case; real-world/provider evidence limits remain unchanged. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json).
+Yang bikin gue lega bukan angka versinya.
 
-**Snapshot maturity v0.5.1 published release:**
+Yang lebih penting: release-nya bisa dicek dari luar repo. Tag-nya menunjuk source commit yang jelas, artifact punya checksum, installer bisa dites ulang dari release yang sudah dipublish, dan kalau ada sesuatu yang belum terbukti sistemnya masih punya tempat buat bilang **belum**.
 
-| Dimension | State |
-| --- | --- |
-| Artifact | `stable` |
-| Contract/API | `stable` |
-| Runtime adapter | `stable` |
-| Behavioral evidence | `evaluated-case` |
-| Real-world workflow | `collecting` |
-| Provider lifecycle | `partial` |
+Itu terdengar sederhana, tapi justru bagian itu yang paling lama gue kejar.
 
-Ini sengaja multidimensi: **stable artifact ≠ stable behavior**. Controlled live cases tidak otomatis berarti repeated behavior; real-task 1/20 juga tetap `collecting`. Sumber mesin: [evidence classification](config/evidence-classification.json) dan [maturity model](config/maturity-model.json); penjelasan: [Evidence Classification](docs/EVIDENCE-CLASSIFICATION.md) dan [Stability Model](docs/STABILITY-MODEL.md).
+Gue nggak mau repo ini menang karena README-nya terdengar besar. Gue juga nggak mau merendahkan kerja yang memang sudah selesai. Jadi posisi nyatanya sekarang:
 
+- release artifact, contract/API, dan runtime-adapter layer sudah berada di state `stable`;
+- bounded Hermes + Codex reference case sudah punya portability evidence yang lolos verifier;
+- 16 employee profiles, pack pipeline, approval model, receipts, evidence model, dan installer sudah benar-benar ada di repo;
+- real-world workflow evidence masih **1/20** dan statusnya tetap `collecting`;
+- provider lifecycle masih `partial`;
+- sebagian visual worker masih nunggu original art;
+- beberapa integrasi nyata tetap bergantung pada setup dan akun milik user sendiri.
 
-v0.4 Modular Workforce sudah mencapai **stable-promotion scope**. Pada 30 September 2026 owner secara eksplisit menerima enam evidence gap yang masih terbuka sebagai deferred scope untuk v0.4.0; status `UNPROVEN`, `NOT_RUN`, dan `COLLECTING` tetap dipertahankan apa adanya dan tidak dipoles menjadi bukti selesai.
+Jadi iya, proyeknya sudah jauh lebih nyata dibanding waktu awal gue cuma pengen lihat “kantor AI” di layar.
 
-Yang sudah ada di kandidat v0.4 antara lain:
+Tapi belum selesai.
 
-- 16 specialized Hermes employee profiles dari satu canonical registry;
-- standalone one/subset/preset/all employee packs;
-- selective installer + reproducible pack/checksum pipeline;
-- signed Ed25519 execution receipts + evidence-verifier integration;
-- evidence-gated task state + explicit human approval gate;
-- application-level runtime permission policy (bukan OS/container isolation);
-- M0–M4 memory/learning policy + deterministic cross-profile isolation;
-- Fikri L0/L1/L2 context compiler;
-- controlled live-model Fikri evaluation;
-- provider evaluation contracts + Playwright MCP controlled-live candidate evidence;
-- anti-synthetic real-task collection gate;
-- local hash-chained Real Task Recorder with independent verification + export;
-- side-effect-free Unified Provider Doctor for user-owned Hermes/Codex/Gemini/Copilot/Cognee/Browser Use/Playwright setup;
-- isolated Browser Use self-service six-case runner with disposable loopback target, temporary browser profile, server-side mutation/auth evidence, and no automatic install/login;
-- isolated Cognee self-service eight-case memory runner with random run-owned datasets, secret pre-write rejection, scoped deletion, cleanup verification, and remote opt-in;
-- cross-harness self-service parity runner for Hermes/Codex/Gemini/Copilot with one disposable skill, exact protected-atom contract, temporary workspaces, and no auto-install/login;
-- isolated release matrices for one worker, arbitrary subset, full workforce, and full upgrade/uninstall/reinstall lifecycle with user-state preservation and byte-integrity checks;
-- Linux + Windows + minimum-version CI.
+Dan menurut gue justru bagus kalau README ini masih bisa bilang itu tanpa malu-malu dan tanpa jualan mimpi.
 
-Yang **belum** boleh dianggap proven/stable:
-
-- canonical live cross-harness behavioral parity across real installed harnesses;
-- canonical live Cognee/Hermes provider-lifecycle evaluation;
-- Browser Use side of the browser comparison;
-- real-task baseline, saat ini baru **1/20 eligible cases**;
-- final real clean-machine Hermes lifecycle coverage on intended release platforms;
-- live ads provider adapters;
-- finished original art untuk 10 worker baru;
-- complete office/UI storage migration.
-
-Stable promotion **AUTHORIZED WITH ACCEPTED DEFERRALS**. Tag stabil hanya boleh dibuat setelah commit yang dipromosikan ke `main` lulus verify lintas platform dan manual release-gate. Lihat [docs/V0.4-RELEASE-DECISION.md](docs/V0.4-RELEASE-DECISION.md), [docs/V0.4-REVIEW-MAP.md](docs/V0.4-REVIEW-MAP.md), dan [ROADMAP.md](ROADMAP.md).
-
-Self-service evidence/setup surfaces: [Real Task Recorder](docs/REAL-TASK-RECORDER.md), [Real-Task Baseline Collection](docs/REAL-TASK-BASELINE.md), [Unified Provider Doctor](docs/PROVIDER-DOCTOR.md), [Browser Use Self-Test](docs/BROWSER-SELF-TEST.md), [Cognee Memory Self-Test](docs/COGNEE-SELF-TEST.md), dan [Cross-Harness Self-Test](docs/CROSS-HARNESS-SELF-TEST.md).
-
----
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/pepe-clap.gif" width="275" alt="pepe clap gif" />
+</p>
 
 ## Pesan buat gue nanti
 
@@ -335,346 +681,8 @@ berarti kantornya tambah ramai.
 
 Belum tentu tambah pintar.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/pepe-clap.gif" width="275" alt="pepe clap gif" />
-</p>
-
 **Oke. Balik kerja.**
 
 ---
 
 <br/>
-
-# For everyone else
-
-> The section above is intentionally written as the owner's working note. This section is the technical project overview.
-
-## nyobakantorai
-
-**nyobakantorai is a local-first, human-governed multi-agent office that treats evidence as a first-class feature.**
-
-It is an experimental visual workspace for coordinating AI-agent roles without pretending that a configured model, a moving avatar, or a task label proves that work actually happened.
-
-The core model is:
-
-```text
-human intent
-    ↓
-scoped task
-    ↓
-agent role / runtime
-    ↓
-work product
-    ↓
-evidence + provenance
-    ↓
-independent verification
-```
-
-The default build is intentionally conservative: localhost-only, no autonomous dispatch endpoint, no bundled credentials, no production-write capability, and no hidden provider calls.
-
-## Highlights
-
-- **16 specialized Hermes employees** driven by one canonical registry, with distinct dialogue fingerprints, roles, habits, skills, toolset preferences, routing, approval, and verification policy.
-- **Standalone employee packs** so users can install/download one worker, an arbitrary subset, a preset team, or the full workforce.
-- **Signed execution receipts** with Ed25519 tamper detection, task/worker/capability binding, normalized token/cost fields, and evidence-verifier integration.
-- **Canonical reusable skills** spanning task truth, tool safety, ads operations, SEO/CRO, data, integrations, operations, community, governance, and independent QA.
-- **Evidence-gated task state** where VERIFIED requires independent evidence.
-- **Human approval gate** for external writes, paid actions, account changes, and destructive actions.
-- **Hermes-first reference runtime** with sixteen installable Hermes profile distributions and an idempotent, v0.2-upgrade-safe bootstrap.
-- **Read-only runtime adapter SDK** with a strict loopback HTTP adapter for plugging in other local runtimes without granting write or dispatch authority.
-- **Manual handoff + receipt protocol** for provenance-aware work across surfaces.
-- **Portable diagnostics** that check expected safety boundaries without printing secrets.
-- **Machine-readable capabilities** through `GET /api/capabilities`.
-- **Public-release guardrails** for tests, builds, private-path leakage, sensitive filenames, and credential-shaped strings.
-- **Zero npm runtime dependencies** for the main office server.
-
-## Workforce baseline (v0.3, extended by the v0.4 candidate)
-
-```text
-SOUL    = who the employee is
-SKILL   = reusable procedure / knowledge
-TOOL    = executable Hermes capability
-MCP     = external capability connection
-PROFILE = complete installable employee package
-```
-
-Credentials, account access, provider billing state, sessions, memory, and messaging tokens remain **user-owned**. A preferred toolset or external-capability declaration does not mean it is connected.
-
-| Employee | Department | Role | Visual | External capability default |
-| --- | --- | --- | --- | --- |
-| **Praroro** | Leadership / Coordination | COO / Chief of Staff | owner-authored | none required |
-| **Paijo** | Growth / Data | Quant / Growth / Finance | owner-authored | none required |
-| **Subagjo** | Engineering / Automation | Engineering / Operations | owner-authored | none required |
-| **Alex** | Strategy / Research | Strategy / Research | owner-authored | none required |
-| **Sumiati** | Creative / Community | Creative / Communications | owner-authored | none required |
-| **Siti** | QA / Governance | QA / Compliance / Knowledge | owner-authored | none required |
-| **Maya** | Paid Media | Meta Ads Operator | pending-original-art | `ads.meta.read`, `ads.meta.insights`, `ads.meta.creative`, `ads.meta.write`, `ads.meta.media` → NOT_CONNECTED |
-| **Gugun** | Paid Media | Google Ads Operator | pending-original-art | `ads.google.read`, `ads.google.insights`, `ads.google.keywords`, `ads.google.creative`, `ads.google.write`, `ads.google.verify` → NOT_CONNECTED |
-| **Ratri** | Growth / Data | SEO / CRO / Web Analyst | pending-original-art | none required |
-| **Bimo** | Engineering / Automation | Automation / MCP / Integrations Engineer | pending-original-art | none required |
-| **Nara** | Growth / Data | Data / BI / Experimentation | pending-original-art | none required |
-| **Dina** | Operations | Client / Project Operations | pending-original-art | none required |
-| **Bambang** | Engineering / Automation | Automation / Queue Optimizer | pending-original-art | none required |
-| **Fikri** | QA / Governance | Knowledge / Markdown / Context / Prompt Engineer | pending-original-art | none required |
-| **Tari** | Operations | Execution / Follow-Up Specialist | pending-original-art | none required |
-| **Caca** | Creative / Community | Community / Social / Partnerships | pending-original-art | none required |
-
-Maya and Gugun are capability **consumers**, not bundled ads engines. Telegram is an optional Hermes gateway path. See the dedicated docs below.
-
-### Upstream skill enrichment
-
-The workforce uses recreated/adapted workflow concepts with explicit provenance from ECC, Superpowers, MarkItDown, Docling, Mem0, Letta, Jina Reader, MCP reference servers, and Anthropic's Apache-2.0 MCP builder. See [UPSTREAM-SOURCE-CATALOG.md](docs/UPSTREAM-SOURCE-CATALOG.md). Restricted Anthropic document skills are not copied or used to create derivatives.
-
-**Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
-## Install
-
-> **Stable means immutable here.** Starting with v0.5.0, the recommended installer resolves a tagged GitHub release, downloads a core release artifact, verifies `install-manifest.json` + SHA-256 checksums, and only then unpacks it. Stable mode never falls back to mutable `main`.
-
-### Hermes-first — recommended stable path
-
-Hermes remains the reference runtime. The installer can reuse an existing Hermes installation or, only when you explicitly pass `WithHermes` / `--with-hermes`, invoke the official upstream installer.
-
-**Windows PowerShell**
-
-```powershell
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Start
-```
-
-**Linux / macOS / WSL2**
-
-```bash
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --start
-```
-
-The latest-release URL resolves the current stable release. The installer then verifies the immutable release artifact before installation.
-
-To pin an exact release, download that release's installer asset and pass the same version explicitly:
-
-```bash
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.1/install.sh | bash -s -- --version v0.5.1 --with-hermes
-```
-
-```powershell
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.1/install.ps1))) -Version v0.5.1 -WithHermes
-```
-
-### Install only part of the office
-
-The selector remains independent from the stable source channel.
-
-Windows:
-
-```powershell
-# one worker
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "siti"
-
-# arbitrary subset
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "praroro,siti"
-
-# preset
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "growth"
-```
-
-Linux / macOS / WSL2:
-
-```bash
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees siti
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees praroro,siti
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees growth
-```
-
-Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creative-community`, and `full`.
-
-Tagged releases also publish standalone employee ZIPs with their own checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
-
-Every successful install writes `.nyobakantorai-install.json` with the install channel, version/ref, exact source commit, stable artifact checksum when applicable, integrity state, timestamp, and selected employees. See [docs/INSTALL-INTEGRITY.md](docs/INSTALL-INTEGRITY.md).
-
-It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
-
-```bash
-hermes setup --portal
-```
-
-### Mutable development path — explicit opt-in only
-
-`main` is no longer the stable default. Contributors who intentionally want mutable source must opt in.
-
-POSIX:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --channel development --ref main
-```
-
-PowerShell:
-
-```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -Channel development -Ref main
-```
-
-A stable integrity failure does **not** downgrade to this path.
-
-### Core-only / contributor path
-
-The office can run without Hermes. Runtime requires **Node.js 20+**. Python 3.10+ and PyYAML are needed only for contributor/release utilities.
-
-For a source checkout used for development:
-
-```bash
-git clone https://github.com/exxrawrrr/nyobakantorai.git
-cd nyobakantorai
-
-node scripts/preflight.mjs --runtime
-npm run smoke
-npm start
-```
-
-Open `http://127.0.0.1:4322`.
-
-For contributor/release verification:
-
-```bash
-python -m pip install -r requirements-dev.txt
-npm run ready
-```
-
-The root package keeps `"private": true` intentionally to prevent accidental npm publication; it does **not** make the GitHub repository private.
-
-## Hermes runtime configuration
-
-Normally the installer and auto-discovery are enough. Advanced overrides:
-
-```text
-NYOBAKANTORAI_DISABLE_HERMES=0
-NYOBAKANTORAI_HERMES_EXE=/absolute/path/to/hermes
-NYOBAKANTORAI_HERMES_HOME=/absolute/path/to/hermes-data
-NYOBAKANTORAI_BOARD=nyobakantorai
-NYOBAKANTORAI_PORT=4322
-NYOBAKANTORAI_WORKER_PORT=4333
-```
-
-On native Windows the office detects the upstream Hermes data location under `%LOCALAPPDATA%\hermes`; on POSIX it checks `~/.hermes`. Explicit environment overrides always win.
-
-No secret is required by the repository itself.
-
-## Public project layout
-
-| Path | Purpose |
-| --- | --- |
-| `config/employees.json` | Canonical workforce registry — source of truth for employee identity/policy/routing |
-| `config/capabilities.json` | Provider-neutral capability states, ads/tool contracts, and autonomy modes |
-| `config/memory-policy.json` | M0–M4 profile/shared learning and canonical-skill promotion policy |
-| `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
-| `agents/` | Registry-derived public SOUL/profile definitions |
-| `hermes-profiles/` | Native Hermes profile distributions generated for the workforce |
-| `skills/canonical/` | Reusable portable skills |
-| `operations/taskctl/` | Blocked owner-controlled Hermes task intake |
-| `operations/handoff/` | Manual handoff, receipts, and source-evidence gates |
-| `operations/workflow/` | Deterministic routing preview and QA request flow |
-| `operations/doctor/` | Read-only environment diagnostics |
-| `packages/task-registry/` | Standalone evented task-registry prototype |
-| `packages/runtime-adapter/` | Dependency-free read-only runtime adapter SDK |
-| `docs/` | Architecture, approval model, threat model, privacy, demos, release docs, and adapter contracts |
-| `scripts/` | Security, public-release, employee-pack, selection, and test automation |
-
-## Capability endpoint
-
-```http
-GET /api/capabilities
-```
-
-Example contract:
-
-```json
-{
-  "app": "nyobakantorai",
-  "api": 1,
-  "runtime_adapter_api": 1,
-  "local_only": true,
-  "dispatch": false,
-  "runtime_adapter": "none",
-  "evidence_gated_verification": true,
-  "human_approval_gate": true,
-  "approval_risk_classes": ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"]
-}
-```
-
-This endpoint is discovery metadata, not authorization.
-
-## Upstreams and credits
-
-- **Hermes Agent** — reference agent runtime: https://github.com/NousResearch/hermes-agent
-- **Pixel Agents** — visual/interaction inspiration for representing active agents as workers in an office: https://github.com/pixel-agents-hq/pixel-agents
-
-nyobakantorai does not vendor Hermes itself and is not presented as a fork of Pixel Agents. See [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) for the exact relationship and provenance notes.
-
-## Safety model
-
-nyobakantorai is designed around **least privilege and honest state**.
-
-Skills are procedures, not permissions. A configured provider is not proof that inference happened. A task card is not an execution receipt. A named reviewer is not proof that an independent review happened. External writes require explicit scoped human approval. Runtime claims that cannot be reconciled degrade to UNKNOWN / NOT CONNECTED.
-
-The office server binds to localhost and rejects cross-site mutation attempts. Credentials, runtime databases, logs, private paths, and personal workspace artifacts are excluded from the public release.
-
-Run the full release gate before every release candidate:
-
-```bash
-npm run ready
-```
-
-## Development
-
-```bash
-npm run doctor
-npm run audit
-npm test
-npm run demo
-npm run demo:adapter
-npm run smoke
-npm run build
-npm start
-```
-
-`npm run demo` executes a deterministic synthetic multi-agent flow without contacting a model or external service.
-
-The CI workflow runs the same verification on Linux and Windows.
-
-## Project status
-
-**v0.5.1 is the current stable release.** Its tagged immutable install assets were verified and published successfully; behavioral evidence remains `evaluated-case`, real-world workflow remains `collecting`, and provider lifecycle remains `partial`.
-
-v0.5 also carries an executable [complexity budget](config/complexity-budget.json): 12 required subsystems have explicit delete-test decisions. Current delete-test result is **11 KEEP / 1 MERGE**; Chat 19 executed that MERGE by folding the internal `deferred-evidence` module/tests into `release-claims` while preserving the historical v0.4 ledger and docs unchanged. See [Complexity Budget](docs/COMPLEXITY-BUDGET.md).
-
-See:
-
-- [ROADMAP.md](ROADMAP.md)
-- [office/docs/ARCHITECTURE.md](office/docs/ARCHITECTURE.md)
-- [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md)
-- [docs/EMPLOYEE-ARCHITECTURE.md](docs/EMPLOYEE-ARCHITECTURE.md)
-- [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md)
-- [docs/PERSONALITY-CONTRACT.md](docs/PERSONALITY-CONTRACT.md)
-- [docs/MEMORY-LEARNING.md](docs/MEMORY-LEARNING.md)
-- [docs/EXECUTION-RECEIPTS.md](docs/EXECUTION-RECEIPTS.md)
-- [docs/CAPABILITY-MODEL.md](docs/CAPABILITY-MODEL.md)
-- [docs/AUTONOMY-MODES.md](docs/AUTONOMY-MODES.md)
-- [docs/ADS-WORKERS.md](docs/ADS-WORKERS.md)
-- [docs/TELEGRAM-OFFICE.md](docs/TELEGRAM-OFFICE.md)
-- [docs/V0.3-UPGRADE.md](docs/V0.3-UPGRADE.md)
-- [docs/ADDING-EMPLOYEE.md](docs/ADDING-EMPLOYEE.md)
-- [docs/RUNTIME-ADAPTER-SPEC.md](docs/RUNTIME-ADAPTER-SPEC.md)
-- [docs/APPROVAL-MODEL.md](docs/APPROVAL-MODEL.md)
-- [docs/DEMO.md](docs/DEMO.md)
-- [docs/V0.5-RELEASE-READINESS.md](docs/V0.5-RELEASE-READINESS.md)
-- [docs/RELEASE-CHECKLIST.md](docs/RELEASE-CHECKLIST.md)
-- [docs/PUBLICATION-RUNBOOK.md](docs/PUBLICATION-RUNBOOK.md)
-- [docs/THREAT-MODEL.md](docs/THREAT-MODEL.md)
-- [docs/PRIVACY.md](docs/PRIVACY.md)
-- [SECURITY.md](SECURITY.md)
-- [CONTRIBUTING.md](CONTRIBUTING.md)
-- [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md)
-
-MIT licensed.
-
----
-
-**A visible agent is not the same thing as a verified worker.**
