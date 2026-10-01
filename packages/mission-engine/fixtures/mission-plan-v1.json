@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "strategy": "RULE_BASED_V1",
+  "mission": {
+    "schema": 1,
+    "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
+    "objective": "Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
+    "constraints": [
+      "read-only planning",
+      "do not change production website"
+    ],
+    "risk_class": "READ_ONLY",
+    "budget": {
+      "hard_limit_amount": 5,
+      "currency": "USD"
+    },
+    "autonomy": {
+      "mode": "GUARDED",
+      "delegated_capabilities": []
+    },
+    "task_ids": [
+      "tnode-fixture-01-evidence",
+      "tnode-fixture-02-domain",
+      "tnode-fixture-03-synthesis",
+      "tnode-fixture-04-verify"
+    ],
+    "artifact_refs": [],
+    "evidence_refs": [],
+    "approval_refs": [],
+    "state": "PLANNED",
+    "created_at": "2026-10-01T06:30:00.000Z",
+    "updated_at": "2026-10-01T06:30:00.000Z"
+  },
+  "task_nodes": [
+    {
+      "schema": 1,
+      "task_id": "tnode-fixture-01-evidence",
+      "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
+      "title": "Collect source evidence",
+      "objective": "Collect bounded source evidence relevant to: Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
+      "employee_id": "alex",
+      "risk_class": "READ_ONLY",
+      "state": "PLANNED",
+      "approval": {
+        "required": false,
+        "status": "NOT_REQUIRED",
+        "approval_ref": null
+      },
+      "attempt_ids": [],
+      "evidence_refs": [],
+      "receipt_refs": [],
+      "blocking": null,
+      "legacy": null,
+      "created_at": "2026-10-01T06:30:00.000Z",
+      "updated_at": "2026-10-01T06:30:00.000Z"
+    },
+    {
+      "schema": 1,
+      "task_id": "tnode-fixture-02-domain",
+      "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
+      "title": "Analyze domain requirements",
+      "objective": "Analyze the domain-specific requirements and risks for: Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
+      "employee_id": "ratri",
+      "risk_class": "READ_ONLY",
+      "state": "PLANNED",
+      "approval": {
+        "required": false,
+        "status": "NOT_REQUIRED",
+        "approval_ref": null
+      },
+      "attempt_ids": [],
+      "evidence_refs": [],
+      "receipt_refs": [],
+      "blocking": null,
+      "legacy": null,
+      "created_at": "2026-10-01T06:30:00.000Z",
+      "updated_at": "2026-10-01T06:30:00.000Z"
+    },
+    {
+      "schema": 1,
+      "task_id": "tnode-fixture-03-synthesis",
+      "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
+      "title": "Synthesize mission result",
+      "objective": "Synthesize a bounded result for: Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
+      "employee_id": "praroro",
+      "risk_class": "READ_ONLY",
+      "state": "PLANNED",
+      "approval": {
+        "required": false,
+        "status": "NOT_REQUIRED",
+        "approval_ref": null
+      },
+      "attempt_ids": [],
+      "evidence_refs": [],
+      "receipt_refs": [],
+      "blocking": null,
+      "legacy": null,
+      "created_at": "2026-10-01T06:30:00.000Z",
+      "updated_at": "2026-10-01T06:30:00.000Z"
+    },
+    {
+      "schema": 1,
+      "task_id": "tnode-fixture-04-verify",
+      "mission_id": "mission-fixture-01-audit-seo-landing-page-performance-compare-competitors-and-produce-an-evidence-backed-brief-",
+      "title": "Verify mission evidence",
+      "objective": "Independently verify the synthesized result for: Audit SEO landing page performance, compare competitors, and produce an evidence-backed brief.",
+      "employee_id": "siti",
+      "risk_class": "READ_ONLY",
+      "state": "PLANNED",
+      "approval": {
+        "required": false,
+        "status": "NOT_REQUIRED",
+        "approval_ref": null
+      },
+      "attempt_ids": [],
+      "evidence_refs": [],
+      "receipt_refs": [],
+      "blocking": null,
+      "legacy": null,
+      "created_at": "2026-10-01T06:30:00.000Z",
+      "updated_at": "2026-10-01T06:30:00.000Z"
+    }
+  ],
+  "node_meta": [
+    {
+      "task_id": "tnode-fixture-01-evidence",
+      "key": "evidence",
+      "depends_on": [],
+      "constraints": [
+        "read-only planning",
+        "do not change production website"
+      ],
+      "required_skills": [
+        "nyoba-research-synthesis"
+      ],
+      "required_evidence": [
+        "source URLs",
+        "source provenance",
+        "retrieval evidence"
+      ],
+      "budget_policy": {
+        "source": "MISSION_SHARED",
+        "hard_limit_amount": 5,
+        "currency": "USD"
+      },
+      "route": {
+        "employee": "alex",
+        "source": "DETERMINISTIC_REGISTRY",
+        "score": 16,
+        "reasons": [
+          "match:research",
+          "match:competitor",
+          "match:compare sources",
+          "skill:nyoba-research-synthesis"
+        ],
+        "factors": {
+          "role": 10,
+          "skills": 6,
+          "workload": 0,
+          "history": 0,
+          "risk": "COMPATIBLE"
+        }
+      }
+    },
+    {
+      "task_id": "tnode-fixture-02-domain",
+      "key": "domain",
+      "depends_on": [],
+      "constraints": [
+        "read-only planning",
+        "do not change production website"
+      ],
+      "required_skills": [],
+      "required_evidence": [
+        "source URLs",
+        "analysis basis"
+      ],
+      "budget_policy": {
+        "source": "MISSION_SHARED",
+        "hard_limit_amount": 5,
+        "currency": "USD"
+      },
+      "route": {
+        "employee": "ratri",
+        "source": "DETERMINISTIC_REGISTRY",
+        "score": 8,
+        "reasons": [
+          "match:seo",
+          "match:landing page"
+        ],
+        "factors": {
+          "role": 8,
+          "skills": 0,
+          "workload": 0,
+          "history": 0,
+          "risk": "COMPATIBLE"
+        }
+      }
+    },
+    {
+      "task_id": "tnode-fixture-03-synthesis",
+      "key": "synthesis",
+      "depends_on": [
+        "tnode-fixture-01-evidence",
+        "tnode-fixture-02-domain"
+      ],
+      "constraints": [
+        "read-only planning",
+        "do not change production website"
+      ],
+      "required_skills": [
+        "nyoba-cross-team-briefing"
+      ],
+      "required_evidence": [
+        "source URLs",
+        "input task references",
+        "decision rationale"
+      ],
+      "budget_policy": {
+        "source": "MISSION_SHARED",
+        "hard_limit_amount": 5,
+        "currency": "USD"
+      },
+      "route": {
+        "employee": "praroro",
+        "source": "DETERMINISTIC_REGISTRY",
+        "score": 12,
+        "reasons": [
+          "match:coordinate",
+          "match:handoff",
+          "match:coo",
+          "skill:nyoba-cross-team-briefing"
+        ],
+        "factors": {
+          "role": 6,
+          "skills": 6,
+          "workload": 0,
+          "history": 0,
+          "risk": "COMPATIBLE"
+        }
+      }
+    },
+    {
+      "task_id": "tnode-fixture-04-verify",
+      "key": "verify",
+      "depends_on": [
+        "tnode-fixture-03-synthesis"
+      ],
+      "constraints": [
+        "read-only planning",
+        "do not change production website"
+      ],
+      "required_skills": [
+        "nyoba-independent-qa"
+      ],
+      "required_evidence": [
+        "source URLs",
+        "independent verification findings"
+      ],
+      "budget_policy": {
+        "source": "MISSION_SHARED",
+        "hard_limit_amount": 5,
+        "currency": "USD"
+      },
+      "route": {
+        "employee": "siti",
+        "source": "DETERMINISTIC_REGISTRY",
+        "score": 22,
+        "reasons": [
+          "match:verify",
+          "match:review",
+          "match:qa",
+          "match:evidence",
+          "match:audit result",
+          "match:QA",
+          "skill:nyoba-independent-qa"
+        ],
+        "factors": {
+          "role": 16,
+          "skills": 6,
+          "workload": 0,
+          "history": 0,
+          "risk": "COMPATIBLE"
+        }
+      }
+    }
+  ],
+  "graph": {
+    "ok": true,
+    "task_ids": [
+      "tnode-fixture-01-evidence",
+      "tnode-fixture-02-domain",
+      "tnode-fixture-03-synthesis",
+      "tnode-fixture-04-verify"
+    ],
+    "edges": [
+      {
+        "from": "tnode-fixture-01-evidence",
+        "to": "tnode-fixture-03-synthesis"
+      },
+      {
+        "from": "tnode-fixture-02-domain",
+        "to": "tnode-fixture-03-synthesis"
+      },
+      {
+        "from": "tnode-fixture-03-synthesis",
+        "to": "tnode-fixture-04-verify"
+      }
+    ],
+    "topological_layers": [
+      [
+        "tnode-fixture-01-evidence",
+        "tnode-fixture-02-domain"
+      ],
+      [
+        "tnode-fixture-03-synthesis"
+      ],
+      [
+        "tnode-fixture-04-verify"
+      ]
+    ],
+    "parallel_groups": [
+      [
+        "tnode-fixture-01-evidence",
+        "tnode-fixture-02-domain"
+      ]
+    ],
+    "roots": [
+      "tnode-fixture-01-evidence",
+      "tnode-fixture-02-domain"
+    ],
+    "leaves": [
+      "tnode-fixture-04-verify"
+    ]
+  },
+  "assumptions": [
+    "The target landing page will be supplied before execution.",
+    "Independent source collection and domain analysis can begin without depending on each other.",
+    "Synthesis should wait for both evidence collection and domain analysis.",
+    "Independent verification should wait for synthesis."
+  ],
+  "unknowns": [
+    "Current analytics access is not yet known.",
+    "The final runtime/model/tool choices are intentionally unresolved until later routing chats.",
+    "The completeness of external evidence is unknown until execution occurs."
+  ],
+  "generated_at": "2026-10-01T06:30:00.000Z"
+}
