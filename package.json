@@ -36,7 +36,7 @@
     "workforce:doctor": "node scripts/workforce-doctor.mjs",
     "employee:new": "node scripts/new-employee.mjs",
     "test:workforce": "node --test lib/routing.test.mjs scripts/new-employee.test.mjs scripts/personality-contract.test.mjs scripts/employee-contract.test.mjs scripts/employee-selection.test.mjs lib/workforce-portability.test.mjs",
-    "test:capabilities": "node --test packages/capability-router/index.test.mjs",
+    "test:capabilities": "node --test packages/capability-router/index.test.mjs packages/capability-router/action-routing.test.mjs packages/capability-router/orchestrator-integration.test.mjs",
     "test:provenance": "node --test scripts/upstream-provenance.test.mjs",
     "employee:pack": "node scripts/employee-pack.mjs",
     "test:packs": "node --test scripts/employee-pack.test.mjs",

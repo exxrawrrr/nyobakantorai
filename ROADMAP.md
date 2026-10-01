@@ -126,6 +126,7 @@ Execution progress:
 - [x] CHAT 03 — deterministic Mission Planner + validated DAG + worker routing + propagation + explicit assumptions/unknowns; still planning-only. See [v0.6 Mission Planner](docs/V0.6-MISSION-PLANNER.md).
 - [x] CHAT 04 — typed handoff envelopes + bounded runtime-neutral DAG orchestration + Attempt provenance + dependency/failure/cancel propagation. See [v0.6 Mission Orchestrator](docs/V0.6-MISSION-ORCHESTRATOR.md).
 - [x] CHAT 05 — deterministic provider-neutral Model Router with privacy/locality, health, budget, context, latency, fallback and route-evidence enforcement. See [v0.6 Model Router](docs/V0.6-MODEL-ROUTER.md).
+- [x] CHAT 06 — capability action policy with exact employee/resource grants, READ/WRITE distinction, connection + approval evidence and Attempt route-ref propagation. See [v0.6 Capability Policy](docs/V0.6-CAPABILITY-POLICY.md).
 
 Planned release sequence:
 

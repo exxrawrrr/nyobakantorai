@@ -65,9 +65,13 @@ verified execution
 
 ## Signed execution receipts
 
-Approval answers **may this action happen?** A signed execution receipt answers **what does this trusted runtime key claim happened?**
+Approval answers **may this action happen?** A scoped capability route additionally binds that permission to a concrete employee, capability, action, READ/WRITE mode, and exact resource target. A signed execution receipt answers **what does this trusted runtime key claim happened?**
 
-They are intentionally separate.
+Approval status without its required approval evidence reference does not authorize a v0.6 GUARDED write route.
+
+See [V0.6-CAPABILITY-POLICY.md](V0.6-CAPABILITY-POLICY.md) for the resource-grant and route-evidence layer.
+
+These concepts are intentionally separate.
 
 For high-impact authorized actions, the normalized receipt requires an approval reference. The receipt is signed with Ed25519 and can be bound to the expected task, employee, capability, and result state.
 
