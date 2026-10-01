@@ -235,6 +235,10 @@ export function readyTaskIds(planInput, completedTaskIds = []) {
     .sort());
 }
 
+function canonicalizeJsonNumber(value) {
+  return typeof value === "number" && Object.is(value, -0) ? 0 : value;
+}
+
 function normalizeRouteDecision(route = {}) {
   const employee = clean(route.employee, 40).toLowerCase();
   assert(PORTABLE_EMPLOYEE_BY_ID[employee], "Plan route decision references unknown employee.");
@@ -243,9 +247,12 @@ function normalizeRouteDecision(route = {}) {
   return Object.freeze({
     employee,
     source,
-    score:route.score == null ? null : Number(route.score),
+    score:route.score == null ? null : canonicalizeJsonNumber(Number(route.score)),
     reasons:unique(route.reasons),
-    factors:Object.freeze(structuredClone(route.factors || {})),
+    factors:Object.freeze(Object.fromEntries(
+      Object.entries(structuredClone(route.factors || {}))
+        .map(([key, value]) => [key, canonicalizeJsonNumber(value)])
+    )),
   });
 }
 
