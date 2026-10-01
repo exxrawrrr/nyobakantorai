@@ -85,7 +85,7 @@ export function buildV05ReadinessSnapshot({config,assessment}){
     schema:1,candidate:config.candidate,decision:assessment.decision,blocker_count:assessment.blocker_count,
     blockers:assessment.blockers,canonical:assessment.canonical,temporary_prd_absent:assessment.temporary_prd_absent,
     merge_authorized:config.promotion.merge_authorized===true,
-    truth_boundary:"green validation of BLOCKED state != release authorization; READY still requires exact promoted-main verify + manual release gate",
+    truth_boundary:"green validation of BLOCKED state != release authorization; READY does not imply publication; publication additionally requires an immutable tag and successful tagged asset verification; stable artifact != broad behavioral or provider maturity",
   });
 }
 
