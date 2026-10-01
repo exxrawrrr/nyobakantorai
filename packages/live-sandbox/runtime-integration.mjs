@@ -91,7 +91,20 @@ export async function executeLiveSandboxedTask({
   let actual=unknownUsage(outcome);
   if(usage_reporter!=null){
     if(typeof usage_reporter!=="function") throw sandboxError("SANDBOX_USAGE_REPORTER_INVALID","usage_reporter must be a function or null.");
-    actual=await usage_reporter(Object.freeze({admission,outcome}));
+    const reported=await usage_reporter(Object.freeze({admission,outcome}));
+    if(!reported||typeof reported!=="object"||Array.isArray(reported)){
+      throw sandboxError("SANDBOX_USAGE_REPORTER_INVALID","usage_reporter must return an object.");
+    }
+    const measuredDuration=actualDuration(outcome);
+    let durationMs=measuredDuration;
+    if(reported.duration_ms!=null){
+      const reportedDuration=Number(reported.duration_ms);
+      if(!Number.isFinite(reportedDuration)||reportedDuration<0){
+        throw sandboxError("SANDBOX_USAGE_REPORTER_INVALID","usage_reporter duration_ms must be a non-negative finite number when provided.");
+      }
+      durationMs=Math.max(measuredDuration,reportedDuration);
+    }
+    actual={...reported,duration_ms:durationMs};
   }
 
   const record=settleLiveSandbox(admission,outcome,actual);
