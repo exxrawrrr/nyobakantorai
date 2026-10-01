@@ -396,3 +396,34 @@ test("sandbox record digest detects tampering",()=>{
     status:"FAIL",
   }),/record ref.*content|digest|payload/i);
 });
+
+
+test("fallback provider must also be inside the runtime provider allowlist",()=>{
+  const result=admitLiveSandboxDispatch(policy({
+    allow_fallback:true,
+    allowed_runtime_providers:["codex"],
+  }),declaration({
+    fallback_models:[{
+      provider_id:"hermes",
+      model_identity:{status:"UNKNOWN",model_id:null},
+    }],
+  }));
+  assert.equal(result.allowed,false);
+  assert.ok(result.reason_codes.includes("FALLBACK_PROVIDER_NOT_ALLOWED"));
+});
+
+test("total token ceiling may be stricter than individual input/output ceilings",()=>{
+  const result=admitLiveSandboxDispatch(policy({
+    max_input_tokens:12000,
+    max_output_tokens:4000,
+    max_total_tokens:1000,
+  }),declaration({
+    projected_usage:{
+      ...declaration().projected_usage,
+      input_tokens:600,
+      output_tokens:500,
+    },
+  }));
+  assert.equal(result.allowed,false);
+  assert.ok(result.reason_codes.includes("TOTAL_TOKEN_LIMIT_EXCEEDED"));
+});
