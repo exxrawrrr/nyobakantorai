@@ -2,26 +2,22 @@
   "schema": 1,
   "candidate": "v0.5.1",
   "observed_on": "2026-10-01",
-  "decision": "BLOCKED",
+  "decision": "READY",
   "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. The immutable v0.5.0 tag is preserved as a failed publication attempt; v0.5.1 must pass its own exact-main verification, manual release-gate, require-ready check, and tagged-release asset verification before publication.",
-  "release_blockers": [
-    {
-      "id": "final-main-release-gate",
-      "category": "PROMOTION",
-      "status": "PENDING",
-      "required_state": "PASS",
-      "current_state": "PENDING",
-      "canonical_source": "docs/RELEASE-CHECKLIST.md",
-      "reason": "The v0.5.1 hotfix candidate has not yet been promoted to main and re-verified on its exact final commit.",
-      "safe_next_action": "Merge only after PR CI is green; then rerun exact-main verify, manual release-gate, and v0.5:readiness:require-ready before creating the v0.5.1 tag."
-    }
-  ],
+  "release_blockers": [],
   "promotion": {
     "target_branch": "main",
-    "final_main_verify": "PENDING",
-    "manual_release_gate": "PENDING",
-    "stable_tag": "PENDING",
-    "merge_authorized": false,
+    "final_main_verify": "PASS",
+    "manual_release_gate": "PASS",
+    "stable_tag": "AUTHORIZED",
+    "merge_authorized": true,
+    "verified_main_sha": "c8b8da5487a5201b89793ce8a09cf6f2912c1585",
+    "verify_run_id": 36810990252,
+    "verify_run_number": 576,
+    "verify_conclusion": "success",
+    "manual_release_gate_run_id": 36811165894,
+    "manual_release_gate_conclusion": "success",
+    "attested_on": "2026-10-01",
     "previous_failed_publication": {
       "tag": "v0.5.0",
       "source_commit": "90c921df96fa59cf83c19dfe6d2b8e4f14c2ba59",
@@ -104,6 +100,12 @@
       "state": "INCREASED",
       "source": "config/evidence-classification.json",
       "scope": "canonical Hermes+Codex bounded reference case"
+    },
+    {
+      "id": "final-main-release-gate",
+      "state": "PASS",
+      "source": "GitHub Actions verify #576 + manual release-gate run 36811165894",
+      "scope": "promoted main commit c8b8da5487a5201b89793ce8a09cf6f2912c1585"
     }
   ]
 }

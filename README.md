@@ -263,7 +263,7 @@ itu belum kemenangan.
 
 Release stable terbaru tetap **v0.4.0**. Kandidat v0.5.0 sudah lolos promoted-main verification dan manual release-gate, tetapi tagged-release workflow gagal **sebelum GitHub Release dan assets dipublish** karena bug CLI verifier asset. Tag `v0.5.0` dipertahankan immutable sebagai failed publication attempt; hotfix sekarang ditargetkan ke **v0.5.1**.
 
-**v0.5.1 release readiness: `BLOCKED` only by the final promotion gate.** Canonical Hermes+Codex Siti reference case tetap `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE` dan LIVE_RUNTIME evidence growth tetap `INCREASED`; package candidate sekarang `0.5.1`. Hotfix harus melewati PR CI, exact-final-main verify, manual release-gate, `v0.5:readiness:require-ready`, lalu tagged-release asset verification sebelum boleh disebut stable. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json).
+**v0.5.1 release readiness: `READY` pending final attestation re-verification and tagged publication.** Canonical Hermes+Codex Siti reference case tetap `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, LIVE_RUNTIME evidence growth tetap `INCREASED`, package candidate `0.5.1`, exact promoted-main verify #576 lulus, dan manual release-gate run `36811165894` lulus. Setelah attestation ini masuk `main`, exact-main verify + manual gate + `v0.5:readiness:require-ready` tetap harus diulang sebelum tag dibuat. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json).
 
 **Snapshot maturity v0.5.1 candidate:**
 
