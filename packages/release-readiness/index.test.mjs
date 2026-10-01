@@ -6,13 +6,13 @@ import { assessV05ReleaseReadiness,buildV05ReadinessSnapshot,readAndAssessV05Rel
 
 const root=resolve(import.meta.dirname,"../..");
 
-test("canonical v0.5 readiness is truthfully BLOCKED by four release blockers",async()=>{
+test("canonical v0.5 readiness is truthfully BLOCKED by the two remaining artifact/promotion blockers",async()=>{
   const {config,assessment}=await readAndAssessV05ReleaseReadiness({root});
   assert.equal(assessment.ok,true,assessment.errors.join("\n"));
   assert.equal(assessment.decision,"BLOCKED");
-  assert.deepEqual(assessment.blockers,["canonical-reference-portability","live-runtime-evidence-growth","package-version-v0.5","final-main-release-gate"]);
-  assert.equal(assessment.canonical.reference_case_portability,"UNPROVEN");
-  assert.equal(assessment.canonical.live_runtime_growth,"OPEN_REQUIRED");
+  assert.deepEqual(assessment.blockers,["package-version-v0.5","final-main-release-gate"]);
+  assert.equal(assessment.canonical.reference_case_portability,"SUPPORTED");
+  assert.equal(assessment.canonical.live_runtime_growth,"INCREASED");
   assert.equal(assessment.canonical.package_version,"0.4.0");
   assert.equal(assessment.canonical.artifact_maturity,"candidate");
   assert.equal(assessment.canonical.real_task_cases,1);
