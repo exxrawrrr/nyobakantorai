@@ -6,6 +6,8 @@ import {
   defineLiveSandboxPolicy,
   admitLiveSandboxDispatch,
   validateSandboxAdmission,
+  settleLiveSandbox,
+  validateSandboxRecord,
 } from "./index.mjs";
 
 function policy(overrides={}) {
@@ -225,4 +227,172 @@ test("invalid cost representation is rejected instead of normalized",()=>{
       cost:{status:"KNOWN",amount_usd:null},
     },
   })),/KNOWN.*amount|amount.*KNOWN/i);
+});
+
+
+function successfulOutcome(overrides={}) {
+  return {
+    schema:1,
+    ok:true,
+    state:"SUCCEEDED",
+    error_category:null,
+    runtime:{provider:"codex",runtime_ref:"codex:ephemeral:read-only",provider_version:"fixture"},
+    evidence:{
+      workspace_mutation_check:{temporary_workspace_only:true,production_repo_changed:false},
+      prohibited_action_check:{passed:true,observed:[]},
+      runtime_actions:{install:false,login:false,account_mutation:false,external_write:false},
+      evidence_refs:["evidence:runtime"],
+      artifact_refs:["artifact:runtime"],
+    },
+    cleanup:{attempted:true,ok:true},
+    started_at:"2026-10-01T09:00:00.000Z",
+    finished_at:"2026-10-01T09:00:01.000Z",
+    ...overrides,
+  };
+}
+
+function actualUsage(overrides={}) {
+  return {
+    duration_ms:1000,
+    tool_calls:0,
+    input_tokens:3000,
+    output_tokens:1000,
+    cost:{status:"UNKNOWN",amount_usd:null},
+    ...overrides,
+  };
+}
+
+test("fully measured successful execution settles PASS with verified teardown",()=>{
+  const admission=admitLiveSandboxDispatch(policy(),declaration());
+  const record=settleLiveSandbox(admission,successfulOutcome(),actualUsage());
+  assert.equal(record.status,"PASS");
+  assert.equal(record.execution_state,"SUCCEEDED");
+  assert.equal(record.teardown_verified,true);
+  assert.equal(record.quota_status,"PASS");
+  assert.deepEqual(record.reason_codes,[]);
+  assert.match(record.sandbox_record_ref,/^sandbox-record:sha256:[a-f0-9]{64}$/);
+  assert.equal(validateSandboxRecord(record),true);
+});
+
+test("known actual quota overage fails settlement",()=>{
+  const admission=admitLiveSandboxDispatch(policy(),declaration());
+  const record=settleLiveSandbox(admission,successfulOutcome(),actualUsage({
+    input_tokens:12001,
+    output_tokens:4000,
+  }));
+  assert.equal(record.status,"FAIL");
+  assert.equal(record.quota_status,"FAIL");
+  assert.ok(record.reason_codes.includes("ACTUAL_INPUT_TOKEN_LIMIT_EXCEEDED"));
+  assert.ok(record.reason_codes.includes("ACTUAL_TOTAL_TOKEN_LIMIT_EXCEEDED"));
+});
+
+test("unknown actual token/tool counters produce PARTIAL quota verification, never zero",()=>{
+  const admission=admitLiveSandboxDispatch(policy(),declaration());
+  const record=settleLiveSandbox(admission,successfulOutcome(),actualUsage({
+    tool_calls:null,
+    input_tokens:null,
+    output_tokens:null,
+  }));
+  assert.equal(record.status,"PARTIAL");
+  assert.equal(record.quota_status,"PARTIAL");
+  assert.ok(record.unverified_dimensions.includes("TOOL_CALLS"));
+  assert.ok(record.unverified_dimensions.includes("INPUT_TOKENS"));
+  assert.ok(record.unverified_dimensions.includes("OUTPUT_TOKENS"));
+  assert.equal(record.actual_usage.input_tokens,null);
+});
+
+test("hard cost ceiling with unknown actual cost is PARTIAL rather than falsely within budget",()=>{
+  const p=policy({max_cost_usd:0.25});
+  const admission=admitLiveSandboxDispatch(p,declaration({
+    projected_usage:{
+      ...declaration().projected_usage,
+      cost:{status:"KNOWN",amount_usd:0.1},
+    },
+  }));
+  const record=settleLiveSandbox(admission,successfulOutcome(),actualUsage());
+  assert.equal(record.status,"PARTIAL");
+  assert.equal(record.quota_status,"PARTIAL");
+  assert.ok(record.unverified_dimensions.includes("COST"));
+  assert.equal(record.actual_usage.cost.status,"UNKNOWN");
+});
+
+test("known actual cost over hard ceiling fails settlement",()=>{
+  const p=policy({max_cost_usd:0.25});
+  const admission=admitLiveSandboxDispatch(p,declaration({
+    projected_usage:{
+      ...declaration().projected_usage,
+      cost:{status:"KNOWN",amount_usd:0.1},
+    },
+  }));
+  const record=settleLiveSandbox(admission,successfulOutcome(),actualUsage({
+    cost:{status:"KNOWN",amount_usd:0.3},
+  }));
+  assert.equal(record.status,"FAIL");
+  assert.ok(record.reason_codes.includes("ACTUAL_COST_LIMIT_EXCEEDED"));
+});
+
+test("cleanup or temporary-workspace evidence failure makes settlement FAIL",()=>{
+  const admission=admitLiveSandboxDispatch(policy(),declaration());
+  const cleanup=settleLiveSandbox(admission,successfulOutcome({
+    cleanup:{attempted:true,ok:false},
+  }),actualUsage());
+  assert.equal(cleanup.status,"FAIL");
+  assert.ok(cleanup.reason_codes.includes("CLEANUP_NOT_VERIFIED"));
+
+  const workspace=settleLiveSandbox(admission,successfulOutcome({
+    evidence:{
+      ...successfulOutcome().evidence,
+      workspace_mutation_check:{temporary_workspace_only:false,production_repo_changed:false},
+    },
+  }),actualUsage());
+  assert.equal(workspace.status,"FAIL");
+  assert.ok(workspace.reason_codes.includes("TEMPORARY_WORKSPACE_NOT_PROVEN"));
+});
+
+test("production repo mutation or external write evidence makes settlement FAIL",()=>{
+  const admission=admitLiveSandboxDispatch(policy(),declaration());
+  const mutation=settleLiveSandbox(admission,successfulOutcome({
+    evidence:{
+      ...successfulOutcome().evidence,
+      workspace_mutation_check:{temporary_workspace_only:true,production_repo_changed:true},
+    },
+  }),actualUsage());
+  assert.equal(mutation.status,"FAIL");
+  assert.ok(mutation.reason_codes.includes("PRODUCTION_REPO_MUTATION"));
+
+  const external=settleLiveSandbox(admission,successfulOutcome({
+    evidence:{
+      ...successfulOutcome().evidence,
+      runtime_actions:{install:false,login:false,account_mutation:false,external_write:true},
+    },
+  }),actualUsage());
+  assert.equal(external.status,"FAIL");
+  assert.ok(external.reason_codes.includes("EXTERNAL_WRITE_OBSERVED"));
+});
+
+test("runtime provider drift and unsuccessful runtime outcome are explicit failures",()=>{
+  const admission=admitLiveSandboxDispatch(policy(),declaration());
+  const provider=settleLiveSandbox(admission,successfulOutcome({
+    runtime:{provider:"hermes",runtime_ref:"hermes:fixture",provider_version:"fixture"},
+  }),actualUsage());
+  assert.equal(provider.status,"FAIL");
+  assert.ok(provider.reason_codes.includes("RUNTIME_PROVIDER_MISMATCH"));
+
+  const failed=settleLiveSandbox(admission,successfulOutcome({
+    ok:false,
+    state:"FAILED",
+    error_category:"TIMEOUT",
+  }),actualUsage());
+  assert.equal(failed.status,"FAIL");
+  assert.ok(failed.reason_codes.includes("RUNTIME_EXECUTION_NOT_SUCCESSFUL"));
+});
+
+test("sandbox record digest detects tampering",()=>{
+  const admission=admitLiveSandboxDispatch(policy(),declaration());
+  const record=settleLiveSandbox(admission,successfulOutcome(),actualUsage());
+  assert.equal(validateSandboxRecord(record),true);
+  assert.throws(()=>validateSandboxRecord({
+    ...record,
+    status:"FAIL",
+  }),/record ref.*content|digest|payload/i);
 });
