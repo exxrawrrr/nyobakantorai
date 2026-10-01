@@ -207,3 +207,37 @@ test("runtime timeout ceiling cannot exceed sandbox duration ceiling",async()=>{
     },
   );
 });
+
+
+test("sandbox admission is bound to exact runtime task identity and risk before prepare",async()=>{
+  const counter={prepare:0,execute:0,cleanup:0};
+  await assert.rejects(
+    ()=>executeLiveSandboxedTask({
+      sandbox_policy:sandboxPolicy(),
+      declaration:declaration({task_id:"other-task"}),
+      adapter:adapter({counter}),
+      task:runtimeTask(),
+      runtime_policy:runtimePolicy,
+    }),
+    (error)=>{
+      assert.equal(error.code,"SANDBOX_TASK_BINDING_MISMATCH");
+      return true;
+    },
+  );
+  assert.deepEqual(counter,{prepare:0,execute:0,cleanup:0});
+
+  await assert.rejects(
+    ()=>executeLiveSandboxedTask({
+      sandbox_policy:sandboxPolicy({allowed_risk_classes:["READ_ONLY","LOCAL_WRITE"]}),
+      declaration:declaration({risk_class:"LOCAL_WRITE"}),
+      adapter:adapter({counter}),
+      task:runtimeTask(),
+      runtime_policy:runtimePolicy,
+    }),
+    (error)=>{
+      assert.equal(error.code,"SANDBOX_RISK_BINDING_MISMATCH");
+      return true;
+    },
+  );
+  assert.deepEqual(counter,{prepare:0,execute:0,cleanup:0});
+});
