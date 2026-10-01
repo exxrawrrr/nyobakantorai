@@ -6,6 +6,8 @@ import { createConfiguredRuntimeProvider } from "./runtime-composition.mjs";
 import { randomBytes } from "node:crypto";
 import { sanitizeRuntimeTask } from "./reconcile.mjs";
 import { createRuntimeSnapshotCache } from "./runtime-cache.mjs";
+import { createPublicDemoService } from "./public-demo.mjs";
+import { publicDemoHttpErrorResponse, readBoundedJsonBody, routePublicDemoRequest } from "./public-demo-http.mjs";
 import { WORKFORCE, EMPLOYEE_IDS, WORKFORCE_VERSION, CAPABILITY_STATES, AUTONOMY_MODES, DEFAULT_AUTONOMY, CAPABILITY_CATALOG } from "./workforce.mjs";
 
 const projectRoot = fileURLToPath(new URL(".", import.meta.url));
@@ -44,11 +46,13 @@ function assertLocal(request) {
     if (parsed.protocol !== "http:" || parsed.host !== host) throw new PublicError(403, "Same-origin request required");
   }
 }
-function json(response, statusCode, value) {
-  response.writeHead(statusCode, { ...security, "Content-Type": "application/json; charset=utf-8" });
+function json(response, statusCode, value, extraHeaders = {}) {
+  response.writeHead(statusCode, { ...security, "Content-Type": "application/json; charset=utf-8", ...extraHeaders });
   response.end(JSON.stringify(value));
 }
+
 const runtimeProvider = createConfiguredRuntimeProvider({ employeeIds:EMPLOYEE_IDS, board });
+const publicDemo = createPublicDemoService();
 
 async function employeeSnapshot() {
   const snapshot = await runtimeProvider.employeeSnapshot();
@@ -134,9 +138,23 @@ const server = createServer(async (request, response) => {
     }
     if (pathname === "/api/capabilities" && request.method === "GET") {
       assertLocal(request);
-      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: runtimeProvider.configured ? runtimeProvider.adapter.id : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, autonomy_default: DEFAULT_AUTONOMY, autonomy_modes: AUTONOMY_MODES, capability_states: CAPABILITY_STATES, external_capability_catalog: CAPABILITY_CATALOG, employees: EMPLOYEE_IDS, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks"] }); return;
+      json(response, 200, { app: "nyobakantorai", api: 1, runtime_adapter_api: 1, local_only: true, dispatch: false, runtime_adapter: runtimeProvider.configured ? runtimeProvider.adapter.id : "none", evidence_gated_verification: true, human_approval_gate: true, approval_risk_classes: ["EXTERNAL_WRITE", "PAID_ACTION", "ACCOUNT_CHANGE", "DESTRUCTIVE"], workforce_version: WORKFORCE_VERSION, autonomy_default: DEFAULT_AUTONOMY, autonomy_modes: AUTONOMY_MODES, capability_states: CAPABILITY_STATES, external_capability_catalog: CAPABILITY_CATALOG, employees: EMPLOYEE_IDS, public_demo: { api: publicDemo.api, live_available: publicDemo.live_available === true, limits: publicDemo.limits }, endpoints: ["/api/health", "/api/capabilities", "/api/workforce", "/api/runtime", "/api/worker/tasks", "/api/public/capabilities", "/api/public/session", "/api/public/demo", "/api/public/live"] }); return;
     }
     if (pathname === "/api/capabilities") throw new PublicError(405, "Method not allowed");
+    if (pathname.startsWith("/api/public/")) {
+      assertLocal(request);
+      const body = request.method === "POST" ? await readBoundedJsonBody(request) : null;
+      const handled = await routePublicDemoRequest(publicDemo, {
+        pathname,
+        method:request.method,
+        headers:request.headers,
+        body,
+      });
+      if (handled) {
+        json(response, handled.status, handled.body, handled.headers);
+        return;
+      }
+    }
     if (pathname === "/api/workforce" && request.method === "GET") {
       assertLocal(request);
       json(response, 200, {
@@ -214,6 +232,11 @@ const server = createServer(async (request, response) => {
     response.writeHead(200, { ...security, "Content-Type": mime[extname(file).toLowerCase()] || "application/octet-stream" });
     response.end(request.method === "HEAD" ? undefined : body);
   } catch (error) {
+    const publicDemoError = publicDemoHttpErrorResponse(error);
+    if (publicDemoError && request.url?.startsWith("/api/public/")) {
+      json(response, publicDemoError.status, publicDemoError.body, publicDemoError.headers);
+      return;
+    }
     const status = error instanceof PublicError ? error.status : 500;
     if (request.url?.startsWith("/api/")) json(response, status, { error: error instanceof PublicError ? error.message : "Internal request failure" });
     else response.writeHead(status === 500 ? 404 : status, { ...security, "Content-Type": "text/plain; charset=utf-8" }).end(status === 403 ? "Forbidden" : "Not found");

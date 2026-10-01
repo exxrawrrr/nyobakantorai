@@ -128,6 +128,7 @@ Execution progress:
 - [x] CHAT 05 — deterministic provider-neutral Model Router with privacy/locality, health, budget, context, latency, fallback and route-evidence enforcement. See [v0.6 Model Router](docs/V0.6-MODEL-ROUTER.md).
 - [x] CHAT 06 — capability action policy with exact employee/resource grants, READ/WRITE distinction, connection + approval evidence and Attempt route-ref propagation. See [v0.6 Capability Policy](docs/V0.6-CAPABILITY-POLICY.md).
 - [x] CHAT 07 — Live Sandbox implemented, verified, and closed for repository delivery. CHAT 07B traced the current Codex status-1 failure to external provider quota exhaustion, not an adapter/sandbox regression. The quota limitation remains documented but is not a repository-development blocker. See [v0.6 Live Sandbox](docs/V0.6-LIVE-SANDBOX.md) and [Codex Runtime Diagnosis](docs/V0.6-CODEX-RUNTIME-DIAGNOSIS.md).
+- [x] CHAT 08 — Public Interactive Demo Backend + UI implemented and verified: deterministic no-login demo, isolated anonymous sessions, bounded quotas, visible task graph/employee routing, strict synthetic/live labels, and fail-closed LIVE fallback. The localhost office does not currently inject an arbitrary-mission live runner. See [v0.6 Public Interactive Demo](docs/V0.6-PUBLIC-INTERACTIVE-DEMO.md).
 
 Planned release sequence:
 

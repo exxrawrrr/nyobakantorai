@@ -242,6 +242,8 @@ It requires demonstrated real-world reliability across a reviewed dataset, matur
 
 ### 8.1 Public Interactive Web Demo
 
+CHAT 08 implementation/status source: [v0.6 Public Interactive Demo Backend + UI](V0.6-PUBLIC-INTERACTIVE-DEMO.md). The repository now includes the deterministic no-login experience, bounded anonymous sessions, task-graph/employee visualization, strict synthetic/live labeling, and a fail-closed live-unavailable fallback.
+
 The public surface exposes two distinct experiences:
 
 ```text
@@ -398,7 +400,7 @@ Routing must verify:
 
 ### 8.7 Live AI Sandbox
 
-CHAT 07 implementation/status source: [v0.6 Live Sandbox + Minimum Cost/Quota Guard](V0.6-LIVE-SANDBOX.md). The application-level sandbox now enforces bounded read-only admission, quota/cost truth semantics, exact task/provider binding, disposable workspace settlement, teardown checks, and canonical live-run integration. One explicit Codex live attempt was fail-closed and teardown-safe but did not complete successfully, so the real-model success exit gate remains open.
+CHAT 07 implementation/status source: [v0.6 Live Sandbox + Minimum Cost/Quota Guard](V0.6-LIVE-SANDBOX.md). The application-level sandbox enforces bounded read-only admission, quota/cost truth semantics, exact task/provider binding, disposable workspace settlement, teardown checks, and canonical live-run integration. CHAT 07 is closed for repository delivery; the most recent provider-quota failure remains documented as an external operational limitation rather than unfinished sandbox work.
 
 
 The live demo/runtime sandbox must provide:

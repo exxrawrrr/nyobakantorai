@@ -153,6 +153,9 @@ Closure basis: implementation and CI are verified; earlier canonical live eviden
 
 ### CHAT 08 — Public Interactive Demo Backend + UI
 
+**Status: COMPLETE — DETERMINISTIC DEMO + FAIL-CLOSED LIVE SURFACE VERIFIED — 2026-10-01.**
+Implementation/status: `docs/V0.6-PUBLIC-INTERACTIVE-DEMO.md`
+
 Goal: expose `TRY DEMO` and `TRY LIVE AI` as clearly different experiences.
 
 Deliverables:
@@ -167,6 +170,8 @@ Deliverables:
 - basic mobile behavior.
 
 Exit gate: first-time visitor can run demo safely and the UI never labels synthetic work as live.
+
+Closure: PASS for repository delivery. The deterministic no-login path, anonymous-session isolation, quotas, task graph, truth labels, mobile behavior, and live-unavailable fallback are verified. The current localhost office intentionally has no arbitrary-mission live runner, so LIVE fails closed instead of fabricating success.
 
 ### CHAT 09 — Execution Telemetry + Evidence UI
 

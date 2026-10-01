@@ -5,6 +5,7 @@ import { EMPLOYEE_PLAYBOOK, PERSONA_SNAPSHOT } from "./persona-ops.mjs";
 import { attachWorkerBubbles } from "./worker-bubbles.mjs";
 import { WORKFORCE_VIEW as WORKFORCE, EMPLOYEE_BY_ID, runtimePreferencesForEmployee } from "./workforce-view.mjs";
 import { approvalPriorityFacts, buildApprovalSummary, deriveRegistryApprovalSignals } from "./approval-summary.mjs";
+import { attachPublicDemo } from "./public-demo-ui.mjs";
 
 const STORAGE_KEY = "nyobakantorai-registry-v1";
 const SETTINGS_KEY = "nyobakantorai-settings-v1";
@@ -71,7 +72,7 @@ function renderSelected() {
   const person=employee(selected),profile=profileFor(person),presence=presenceFor(selected),playbook=EMPLOYEE_PLAYBOOK[selected];
   $("#selected-profile").innerHTML=`${portraitMarkup(person)}<h2 class="selected-name">${escapeHtml(person.name)}</h2><div class="selected-role">${escapeHtml(person.role)}</div><p class="eyebrow">${escapeHtml(person.department)} · ${escapeHtml(profile.visual)}</p><p class="selected-copy">${escapeHtml(profile.personality)}</p><div class="profile-states">${profile.skills.map((skill)=>`<span>${escapeHtml(skill)}</span>`).join("")}</div><p class="selected-copy"><strong>Gaya bicara:</strong> ${escapeHtml(playbook.voice)}</p><p class="selected-copy"><strong>Habit:</strong> ${escapeHtml(person.habits.idle_habit)}</p><div class="profile-states">${capabilityChips(person)||"<span>NO EXTERNAL CAPABILITY REQUIRED</span>"}</div><span class="runtime-pill">${escapeHtml(presence)}</span>`;
   $("#scene-status").textContent=`Scene: VISUAL DEMO · selected ${person.name}`;
-  $("#scene-roster button").forEach((button)=>button.classList.toggle("is-active",button.dataset.employee===selected));
+  $$("#scene-roster button").forEach((button)=>button.classList.toggle("is-active",button.dataset.employee===selected));
 }
 function renderRoster() {
   $("#scene-roster").innerHTML=EMPLOYEES.map(({id,name})=>`<button type="button" data-employee="${id}">${escapeHtml(name)}</button>`).join("");
@@ -163,7 +164,7 @@ function renderActivity() {
 function renderSystems() {
   const connected=runtime?.runtime?.connected===true;
   const cards=[
-    ["Local office server","Static UI and read-only runtime adapter.",[["LOCALHOST","pass"],["WRITE ENDPOINTS: 0","pass"],["DISPATCH: BLOCKED","blocked"]]],
+    ["Local office server","Static UI, bounded in-memory public demo POST routes, and a read-only runtime adapter.",[["LOCALHOST","pass"],["PRODUCTION WRITES: 0","pass"],["PUBLIC LIVE: FAIL-CLOSED","pass"]]],
     ["Runtime provider",connected?`${runtime.runtime.provider_id} · ${runtime.runtime.version} · ${runtime.runtime.task_count} sanitized task(s).`:"No verified runtime snapshot.",[[connected?"READ CONNECTED":"UNKNOWN",connected?"pass":"blocked"],["RUNTIME WRITES: 0","pass"],["READ-ONLY ADAPTER","pass"]]],
     ["Employee runtime","Registry profile presence comes from the configured runtime provider; model label or animation does NOT prove execution.",EMPLOYEES.map(({id})=>[`${id.toUpperCase()}: ${presenceFor(id)}`,""])],
     ["Providers / models","The office server does not read provider keys, change providers, or run model inference.",[["SERVER INFERENCE: 0","pass"],["PROVIDER KEYS: NOT READ","pass"],["CONFIG CHANGES: 0","pass"]]],
@@ -212,6 +213,7 @@ function syncWorkerPanel(live) {
  if(live&&!workerAvailable)frame.src="http://127.0.0.1:4333/?embedded=1&employee="+encodeURIComponent(requestedWorker);
  workerAvailable=live;
 }
+attachPublicDemo({ root:document, employeeById:EMPLOYEE_BY_ID, toast });
 workerBubbles=attachWorkerBubbles({layer:$("#speech-layer"),onSelect:(id)=>scene.select(id),
  onOpen:(id)=>{requestedWorker=id;showView("workers");if(workerAvailable)$("#worker-frame").src="http://127.0.0.1:4333/?embedded=1&employee="+encodeURIComponent(id);},
  onConnection:(live)=>{$("#worker-connection").textContent=live?"WORKER: CONNECTED":"WORKER: OFFLINE";syncWorkerPanel(live);}});
@@ -222,6 +224,6 @@ $("#motion-toggle").addEventListener("click",()=>{settings.motion=!settings.moti
 $("#reduced-motion").addEventListener("change",(event)=>{settings.motion=!event.currentTarget.checked;saveSettings();applyMotion();});
 $("#debug-grid").checked=settings.debug;$("#debug-grid").addEventListener("change",(event)=>{settings.debug=event.currentTarget.checked;saveSettings();scene.debug(settings.debug);});scene.debug(settings.debug);applyMotion();
 
-const allowedViews=new Set(["office","workers","people","missions","activity","systems","architecture","knowledge","settings"]);showView(allowedViews.has(location.hash.slice(1))?location.hash.slice(1):"office");
+const allowedViews=new Set(["office","try","workers","people","missions","approvals","activity","systems","architecture","knowledge","settings"]);showView(allowedViews.has(location.hash.slice(1))?location.hash.slice(1):"office");
 setInterval(()=>{$("#clock").textContent=new Intl.DateTimeFormat("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(new Date());},1000);
 renderAll();refreshRuntime({quiet:true});
