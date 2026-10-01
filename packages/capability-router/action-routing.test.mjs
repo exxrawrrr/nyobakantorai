@@ -367,3 +367,57 @@ test("route decision digest detects tampering",()=>{
   };
   assert.throws(()=>validateCapabilityRouteDecision(tampered),/route ref.*content|digest|payload/i);
 });
+
+
+test("grant cannot authorize before issued_at or at/after expires_at",()=>{
+  const future=makeRouter([grant({issued_at:"2026-10-01T10:00:00.000Z"})]).authorizeActionForEmployee({
+    employee:employee("maya"),
+    capabilityId:"ads.meta.read",
+    action:"inspect",
+    accessMode:"READ",
+    target:target(),
+    snapshots:[snapshot("ads.meta.read")],
+    now:"2026-10-01T09:00:00.000Z",
+  });
+  assert.equal(future.allowed,false);
+  assert.equal(future.reason,"RESOURCE_GRANT_NOT_YET_VALID");
+
+  const expired=makeRouter([grant({expires_at:"2026-10-01T09:00:00.000Z"})]).authorizeActionForEmployee({
+    employee:employee("maya"),
+    capabilityId:"ads.meta.read",
+    action:"inspect",
+    accessMode:"READ",
+    target:target(),
+    snapshots:[snapshot("ads.meta.read")],
+    now:"2026-10-01T09:00:00.000Z",
+  });
+  assert.equal(expired.allowed,false);
+  assert.equal(expired.reason,"RESOURCE_GRANT_EXPIRED");
+});
+
+test("route digest binds full grant policy and connection/capability authorization metadata",()=>{
+  const router=makeRouter([grant()]);
+  const route=router.authorizeActionForEmployee({
+    employee:employee("maya"),
+    capabilityId:"ads.meta.read",
+    action:"inspect",
+    accessMode:"READ",
+    target:target(),
+    snapshots:[snapshot("ads.meta.read")],
+  });
+
+  assert.throws(()=>validateCapabilityRouteDecision({
+    ...route,
+    grant:{...route.grant,actions:["different-action"]},
+  }),/route ref.*content|digest|payload/i);
+
+  assert.throws(()=>validateCapabilityRouteDecision({
+    ...route,
+    connection:{...route.connection,state:"NOT_CONNECTED"},
+  }),/route ref.*content|digest|payload/i);
+
+  assert.throws(()=>validateCapabilityRouteDecision({
+    ...route,
+    capability:{...route.capability,requires_human_approval:true},
+  }),/route ref.*content|digest|payload/i);
+});
