@@ -18,6 +18,8 @@ import {
 const root = new URL("../../", import.meta.url);
 const missionSchema = JSON.parse(await readFile(new URL("schemas/mission.schema.json", root), "utf8"));
 const attemptSchema = JSON.parse(await readFile(new URL("schemas/execution-attempt.schema.json", root), "utf8"));
+const missionFixture = JSON.parse(await readFile(new URL("packages/mission-engine/fixtures/mission-v1.json", root), "utf8"));
+const attemptFixture = JSON.parse(await readFile(new URL("packages/mission-engine/fixtures/attempt-v1.json", root), "utf8"));
 
 const stamp = (seconds = 0) => `2026-10-01T05:10:${String(seconds).padStart(2, "0")}.000Z`;
 
@@ -63,6 +65,11 @@ function plannedAttempt(overrides = {}) {
     ...overrides,
   };
 }
+
+test("canonical Mission and Attempt fixtures validate against runtime contracts", () => {
+  assert.equal(validateMission(missionFixture), true);
+  assert.equal(validateExecutionAttempt(attemptFixture), true);
+});
 
 test("Mission and Attempt state catalogs match machine-readable schemas", () => {
   assert.deepEqual(missionSchema.properties.state.enum, MISSION_STATES);
