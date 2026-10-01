@@ -299,6 +299,8 @@ Mission planning must remain inspectable. The system must not hide a large free-
 
 ### 8.3 Agent Handoff Bus
 
+CHAT 04 implementation source: [v0.6 Mission Orchestrator](V0.6-MISSION-ORCHESTRATOR.md). Typed handoff envelopes and bounded runtime-neutral DAG execution are now implemented for synthetic/read-only contract cases; dynamic model routing and production connectors remain later milestones.
+
 Inter-agent delegation uses typed envelopes rather than unrestricted chat as the source of truth.
 
 Minimum outbound handoff fields:
