@@ -6,14 +6,14 @@ import { assessV05ReleaseReadiness,buildV05ReadinessSnapshot,readAndAssessV05Rel
 
 const root=resolve(import.meta.dirname,"../..");
 
-test("canonical v0.5 readiness is truthfully BLOCKED by the two remaining artifact/promotion blockers",async()=>{
+test("canonical v0.5 readiness is truthfully BLOCKED only by the final promotion gate",async()=>{
   const {config,assessment}=await readAndAssessV05ReleaseReadiness({root});
   assert.equal(assessment.ok,true,assessment.errors.join("\n"));
   assert.equal(assessment.decision,"BLOCKED");
-  assert.deepEqual(assessment.blockers,["package-version-v0.5","final-main-release-gate"]);
+  assert.deepEqual(assessment.blockers,["final-main-release-gate"]);
   assert.equal(assessment.canonical.reference_case_portability,"SUPPORTED");
   assert.equal(assessment.canonical.live_runtime_growth,"INCREASED");
-  assert.equal(assessment.canonical.package_version,"0.4.0");
+  assert.equal(assessment.canonical.package_version,"0.5.0");
   assert.equal(assessment.canonical.artifact_maturity,"candidate");
   assert.equal(assessment.canonical.real_task_cases,1);
   assert.equal(assessment.canonical.real_task_required,20);
@@ -30,7 +30,7 @@ test("temporary PRD is retired and durable successor contains surviving final ru
   }
 });
 
-test("READY cannot be declared while canonical portability/live evidence/version/main gate remain open",async()=>{
+test("READY cannot be declared while the final main release gate remains open",async()=>{
   const {config}=await readAndAssessV05ReleaseReadiness({root});
   const changed=structuredClone(config);
   changed.decision="READY";

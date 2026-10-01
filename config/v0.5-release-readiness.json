@@ -6,16 +6,6 @@
   "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. A green CI run may validate a truthful BLOCKED decision; only the explicit require-ready command may authorize the next release step.",
   "release_blockers": [
     {
-      "id": "package-version-v0.5",
-      "category": "RELEASE_ARTIFACT",
-      "status": "OPEN",
-      "required_state": "0.5.0",
-      "current_state": "0.4.0",
-      "canonical_source": "package.json",
-      "reason": "The development branch still declares package version 0.4.0 and therefore is not a final v0.5.0 release artifact.",
-      "safe_next_action": "Bump the version only after the live portability/release decision is reconciled, then regenerate/verify release metadata and immutable assets."
-    },
-    {
       "id": "final-main-release-gate",
       "category": "PROMOTION",
       "status": "PENDING",
@@ -87,7 +77,7 @@
     "successor": "docs/V0.5-RELEASE-READINESS.md"
   },
   "claim_language": {
-    "allowed": "v0.5 candidate adds runtime-neutral contracts, cross-implementation verification, immutable-install integrity, anomaly-first approval oversight, evidence classification, multidimensional maturity, and complexity pruning; canonical Hermes+Codex reference portability remains unproven until qualifying live evidence exists.",
+    "allowed": "v0.5 candidate includes verified bounded Hermes+Codex portability for the canonical Siti reference case, cross-implementation verification, immutable-install integrity, anomaly-first approval oversight, evidence classification, multidimensional maturity, and complexity pruning; this does not imply global runtime parity, broad production reliability, or external-world correctness.",
     "forbidden": [
       "nyobakantorai works identically on all AI runtimes",
       "signed receipts prove the external action happened correctly",
