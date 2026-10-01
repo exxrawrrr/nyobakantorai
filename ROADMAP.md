@@ -125,6 +125,7 @@ Execution progress:
 - [x] CHAT 02 — Mission/TaskNode/Attempt v1 schemas + state machines + legacy migration projection; no Mission execution yet. See [v0.6 Mission Contracts](docs/V0.6-MISSION-CONTRACTS.md).
 - [x] CHAT 03 — deterministic Mission Planner + validated DAG + worker routing + propagation + explicit assumptions/unknowns; still planning-only. See [v0.6 Mission Planner](docs/V0.6-MISSION-PLANNER.md).
 - [x] CHAT 04 — typed handoff envelopes + bounded runtime-neutral DAG orchestration + Attempt provenance + dependency/failure/cancel propagation. See [v0.6 Mission Orchestrator](docs/V0.6-MISSION-ORCHESTRATOR.md).
+- [x] CHAT 05 — deterministic provider-neutral Model Router with privacy/locality, health, budget, context, latency, fallback and route-evidence enforcement. See [v0.6 Model Router](docs/V0.6-MODEL-ROUTER.md).
 
 Planned release sequence:
 
