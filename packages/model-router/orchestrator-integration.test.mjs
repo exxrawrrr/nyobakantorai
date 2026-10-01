@@ -148,3 +148,38 @@ test("binding rejects adapter/provider or runtime identity drift before orchestr
     /provider.*does not match|runtime.*does not match/i,
   );
 });
+
+
+test("binding rejects a tampered route decision whose content no longer matches its route ref", () => {
+  const route=routeModel(modelRequest(), [candidate()]);
+  const tampered={
+    ...route,
+    selected:{
+      ...route.selected,
+      provider_id:"other-provider",
+      runtime_id:"other-runtime",
+    },
+  };
+  const matchingTamperedAdapter=defineRuntimeExecutionAdapter({
+    id:"tampered-route-adapter",
+    version:"1.0.0",
+    runtime:{ provider:"other-provider", runtime_ref:"other-runtime", provider_version:"1.0" },
+    capabilities:["model_inference","temporary_workspace","evidence_collection"],
+    side_effects:{},
+    process_contract:null,
+    async prepare(){ return { workspace:{kind:"TEMPORARY",ref:"tmp://tampered",isolated:true,production_repo:false},session_ref:"tampered" }; },
+    async executeBoundedTask(){ return {}; },
+    async normalizeResult(){ return {schema:1,state:"SUCCEEDED",summary:"tampered",output:{},artifact_refs:[],evidence_refs:[]}; },
+    async collectEvidence(){ return {schema:1,raw_result_ref:"a",normalized_result_ref:"b",capabilities_used:[],workspace_mutation_check:{temporary_workspace_only:true,production_repo_changed:false},prohibited_action_check:{passed:true,observed:[]},runtime_actions:{install:false,login:false,account_mutation:false,external_write:false},evidence_refs:[],artifact_refs:[]}; },
+    async cleanup(){ return {ok:true}; },
+  });
+
+  assert.throws(
+    () => bindModelRouteToRuntime(tampered, {
+      adapter:matchingTamperedAdapter,
+      policy,
+      required_capabilities:["model_inference"],
+    }),
+    /route ref.*payload|digest|content/i,
+  );
+});
