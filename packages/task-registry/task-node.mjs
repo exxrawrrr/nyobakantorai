@@ -179,6 +179,7 @@ export function assertTaskNodeTransition(nodeInput, nextStateInput, {
   verifier_id = "",
   evidence_refs = [],
   reopen = false,
+  approval = null,
 } = {}) {
   const node = normalizeTaskNode(nodeInput);
   const nextState = clean(nextStateInput, 40).toUpperCase();
@@ -186,19 +187,24 @@ export function assertTaskNodeTransition(nodeInput, nextStateInput, {
   assert(nextState !== node.state, "TaskNode transition must change state.");
   assert(TASK_NODE_TRANSITIONS[node.state].includes(nextState), `TaskNode transition ${node.state} -> ${nextState} is not allowed.`);
 
-  if (nextState === "RUNNING" && node.approval.required) {
-    assert(node.approval.status === "APPROVED", "TaskNode cannot RUN without APPROVED required approval.");
-    assert(node.approval.approval_ref, "TaskNode cannot RUN without approval_ref for required approval.");
+  if (approval != null) {
+    assert(node.state === "WAITING_APPROVAL" && nextState === "READY", "Approval mutation is only allowed atomically with WAITING_APPROVAL -> READY.");
+  }
+  const effectiveApproval = approval == null ? node.approval : normalizeApproval(approval);
+
+  if (nextState === "RUNNING" && effectiveApproval.required) {
+    assert(effectiveApproval.status === "APPROVED", "TaskNode cannot RUN without APPROVED required approval.");
+    assert(effectiveApproval.approval_ref, "TaskNode cannot RUN without approval_ref for required approval.");
   }
 
   if (nextState === "WAITING_APPROVAL") {
-    assert(node.approval.required, "WAITING_APPROVAL requires approval.required=true.");
-    assert(node.approval.status !== "APPROVED", "Approved TaskNode cannot enter WAITING_APPROVAL.");
+    assert(effectiveApproval.required, "WAITING_APPROVAL requires approval.required=true.");
+    assert(effectiveApproval.status !== "APPROVED", "Approved TaskNode cannot enter WAITING_APPROVAL.");
   }
 
   if (node.state === "WAITING_APPROVAL" && nextState === "READY") {
-    assert(node.approval.status === "APPROVED", "WAITING_APPROVAL TaskNode requires APPROVED status before READY.");
-    assert(node.approval.approval_ref, "WAITING_APPROVAL TaskNode requires approval_ref before READY.");
+    assert(effectiveApproval.status === "APPROVED", "WAITING_APPROVAL TaskNode requires APPROVED status before READY.");
+    assert(effectiveApproval.approval_ref, "WAITING_APPROVAL TaskNode requires approval_ref before READY.");
   }
 
   if (nextState === "VERIFIED") {
@@ -223,10 +229,11 @@ export function assertTaskNodeTransition(nodeInput, nextStateInput, {
 export function transitionTaskNode(nodeInput, nextState, {
   clock = () => new Date().toISOString(),
   evidence_refs = [],
+  approval = null,
   ...context
 } = {}) {
   const node = normalizeTaskNode(nodeInput);
-  assertTaskNodeTransition(node, nextState, { ...context, evidence_refs });
+  assertTaskNodeTransition(node, nextState, { ...context, evidence_refs, approval });
   const normalizedState = clean(nextState, 40).toUpperCase();
   const refs = unique([...node.evidence_refs, ...(Array.isArray(evidence_refs) ? evidence_refs : [])]);
   let blocking = null;
@@ -240,6 +247,7 @@ export function transitionTaskNode(nodeInput, nextState, {
   return normalizeTaskNode({
     ...node,
     state:normalizedState,
+    approval:approval == null ? node.approval : approval,
     evidence_refs:refs,
     blocking,
     updated_at:clock(),
