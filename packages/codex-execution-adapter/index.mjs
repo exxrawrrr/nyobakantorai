@@ -41,6 +41,14 @@ function collectStrings(value,out){
   if(value&&typeof value==="object") for(const item of Object.values(value)) collectStrings(item,out);
 }
 
+function classifyCodexProviderFailure(rawResult){
+  const diagnostic=[rawResult?.stdout,rawResult?.stderr].map((value)=>String(value||"")).join("\n");
+  if(/(?:hit|reached)[^\n]{0,80}usage limit|usage limit[^\n]{0,120}(?:credits|upgrade|try again)|purchase more credits/i.test(diagnostic)){
+    return "PROVIDER_QUOTA_EXHAUSTED";
+  }
+  return "PROVIDER_FAILURE_UNCLASSIFIED";
+}
+
 export function extractCodexReferencePayload(raw){
   const text=String(raw||"").trim();
   const fragments=[text];
@@ -188,7 +196,7 @@ export function createCodexReferenceExecutionAdapter({
       if(raw_result?.status!==0||raw_result?.aborted||raw_result?.error){
         return {
           schema:1,state:"FAILED",summary:"Codex reference process did not complete successfully.",
-          output:{process_status:raw_result?.status??null,aborted:Boolean(raw_result?.aborted)},
+          output:{process_status:raw_result?.status??null,aborted:Boolean(raw_result?.aborted),provider_failure_category:classifyCodexProviderFailure(raw_result)},
           artifact_refs:["sha256:"+hash(canonicalJson(raw_result))],
           evidence_refs:["core-bundle-sha256:"+reference.manifest.core_bundle_sha256],
         };

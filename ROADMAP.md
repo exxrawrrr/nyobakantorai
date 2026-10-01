@@ -127,7 +127,7 @@ Execution progress:
 - [x] CHAT 04 — typed handoff envelopes + bounded runtime-neutral DAG orchestration + Attempt provenance + dependency/failure/cancel propagation. See [v0.6 Mission Orchestrator](docs/V0.6-MISSION-ORCHESTRATOR.md).
 - [x] CHAT 05 — deterministic provider-neutral Model Router with privacy/locality, health, budget, context, latency, fallback and route-evidence enforcement. See [v0.6 Model Router](docs/V0.6-MODEL-ROUTER.md).
 - [x] CHAT 06 — capability action policy with exact employee/resource grants, READ/WRITE distinction, connection + approval evidence and Attempt route-ref propagation. See [v0.6 Capability Policy](docs/V0.6-CAPABILITY-POLICY.md).
-- [ ] CHAT 07 — Live Sandbox implementation is in place and fail-closed; one explicit Codex live attempt verified teardown/read-only safety but runtime execution returned status 1, so the real-model success exit gate remains blocked. See [v0.6 Live Sandbox](docs/V0.6-LIVE-SANDBOX.md).
+- [ ] CHAT 07 — Live Sandbox implementation is merged and fail-closed; CHAT 07B traced the current Codex status-1 failure to provider quota exhaustion, not an adapter/sandbox regression. Real-model success remains blocked until provider quota is available. See [v0.6 Live Sandbox](docs/V0.6-LIVE-SANDBOX.md) and [Codex Runtime Diagnosis](docs/V0.6-CODEX-RUNTIME-DIAGNOSIS.md).
 
 Planned release sequence:
 
