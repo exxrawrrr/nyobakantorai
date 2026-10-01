@@ -176,7 +176,7 @@ test("Execution Attempt is one try only: terminal states cannot become RETRYING 
 test("Execution Attempt enforces ordinal lineage, terminal truth and cleanup on success", () => {
   assert.throws(
     () => normalizeExecutionAttempt(plannedAttempt({ ordinal:1, previous_attempt_id:"attempt-old" })),
-    /First Execution Attempt/,
+    /ordinal > 1|First Execution Attempt/,
   );
   assert.throws(
     () => normalizeExecutionAttempt(plannedAttempt({
