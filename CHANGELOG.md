@@ -17,9 +17,9 @@ All notable public changes to nyobakantorai are documented here.
 - Temporary v0.5 implementation PRD was retired after permanent transfer.
 
 ### Release status
-- **BLOCKED** as of 2026-09-30.
+- **BLOCKED** as of 2026-10-01 pending only the final promoted-`main` release gate.
 - Canonical Hermes+Codex Siti reference case is `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`; v0.5 LIVE_RUNTIME evidence growth is `INCREASED`.
-- Package still declares `0.4.0`; final promoted-`main` verify/manual release gate have not run.
+- Package candidate declares `0.5.0`; final promoted-`main` verify/manual release gate have not run.
 - Real-world baseline remains `COLLECTING 1/20`; provider lifecycle remains `partial`.
 - Green feature-branch CI does not authorize merge/tag/release.
 

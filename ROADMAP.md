@@ -102,7 +102,7 @@
 - [x] final convergence moved surviving requirements into permanent readiness/roadmap surfaces and retired the temporary implementation PRD
 - [ ] real-world baseline remains `COLLECTING 1/20` — do not claim demonstrated
 - [ ] provider lifecycle remains `partial` — do not claim validated
-- [ ] bump package/release metadata to `0.5.0`
+- [x] bump package/release metadata to `0.5.0`
 - [ ] explicit readiness ledger reaches `READY`
 - [ ] promote reviewed candidate through PR to `main`
 - [ ] exact promoted-`main` Linux/Windows/minimum-version verify + manual release gate
