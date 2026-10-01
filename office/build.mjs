@@ -3,7 +3,7 @@ import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 const root = new URL(".", import.meta.url);
 const src = new URL("src/", root);
 const dist = new URL("dist/", root);
-const files = ["index.html", "styles.css", "app.mjs", "approval-summary.mjs", "persona-ops.mjs", "scene.mjs", "worker-bubbles.mjs", "favicon.svg", "asset-manifest.json", "workforce.generated.css"];
+const files = ["index.html", "styles.css", "app.mjs", "approval-summary.mjs", "public-demo-ui.mjs", "persona-ops.mjs", "scene.mjs", "worker-bubbles.mjs", "favicon.svg", "asset-manifest.json", "workforce.generated.css"];
 const rootFiles = ["registry.mjs", "reconcile.mjs", "workforce.mjs", "workforce-view.mjs"];
 
 await rm(dist, { recursive: true, force: true });

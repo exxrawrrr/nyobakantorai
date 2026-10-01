@@ -16,6 +16,7 @@
     <a class="brand" href="#office" aria-label="nyobakantorai home"><span class="brand-mark">N</span><span><strong>nyobakantorai</strong><small>LOCAL-FIRST · HUMAN-GOVERNED</small></span></a>
     <nav class="primary-nav" aria-label="Navigasi utama">
       <button class="nav-button is-active" data-view="office" type="button">Office</button>
+      <button class="nav-button" data-view="try" type="button">Try AI</button>
       <button class="nav-button" data-view="people" type="button">People</button>
       <button class="nav-button" data-view="missions" type="button">Missions</button>
       <button class="nav-button" data-view="approvals" type="button">Approvals</button>
@@ -45,6 +46,32 @@
           <div id="selected-profile"></div>
           <div id="scene-roster" class="scene-roster" aria-label="Pilih karyawan"></div>
         </aside>
+      </div>
+    </section>
+
+    <section id="view-try" class="view" hidden aria-labelledby="try-title">
+      <div class="page-heading">
+        <div><p class="eyebrow">PUBLIC INTERACTIVE EXPERIENCE</p><h1 id="try-title">Try the office safely.</h1><p>One objective, two clearly different paths. SYNTHETIC ≠ LIVE. A demo result never becomes proof of model execution.</p></div>
+        <div class="heading-badges"><span>NO LOGIN</span><span>READ-ONLY</span><span id="public-live-capacity">LIVE CAPACITY: CHECK ON REQUEST</span></div>
+      </div>
+      <div class="public-experience-grid">
+        <article class="panel public-mission-input">
+          <p class="eyebrow">MISSION INPUT</p><h2>What should the team work on?</h2>
+          <label for="public-mission-objective">Objective</label>
+          <textarea id="public-mission-objective" maxlength="1200" rows="6">Audit SEO landing page performance and produce an evidence-backed brief.</textarea>
+          <div class="public-experience-actions">
+            <button id="try-demo" class="primary" type="button">TRY DEMO</button>
+            <button id="try-live" type="button">TRY LIVE AI</button>
+          </div>
+          <p class="public-boundary-note"><strong>TRY DEMO</strong> is deterministic and synthetic. <strong>TRY LIVE AI</strong> is labeled live only after bounded runtime + sandbox verification. No account access, external writes, paid actions, or destructive actions.</p>
+        </article>
+        <article id="public-experience-result" class="panel public-experience-result" data-mode="idle">
+          <div class="public-result-head"><div><p class="eyebrow">TRUTH LABEL</p><h2 id="public-mode-label">READY</h2></div><span id="public-session-status">Anonymous session starts on first run</span></div>
+          <p id="public-result-message">Choose DEMO or LIVE. If live capacity is unavailable, the UI will say so and offer the deterministic demo instead.</p>
+          <div class="profile-states"><span id="public-quota-status">Anonymous session · bounded quota</span></div>
+          <button id="public-demo-fallback" type="button" hidden>RUN DETERMINISTIC DEMO</button>
+          <div id="public-task-graph" class="public-task-graph" aria-live="polite"><p class="public-graph-empty">Mission graph will appear here.</p></div>
+        </article>
       </div>
     </section>
 
