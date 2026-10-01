@@ -1,23 +1,35 @@
 {
   "schema": 1,
-  "candidate": "v0.5.0",
+  "candidate": "v0.5.1",
   "observed_on": "2026-10-01",
-  "decision": "READY",
-  "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. Final stable publication remains prohibited until the exact release commit has also passed verification and the manual release-gate.",
-  "release_blockers": [],
+  "decision": "BLOCKED",
+  "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. The immutable v0.5.0 tag is preserved as a failed publication attempt; v0.5.1 must pass its own exact-main verification, manual release-gate, require-ready check, and tagged-release asset verification before publication.",
+  "release_blockers": [
+    {
+      "id": "final-main-release-gate",
+      "category": "PROMOTION",
+      "status": "PENDING",
+      "required_state": "PASS",
+      "current_state": "PENDING",
+      "canonical_source": "docs/RELEASE-CHECKLIST.md",
+      "reason": "The v0.5.1 hotfix candidate has not yet been promoted to main and re-verified on its exact final commit.",
+      "safe_next_action": "Merge only after PR CI is green; then rerun exact-main verify, manual release-gate, and v0.5:readiness:require-ready before creating the v0.5.1 tag."
+    }
+  ],
   "promotion": {
     "target_branch": "main",
-    "final_main_verify": "PASS",
-    "manual_release_gate": "PASS",
-    "stable_tag": "AUTHORIZED",
-    "merge_authorized": true,
-    "verified_main_sha": "cb05853b17c9eae628957a43fe0ce0227d1668d5",
-    "verify_run_id": 36808678040,
-    "verify_run_number": 571,
-    "verify_conclusion": "success",
-    "manual_release_gate_run_id": 36808904291,
-    "manual_release_gate_conclusion": "success",
-    "attested_on": "2026-10-01"
+    "final_main_verify": "PENDING",
+    "manual_release_gate": "PENDING",
+    "stable_tag": "PENDING",
+    "merge_authorized": false,
+    "previous_failed_publication": {
+      "tag": "v0.5.0",
+      "source_commit": "90c921df96fa59cf83c19dfe6d2b8e4f14c2ba59",
+      "release_workflow_run_id": 36809825093,
+      "result": "FAILED_BEFORE_PUBLICATION",
+      "reason": "verify-install-assets.mjs imported pathToFileURL from node:path instead of node:url",
+      "github_release_published": false
+    }
   },
   "nonblocking_open_evidence": [
     {
@@ -92,12 +104,6 @@
       "state": "INCREASED",
       "source": "config/evidence-classification.json",
       "scope": "canonical Hermes+Codex bounded reference case"
-    },
-    {
-      "id": "final-main-release-gate",
-      "state": "PASS",
-      "source": "GitHub Actions verify #571 + manual release-gate run 36808904291",
-      "scope": "promoted main commit cb05853b17c9eae628957a43fe0ce0227d1668d5"
     }
   ]
 }
