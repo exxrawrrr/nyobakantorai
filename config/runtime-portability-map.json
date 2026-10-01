@@ -1,0 +1,500 @@
+{
+  "schema": 1,
+  "audit": "v0.5-independent-portability-run-verifier-2026-10-01",
+  "audited_release": "v0.4.0",
+  "audited_base_commit": "5d4725d6e2963c467d092af53d9743b6619745dd",
+  "observed_on": "2026-09-30",
+  "claim_limit": "This map classifies current coupling. CORE_PORTABLE means the audited surface has no known Hermes implementation dependency; it does not by itself prove live multi-runtime behavioral parity.",
+  "classifications": {
+    "CORE_PORTABLE": "Runtime-neutral contract/logic with no known direct Hermes implementation dependency in the audited surface.",
+    "ADAPTER_BOUNDARY": "Intentional boundary that knows about one or more runtime/provider interfaces but should keep runtime semantics outside portable core.",
+    "HERMES_SHAPED": "A surface intended to participate in general product behavior but currently embeds Hermes-specific names, states, paths, lifecycle semantics, or assumptions.",
+    "RUNTIME_SPECIFIC_BY_DESIGN": "A Hermes-specific distribution/integration surface whose runtime coupling is intentional and should remain behind an adapter or packaging boundary.",
+    "UNKNOWN_REQUIRES_PROOF": "A mixed or insufficiently isolated surface; portability must not be claimed until coupling is split or executable evidence exists."
+  },
+  "policy": {
+    "required_surface_ids": [
+      "employee-definitions",
+      "skill-definitions",
+      "capability-contracts",
+      "task-registry",
+      "approval-policy",
+      "evidence-and-receipts",
+      "memory-policy",
+      "provider-doctor",
+      "runtime-adapter-sdk",
+      "hermes-office-adapter",
+      "hermes-bootstrap",
+      "cross-harness-export",
+      "office-runtime-reconciliation",
+      "install-update-remove-lifecycle",
+      "employee-packaging",
+      "real-task-evidence",
+      "release-claims",
+      "office-ui-workforce-view",
+      "workforce-generation-pipeline",
+      "portable-worker-contract",
+      "runtime-execution-adapter",
+      "portability-reference-inputs",
+      "hermes-execution-adapter",
+      "codex-execution-adapter",
+      "reference-case-comparator",
+      "live-reference-run-harness",
+      "independent-python-reference-verifier",
+      "verifier-differential-corpus",
+      "receipt-trust-registry"
+    ],
+    "forbidden_core_import_fragments": [
+      "hermes-bootstrap",
+      "hermes-home",
+      "hermes-profiles",
+      "hermes-runtime-adapter",
+      "runtime-composition",
+      "skills/canonical"
+    ],
+    "portable_source_extensions": [
+      ".mjs",
+      ".js",
+      ".cjs"
+    ],
+    "direction_rule": "portable core may define contracts used by adapters; portable core must not import Hermes implementation modules"
+  },
+  "surfaces": [
+    {
+      "id": "employee-definitions",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "config/employees.json",
+        "lib/workforce.mjs"
+      ],
+      "rationale": "The source registry intentionally contains both portable worker semantics and runtime distribution preferences. lib/workforce.mjs now exposes an executable split: PORTABLE_WORKFORCE preserves identity, skills, governance and operational contracts while WORKFORCE_RUNTIME_PREFERENCES contains toolsets, optional integrations, distribution metadata and the source runtime-first memory hint.",
+      "evidence": [
+        "lib/workforce.mjs",
+        "lib/workforce-portability.test.mjs"
+      ],
+      "next_action": "Keep new portable governance fields in the portable projection and keep runtime/distribution preferences isolated behind the explicit preferences map."
+    },
+    {
+      "id": "skill-definitions",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "skills/canonical"
+      ],
+      "rationale": "Canonical skills now live under a runtime-neutral source root. Their compatibility metadata still requires adapter/export interpretation, so Chat 2 does not overclaim them as behaviorally portable.",
+      "evidence": [
+        "skills/canonical",
+        "scripts/export-skills.mjs"
+      ],
+      "next_action": "Keep runtime-specific activation in adapters/export targets; behavioral portability still requires live proof."
+    },
+    {
+      "id": "capability-contracts",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "config/capabilities.json",
+        "packages/capability-router"
+      ],
+      "rationale": "Capability IDs, risk classes, connection truth and authorization routing are expressed independently of Hermes.",
+      "evidence": [
+        "config/capabilities.json",
+        "packages/capability-router/index.mjs"
+      ],
+      "next_action": "Keep runtime capability realization behind adapters."
+    },
+    {
+      "id": "task-registry",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/task-registry"
+      ],
+      "rationale": "Task lifecycle, approval and verification now bind to an opaque runtime provider/reference instead of hard-coding one runtime execution mode, task ID format, staging action or actor.",
+      "evidence": [
+        "packages/task-registry/registry.mjs",
+        "packages/task-registry/registry.test.mjs"
+      ],
+      "next_action": "Keep runtime-specific ID/reference construction in adapters; Chat 3 may consume this generic binding from an execution adapter."
+    },
+    {
+      "id": "approval-policy",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "config/employees.json",
+        "lib/workforce.mjs",
+        "packages/task-registry/registry.mjs",
+        "docs/APPROVAL-MODEL.md"
+      ],
+      "rationale": "Risk classes, owner-approval requirements, independent verification rules and fail-closed execution gates operate on the portable worker projection and opaque runtime provider bindings. Tests prove the same approval behavior with an arbitrary runtime provider rather than a Hermes-specific task mode.",
+      "evidence": [
+        "lib/workforce-portability.test.mjs",
+        "packages/task-registry/registry.test.mjs",
+        "docs/APPROVAL-MODEL.md"
+      ],
+      "next_action": "Keep provider identity opaque to approval semantics; runtime adapters may bind tasks but may not redefine owner approval authority."
+    },
+    {
+      "id": "evidence-and-receipts",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/evidence-verifier",
+        "packages/execution-receipt",
+        "schemas/execution-receipt.schema.json"
+      ],
+      "rationale": "Receipt signing, binding, freshness, replay, evidence references and verification do not depend on Hermes implementation modules.",
+      "evidence": [
+        "packages/evidence-verifier/index.mjs",
+        "packages/execution-receipt/index.mjs"
+      ],
+      "next_action": "Retain as core; Chat 9-10 will add implementation-independent verification evidence."
+    },
+    {
+      "id": "memory-policy",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "config/memory-policy.json",
+        "packages/memory-learning"
+      ],
+      "rationale": "Canonical memory layers, evidence requirements and promotion rules are runtime-neutral even though employee profile metadata separately contains Hermes-first wording.",
+      "evidence": [
+        "config/memory-policy.json",
+        "packages/memory-learning/index.mjs"
+      ],
+      "next_action": "Keep core policy neutral; move runtime memory preferences out of employee core contract."
+    },
+    {
+      "id": "provider-doctor",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "config/provider-doctor.json",
+        "packages/provider-doctor",
+        "scripts/provider-doctor.mjs"
+      ],
+      "rationale": "The doctor intentionally knows concrete harness/provider commands and reports availability without making them core workforce semantics.",
+      "evidence": [
+        "config/provider-doctor.json",
+        "packages/provider-doctor/index.mjs"
+      ],
+      "next_action": "Keep provider-specific probing at the boundary and prevent it from becoming worker policy."
+    },
+    {
+      "id": "runtime-adapter-sdk",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "packages/runtime-adapter",
+        "config/runtime-adapter-policy.json"
+      ],
+      "rationale": "The read-only SDK defines normalized runtime snapshots and policy-constrained adapters. Hermes is one configured adapter policy, not the only interface.",
+      "evidence": [
+        "packages/runtime-adapter/index.mjs",
+        "config/runtime-adapter-policy.json"
+      ],
+      "next_action": "Keep v1 read-only. Execution now uses the separate runtime-execution-adapter contract."
+    },
+    {
+      "id": "hermes-office-adapter",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "office/hermes-runtime-adapter.mjs",
+        "office/hermes-home.mjs"
+      ],
+      "rationale": "Executable resolution, profile inspection, kanban invocation and Hermes environment rules are intentionally Hermes-specific.",
+      "evidence": [
+        "office/hermes-runtime-adapter.mjs",
+        "office/hermes-home.mjs"
+      ],
+      "next_action": "Keep behind a runtime-neutral office/runtime boundary."
+    },
+    {
+      "id": "hermes-bootstrap",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "scripts/hermes-bootstrap.mjs",
+        "scripts/hermes-bootstrap-plan.mjs",
+        "hermes-profiles"
+      ],
+      "rationale": "Profile installation, upgrade and Hermes-owned distribution layout are runtime packaging concerns.",
+      "evidence": [
+        "scripts/hermes-bootstrap-plan.mjs",
+        "hermes-profiles/README.md"
+      ],
+      "next_action": "Retain as Hermes distribution implementation; do not leak lifecycle semantics into core."
+    },
+    {
+      "id": "cross-harness-export",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "config/cross-harness-self-test.json",
+        "packages/cross-harness-self-test",
+        "scripts/export-skills.mjs"
+      ],
+      "rationale": "This boundary knows Hermes, Codex, Gemini and Copilot invocation/export details and already states that self-test success is not broad behavioral portability.",
+      "evidence": [
+        "config/cross-harness-self-test.json"
+      ],
+      "next_action": "Reuse its bounded harness knowledge for reference-case proof without promoting self-test to canonical live parity."
+    },
+    {
+      "id": "office-runtime-reconciliation",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "office/server.mjs",
+        "office/reconcile.mjs",
+        "office/runtime-composition.mjs",
+        "office/runtime-cache.mjs"
+      ],
+      "rationale": "Server and reconciliation consume a generic runtime provider shape. Hermes construction moved into the explicit composition root while the existing Hermes read-only adapter remains runtime-specific.",
+      "evidence": [
+        "office/runtime-composition.mjs",
+        "office/tests/architecture-sync.test.mjs",
+        "office/tests/reconcile.test.mjs"
+      ],
+      "next_action": "Add execution-capable adapters separately without widening the read-only snapshot contract."
+    },
+    {
+      "id": "install-update-remove-lifecycle",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "install.sh",
+        "install.ps1",
+        "packages/install-integrity",
+        "packages/fresh-install-matrix",
+        "scripts/hermes-remove-selected.mjs",
+        "scripts/build-install-assets.mjs",
+        "scripts/verify-install-assets.mjs",
+        ".github/workflows/release.yml"
+      ],
+      "rationale": "The product installer now separates a runtime-neutral immutable core release channel from runtime-specific employee/profile lifecycle work. Stable source installation resolves tagged release assets, verifies manifest + SHA-256 + exact source commit, records provenance, and has no mutable-main fallback. Hermes profile install/upgrade/remove remains an explicit runtime boundary implemented by Hermes bootstrap/removal tooling rather than core source acquisition.",
+      "evidence": [
+        "packages/install-integrity/index.test.mjs",
+        "packages/install-integrity/installers.test.mjs",
+        "scripts/build-install-assets.test.mjs",
+        "docs/INSTALL-INTEGRITY.md",
+        ".github/workflows/release.yml"
+      ],
+      "next_action": "Keep stable core acquisition runtime-neutral and fail-closed. Keep Hermes profile bootstrap/removal as runtime-specific distribution behavior; do not fold runtime profile lifecycle back into the stable source installer contract."
+    },
+    {
+      "id": "employee-packaging",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "scripts/employee-pack.mjs",
+        "hermes-profiles"
+      ],
+      "rationale": "Current employee release packs package Hermes profile distributions. They are valid release artifacts but are not a runtime-neutral worker package proof.",
+      "evidence": [
+        "scripts/employee-pack.mjs"
+      ],
+      "next_action": "Keep Hermes packs stable while defining portable core inputs separately."
+    },
+    {
+      "id": "real-task-evidence",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/real-task-recorder",
+        "packages/real-task-evaluation",
+        "packages/real-task-baseline"
+      ],
+      "rationale": "Real-task collection, hash-chain truth and evaluation readiness operate on evidence/task contracts rather than Hermes implementation details.",
+      "evidence": [
+        "packages/real-task-recorder/index.mjs"
+      ],
+      "next_action": "Keep as core evidence machinery; do not require 20/20 for the v0.5 portability reference case."
+    },
+    {
+      "id": "release-claims",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/release-claims",
+        "config/v0.4-deferred-evidence.json"
+      ],
+      "rationale": "Release-claim construction and historical deferred-evidence semantics now share one provider-neutral package boundary under packages/release-claims. Historical v0.4 Hermes/provider evidence remains data, while synthetic-provider tests independently demonstrate that the claims model itself is provider-neutral.",
+      "evidence": [
+        "packages/release-claims/index.mjs",
+        "packages/release-claims/index.test.mjs",
+        "packages/release-claims/deferred-evidence.mjs",
+        "packages/release-claims/deferred-evidence.test.mjs",
+        "config/v0.4-deferred-evidence.json"
+      ],
+      "next_action": "Keep historical release data truthful and runtime-specific as data; keep the consolidated release-claims evaluation/deferral logic provider-neutral."
+    },
+    {
+      "id": "office-ui-workforce-view",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "office/src/app.mjs",
+        "office/registry.mjs",
+        "office/workforce.mjs",
+        "office/workforce-view.mjs"
+      ],
+      "rationale": "The office now consumes a portable WORKFORCE_VIEW for identity, governance and task ownership. Runtime toolsets, optional integrations, distribution metadata and source runtime-first memory hints are available only through an explicit runtime-preference map for labeled UI presentation.",
+      "evidence": [
+        "office/workforce-view.mjs",
+        "office/tests/workforce-view.test.mjs",
+        "office/src/app.mjs",
+        "office/registry.mjs"
+      ],
+      "next_action": "Keep runtime preference display optional and explicit; portable UI/task behavior must continue to use WORKFORCE_VIEW rather than the full generated distribution object."
+    },
+    {
+      "id": "workforce-generation-pipeline",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "scripts/generate-workforce.mjs"
+      ],
+      "rationale": "The generator still emits Hermes distributions by design, but canonical skill ownership is runtime-neutral and portable/core versus runtime distribution outputs are now separate responsibilities.",
+      "evidence": [
+        "scripts/generate-workforce.mjs",
+        "skills/canonical"
+      ],
+      "next_action": "Keep runtime distribution generation explicit; do not treat Hermes output generation as portable-core behavior."
+    },
+    {
+      "id": "portable-worker-contract",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "lib/workforce.mjs"
+      ],
+      "rationale": "Portable worker projection strips runtime toolsets, optional integrations and distribution metadata while preserving identity, skills, governance and operational contracts.",
+      "evidence": [
+        "lib/workforce.mjs",
+        "lib/workforce-portability.test.mjs"
+      ],
+      "next_action": "Use PORTABLE_WORKFORCE for runtime-neutral core and portability hashes; keep full WORKFORCE only where runtime packaging or UI compatibility needs it."
+    },
+    {
+      "id": "runtime-execution-adapter",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "packages/runtime-execution-adapter",
+        "config/runtime-execution-policy.json"
+      ],
+      "rationale": "A separately scoped fail-closed execution contract provides bounded prepare/execute/normalize/evidence/cleanup semantics without widening the read-only Runtime Adapter SDK.",
+      "evidence": [
+        "packages/runtime-execution-adapter/index.mjs",
+        "packages/runtime-execution-adapter/index.test.mjs",
+        "packages/runtime-execution-adapter/conformance.mjs",
+        "docs/RUNTIME-EXECUTION-ADAPTER.md"
+      ],
+      "next_action": "Implement Hermes and Codex reference adapters against this contract, then collect reference-case and live-runtime evidence before any portability promotion."
+    },
+    {
+      "id": "portability-reference-inputs",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/portability-reference",
+        "benchmarks/portability/reference-case",
+        "scripts/portability-reference.mjs"
+      ],
+      "rationale": "The Siti reference worker projection, exact task, five canonical skills, READ_ONLY execution policy, source artifact, expected result, verification contract, and evidence expectations are hashed into one runtime-neutral core bundle. Runtime adapter/provider metadata is explicitly outside the core hash.",
+      "evidence": [
+        "benchmarks/portability/reference-case/manifest.json",
+        "packages/portability-reference/index.test.mjs",
+        "docs/PORTABILITY-REFERENCE-CASE.md"
+      ],
+      "next_action": "Hermes and Codex execution adapters must consume the final re-baselined core bundle unchanged. Verdict/evidence-path semantics are explicit; any further core drift invalidates prior live evidence."
+    },
+    {
+      "id": "hermes-execution-adapter",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "packages/hermes-execution-adapter"
+      ],
+      "rationale": "Hermes-specific one-shot execution is isolated behind RuntimeExecutionAdapter v1 and bound to the re-baselined canonical Siti core bundle. Portable worker identity is independent from the local Hermes runtime profile; the adapter defaults to the safe local `default` profile, exposes only the skills toolset, and ignores runtime rules that could replace the canonical worker contract.",
+      "evidence": [
+        "packages/hermes-execution-adapter/index.mjs",
+        "packages/hermes-execution-adapter/index.test.mjs",
+        "docs/HERMES-EXECUTION-ADAPTER.md"
+      ],
+      "next_action": "Run the separately authorized live Hermes reference case under the reviewed 45-second canonical execution policy; runtime profile/auth remains adapter metadata and must not alter the re-baselined core bundle."
+    },
+    {
+      "id": "codex-execution-adapter",
+      "classification": "RUNTIME_SPECIFIC_BY_DESIGN",
+      "paths": [
+        "packages/codex-execution-adapter"
+      ],
+      "rationale": "Codex-specific ephemeral read-only execution is isolated behind RuntimeExecutionAdapter v1, bound to the re-baselined canonical Siti bundle, stages the five canonical skills under .agents/skills, and ignores user config/rules so local configuration cannot silently change the reference case while authentication remains available.",
+      "evidence": [
+        "packages/codex-execution-adapter/index.mjs",
+        "packages/codex-execution-adapter/index.test.mjs",
+        "docs/CODEX-EXECUTION-ADAPTER.md"
+      ],
+      "next_action": "Run the bounded live Codex reference case under the reviewed 45-second canonical execution policy. This timeout was re-baselined from measured runtime latency and is part of the new core hash; do not promote partial/timeout attempts."
+    },
+    {
+      "id": "reference-case-comparator",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/portability-comparator/index.mjs"
+      ],
+      "rationale": "Runtime-neutral comparator checks canonical core identity, Hermes+Codex runtime pairing, evidence completeness, strict protected verdict atoms, explicitly enumerated equivalent evidence paths, prohibited-action/workspace state, exact live commit binding, and independent verification state before allowing a reference-case portability claim.",
+      "evidence": [
+        "packages/portability-comparator/index.test.mjs",
+        "scripts/portability-compare.mjs",
+        "docs/PORTABILITY-COMPARATOR.md"
+      ],
+      "next_action": "Collect exact-head live Hermes/Codex records under the final re-baselined core, then attach genuinely independent verification. Live evidence without independent PASS remains PORTABILITY_CANDIDATE."
+    },
+    {
+      "id": "live-reference-run-harness",
+      "classification": "ADAPTER_BOUNDARY",
+      "paths": [
+        "packages/portability-live-run",
+        "scripts/portability-live-run.mjs",
+        "config/portability-live-run.json"
+      ],
+      "rationale": "The harness binds canonical core plus runtime-specific adapters, provider detection, clean Git state and public-safety checks into redacted comparator-compatible run records while refusing fixture/provider-unverified promotion to LIVE_RUNTIME_EVIDENCE.",
+      "evidence": [
+        "packages/portability-live-run/index.test.mjs",
+        "docs/PORTABILITY-LIVE-RUN.md"
+      ],
+      "next_action": "Use explicit plan/run commands for separately authorized live Hermes and Codex reference attempts; keep generated records local until redaction/public review."
+    },
+    {
+      "id": "independent-python-reference-verifier",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "reference-verifier/python"
+      ],
+      "rationale": "Python independently verifies both the signed receipt/evidence trust surface and the bounded canonical live portability-run record surface without importing or invoking JavaScript verdict-producing implementations.",
+      "evidence": [
+        "reference-verifier/python/test_verifier.py",
+        "docs/INDEPENDENT-REFERENCE-VERIFIER.md",
+        "reference-verifier/python/portability_run_verifier.py",
+        "reference-verifier/python/test_portability_run_verifier.py"
+      ],
+      "next_action": "Use the Python portability-run verifier on each exact-head live Hermes/Codex record before comparator promotion; keep signed-receipt differential verification and portability-run verification as separate evidence domains."
+    },
+    {
+      "id": "verifier-differential-corpus",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "benchmarks/verifier-differential",
+        "reference-verifier/python/differential_runner.py"
+      ],
+      "rationale": "One static signed-receipt corpus is consumed independently by the production JavaScript verifier and Python reference verifier; exact accept/reject, packet reason codes, receipt reason sets, and corpus SHA-256 must agree.",
+      "evidence": [
+        "benchmarks/verifier-differential/corpus.json",
+        "benchmarks/verifier-differential/run.mjs",
+        "docs/VERIFIER-DIFFERENTIAL-CORPUS.md"
+      ],
+      "next_action": "Treat any future JavaScript/Python disagreement as a release-blocking contract regression; extend the corpus when the stable receipt trust surface changes."
+    },
+    {
+      "id": "receipt-trust-registry",
+      "classification": "CORE_PORTABLE",
+      "paths": [
+        "packages/receipt-trust-registry",
+        "config/receipt-trust-registry.json",
+        "schemas/receipt-trust-registry.schema.json"
+      ],
+      "rationale": "Public Ed25519 trust anchors, signer ownership, validity windows, runtime scope, ACTIVE/RETIRED/REVOKED lifecycle, explicit rotation overlap, and compromise policy are runtime-neutral receipt-governance semantics. Private signing material is explicitly forbidden from the registry.",
+      "evidence": [
+        "packages/receipt-trust-registry/index.test.mjs",
+        "packages/receipt-trust-registry/integration.test.mjs",
+        "docs/SIGNING-KEY-LIFECYCLE.md",
+        "benchmarks/verifier-differential/corpus.json"
+      ],
+      "next_action": "Populate deployment-specific public trust anchors only through reviewed release/configuration changes; keep private keys outside the repository and treat registry revocation as authoritative over legacy public-key maps."
+    }
+  ]
+}

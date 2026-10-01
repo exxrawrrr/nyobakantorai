@@ -24,4 +24,4 @@ npm run workforce:check
 npm run ready
 ```
 
-For a reusable new procedure, create a canonical skill first under `skills/hermes-custom/<skill>/SKILL.md`; do not duplicate procedures inside SOUL files.
+For a reusable new procedure, create a canonical skill first under `skills/canonical/<skill>/SKILL.md`; do not duplicate procedures inside SOUL files.

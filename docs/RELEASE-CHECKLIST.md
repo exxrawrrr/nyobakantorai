@@ -12,6 +12,8 @@ The repository is **already PUBLIC**. The old private-to-public visibility trans
 
 For v0.4.0, the owner explicitly accepted the six still-open evidence classes as deferred scope on 2026-09-30. Stable promotion is authorized only after the exact promoted `main` commit passes cross-platform verify and the manual release-gate. See `docs/V0.4-RELEASE-DECISION.md`.
 
+For v0.5.0, the current decision is **BLOCKED only by the final promotion gate**. Canonical Hermes+Codex reference portability is `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, v0.5 LIVE_RUNTIME evidence growth is `INCREASED`, and the package candidate declares `0.5.0`. Final promoted-`main` verify + manual release gate remain pending. See `docs/V0.5-RELEASE-READINESS.md` and `config/v0.5-release-readiness.json`.
+
 ## Code and tests
 - [ ] `npm run doctor` passes on the release machine.
 - [ ] `npm run ready` passes from the canonical worktree.

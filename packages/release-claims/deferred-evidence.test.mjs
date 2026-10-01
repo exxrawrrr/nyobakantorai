@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import {
   buildDeferredEvidenceSnapshot,
   validateDeferredEvidenceLedger,
-} from "./index.mjs";
+} from "./deferred-evidence.mjs";
 
 const readJson=async(path)=>JSON.parse(await readFile(new URL(path,import.meta.url),"utf8"));
 const [ledger,crossHarness,memoryResults,browserResults,realTaskStatus]=await Promise.all([
@@ -116,4 +116,28 @@ test("release snapshot remains compact and contains no free-form next actions",(
   assert.equal(snapshot.items.length,6);
   assert.equal(JSON.stringify(snapshot).includes("safe_next_action"),false);
   assert.equal(JSON.stringify(snapshot).includes("completion_criterion"),false);
+});
+
+
+test("historical v0.4 deferred snapshot remains exact after package-boundary merge",()=>{
+  const validation=validate();
+  const snapshot=buildDeferredEvidenceSnapshot({ledger,validation});
+  assert.deepEqual(snapshot,{
+    schema:1,
+    candidate:"v0.4.0",
+    decision:"RELEASE_WITH_ACCEPTED_DEFERRALS",
+    open_blockers:0,
+    accepted_deferred:6,
+    stable_promotion_allowed:true,
+    owner_scope_accepted_on:"2026-09-30",
+    items:[
+      {id:"cross-harness-live-parity",category:"live_evidence",status:"UNPROVEN",blocking_stable_promotion:false,accepted_for_v0_4_scope:true},
+      {id:"cognee-live-provider",category:"live_evidence",status:"NOT_RUN_UNPROVEN",blocking_stable_promotion:false,accepted_for_v0_4_scope:true},
+      {id:"browser-use-live-provider",category:"live_evidence",status:"NOT_RUN_UNPROVEN",blocking_stable_promotion:false,accepted_for_v0_4_scope:true},
+      {id:"real-task-baseline",category:"real_world_evidence",status:"COLLECTING",blocking_stable_promotion:false,accepted_for_v0_4_scope:true},
+      {id:"department-real-workflow-coverage",category:"real_world_evidence",status:"UNPROVEN",blocking_stable_promotion:false,accepted_for_v0_4_scope:true},
+      {id:"real-clean-machine-hermes-lifecycle",category:"environment_evidence",status:"NOT_RUN",blocking_stable_promotion:false,accepted_for_v0_4_scope:true}
+    ],
+    truth_boundary:"release-scope acceptance != canonical evidence completion"
+  });
 });

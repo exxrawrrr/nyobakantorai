@@ -31,7 +31,7 @@ test("all registry employees have native Hermes distributions with canonical ski
     for (const skill of installed) {
       assert.match(soul, new RegExp(skill.replaceAll("-", "\\-")));
       const bundled = await readFile(resolve(dir, "skills", "nyobakantorai", skill, "SKILL.md"), "utf8");
-      const canonical = await readFile(resolve(root, "skills", "hermes-custom", skill, "SKILL.md"), "utf8");
+      const canonical = await readFile(resolve(root, "skills", "canonical", skill, "SKILL.md"), "utf8");
       assert.equal(bundled, canonical, `${employee.id}/${skill} must match canonical skill exactly`);
     }
 

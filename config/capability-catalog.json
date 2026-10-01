@@ -8,7 +8,7 @@
     "config/integrations.json",
     "config/upstream-sources.json",
     "config/skill-provenance.json",
-    "skills/hermes-custom/*/SKILL.md"
+    "skills/canonical/*/SKILL.md"
   ],
   "taxonomy": {
     "kinds": [
@@ -987,7 +987,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-approval-and-evidence/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-approval-and-evidence/SKILL.md"
     },
     {
       "id": "skill.nyoba-automation-queue",
@@ -1015,7 +1015,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-automation-queue/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-automation-queue/SKILL.md"
     },
     {
       "id": "skill.nyoba-brainstorming-discovery",
@@ -1046,7 +1046,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-brainstorming-discovery/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-brainstorming-discovery/SKILL.md"
     },
     {
       "id": "skill.nyoba-brand-copy-qa",
@@ -1074,7 +1074,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-brand-copy-qa/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-brand-copy-qa/SKILL.md"
     },
     {
       "id": "skill.nyoba-chief-of-staff",
@@ -1101,7 +1101,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-chief-of-staff/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-chief-of-staff/SKILL.md"
     },
     {
       "id": "skill.nyoba-client-operations",
@@ -1129,7 +1129,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-client-operations/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-client-operations/SKILL.md"
     },
     {
       "id": "skill.nyoba-codebase-verification",
@@ -1157,7 +1157,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-codebase-verification/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-codebase-verification/SKILL.md"
     },
     {
       "id": "skill.nyoba-community-partnerships",
@@ -1185,7 +1185,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-community-partnerships/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-community-partnerships/SKILL.md"
     },
     {
       "id": "skill.nyoba-context-prompt-compiler",
@@ -1237,7 +1237,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-context-prompt-compiler/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-context-prompt-compiler/SKILL.md"
     },
     {
       "id": "skill.nyoba-creative-brief",
@@ -1266,7 +1266,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-creative-brief/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-creative-brief/SKILL.md"
     },
     {
       "id": "skill.nyoba-cross-team-briefing",
@@ -1295,7 +1295,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-cross-team-briefing/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-cross-team-briefing/SKILL.md"
     },
     {
       "id": "skill.nyoba-data-analysis",
@@ -1325,7 +1325,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-data-analysis/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-data-analysis/SKILL.md"
     },
     {
       "id": "skill.nyoba-deep-research-open",
@@ -1357,7 +1357,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-deep-research-open/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-deep-research-open/SKILL.md"
     },
     {
       "id": "skill.nyoba-delegation-routing",
@@ -1384,7 +1384,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-delegation-routing/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-delegation-routing/SKILL.md"
     },
     {
       "id": "skill.nyoba-experiment-design",
@@ -1412,7 +1412,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-experiment-design/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-experiment-design/SKILL.md"
     },
     {
       "id": "skill.nyoba-finance-scenario",
@@ -1439,7 +1439,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-finance-scenario/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-finance-scenario/SKILL.md"
     },
     {
       "id": "skill.nyoba-follow-up",
@@ -1468,7 +1468,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-follow-up/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-follow-up/SKILL.md"
     },
     {
       "id": "skill.nyoba-github-readonly",
@@ -1495,7 +1495,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-github-readonly/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-github-readonly/SKILL.md"
     },
     {
       "id": "skill.nyoba-google-ads-operations",
@@ -1522,7 +1522,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-google-ads-operations/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-google-ads-operations/SKILL.md"
     },
     {
       "id": "skill.nyoba-independent-qa",
@@ -1550,7 +1550,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-independent-qa/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-independent-qa/SKILL.md"
     },
     {
       "id": "skill.nyoba-knowledge-stewardship",
@@ -1578,7 +1578,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-knowledge-stewardship/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-knowledge-stewardship/SKILL.md"
     },
     {
       "id": "skill.nyoba-kpi-analysis",
@@ -1608,7 +1608,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-kpi-analysis/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-kpi-analysis/SKILL.md"
     },
     {
       "id": "skill.nyoba-manual-chatgpt-handoff",
@@ -1650,7 +1650,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-manual-chatgpt-handoff/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-manual-chatgpt-handoff/SKILL.md"
     },
     {
       "id": "skill.nyoba-markdown-knowledge-compaction",
@@ -1696,7 +1696,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-markdown-knowledge-compaction/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-markdown-knowledge-compaction/SKILL.md"
     },
     {
       "id": "skill.nyoba-mcp-builder",
@@ -1734,7 +1734,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-mcp-builder/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-mcp-builder/SKILL.md"
     },
     {
       "id": "skill.nyoba-mcp-integration",
@@ -1763,7 +1763,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-mcp-integration/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-mcp-integration/SKILL.md"
     },
     {
       "id": "skill.nyoba-meta-ads-operations",
@@ -1790,7 +1790,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-meta-ads-operations/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-meta-ads-operations/SKILL.md"
     },
     {
       "id": "skill.nyoba-paid-media-safety",
@@ -1818,7 +1818,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-paid-media-safety/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-paid-media-safety/SKILL.md"
     },
     {
       "id": "skill.nyoba-plan-execute-review",
@@ -1850,7 +1850,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-plan-execute-review/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-plan-execute-review/SKILL.md"
     },
     {
       "id": "skill.nyoba-reflective-memory-learning",
@@ -1907,7 +1907,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-reflective-memory-learning/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-reflective-memory-learning/SKILL.md"
     },
     {
       "id": "skill.nyoba-research-synthesis",
@@ -1934,7 +1934,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-research-synthesis/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-research-synthesis/SKILL.md"
     },
     {
       "id": "skill.nyoba-safe-tool-use",
@@ -1976,7 +1976,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-safe-tool-use/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-safe-tool-use/SKILL.md"
     },
     {
       "id": "skill.nyoba-seo-cro-audit",
@@ -2003,7 +2003,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-seo-cro-audit/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-seo-cro-audit/SKILL.md"
     },
     {
       "id": "skill.nyoba-skill-engineering",
@@ -2038,7 +2038,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-skill-engineering/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-skill-engineering/SKILL.md"
     },
     {
       "id": "skill.nyoba-source-provenance",
@@ -2066,7 +2066,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-source-provenance/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-source-provenance/SKILL.md"
     },
     {
       "id": "skill.nyoba-strategic-context-compaction",
@@ -2098,7 +2098,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-strategic-context-compaction/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-strategic-context-compaction/SKILL.md"
     },
     {
       "id": "skill.nyoba-systematic-debugging",
@@ -2132,7 +2132,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-systematic-debugging/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-systematic-debugging/SKILL.md"
     },
     {
       "id": "skill.nyoba-task-truth",
@@ -2174,7 +2174,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-task-truth/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-task-truth/SKILL.md"
     },
     {
       "id": "skill.nyoba-test-driven-delivery",
@@ -2207,7 +2207,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-test-driven-delivery/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-test-driven-delivery/SKILL.md"
     },
     {
       "id": "skill.nyoba-verification-before-completion",
@@ -2242,7 +2242,7 @@
       ],
       "install_method": "bundled-with-employee-profile",
       "verification_method": "workforce:check + packaged-skill parity",
-      "artifact_ref": "skills/hermes-custom/nyoba-verification-before-completion/SKILL.md"
+      "artifact_ref": "skills/canonical/nyoba-verification-before-completion/SKILL.md"
     },
     {
       "id": "web.audit.lighthouse",

@@ -2,6 +2,27 @@
 
 All notable public changes to nyobakantorai are documented here.
 
+## [0.5.0] - Unreleased
+
+### Added
+- Runtime-portability inventory, bounded execution contract, Hermes/Codex adapters, immutable Siti reference case, live harness, and comparator.
+- Independent Python verifier + Node/Python differential corpus.
+- Receipt trust lifecycle registry and immutable installer integrity.
+- Anomaly-first approval oversight, evidence classification, multidimensional maturity, complexity budget, and machine-readable release readiness.
+
+### Changed
+- Stable install defaults no longer rely on mutable branch archives.
+- Approval review prioritizes structured anomalies/missing evidence/failed checks/material changes.
+- Historical deferred-evidence validation was consolidated under release-claims.
+- Temporary v0.5 implementation PRD was retired after permanent transfer.
+
+### Release status
+- **BLOCKED** as of 2026-10-01 pending only the final promoted-`main` release gate.
+- Canonical Hermes+Codex Siti reference case is `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`; v0.5 LIVE_RUNTIME evidence growth is `INCREASED`.
+- Package candidate declares `0.5.0`; final promoted-`main` verify/manual release gate have not run.
+- Real-world baseline remains `COLLECTING 1/20`; provider lifecycle remains `partial`.
+- Green feature-branch CI does not authorize merge/tag/release.
+
 ## [0.4.0] - 2026-09-30
 
 ### Added

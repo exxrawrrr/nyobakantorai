@@ -28,7 +28,7 @@ for(const e of registry.employees){
  for(const k of contractArrays)if(!Array.isArray(oc?.[k])||oc[k].length===0&&k!=="capability_scope")findings.push(`${e.id}: invalid operational_contract.${k}`);
  for(const k of ["failure_policy","verification_method","cost_policy"])if(!oc?.[k])findings.push(`${e.id}: missing operational_contract.${k}`);
  for(const cap of oc?.capability_scope||[])if(!capabilityIds.has(cap))findings.push(`${e.id}: unknown operational capability ${cap}`);
- for(const skill of e.skills)if(!existsSync(resolve(root,"skills/hermes-custom",skill,"SKILL.md")))findings.push(`${e.id}: missing canonical skill ${skill}`);
+ for(const skill of e.skills)if(!existsSync(resolve(root,"skills/canonical",skill,"SKILL.md")))findings.push(`${e.id}: missing canonical skill ${skill}`);
  for(const cap of e.external_capabilities||[])if(!capabilityIds.has(cap))findings.push(`${e.id}: unknown capability ${cap}`);
  if(e.verification_policy?.self_verify!==false)findings.push(`${e.id}: self verification must be false`);
  if(!["owner-authored","pending-original-art"].includes(e.visual?.asset_status))findings.push(`${e.id}: invalid asset status`);
@@ -156,7 +156,7 @@ for(const e of registry.employees){
  expected.set(`hermes-profiles/${e.id}/profile.yaml`,`description: "${e.summary.replaceAll('"',"'")}"\ndescription_auto: false\n`);
  expected.set(`hermes-profiles/${e.id}/config.yaml`,`# Fresh-install role defaults. Hermes profile updates preserve an existing user config.yaml.\ntoolsets:\n${e.preferred_toolsets.map((toolset)=>`  - ${toolset}`).join("\n")}\n`);
  expected.set(`hermes-profiles/${e.id}/distribution.yaml`,`name: ${e.id}\nversion: ${e.profile.distribution_version}\ndescription: "${e.role.replaceAll('"',"'")} — nyobakantorai"\nauthor: "exxrawrrr / nyobakantorai contributors"\nlicense: "MIT"\ndistribution_owned:\n  - SOUL.md\n  - profile.yaml\n  - config.yaml\n  - skills\n  - distribution.yaml\n`);
- for(const skill of e.skills)expected.set(`hermes-profiles/${e.id}/skills/nyobakantorai/${skill}/SKILL.md`,await readFile(resolve(root,"skills/hermes-custom",skill,"SKILL.md"),"utf8"));
+ for(const skill of e.skills)expected.set(`hermes-profiles/${e.id}/skills/nyobakantorai/${skill}/SKILL.md`,await readFile(resolve(root,"skills/canonical",skill,"SKILL.md"),"utf8"));
 }
 if(check){
  for(const [rel,content] of expected){let actual="";try{actual=await readFile(resolve(root,rel),"utf8")}catch{}if(actual!==content)findings.push(rel+": generated content drift")}

@@ -70,3 +70,6 @@ release/
 # User-owned local real-task evidence ledger
 .nyobakantorai/real-task-recorder/
 real-task-recorder-export.json
+
+# Local portability live-run evidence before public review
+.nyobakantorai/portability-live/

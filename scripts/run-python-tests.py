@@ -8,6 +8,7 @@ SUITES = [
     ROOT / "operations" / "workflow",
     ROOT / "operations" / "doctor",
     ROOT / "operations" / "taskctl",
+    ROOT / "reference-verifier" / "python",
 ]
 
 for suite in SUITES:

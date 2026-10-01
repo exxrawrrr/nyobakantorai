@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "reference_case_id": "siti-portability-reference-v1",
+  "worker_id": "siti",
+  "risk_class": "READ_ONLY",
+  "required_skills": [
+    "nyoba-independent-qa",
+    "nyoba-source-provenance",
+    "nyoba-verification-before-completion",
+    "nyoba-approval-and-evidence",
+    "nyoba-safe-tool-use"
+  ],
+  "component_sha256": {
+    "worker_sha256": "3898c7e8b403a5f636105c654e03ec3b2cc28324b9bf86b2aeda0a3bf82edbb5",
+    "task_sha256": "a3a525773f028c3f9f7509293696969bfd7ec8889abd77102e31c4d044f6c4c6",
+    "policy_sha256": "ee8905c62fd001360c2502a392692a0c7f330194374e006c39f617f8176ae00c",
+    "source_artifact_sha256": "4166bccfefa2a5a577aac44ad4a65cea6ba12f3fd1b8db654ff4eba2a54d864b",
+    "expected_result_sha256": "73697c2c62d184ad7ae6befa37f035ac8ea90c18f822233486499ebc5c0bf9a3",
+    "verification_contract_sha256": "51fa978c97c48a52ad0ff456bc96c00ce85fa2ab965341bf2bc683ebeca9b0e6",
+    "evidence_expectations_sha256": "f7b7a5c2a582b96d9cfb97e42d3e74fec0f10e34ba7b83d2373c822dc2f87272",
+    "skill_bundle_sha256": "53939ea80223fe95ed6975ab12eafd5964798dce7e330cbc2a27e8b1489592f9"
+  },
+  "core_bundle_sha256": "cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8",
+  "core_bundle_byte_length": 18157,
+  "claim_limit": "Byte identity proves that runtime adapters received the same canonical core inputs. It does not prove equal behavior, correct external-world execution, or global portability."
+}

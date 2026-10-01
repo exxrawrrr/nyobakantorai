@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "candidate": "v0.5.0",
+  "observed_on": "2026-10-01",
+  "decision": "BLOCKED",
+  "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. A green CI run may validate a truthful BLOCKED decision; only the explicit require-ready command may authorize the next release step.",
+  "release_blockers": [
+    {
+      "id": "final-main-release-gate",
+      "category": "PROMOTION",
+      "status": "PENDING",
+      "required_state": "PASS",
+      "current_state": "PENDING",
+      "canonical_source": "docs/RELEASE-CHECKLIST.md",
+      "reason": "The candidate has not been promoted to main and the exact promoted main commit has not passed final cross-platform verification plus the manual release gate.",
+      "safe_next_action": "After blockers are resolved and reviewed, merge through the explicit PR path, rerun verify on exact main, run the manual release gate, then create the stable tag/release."
+    }
+  ],
+  "promotion": {
+    "target_branch": "main",
+    "final_main_verify": "PENDING",
+    "manual_release_gate": "PENDING",
+    "stable_tag": "PENDING",
+    "merge_authorized": false
+  },
+  "nonblocking_open_evidence": [
+    {
+      "id": "real-world-workflow-baseline",
+      "state": "COLLECTING",
+      "current": "1/20",
+      "canonical_source": "benchmarks/real-tasks/collection-status-2026-09-29.json",
+      "claim_limit": "Real-world workflow maturity remains collecting; v0.5 must not claim demonstrated general reliability."
+    },
+    {
+      "id": "provider-lifecycle",
+      "state": "PARTIAL",
+      "canonical_source": "config/maturity-model.json",
+      "claim_limit": "Playwright has bounded evidence while Browser Use and Cognee remain open; provider lifecycle must not be called validated."
+    },
+    {
+      "id": "real-clean-machine-hermes-lifecycle",
+      "state": "NOT_RUN",
+      "canonical_source": "config/v0.4-deferred-evidence.json",
+      "claim_limit": "Deterministic install lifecycle matrices do not equal real clean-machine Hermes lifecycle evidence."
+    }
+  ],
+  "durable_requirement_surfaces": [
+    "config/runtime-portability-map.json",
+    "docs/RUNTIME-PORTABILITY.md",
+    "packages/runtime-execution-adapter/index.test.mjs",
+    "packages/hermes-execution-adapter/index.test.mjs",
+    "packages/codex-execution-adapter/index.test.mjs",
+    "packages/portability-comparator/index.test.mjs",
+    "docs/PORTABILITY-LIVE-RUN.md",
+    "reference-verifier/python/test_verifier.py",
+    "benchmarks/verifier-differential/run.mjs",
+    "config/receipt-trust-registry.json",
+    "docs/SIGNING-KEY-LIFECYCLE.md",
+    "docs/INSTALL-INTEGRITY.md",
+    "docs/APPROVAL-OVERSIGHT.md",
+    "config/evidence-classification.json",
+    "docs/EVIDENCE-CLASSIFICATION.md",
+    "config/maturity-model.json",
+    "docs/STABILITY-MODEL.md",
+    "config/complexity-budget.json",
+    "docs/COMPLEXITY-BUDGET.md",
+    "ROADMAP.md",
+    "docs/V0.5-RELEASE-READINESS.md",
+    "docs/RELEASE-CHECKLIST.md",
+    "reference-verifier/python/portability_run_verifier.py",
+    "docs/PORTABILITY-RUN-VERIFIER.md"
+  ],
+  "retired_temporary_prd": {
+    "path": "docs/V0.5-IMPLEMENTATION-PRD.md",
+    "must_be_absent": true,
+    "retired_on": "2026-09-30",
+    "successor": "docs/V0.5-RELEASE-READINESS.md"
+  },
+  "claim_language": {
+    "allowed": "v0.5 candidate includes verified bounded Hermes+Codex portability for the canonical Siti reference case, cross-implementation verification, immutable-install integrity, anomaly-first approval oversight, evidence classification, multidimensional maturity, and complexity pruning; this does not imply global runtime parity, broad production reliability, or external-world correctness.",
+    "forbidden": [
+      "nyobakantorai works identically on all AI runtimes",
+      "signed receipts prove the external action happened correctly",
+      "v0.5 is production-proven because CI passed"
+    ]
+  },
+  "resolved_evidence": [
+    {
+      "id": "canonical-reference-portability",
+      "state": "SUPPORTED",
+      "source": "benchmarks/portability/live/2026-10-01/30b3be36dd1d4e13888ad921c597dbb3b13d02e6/comparison.json",
+      "scope": "PORTABILITY_VERIFIED_FOR_REFERENCE_CASE"
+    },
+    {
+      "id": "live-runtime-evidence-growth",
+      "state": "INCREASED",
+      "source": "config/evidence-classification.json",
+      "scope": "canonical Hermes+Codex bounded reference case"
+    }
+  ]
+}

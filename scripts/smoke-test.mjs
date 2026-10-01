@@ -108,7 +108,8 @@ try {
   assert.equal(runtimeResponse.status, 200);
   const runtime = await runtimeResponse.json();
   assert.equal(runtime.mode, "READ_ONLY / VALIDATE_ONLY");
-  assert.equal(runtime.hermes.configured, false);
+  assert.equal(runtime.runtime.provider_id, "hermes");
+  assert.equal(runtime.runtime.configured, false);
   assert.equal(runtime.dispatch.enabled, false);
   assert.equal(runtime.dispatch.state, "BLOCKED");
 
@@ -116,6 +117,13 @@ try {
   assert.equal(home.status, 200);
   assert.match(home.headers.get("content-type") || "", /^text\/html/);
   assert.match(await home.text(), /nyobakantorai/i);
+
+  for (const modulePath of ["/workforce-view.mjs","/approval-summary.mjs"]) {
+    const moduleResponse = await fetch(base + modulePath);
+    assert.equal(moduleResponse.status, 200, modulePath + " must be shipped in dist");
+    assert.match(moduleResponse.headers.get("content-type") || "", /text\/javascript/);
+    assert.ok((await moduleResponse.text()).length > 100);
+  }
 
   const sprite = await fetch(base + "/assets/generated/characters/praroro/idle.png");
   assert.equal(sprite.status, 200);

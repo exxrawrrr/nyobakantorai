@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "implementation_id": "python-portability-run-verifier-v1",
+  "independent": true,
+  "status": "PASS",
+  "run_file_sha256": "c5c82f96e959ba64125a4b1510b2c0f87976533f82cab42a1981feadb71d7edf",
+  "reference_case_id": "siti-portability-reference-v1",
+  "core_bundle_sha256": "cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8",
+  "runtime_provider": "hermes",
+  "code_commit": "30b3be36dd1d4e13888ad921c597dbb3b13d02e6",
+  "checks": [
+    {
+      "id": "schema",
+      "passed": true
+    },
+    {
+      "id": "reference_case",
+      "passed": true
+    },
+    {
+      "id": "core_hash",
+      "passed": true
+    },
+    {
+      "id": "component_hashes",
+      "passed": true
+    },
+    {
+      "id": "live_class",
+      "passed": true
+    },
+    {
+      "id": "runtime_provider",
+      "passed": true
+    },
+    {
+      "id": "adapter_identity",
+      "passed": true
+    },
+    {
+      "id": "execution_success",
+      "passed": true
+    },
+    {
+      "id": "cleanup",
+      "passed": true
+    },
+    {
+      "id": "timestamps",
+      "passed": true
+    },
+    {
+      "id": "normalized_result",
+      "passed": true
+    },
+    {
+      "id": "workspace_safety",
+      "passed": true
+    },
+    {
+      "id": "prohibited_actions",
+      "passed": true
+    },
+    {
+      "id": "runtime_actions",
+      "passed": true
+    },
+    {
+      "id": "evidence_refs",
+      "passed": true
+    },
+    {
+      "id": "binding_core",
+      "passed": true
+    },
+    {
+      "id": "binding_workspace_hashes",
+      "passed": true
+    },
+    {
+      "id": "binding_commit",
+      "passed": true
+    },
+    {
+      "id": "binding_refs",
+      "passed": true
+    },
+    {
+      "id": "protected_atoms",
+      "passed": true
+    },
+    {
+      "id": "residual_limitation",
+      "passed": true
+    },
+    {
+      "id": "source_truth_basis",
+      "passed": true
+    },
+    {
+      "id": "capture_qualification",
+      "passed": true
+    },
+    {
+      "id": "independent_public_safety_scan",
+      "passed": true
+    }
+  ],
+  "protected_atoms": [
+    {
+      "path": "review_state",
+      "expected": "FAIL",
+      "accepted": [
+        "FAIL"
+      ],
+      "actual": "FAIL",
+      "passed": true
+    },
+    {
+      "path": "claims.claim-worker.verdict",
+      "expected": "SUPPORTED",
+      "accepted": [
+        "SUPPORTED"
+      ],
+      "actual": "SUPPORTED",
+      "passed": true
+    },
+    {
+      "path": "claims.claim-worker.evidence_path",
+      "expected": "facts.canonical_worker",
+      "accepted": [
+        "facts.canonical_worker"
+      ],
+      "actual": "facts.canonical_worker",
+      "passed": true
+    },
+    {
+      "path": "claims.claim-write.verdict",
+      "expected": "CONTRADICTED",
+      "accepted": [
+        "CONTRADICTED"
+      ],
+      "actual": "CONTRADICTED",
+      "passed": true
+    },
+    {
+      "path": "claims.claim-write.evidence_path",
+      "expected": "facts.external_write_performed",
+      "accepted": [
+        "facts.external_write_performed"
+      ],
+      "actual": "facts.external_write_performed",
+      "passed": true
+    },
+    {
+      "path": "claims.claim-verified.verdict",
+      "expected": "CONTRADICTED",
+      "accepted": [
+        "CONTRADICTED"
+      ],
+      "actual": "CONTRADICTED",
+      "passed": true
+    },
+    {
+      "path": "claims.claim-verified.evidence_path",
+      "expected": "facts.source_status",
+      "accepted": [
+        "facts.source_status",
+        "facts.evidence_packet_complete"
+      ],
+      "actual": "facts.source_status",
+      "passed": true
+    }
+  ],
+  "public_safety_findings": [],
+  "reasons": [],
+  "truth_boundary": "independent run verification != proof of global portability or external-world correctness",
+  "evidence_ref": "sha256:c458733d12e92737b09d75fcfd6a93ea4e1d136694c4eee81f0dec4b8e30cbf8"
+}

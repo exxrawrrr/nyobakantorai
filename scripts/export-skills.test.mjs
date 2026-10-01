@@ -30,7 +30,7 @@ test("Agent Skills core export is byte-identical to canonical skills", async (t)
   assert.ok(result.manifest.source.commit);
 
   const skill = "nyoba-context-prompt-compiler";
-  const canonical = await readFile(new URL(`../skills/hermes-custom/${skill}/SKILL.md`, import.meta.url), "utf8");
+  const canonical = await readFile(new URL(`../skills/canonical/${skill}/SKILL.md`, import.meta.url), "utf8");
   const exported = await readFile(resolve(outRoot, "agent-skills-core", "skills", skill, "SKILL.md"), "utf8");
   assert.equal(exported, canonical);
 });
@@ -51,7 +51,7 @@ for (const target of [
     assert.equal(result.manifest.runtime_tested, false);
 
     const skill = "nyoba-context-prompt-compiler";
-    const canonical = await readFile(new URL(`../skills/hermes-custom/${skill}/SKILL.md`, import.meta.url), "utf8");
+    const canonical = await readFile(new URL(`../skills/canonical/${skill}/SKILL.md`, import.meta.url), "utf8");
     const exported = await readFile(resolve(outRoot, ...target.root, skill, "SKILL.md"), "utf8");
     const canonicalParsed = parseCanonicalSkill(canonical, skill);
     const exportedParsed = parseCanonicalSkill(exported, skill);
@@ -90,7 +90,7 @@ test("all adapter exports expose exactly the canonical skill names", async (t) =
   const outRoot = await tempRoot();
   t.after(async () => rm(outRoot, { recursive:true, force:true }));
 
-  const canonical = (await readdir(new URL("../skills/hermes-custom/", import.meta.url), { withFileTypes:true }))
+  const canonical = (await readdir(new URL("../skills/canonical/", import.meta.url), { withFileTypes:true }))
     .filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
 
   await exportHarnessTarget({ targetId:"codex-cli", outRoot });

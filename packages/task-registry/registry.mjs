@@ -1,4 +1,4 @@
-import { WORKFORCE } from "../../lib/workforce.mjs";
+import { PORTABLE_WORKFORCE as WORKFORCE } from "../../lib/workforce.mjs";
 
 export const EMPLOYEES = Object.freeze(WORKFORCE.map((person) => Object.freeze({
   id: person.id,
@@ -130,8 +130,9 @@ export function createTask(registry, input, clock = defaultClock, idFactory = de
     approval_evidence_ref: "",
     handoff_to: employeeIds.has(input.handoff_to) ? input.handoff_to : "",
     execution_mode: "DEMO",
+    runtime_provider: "",
     runtime_ref: "",
-    runtime_state: "NOT CONNECTED",
+    runtime_state: "NOT_CONNECTED",
   };
   task.approval_required = AUTO_APPROVAL_RISKS.has(task.risk_class) || Boolean(input.approval_required);
   task.approval_status = task.approval_required ? "PENDING" : "NOT_REQUIRED";
@@ -150,26 +151,30 @@ export function attachRuntimeTask(registry, taskId, runtime, clock = defaultCloc
   const next = clone(registry);
   const task = next.tasks.find(({ id }) => id === taskId);
   assert(task, "Tugas tidak ditemukan.");
-  const runtimeId = clean(runtime.task_id, 160);
-  assert(/^t_[a-z0-9]+$/i.test(runtimeId), "Hermes task ID tidak valid.");
-  assert(task.execution_mode !== "HERMES", "Tugas sudah terhubung ke Hermes.");
-  assert(runtime.assignee === task.assignee_id, "Assignee Hermes tidak cocok.");
-  assert(runtime.state === "BLOCKED", "Task Hermes wajib di-stage sebagai BLOCKED.");
+  const providerId = clean(runtime.provider_id, 64).toLowerCase();
+  const runtimeRef = clean(runtime.runtime_ref, 240);
+  assert(/^[a-z][a-z0-9-]{1,63}$/.test(providerId), "Runtime provider ID tidak valid.");
+  assert(runtimeRef, "Runtime reference wajib diisi.");
+  assert(task.execution_mode !== "RUNTIME", "Tugas sudah terhubung ke runtime.");
+  assert(runtime.assignee === task.assignee_id, "Assignee runtime tidak cocok.");
+  assert(runtime.state === "BLOCKED", "Task runtime wajib di-stage sebagai BLOCKED.");
   assert(task.lifecycle_status === "PLANNED" || task.lifecycle_status === "BLOCKED", "Hanya tugas PLANNED/BLOCKED yang dapat di-stage.");
   const oldStatus = task.lifecycle_status;
-  task.execution_mode = "HERMES";
-  task.runtime_ref = `hermes-kanban:${runtimeId}`;
+  task.execution_mode = "RUNTIME";
+  task.runtime_provider = providerId;
+  task.runtime_ref = runtimeRef;
   task.runtime_state = "BLOCKED";
   task.lifecycle_status = "BLOCKED";
   task.updated_at = clock();
-  next.events.push(makeEvent(task.id, "HERMES_TASK_STAGED", {
-    actor: "adapter:hermes",
+  next.events.push(makeEvent(task.id, "RUNTIME_TASK_STAGED", {
+    actor: `adapter:${providerId}`,
     oldStatus,
     newStatus: "BLOCKED",
-    source: "Hermes Kanban adapter",
+    source: clean(runtime.source, 240) || `Runtime adapter ${providerId}`,
     evidenceRef: task.runtime_ref,
   }, clock, idFactory));
   next.updated_at = task.updated_at;
+  validateRegistry(next);
   return next;
 }
 
@@ -179,7 +184,7 @@ export function updateTask(registry, taskId, patch, clock = defaultClock, idFact
   const next = clone(registry);
   const task = next.tasks.find(({ id }) => id === taskId);
   assert(task, "Tugas tidak ditemukan.");
-  assert(task.execution_mode !== "HERMES", "Status tugas Hermes hanya boleh berasal dari event runtime yang divalidasi server.");
+  assert(task.execution_mode !== "RUNTIME", "Status tugas runtime hanya boleh berasal dari event runtime yang divalidasi server.");
 
   const oldStatus = task.lifecycle_status;
   const newStatus = patch.lifecycle_status || oldStatus;
@@ -255,7 +260,7 @@ export function recordApproval(registry, taskId, decision, clock = defaultClock,
   const next = clone(registry);
   const task = next.tasks.find(({ id }) => id === taskId);
   assert(task, "Tugas tidak ditemukan.");
-  assert(task.execution_mode !== "HERMES", "Approval lokal tidak boleh mengubah klaim runtime Hermes.");
+  assert(task.execution_mode !== "RUNTIME", "Approval lokal tidak boleh mengubah klaim runtime-bound.");
   const actor = clean(decision.actor, 80).toLowerCase();
   assert(actor === "owner" || actor === "manual:owner", "Only the owner may approve high-impact work.");
   const status = clean(decision.status, 20).toUpperCase();
@@ -323,20 +328,46 @@ export function validateRegistry(registry) {
       );
       assert(verified, "VERIFIED requires an independent reviewer evidence event.");
     }
-    if (task.execution_mode === "HERMES") {
-      assert(clean(task.runtime_ref, 200).startsWith("hermes-kanban:"), "Task Hermes tidak memiliki runtime reference valid.");
-      assert(task.runtime_state === "BLOCKED" && task.lifecycle_status === "BLOCKED", "Task Hermes yang di-stage harus tetap BLOCKED sampai runtime tervalidasi.");
-      const staged = registry.events.find((event) => event.task_id === task.id && event.action === "HERMES_TASK_STAGED" && event.actor === "adapter:hermes" && event.evidence_ref === task.runtime_ref);
-      assert(staged, "Task Hermes tidak memiliki event staging yang valid.");
+    if (task.execution_mode === "RUNTIME") {
+      assert(/^[a-z][a-z0-9-]{1,63}$/.test(clean(task.runtime_provider, 64)), "Task runtime tidak memiliki provider ID valid.");
+      assert(clean(task.runtime_ref, 240), "Task runtime tidak memiliki runtime reference valid.");
+      assert(task.runtime_state === "BLOCKED" && task.lifecycle_status === "BLOCKED", "Task runtime yang di-stage harus tetap BLOCKED sampai runtime tervalidasi.");
+      const staged = registry.events.find((event) => event.task_id === task.id
+        && event.action === "RUNTIME_TASK_STAGED"
+        && event.actor === `adapter:${task.runtime_provider}`
+        && event.evidence_ref === task.runtime_ref);
+      assert(staged, "Task runtime tidak memiliki event staging yang valid.");
     }
   }
   return true;
 }
 
+function migrateLegacyRuntimeBindings(registry) {
+  const next = clone(registry);
+  for (const task of next.tasks || []) {
+    const mode = clean(task.execution_mode, 64);
+    if (mode && !["DEMO","LOCAL","RUNTIME"].includes(mode)) {
+      const provider = mode.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "");
+      if (provider) {
+        task.execution_mode = "RUNTIME";
+        task.runtime_provider = provider;
+      }
+    }
+    if (task.execution_mode === "RUNTIME" && !task.runtime_provider) {
+      task.runtime_provider = clean(task.runtime_ref, 240).split(/[:/]/,1)[0].toLowerCase();
+    }
+  }
+  for (const event of next.events || []) {
+    const match = /^([A-Z0-9_-]+)_TASK_STAGED$/.exec(String(event.action || ""));
+    if (match && event.action !== "RUNTIME_TASK_STAGED") event.action = "RUNTIME_TASK_STAGED";
+  }
+  return next;
+}
+
 export function loadRegistry(storage, key = "nyobakantorai-registry-v1") {
   const raw = storage.getItem(key);
   if (!raw) return null;
-  const registry = JSON.parse(raw);
+  const registry = migrateLegacyRuntimeBindings(JSON.parse(raw));
   validateRegistry(registry);
   return registry;
 }
@@ -347,7 +378,7 @@ export function saveRegistry(storage, registry, key = "nyobakantorai-registry-v1
 }
 
 export function importRegistry(text) {
-  const parsed = JSON.parse(text);
+  const parsed = migrateLegacyRuntimeBindings(JSON.parse(text));
   validateRegistry(parsed);
   return clone(parsed);
 }

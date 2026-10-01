@@ -9,6 +9,12 @@ The canonical v1 implementation lives in `packages/runtime-adapter/` and exports
 - `snapshotRuntime(adapter, options)`
 - `RUNTIME_ADAPTER_API = 1`
 
+## Execution remains a separate contract
+
+This SDK is intentionally read-only. Bounded task execution for v0.5 portability proof is defined separately in `docs/RUNTIME-EXECUTION-ADAPTER.md` and `packages/runtime-execution-adapter/`.
+
+The existence of that execution contract does not grant this SDK write or dispatch capability.
+
 ## v1 safety contract
 
 - `health()` reports availability without mutating state.

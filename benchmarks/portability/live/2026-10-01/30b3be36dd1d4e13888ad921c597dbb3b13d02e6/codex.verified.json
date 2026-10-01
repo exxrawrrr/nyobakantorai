@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "reference_case_id": "siti-portability-reference-v1",
+  "core_bundle_sha256": "cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8",
+  "component_sha256": {
+    "worker_sha256": "3898c7e8b403a5f636105c654e03ec3b2cc28324b9bf86b2aeda0a3bf82edbb5",
+    "task_sha256": "a3a525773f028c3f9f7509293696969bfd7ec8889abd77102e31c4d044f6c4c6",
+    "policy_sha256": "ee8905c62fd001360c2502a392692a0c7f330194374e006c39f617f8176ae00c",
+    "source_artifact_sha256": "4166bccfefa2a5a577aac44ad4a65cea6ba12f3fd1b8db654ff4eba2a54d864b",
+    "expected_result_sha256": "73697c2c62d184ad7ae6befa37f035ac8ea90c18f822233486499ebc5c0bf9a3",
+    "verification_contract_sha256": "51fa978c97c48a52ad0ff456bc96c00ce85fa2ab965341bf2bc683ebeca9b0e6",
+    "evidence_expectations_sha256": "f7b7a5c2a582b96d9cfb97e42d3e74fec0f10e34ba7b83d2373c822dc2f87272",
+    "skill_bundle_sha256": "53939ea80223fe95ed6975ab12eafd5964798dce7e330cbc2a27e8b1489592f9"
+  },
+  "evidence_class": "LIVE_RUNTIME_EVIDENCE",
+  "adapter": {
+    "id": "codex-reference",
+    "version": "1.0.0"
+  },
+  "runtime": {
+    "provider": "codex",
+    "runtime_ref": "codex:ephemeral:read-only",
+    "provider_version": "codex-cli 0.154.0"
+  },
+  "execution": {
+    "ok": true,
+    "state": "SUCCEEDED",
+    "error_category": null,
+    "started_at": "2026-10-01T02:06:37.084Z",
+    "finished_at": "2026-10-01T02:07:04.786Z",
+    "cleanup_attempted": true,
+    "cleanup_ok": true
+  },
+  "normalized_result": {
+    "schema": 1,
+    "state": "SUCCEEDED",
+    "summary": "Codex returned a structurally valid Siti reference-case review.",
+    "output": {
+      "schema": 1,
+      "review_state": "FAIL",
+      "claims": [
+        {
+          "claim_id": "claim-worker",
+          "verdict": "SUPPORTED",
+          "evidence_path": "facts.canonical_worker"
+        },
+        {
+          "claim_id": "claim-write",
+          "verdict": "CONTRADICTED",
+          "evidence_path": "facts.external_write_performed"
+        },
+        {
+          "claim_id": "claim-verified",
+          "verdict": "CONTRADICTED",
+          "evidence_path": "facts.source_status"
+        }
+      ],
+      "residual_limitations": [
+        "The evidence packet is incomplete and the case is not VERIFIED.",
+        "Tool policy blocked reading the five staged canonical skills; this review used only the supplied runtime-facing facts and task contract."
+      ]
+    },
+    "artifact_refs": [
+      "sha256:e8de41edbb0a2c4b9dea7475ce174dc7529691c350ed092759d569540a1ca9e8"
+    ],
+    "evidence_refs": [
+      "core-bundle-sha256:cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8",
+      "skill-bundle-sha256:53939ea80223fe95ed6975ab12eafd5964798dce7e330cbc2a27e8b1489592f9"
+    ]
+  },
+  "evidence": {
+    "schema": 1,
+    "raw_result_ref": "sha256:e8de41edbb0a2c4b9dea7475ce174dc7529691c350ed092759d569540a1ca9e8",
+    "normalized_result_ref": "sha256:da07c0c0a54e50443065be785a232148aa4f827bf243b7cea6b5b1bbdeabd57b",
+    "capabilities_used": [
+      "bounded_process",
+      "model_inference",
+      "temporary_workspace",
+      "evidence_collection"
+    ],
+    "workspace_mutation_check": {
+      "temporary_workspace_only": true,
+      "production_repo_changed": false
+    },
+    "prohibited_action_check": {
+      "passed": true,
+      "observed": []
+    },
+    "runtime_actions": {
+      "install": false,
+      "login": false,
+      "account_mutation": false,
+      "external_write": false
+    },
+    "evidence_refs": [
+      "core-bundle-sha256:cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8",
+      "workspace-before-sha256:5683f0c9ceb07a7a2f1485109aee58cac8860752d63082820124ab76e19b3328",
+      "workspace-after-sha256:5683f0c9ceb07a7a2f1485109aee58cac8860752d63082820124ab76e19b3328",
+      "code-commit:30b3be36dd1d4e13888ad921c597dbb3b13d02e6",
+      "codex-sandbox:read-only",
+      "codex-session:ephemeral",
+      "codex-user-config:ignored",
+      "codex-rules:ignored",
+      "codex-reasoning-effort:low",
+      "codex-skill-root:.agents/skills"
+    ],
+    "artifact_refs": [
+      "sha256:e8de41edbb0a2c4b9dea7475ce174dc7529691c350ed092759d569540a1ca9e8",
+      "sha256:da07c0c0a54e50443065be785a232148aa4f827bf243b7cea6b5b1bbdeabd57b"
+    ]
+  },
+  "evidence_binding": {
+    "core_bundle_sha256": "cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8",
+    "workspace_before_sha256": "5683f0c9ceb07a7a2f1485109aee58cac8860752d63082820124ab76e19b3328",
+    "workspace_after_sha256": "5683f0c9ceb07a7a2f1485109aee58cac8860752d63082820124ab76e19b3328",
+    "code_commit": "30b3be36dd1d4e13888ad921c597dbb3b13d02e6"
+  },
+  "external_verification": {
+    "status": "PASS",
+    "independent": true,
+    "implementation_id": "python-portability-run-verifier-v1",
+    "evidence_ref": "sha256:3b30d227a364c61acb490949a2440eaf5aafb677bc69d8daa6cc5fbf02939e2a"
+  },
+  "capture": {
+    "schema": 1,
+    "origin": "canonical-live-reference-runner-v1",
+    "runtime": "codex",
+    "mode": "live",
+    "repository": {
+      "commit": "30b3be36dd1d4e13888ad921c597dbb3b13d02e6",
+      "clean": true
+    },
+    "provider": {
+      "install_state": "INSTALLED",
+      "command_detected": true,
+      "version_verified": true,
+      "version": "codex-cli 0.154.0"
+    },
+    "qualification": {
+      "eligible": true,
+      "evidence_class": "LIVE_RUNTIME_EVIDENCE",
+      "reasons": []
+    },
+    "public_safety": {
+      "ok": true,
+      "findings": []
+    }
+  }
+}

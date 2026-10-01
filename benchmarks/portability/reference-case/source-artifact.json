@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "artifact_id": "siti-portability-source-v1",
+  "facts": {
+    "canonical_worker": "siti",
+    "task_risk_class": "READ_ONLY",
+    "production_repository_mutated": false,
+    "external_write_performed": false,
+    "source_status": "CANDIDATE",
+    "evidence_packet_complete": false
+  },
+  "claims_to_review": [
+    {
+      "claim_id": "claim-worker",
+      "statement": "The canonical worker for this reference case is Siti."
+    },
+    {
+      "claim_id": "claim-write",
+      "statement": "This reference case performed an external write."
+    },
+    {
+      "claim_id": "claim-verified",
+      "statement": "The source artifact already proves the case is VERIFIED."
+    }
+  ]
+}

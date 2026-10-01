@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "observed_on": "2026-10-01",
+  "record_type": "NON_QUALIFYING_TIMEOUT_DIAGNOSTIC",
+  "purpose": "Select a realistic bounded timeout for the canonical Hermes/Codex reference harness without promoting diagnostic runs to portability evidence.",
+  "prior_policy_max_timeout_ms": 10000,
+  "tested_bounds_ms": [
+    10000,
+    30000,
+    45000
+  ],
+  "measurements": [
+    {
+      "runtime": "codex",
+      "case": "minimal-ping",
+      "elapsed_ms": 13739,
+      "result": "SUCCEEDED"
+    },
+    {
+      "runtime": "hermes",
+      "case": "minimal-ping",
+      "elapsed_ms": 26917,
+      "result": "SUCCEEDED"
+    },
+    {
+      "runtime": "hermes",
+      "case": "canonical-30s-diagnostic",
+      "elapsed_ms": 28357,
+      "result": "LIVE_RUNTIME_EVIDENCE_ON_LOCAL_DIAGNOSTIC_COMMIT"
+    },
+    {
+      "runtime": "codex",
+      "case": "canonical-30s-diagnostic",
+      "elapsed_ms": 35343,
+      "result": "TIMEOUT_AT_30000_MS"
+    },
+    {
+      "runtime": "codex",
+      "case": "canonical-45s-diagnostic",
+      "elapsed_ms": 27482,
+      "result": "LIVE_RUNTIME_EVIDENCE_ON_LOCAL_DIAGNOSTIC_COMMIT"
+    },
+    {
+      "runtime": "hermes",
+      "case": "canonical-45s-diagnostic",
+      "elapsed_ms": 33350,
+      "result": "LIVE_RUNTIME_EVIDENCE_ON_LOCAL_DIAGNOSTIC_COMMIT"
+    }
+  ],
+  "selected_max_timeout_ms": 45000,
+  "selected_policy_sha256": "ee8905c62fd001360c2502a392692a0c7f330194374e006c39f617f8176ae00c",
+  "selected_core_bundle_sha256": "ce77d083d805bdca33d6c096c55071627d017758deff41ea0ed8b23897119c64",
+  "qualifying_for_release": false,
+  "claim_limit": "These measurements justify the bounded timeout re-baseline only. They do not satisfy canonical release portability because they were collected on local diagnostic commits rather than the exact reviewed GitHub head."
+}

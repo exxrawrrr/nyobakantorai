@@ -1,0 +1,418 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "id": "routine-low-risk",
+      "task": {
+        "id": "routine",
+        "title": "Read local report",
+        "risk_class": "READ_ONLY",
+        "approval_required": false,
+        "approval_status": "NOT_REQUIRED",
+        "lifecycle_status": "PLANNED"
+      },
+      "signals": {
+        "requested_action": {
+          "code": "ACTION",
+          "label": "Read local report",
+          "source": "REGISTRY"
+        },
+        "checks": [
+          {
+            "code": "SCOPE",
+            "label": "Scope bounded",
+            "status": "PASS",
+            "source": "POLICY_ENGINE"
+          },
+          {
+            "code": "EVIDENCE",
+            "label": "Input evidence present",
+            "status": "PASS",
+            "source": "VERIFIER"
+          }
+        ],
+        "verification_state": {
+          "code": "STATE",
+          "label": "PLANNED",
+          "source": "REGISTRY"
+        }
+      },
+      "expected": {
+        "state": "ROUTINE",
+        "anomalies": 0,
+        "missing_evidence": 0,
+        "failed_checks": 0,
+        "capability_escalations": 0,
+        "material_changes": 0,
+        "passed_checks": 2
+      }
+    },
+    {
+      "id": "missing-evidence",
+      "task": {
+        "id": "missing",
+        "title": "Publish draft",
+        "risk_class": "EXTERNAL_WRITE",
+        "approval_required": true,
+        "approval_status": "PENDING",
+        "lifecycle_status": "PLANNED"
+      },
+      "signals": {
+        "missing_evidence": [
+          {
+            "code": "DIFF_MISSING",
+            "label": "No reviewed diff attached",
+            "source": "VERIFIER"
+          }
+        ],
+        "checks": [
+          {
+            "code": "POLICY",
+            "label": "Approval gate active",
+            "status": "PASS",
+            "source": "POLICY_ENGINE"
+          }
+        ],
+        "verification_state": {
+          "code": "STATE",
+          "label": "UNVERIFIED",
+          "source": "VERIFIER"
+        }
+      },
+      "expected": {
+        "state": "BLOCKING_SIGNALS",
+        "anomalies": 0,
+        "missing_evidence": 1,
+        "failed_checks": 0,
+        "capability_escalations": 0,
+        "material_changes": 0,
+        "passed_checks": 1
+      }
+    },
+    {
+      "id": "capability-escalation",
+      "task": {
+        "id": "cap",
+        "title": "Send campaign mutation",
+        "risk_class": "PAID_ACTION",
+        "approval_required": true,
+        "approval_status": "PENDING",
+        "lifecycle_status": "PLANNED"
+      },
+      "signals": {
+        "capabilities_used": [
+          {
+            "code": "ADS_READ",
+            "label": "ads.meta.read",
+            "source": "RUNTIME_ADAPTER"
+          }
+        ],
+        "capability_escalations": [
+          {
+            "code": "ADS_WRITE",
+            "label": "ads.meta.write requested after read-only planning",
+            "source": "POLICY_ENGINE"
+          }
+        ],
+        "checks": [
+          {
+            "code": "AUTH",
+            "label": "Write authorization absent",
+            "status": "FAIL",
+            "source": "POLICY_ENGINE"
+          }
+        ],
+        "verification_state": {
+          "code": "STATE",
+          "label": "UNVERIFIED",
+          "source": "VERIFIER"
+        }
+      },
+      "expected": {
+        "state": "BLOCKING_SIGNALS",
+        "anomalies": 0,
+        "missing_evidence": 0,
+        "failed_checks": 1,
+        "capability_escalations": 1,
+        "material_changes": 0,
+        "passed_checks": 0
+      }
+    },
+    {
+      "id": "material-file-change",
+      "task": {
+        "id": "files",
+        "title": "Apply repository patch",
+        "risk_class": "EXTERNAL_WRITE",
+        "approval_required": true,
+        "approval_status": "PENDING",
+        "lifecycle_status": "PLANNED"
+      },
+      "signals": {
+        "material_changes": [
+          {
+            "code": "FILE_1",
+            "label": "src/a.mjs changed",
+            "resource": "src/a.mjs",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "FILE_2",
+            "label": "src/b.mjs changed",
+            "resource": "src/b.mjs",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "FILE_3",
+            "label": "config/policy.json changed",
+            "resource": "config/policy.json",
+            "source": "VERIFIER"
+          }
+        ],
+        "changed_resources": [
+          {
+            "code": "RES_1",
+            "label": "src/a.mjs",
+            "resource": "src/a.mjs",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "RES_2",
+            "label": "src/b.mjs",
+            "resource": "src/b.mjs",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "RES_3",
+            "label": "config/policy.json",
+            "resource": "config/policy.json",
+            "source": "VERIFIER"
+          }
+        ],
+        "checks": [
+          {
+            "code": "TESTS",
+            "label": "Tests passed",
+            "status": "PASS",
+            "source": "VERIFIER"
+          }
+        ],
+        "verification_state": {
+          "code": "STATE",
+          "label": "EVALUATED",
+          "source": "VERIFIER"
+        }
+      },
+      "expected": {
+        "state": "REVIEW_REQUIRED",
+        "anomalies": 0,
+        "missing_evidence": 0,
+        "failed_checks": 0,
+        "capability_escalations": 0,
+        "material_changes": 3,
+        "passed_checks": 1
+      }
+    },
+    {
+      "id": "policy-violation",
+      "task": {
+        "id": "policy",
+        "title": "Attempt restricted action",
+        "risk_class": "ACCOUNT_CHANGE",
+        "approval_required": true,
+        "approval_status": "PENDING",
+        "lifecycle_status": "BLOCKED"
+      },
+      "signals": {
+        "policy_violations": [
+          {
+            "code": "LOGIN_FORBIDDEN",
+            "label": "Login is forbidden by the bounded policy",
+            "source": "POLICY_ENGINE"
+          }
+        ],
+        "checks": [
+          {
+            "code": "POLICY",
+            "label": "Policy evaluation",
+            "status": "FAIL",
+            "source": "POLICY_ENGINE"
+          }
+        ],
+        "verification_state": {
+          "code": "STATE",
+          "label": "BLOCKED",
+          "source": "REGISTRY"
+        }
+      },
+      "expected": {
+        "state": "BLOCKING_SIGNALS",
+        "anomalies": 0,
+        "missing_evidence": 0,
+        "failed_checks": 1,
+        "capability_escalations": 0,
+        "material_changes": 0,
+        "passed_checks": 0
+      }
+    },
+    {
+      "id": "mixed-pass-fail",
+      "task": {
+        "id": "mixed",
+        "title": "Review mixed evidence package",
+        "risk_class": "EXTERNAL_WRITE",
+        "approval_required": true,
+        "approval_status": "PENDING",
+        "lifecycle_status": "PLANNED"
+      },
+      "signals": {
+        "anomalies": [
+          {
+            "code": "ANOMALY_1",
+            "label": "Unexpected output field",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "ANOMALY_2",
+            "label": "Runtime provenance changed",
+            "source": "RUNTIME_ADAPTER"
+          }
+        ],
+        "missing_evidence": [
+          {
+            "code": "MISSING_1",
+            "label": "Independent reviewer receipt missing",
+            "source": "VERIFIER"
+          }
+        ],
+        "failed_checks": [
+          {
+            "code": "FAIL_1",
+            "label": "Protected atom mismatch",
+            "source": "VERIFIER"
+          }
+        ],
+        "material_changes": [
+          {
+            "code": "M1",
+            "label": "file one",
+            "resource": "one.txt",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "M2",
+            "label": "file two",
+            "resource": "two.txt",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "M3",
+            "label": "file three",
+            "resource": "three.txt",
+            "source": "VERIFIER"
+          }
+        ],
+        "checks": [
+          {
+            "code": "PASS_1",
+            "label": "check 1",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_2",
+            "label": "check 2",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_3",
+            "label": "check 3",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_4",
+            "label": "check 4",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_5",
+            "label": "check 5",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_6",
+            "label": "check 6",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_7",
+            "label": "check 7",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_8",
+            "label": "check 8",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_9",
+            "label": "check 9",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_10",
+            "label": "check 10",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_11",
+            "label": "check 11",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_12",
+            "label": "check 12",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_13",
+            "label": "check 13",
+            "status": "PASS",
+            "source": "VERIFIER"
+          },
+          {
+            "code": "PASS_14",
+            "label": "check 14",
+            "status": "PASS",
+            "source": "VERIFIER"
+          }
+        ],
+        "verification_state": {
+          "code": "STATE",
+          "label": "NOT_VERIFIED",
+          "source": "VERIFIER"
+        }
+      },
+      "expected": {
+        "state": "BLOCKING_SIGNALS",
+        "anomalies": 2,
+        "missing_evidence": 1,
+        "failed_checks": 1,
+        "capability_escalations": 0,
+        "material_changes": 3,
+        "passed_checks": 14
+      }
+    }
+  ]
+}

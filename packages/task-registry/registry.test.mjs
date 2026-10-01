@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { EMPLOYEES, attachExecutionReceipt, attachRuntimeTask, createEmptyRegistry, createTask, importRegistry, recordApproval, updateTask, validateRegistry } from "./registry.mjs";
-import { WORKFORCE } from "../../lib/workforce.mjs";
+import { PORTABLE_WORKFORCE as WORKFORCE } from "../../lib/workforce.mjs";
 
 const clock = (() => {
   let n = 0;
@@ -63,11 +63,11 @@ test("VERIFIED requires an independent registry-approved reviewer and evidence",
   assert.equal(validateRegistry(registry), true);
 });
 
-test("Hermes staging records a real runtime reference and blocks manual verification", () => {
+test("runtime staging records an opaque provider reference and blocks manual verification", () => {
   let registry = oneTask();
   const id = registry.tasks[0].id;
-  registry = attachRuntimeTask(registry, id, { task_id: "t_123abc", assignee: "subagjo", state: "BLOCKED" }, clock, ids);
-  assert.equal(registry.tasks[0].execution_mode, "HERMES");
+  registry = attachRuntimeTask(registry, id, { provider_id: "hermes", runtime_ref: "hermes-kanban:t_123abc", assignee: "subagjo", state: "BLOCKED" }, clock, ids);
+  assert.equal(registry.tasks[0].execution_mode, "RUNTIME");
   assert.equal(registry.tasks[0].runtime_ref, "hermes-kanban:t_123abc");
   assert.equal(registry.tasks[0].lifecycle_status, "BLOCKED");
   assert.throws(() => updateTask(registry, id, {
@@ -80,7 +80,7 @@ test("Hermes staging records a real runtime reference and blocks manual verifica
 });
 
 
-test("Hermes staging supports every canonical employee", () => {
+test("runtime staging supports every canonical employee without provider-specific worker definitions", () => {
   assert.ok(EMPLOYEES.length >= 16);
   const employeeIds = EMPLOYEES.map((employee) => employee.id);
   for (const employee of employeeIds) {
@@ -90,8 +90,8 @@ test("Hermes staging supports every canonical employee", () => {
       requester: "the owner",
     }, clock, ids);
     const id = registry.tasks[0].id;
-    registry = attachRuntimeTask(registry, id, { task_id: "t_" + employee, assignee: employee, state: "BLOCKED" }, clock, ids);
-    assert.equal(registry.tasks[0].execution_mode, "HERMES", employee);
+    registry = attachRuntimeTask(registry, id, { provider_id: "hermes", runtime_ref: "hermes-kanban:t_" + employee, assignee: employee, state: "BLOCKED" }, clock, ids);
+    assert.equal(registry.tasks[0].execution_mode, "RUNTIME", employee);
     assert.equal(registry.tasks[0].lifecycle_status, "BLOCKED", employee);
   }
   for (const expected of ["maya","gugun","ratri","bimo","nara","dina","bambang","fikri","tari","caca"]) {
@@ -99,14 +99,14 @@ test("Hermes staging supports every canonical employee", () => {
   }
 });
 
-test("Hermes staging rejects mismatched or non-blocked runtime claims", () => {
+test("runtime staging rejects malformed provider, mismatched assignee, or non-blocked claims", () => {
   const registry = oneTask();
   const id = registry.tasks[0].id;
-  assert.throws(() => attachRuntimeTask(registry, id, { task_id: "t_bad", assignee: "siti", state: "BLOCKED" }, clock, ids), /tidak cocok/);
-  assert.throws(() => attachRuntimeTask(registry, id, { task_id: "t_bad", assignee: "subagjo", state: "RUNNING" }, clock, ids), /wajib di-stage sebagai BLOCKED/);
+  assert.throws(() => attachRuntimeTask(registry, id, { provider_id: "hermes", runtime_ref: "hermes-kanban:t_bad", assignee: "siti", state: "BLOCKED" }, clock, ids), /tidak cocok/);
+  assert.throws(() => attachRuntimeTask(registry, id, { provider_id: "hermes", runtime_ref: "hermes-kanban:t_bad", assignee: "subagjo", state: "RUNNING" }, clock, ids), /wajib di-stage sebagai BLOCKED/);
 });
 
-test("import rejects a forged Hermes task without its adapter event", () => {
+test("import migrates a legacy provider mode but rejects missing runtime staging evidence", () => {
   const registry = oneTask();
   const forged = structuredClone(registry);
   Object.assign(forged.tasks[0], { execution_mode: "HERMES", runtime_ref: "hermes-kanban:t_forged", runtime_state: "BLOCKED", lifecycle_status: "BLOCKED" });
@@ -324,5 +324,28 @@ test("registry import rejects duplicate execution receipt attachment refs", () =
   assert.throws(
     () => importRegistry(JSON.stringify(forged)),
     /replay terdeteksi/
+  );
+});
+
+test("approval policy stays fail-closed for arbitrary runtime providers", () => {
+  let registry = createTask(createEmptyRegistry(clock), {
+    title: "Provider-neutral high-impact task",
+    assignee_id: "subagjo",
+    requester: "the owner",
+    risk_class: "EXTERNAL_WRITE",
+  }, clock, ids);
+  const id = registry.tasks[0].id;
+  registry = attachRuntimeTask(registry, id, {
+    provider_id: "runtime-x",
+    runtime_ref: "runtime-x:job_42",
+    assignee: "subagjo",
+    state: "BLOCKED",
+  }, clock, ids);
+  assert.equal(registry.tasks[0].runtime_provider, "runtime-x");
+  assert.equal(registry.tasks[0].approval_required, true);
+  assert.equal(registry.tasks[0].approval_status, "PENDING");
+  assert.throws(
+    () => recordApproval(registry, id, { status: "APPROVED", actor: "owner" }, clock, ids),
+    /runtime-bound/
   );
 });

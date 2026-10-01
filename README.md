@@ -261,7 +261,23 @@ itu belum kemenangan.
 
 ## Current state
 
-Release bertag terbaru tetap **v0.2.0 — Public Preview**. Branch `main` sudah memuat baseline **v0.3 Real AI Workforce**, tetapi belum ada tag/release v0.3 terpisah.
+Release stable terbaru adalah **v0.4.0**. Workstream v0.5 saat ini masih berada di branch/PR pengembangan dan belum boleh dianggap sebagai release stabil sampai seluruh gate v0.5 selesai.
+
+**v0.5 release readiness: `BLOCKED` (1 blocker).** Canonical Hermes+Codex Siti reference case sudah mencapai `PORTABILITY_VERIFIED_FOR_REFERENCE_CASE`, LIVE_RUNTIME evidence growth sudah `INCREASED`, dan package candidate sudah `0.5.0`. Tinggal final promoted-`main` verify + manual release gate yang belum dijalankan. Sumber permanen: [v0.5 Release Readiness](docs/V0.5-RELEASE-READINESS.md) + [machine-readable ledger](config/v0.5-release-readiness.json). `npm run v0.5:readiness:require-ready` sengaja harus gagal sampai semuanya benar-benar beres.
+
+**Snapshot maturity v0.5 saat ini (candidate, bukan release stable):**
+
+| Dimension | State |
+| --- | --- |
+| Artifact | `candidate` |
+| Contract/API | `candidate` |
+| Runtime adapter | `candidate` |
+| Behavioral evidence | `evaluated-case` |
+| Real-world workflow | `collecting` |
+| Provider lifecycle | `partial` |
+
+Ini sengaja multidimensi: **stable artifact ≠ stable behavior**. Controlled live cases tidak otomatis berarti repeated behavior; real-task 1/20 juga tetap `collecting`. Sumber mesin: [evidence classification](config/evidence-classification.json) dan [maturity model](config/maturity-model.json); penjelasan: [Evidence Classification](docs/EVIDENCE-CLASSIFICATION.md) dan [Stability Model](docs/STABILITY-MODEL.md).
+
 
 v0.4 Modular Workforce sudah mencapai **stable-promotion scope**. Pada 30 September 2026 owner secara eksplisit menerima enam evidence gap yang masih terbuka sebagai deferred scope untuk v0.4.0; status `UNPROVEN`, `NOT_RUN`, dan `COLLECTING` tetap dipertahankan apa adanya dan tidak dipoles menjadi bukti selesai.
 
@@ -413,52 +429,66 @@ The workforce uses recreated/adapted workflow concepts with explicit provenance 
 **Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
 ## Install
 
-> **Release topology note:** the commands below use `main`. For reproducible v0.4.0 installs, prefer the `v0.4.0` tag once published; deferred evidence remains explicitly scoped in the release decision and is not implied complete by a stable tag.
+> **Stable means immutable here.** Starting with v0.5.0, the recommended installer resolves a tagged GitHub release, downloads a core release artifact, verifies `install-manifest.json` + SHA-256 checksums, and only then unpacks it. Stable mode never falls back to mutable `main`.
 
-### Hermes-first — recommended
+### Hermes-first — recommended stable path
 
-This is the path closest to the author's real setup. Hermes is the reference runtime; nyobakantorai adds the visual office, sixteen role profiles, role skills, human approval, evidence rules, deterministic routing, and a conservative runtime view around it.
+Hermes remains the reference runtime. The installer can reuse an existing Hermes installation or, only when you explicitly pass `WithHermes` / `--with-hermes`, invoke the official upstream installer.
 
 **Windows PowerShell**
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Start
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Start
 ```
 
 **Linux / macOS / WSL2**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --start
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --start
 ```
 
-**Want only part of the office?**
+The latest-release URL resolves the current stable release. The installer then verifies the immutable release artifact before installation.
+
+To pin an exact release, download that release's installer asset and pass the same version explicitly:
+
+```bash
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.0/install.sh | bash -s -- --version v0.5.0 --with-hermes
+```
+
+```powershell
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.0/install.ps1))) -Version v0.5.0 -WithHermes
+```
+
+### Install only part of the office
+
+The selector remains independent from the stable source channel.
 
 Windows:
 
 ```powershell
 # one worker
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "siti"
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "siti"
 
 # arbitrary subset
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "praroro,siti"
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "praroro,siti"
 
 # preset
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -WithHermes -Employees "growth"
+& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "growth"
 ```
 
 Linux / macOS / WSL2:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees siti
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees praroro,siti
-curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --with-hermes --employees growth
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees siti
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees praroro,siti
+curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees growth
 ```
 
 Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creative-community`, and `full`.
 
-Tagged releases also publish one ZIP per employee with SHA-256 checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
+Tagged releases also publish standalone employee ZIPs with their own checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
 
-The installer reuses Hermes when it already exists. Otherwise the explicit `WithHermes` flag invokes the official Nous Research Hermes installer. Bootstrap then safely upgrades existing nyobakantorai distributions with native Hermes profile update, installs missing workers, and creates/switches the `nyobakantorai` Kanban board.
+Every successful install writes `.nyobakantorai-install.json` with the install channel, version/ref, exact source commit, stable artifact checksum when applicable, integrity state, timestamp, and selected employees. See [docs/INSTALL-INTEGRITY.md](docs/INSTALL-INTEGRITY.md).
 
 It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
 
@@ -466,22 +496,29 @@ It never copies the author's API keys, provider credentials, billing configurati
 hermes setup --portal
 ```
 
-Then verify:
+### Mutable development path — explicit opt-in only
+
+`main` is no longer the stable default. Contributors who intentionally want mutable source must opt in.
+
+POSIX:
 
 ```bash
-hermes profile list
-hermes kanban boards show
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --channel development --ref main
 ```
 
-You should see the selected employees as Hermes profile distributions. The default selection is the full workforce.
+PowerShell:
 
-Full walkthrough: [docs/HERMES-FIRST-SETUP.md](docs/HERMES-FIRST-SETUP.md).
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -Channel development -Ref main
+```
+
+A stable integrity failure does **not** downgrade to this path.
 
 ### Core-only / contributor path
 
-The office can also run without Hermes. This is useful for reviewing the UI, state machine, approval model, or developing adapters.
+The office can run without Hermes. Runtime requires **Node.js 20+**. Python 3.10+ and PyYAML are needed only for contributor/release utilities.
 
-Runtime requires **Node.js 20+**. Python 3.10+ and PyYAML are needed only for contributor/release utilities.
+For a source checkout used for development:
 
 ```bash
 git clone https://github.com/exxrawrrr/nyobakantorai.git
@@ -501,7 +538,7 @@ python -m pip install -r requirements-dev.txt
 npm run ready
 ```
 
-The root package keeps `"private": true` intentionally to prevent accidental publication to npm; it does **not** make the GitHub repository private.
+The root package keeps `"private": true` intentionally to prevent accidental npm publication; it does **not** make the GitHub repository private.
 
 ## Hermes runtime configuration
 
@@ -530,7 +567,7 @@ No secret is required by the repository itself.
 | `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
 | `agents/` | Registry-derived public SOUL/profile definitions |
 | `hermes-profiles/` | Native Hermes profile distributions generated for the workforce |
-| `skills/hermes-custom/` | Reusable portable skills |
+| `skills/canonical/` | Reusable portable skills |
 | `operations/taskctl/` | Blocked owner-controlled Hermes task intake |
 | `operations/handoff/` | Manual handoff, receipts, and source-evidence gates |
 | `operations/workflow/` | Deterministic routing preview and QA request flow |
@@ -606,6 +643,8 @@ The CI workflow runs the same verification on Linux and Windows.
 
 **v0.4.0 stable-promotion scope — owner authorization recorded 2026-09-30. The six deferred evidence classes remain explicit; a stable tag is valid only after final `main` verify + manual release-gate succeed.**
 
+v0.5 also carries an executable [complexity budget](config/complexity-budget.json): 12 required subsystems have explicit delete-test decisions. Current delete-test result is **11 KEEP / 1 MERGE**; Chat 19 executed that MERGE by folding the internal `deferred-evidence` module/tests into `release-claims` while preserving the historical v0.4 ledger and docs unchanged. See [Complexity Budget](docs/COMPLEXITY-BUDGET.md).
+
 See:
 
 - [ROADMAP.md](ROADMAP.md)
@@ -625,6 +664,7 @@ See:
 - [docs/RUNTIME-ADAPTER-SPEC.md](docs/RUNTIME-ADAPTER-SPEC.md)
 - [docs/APPROVAL-MODEL.md](docs/APPROVAL-MODEL.md)
 - [docs/DEMO.md](docs/DEMO.md)
+- [docs/V0.5-RELEASE-READINESS.md](docs/V0.5-RELEASE-READINESS.md)
 - [docs/RELEASE-CHECKLIST.md](docs/RELEASE-CHECKLIST.md)
 - [docs/PUBLICATION-RUNBOOK.md](docs/PUBLICATION-RUNBOOK.md)
 - [docs/THREAT-MODEL.md](docs/THREAT-MODEL.md)

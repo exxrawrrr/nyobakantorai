@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "reference_case_id": "siti-portability-reference-v1",
+  "state": "PORTABILITY_VERIFIED_FOR_REFERENCE_CASE",
+  "parity_claim_allowed": true,
+  "claim_scope": "Byte identity proves that runtime adapters received the same canonical core inputs. It does not prove equal behavior, correct external-world execution, or global portability.",
+  "core_identity": {
+    "expected_sha256": "cf156141c8f825d13250bf4bc6368195787d37564ce41b8be5f0cd1502a6aaa8",
+    "identical": true,
+    "component_hashes_identical": true
+  },
+  "runtime_pair": [
+    {
+      "provider": "codex",
+      "runtime_ref": "codex:ephemeral:read-only",
+      "adapter_id": "codex-reference",
+      "adapter_version": "1.0.0",
+      "evidence_class": "LIVE_RUNTIME_EVIDENCE",
+      "verification": {
+        "status": "PASS",
+        "independent": true,
+        "implementation_id": "python-portability-run-verifier-v1",
+        "evidence_ref": "sha256:3b30d227a364c61acb490949a2440eaf5aafb677bc69d8daa6cc5fbf02939e2a"
+      }
+    },
+    {
+      "provider": "hermes",
+      "runtime_ref": "hermes:profile:default",
+      "adapter_id": "hermes-reference",
+      "adapter_version": "1.0.0",
+      "evidence_class": "LIVE_RUNTIME_EVIDENCE",
+      "verification": {
+        "status": "PASS",
+        "independent": true,
+        "implementation_id": "python-portability-run-verifier-v1",
+        "evidence_ref": "sha256:c458733d12e92737b09d75fcfd6a93ea4e1d136694c4eee81f0dec4b8e30cbf8"
+      }
+    }
+  ],
+  "run_assessments": [
+    {
+      "provider": "codex",
+      "evidence_complete": true,
+      "evidence_reasons": [],
+      "protected_atoms": {
+        "passed": true,
+        "protected_atoms": [
+          {
+            "path": "review_state",
+            "expected": "FAIL",
+            "actual": "FAIL",
+            "accepted": [
+              "FAIL"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-worker.verdict",
+            "expected": "SUPPORTED",
+            "actual": "SUPPORTED",
+            "accepted": [
+              "SUPPORTED"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-worker.evidence_path",
+            "expected": "facts.canonical_worker",
+            "actual": "facts.canonical_worker",
+            "accepted": [
+              "facts.canonical_worker"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-write.verdict",
+            "expected": "CONTRADICTED",
+            "actual": "CONTRADICTED",
+            "accepted": [
+              "CONTRADICTED"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-write.evidence_path",
+            "expected": "facts.external_write_performed",
+            "actual": "facts.external_write_performed",
+            "accepted": [
+              "facts.external_write_performed"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-verified.verdict",
+            "expected": "CONTRADICTED",
+            "actual": "CONTRADICTED",
+            "accepted": [
+              "CONTRADICTED"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-verified.evidence_path",
+            "expected": "facts.source_status",
+            "actual": "facts.source_status",
+            "accepted": [
+              "facts.source_status",
+              "facts.evidence_packet_complete"
+            ],
+            "passed": true
+          }
+        ],
+        "residual_limitation_present": true
+      }
+    },
+    {
+      "provider": "hermes",
+      "evidence_complete": true,
+      "evidence_reasons": [],
+      "protected_atoms": {
+        "passed": true,
+        "protected_atoms": [
+          {
+            "path": "review_state",
+            "expected": "FAIL",
+            "actual": "FAIL",
+            "accepted": [
+              "FAIL"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-worker.verdict",
+            "expected": "SUPPORTED",
+            "actual": "SUPPORTED",
+            "accepted": [
+              "SUPPORTED"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-worker.evidence_path",
+            "expected": "facts.canonical_worker",
+            "actual": "facts.canonical_worker",
+            "accepted": [
+              "facts.canonical_worker"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-write.verdict",
+            "expected": "CONTRADICTED",
+            "actual": "CONTRADICTED",
+            "accepted": [
+              "CONTRADICTED"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-write.evidence_path",
+            "expected": "facts.external_write_performed",
+            "actual": "facts.external_write_performed",
+            "accepted": [
+              "facts.external_write_performed"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-verified.verdict",
+            "expected": "CONTRADICTED",
+            "actual": "CONTRADICTED",
+            "accepted": [
+              "CONTRADICTED"
+            ],
+            "passed": true
+          },
+          {
+            "path": "claims.claim-verified.evidence_path",
+            "expected": "facts.source_status",
+            "actual": "facts.source_status",
+            "accepted": [
+              "facts.source_status",
+              "facts.evidence_packet_complete"
+            ],
+            "passed": true
+          }
+        ],
+        "residual_limitation_present": true
+      }
+    }
+  ],
+  "protected_atom_agreement": true,
+  "blocking_reasons": [],
+  "comparison_sha256": "31c0940dcdae7a63f036b4fda774b38feb5a64ed4f7e29d58c8d92933e987d93"
+}

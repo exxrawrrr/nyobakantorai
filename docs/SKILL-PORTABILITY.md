@@ -1,6 +1,6 @@
 # Skill portability
 
-nyobakantorai keeps Hermes as the reference runtime, but the canonical skills under `skills/hermes-custom/*/SKILL.md` now follow the **Agent Skills core SKILL.md format** reviewed from the pinned `agentskills/agentskills` specification.
+nyobakantorai keeps Hermes as the reference runtime, but the canonical skills under `skills/canonical/*/SKILL.md` now follow the **Agent Skills core SKILL.md format** reviewed from the pinned `agentskills/agentskills` specification.
 
 ## What is verified
 

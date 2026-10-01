@@ -3,7 +3,8 @@ import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 const root = new URL(".", import.meta.url);
 const src = new URL("src/", root);
 const dist = new URL("dist/", root);
-const files = ["index.html", "styles.css", "app.mjs", "persona-ops.mjs", "scene.mjs", "worker-bubbles.mjs", "favicon.svg", "asset-manifest.json", "workforce.generated.css"];
+const files = ["index.html", "styles.css", "app.mjs", "approval-summary.mjs", "persona-ops.mjs", "scene.mjs", "worker-bubbles.mjs", "favicon.svg", "asset-manifest.json", "workforce.generated.css"];
+const rootFiles = ["registry.mjs", "reconcile.mjs", "workforce.mjs", "workforce-view.mjs"];
 
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
@@ -24,7 +25,7 @@ for (const asset of manifest.assets) {
 }
 
 for (const file of files) await cp(new URL(file, src), new URL(file, dist));
-for (const file of ["registry.mjs", "reconcile.mjs", "workforce.mjs"]) await cp(new URL(file, root), new URL(file, dist));
+for (const file of rootFiles) await cp(new URL(file, root), new URL(file, dist));
 await cp(new URL("assets/", src), new URL("assets/", dist), { recursive: true });
 
 await writeFile(
@@ -37,4 +38,4 @@ await writeFile(
     license: manifest.license
   }, null, 2)
 );
-console.log(`Built ${files.length + 3} files plus ${manifest.assets.length} owner-authored PNG character sprites.`);
+console.log(`Built ${files.length + rootFiles.length} files plus ${manifest.assets.length} owner-authored PNG character sprites.`);

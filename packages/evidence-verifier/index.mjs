@@ -44,6 +44,9 @@ export function verifyEvidencePacket({ expected = {}, report = {}, evidence = {}
   const receiptPublicKeys = expected.receipt_public_keys && typeof expected.receipt_public_keys === "object" && !Array.isArray(expected.receipt_public_keys)
     ? expected.receipt_public_keys
     : {};
+  const receiptTrustRegistry = expected.receipt_trust_registry && typeof expected.receipt_trust_registry === "object" && !Array.isArray(expected.receipt_trust_registry)
+    ? expected.receipt_trust_registry
+    : null;
   const requiredReceiptStates = asList(expected.required_receipt_result_states);
   const receiptMaxAgeMs = Object.prototype.hasOwnProperty.call(expected, "max_execution_receipt_age_ms")
     ? expected.max_execution_receipt_age_ms
@@ -54,6 +57,7 @@ export function verifyEvidencePacket({ expected = {}, report = {}, evidence = {}
   const signedReceiptChecks = signedReceipts.map((envelope) => {
     const check = verifyExecutionReceipt(envelope, {
       publicKeys:receiptPublicKeys,
+      trustRegistry:receiptTrustRegistry,
       now,
       maxReceiptAgeMs:receiptMaxAgeMs,
       consumedReceiptRefs,

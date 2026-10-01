@@ -200,3 +200,13 @@ Tests cover:
 - append-only task-registry attachment.
 
 The deterministic adversarial benchmark also contains a signed-receipt matrix covering valid, tampered, replayed, wrong task, wrong employee, wrong capability, stale, and unauthorized-runtime cases. Its release target remains zero false successes.
+
+## Public trust registry and lifecycle
+
+v0.5 adds `config/receipt-trust-registry.json` and `schemas/receipt-trust-registry.schema.json`.
+
+When `receipt_trust_registry` / `trustRegistry` is supplied, it is authoritative over the legacy public-key map. Key status, receipt-time validity, runtime scope, and revocation policy are checked before a receipt can be accepted.
+
+See `docs/SIGNING-KEY-LIFECYCLE.md` for ACTIVE/RETIRED/REVOKED semantics, rotation, compromise response, and historical receipt policy.
+
+The canonical repository registry currently contains zero production trust anchors. Private signing keys must never be committed.

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "nyobakantorai v0.5 release readiness",
+  "type": "object",
+  "required": [
+    "schema",
+    "candidate",
+    "decision",
+    "release_blockers",
+    "promotion",
+    "nonblocking_open_evidence",
+    "durable_requirement_surfaces",
+    "retired_temporary_prd",
+    "claim_language"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "candidate": {
+      "const": "v0.5.0"
+    },
+    "decision": {
+      "enum": [
+        "BLOCKED",
+        "READY"
+      ]
+    },
+    "release_blockers": {
+      "type": "array"
+    },
+    "promotion": {
+      "type": "object"
+    },
+    "nonblocking_open_evidence": {
+      "type": "array"
+    },
+    "durable_requirement_surfaces": {
+      "type": "array",
+      "minItems": 1
+    },
+    "retired_temporary_prd": {
+      "type": "object"
+    },
+    "claim_language": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

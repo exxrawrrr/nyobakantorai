@@ -52,17 +52,29 @@ test("task/reconciliation boundaries also consume the canonical workforce", asyn
 });
 
 
-test("server routes Hermes through the runtime adapter boundary", async () => {
+test("server depends on the runtime composition boundary instead of Hermes implementation", async () => {
   const server = await read("server.mjs");
+  const composition = await read("runtime-composition.mjs");
   const adapter = await read("hermes-runtime-adapter.mjs");
-  assert.match(server, /createHermesRuntimeAdapter/);
-  assert.match(server, /hermesRuntime\.runtimeSnapshot/);
+  assert.match(server, /createConfiguredRuntimeProvider/);
+  assert.match(server, /runtimeProvider\.runtimeSnapshot/);
+  assert.doesNotMatch(server, /createHermesRuntimeAdapter|resolveHermesHome|HERMES_EXE|HERMES_HOME/);
   assert.doesNotMatch(server, /node:child_process/);
-  assert.doesNotMatch(server, /\bexecFile\b/);
-  assert.doesNotMatch(server, /\brunHermes\b/);
+  assert.match(composition, /createHermesRuntimeAdapter/);
+  assert.match(composition, /provider_id:"hermes"/);
   assert.match(adapter, /defineRuntimeAdapter/);
   assert.match(adapter, /snapshotRuntime/);
   assert.match(adapter, /shell:false/);
   assert.match(adapter, /write:false/);
   assert.match(adapter, /dispatch:false/);
+});
+
+
+test("browser build ships every module imported by the approval/workforce UI boundary", async () => {
+  const app = await read("src/app.mjs");
+  const build = await read("build.mjs");
+  assert.match(app,/from ".\/workforce-view\.mjs"/);
+  assert.match(app,/from ".\/approval-summary\.mjs"/);
+  assert.match(build,/rootFiles = \["registry\.mjs", "reconcile\.mjs", "workforce\.mjs", "workforce-view\.mjs"\]/);
+  assert.match(build,/approval-summary\.mjs/);
 });

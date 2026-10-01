@@ -13,7 +13,7 @@ test("all public employees have complete registry-driven operating styles", asyn
     const p=EMPLOYEE_PLAYBOOK[employee.id];
     for (const field of ["voice","thinking","workflow","toolState"]) assert.ok(typeof p[field]==="string"&&p[field].length>20,employee.id+":"+field);
     assert.deepEqual(p.skillNames,employee.skills,employee.id);
-    for(const skill of p.skillNames){const path=new URL(`../../skills/hermes-custom/${skill}/SKILL.md`,import.meta.url);await access(path);const doc=await readFile(path,"utf8");assert.match(doc,new RegExp(`name: ${skill}`));}
+    for(const skill of p.skillNames){const path=new URL(`../../skills/canonical/${skill}/SKILL.md`,import.meta.url);await access(path);const doc=await readFile(path,"utf8");assert.match(doc,new RegExp(`name: ${skill}`));}
   }
   assert.match(PERSONA_SNAPSHOT,/canonical workforce/);
 });
