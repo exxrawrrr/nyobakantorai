@@ -116,6 +116,12 @@ Planning source of truth:
 
 - [Live Workforce Master PRD](docs/LIVE-WORKFORCE-MASTER-PRD.md)
 - [Live Workforce 30-Chat Execution Plan](docs/LIVE-WORKFORCE-30-CHAT-PLAN.md)
+- [v0.6 Architecture Lock](docs/V0.6-ARCHITECTURE-LOCK.md)
+- [ADR-0001 Live Workforce Domain Ownership](docs/ADR-0001-LIVE-WORKFORCE-DOMAIN-OWNERSHIP.md)
+
+Execution progress:
+
+- [x] CHAT 01 — baseline audit + architecture lock; canonical task domain stays `packages/task-registry`, Mission becomes an orchestration layer, existing approval/evidence/runtime/capability boundaries are reused.
 
 Planned release sequence:
 
