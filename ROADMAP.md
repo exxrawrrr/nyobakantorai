@@ -102,11 +102,11 @@
 - [x] final convergence moved surviving requirements into permanent readiness/roadmap surfaces and retired the temporary implementation PRD
 - [ ] real-world baseline remains `COLLECTING 1/20` — do not claim demonstrated
 - [ ] provider lifecycle remains `partial` — do not claim validated
-- [x] bump package/release metadata to `0.5.0`
+- [x] bump package/release metadata to `0.5.1` after preserving the failed immutable `v0.5.0` publication attempt
 - [ ] explicit readiness ledger reaches `READY`
 - [ ] promote reviewed candidate through PR to `main`
 - [ ] exact promoted-`main` Linux/Windows/minimum-version verify + manual release gate
-- [ ] create v0.5.0 tag/release only after the final gate passes
+- [ ] publish `v0.5.1` only after PR CI, exact-main verify, manual release-gate, require-ready, and tagged asset verification all pass
 
 Permanent readiness source: `docs/V0.5-RELEASE-READINESS.md` + `config/v0.5-release-readiness.json`.
 
