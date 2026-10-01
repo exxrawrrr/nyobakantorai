@@ -28,6 +28,10 @@ Every implementation chat follows the same operating contract:
 
 ### CHAT 01 — v0.6 Baseline Audit + Architecture Lock
 
+**Status: ✅ COMPLETED — 2026-10-01.**  
+Architecture review: `docs/V0.6-ARCHITECTURE-LOCK.md`  
+ADR: `docs/ADR-0001-LIVE-WORKFORCE-DOMAIN-OWNERSHIP.md`
+
 Goal: freeze what v0.6 reuses versus adds.
 
 Deliverables:

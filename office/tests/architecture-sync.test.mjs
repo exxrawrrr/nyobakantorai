@@ -78,3 +78,12 @@ test("browser build ships every module imported by the approval/workforce UI bou
   assert.match(build,/rootFiles = \["registry\.mjs", "reconcile\.mjs", "workforce\.mjs", "workforce-view\.mjs"\]/);
   assert.match(build,/approval-summary\.mjs/);
 });
+
+test("v0.6 architecture points to the accepted ownership lock and canonical task domain", async () => {
+  const spec = await read("docs/ARCHITECTURE.md");
+  assert.match(spec, /V0\.6-ARCHITECTURE-LOCK\.md/);
+  assert.match(spec, /ADR-0001-LIVE-WORKFORCE-DOMAIN-OWNERSHIP\.md/);
+  assert.match(spec, /canonical future task-domain core is `packages\/task-registry\/`/i);
+  assert.match(spec, /must not introduce a third task lifecycle/i);
+});
+

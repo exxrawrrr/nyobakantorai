@@ -776,6 +776,8 @@ No agent may grant itself new tools, permissions, credentials, or autonomy.
 
 ## 15. System architecture target
 
+**CHAT 01 architecture lock:** [V0.6 Architecture Lock](V0.6-ARCHITECTURE-LOCK.md) and [ADR-0001 Live Workforce Domain Ownership](ADR-0001-LIVE-WORKFORCE-DOMAIN-OWNERSHIP.md) are authoritative for implementation boundaries. The module list below is conceptual; it must not be interpreted as permission to create duplicate task, approval, capability, runtime, or evidence packages.
+
 Proposed logical modules:
 
 ```text
