@@ -2,26 +2,22 @@
   "schema": 1,
   "candidate": "v0.5.0",
   "observed_on": "2026-10-01",
-  "decision": "BLOCKED",
-  "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. A green CI run may validate a truthful BLOCKED decision; only the explicit require-ready command may authorize the next release step.",
-  "release_blockers": [
-    {
-      "id": "final-main-release-gate",
-      "category": "PROMOTION",
-      "status": "PENDING",
-      "required_state": "PASS",
-      "current_state": "PENDING",
-      "canonical_source": "docs/RELEASE-CHECKLIST.md",
-      "reason": "The candidate has not been promoted to main and the exact promoted main commit has not passed final cross-platform verification plus the manual release gate.",
-      "safe_next_action": "After blockers are resolved and reviewed, merge through the explicit PR path, rerun verify on exact main, run the manual release gate, then create the stable tag/release."
-    }
-  ],
+  "decision": "READY",
+  "policy": "Release readiness is computed from canonical evidence, package/version state, and final promotion gates. Final stable publication remains prohibited until the exact release commit has also passed verification and the manual release-gate.",
+  "release_blockers": [],
   "promotion": {
     "target_branch": "main",
-    "final_main_verify": "PENDING",
-    "manual_release_gate": "PENDING",
-    "stable_tag": "PENDING",
-    "merge_authorized": false
+    "final_main_verify": "PASS",
+    "manual_release_gate": "PASS",
+    "stable_tag": "AUTHORIZED",
+    "merge_authorized": true,
+    "verified_main_sha": "cb05853b17c9eae628957a43fe0ce0227d1668d5",
+    "verify_run_id": 36808678040,
+    "verify_run_number": 571,
+    "verify_conclusion": "success",
+    "manual_release_gate_run_id": 36808904291,
+    "manual_release_gate_conclusion": "success",
+    "attested_on": "2026-10-01"
   },
   "nonblocking_open_evidence": [
     {
@@ -96,6 +92,12 @@
       "state": "INCREASED",
       "source": "config/evidence-classification.json",
       "scope": "canonical Hermes+Codex bounded reference case"
+    },
+    {
+      "id": "final-main-release-gate",
+      "state": "PASS",
+      "source": "GitHub Actions verify #571 + manual release-gate run 36808904291",
+      "scope": "promoted main commit cb05853b17c9eae628957a43fe0ce0227d1668d5"
     }
   ]
 }
