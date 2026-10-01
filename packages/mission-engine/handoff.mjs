@@ -68,8 +68,6 @@ export function normalizeHandoffEnvelope(input = {}) {
   assert(Number.isInteger(timeoutMs) && timeoutMs >= 1 && timeoutMs <= 45_000, "Handoff timeout_ms must be 1..45000.");
 
   const source = normalizeSource(input.source);
-  assert(!source.employee_ids.includes(destination), "Handoff destination cannot be listed as its own upstream source employee.");
-
   return Object.freeze({
     schema:HANDOFF_ENVELOPE_SCHEMA,
     handoff_id:handoffId,
