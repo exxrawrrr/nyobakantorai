@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "id": "v0-6-live-sandbox",
+  "note": "Application-level live sandbox guard. This is not OS/container isolation. Provider authentication stays runtime-managed and must never be copied into task payloads.",
+  "allowed_risk_classes": [
+    "READ_ONLY"
+  ],
+  "max_duration_ms": 45000,
+  "max_tool_calls": 0,
+  "max_input_tokens": 12000,
+  "max_output_tokens": 4000,
+  "max_total_tokens": 16000,
+  "max_cost_usd": null,
+  "allowed_tool_ids": [],
+  "allowed_network_hosts": [],
+  "allowed_runtime_providers": [
+    "codex",
+    "hermes"
+  ],
+  "allow_fallback": false,
+  "require_temporary_workspace": true,
+  "forbid_external_write": true,
+  "forbid_credentials_exposure": true
+}
