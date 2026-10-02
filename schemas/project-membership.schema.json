@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Project Membership",
+  "type": "object",
+  "required": ["schema","membership_id","workspace_id","project_id","user_id","role","status","joined_at","membership_ref"],
+  "properties": {
+    "schema": {"const": 1},
+    "membership_id": {"type": "string"},
+    "workspace_id": {"type": "string", "pattern": "^ws-"},
+    "project_id": {"type": "string", "minLength": 1},
+    "user_id": {"type": "string", "pattern": "^user-"},
+    "role": {"enum": ["OWNER","ADMIN","APPROVER","MEMBER","VIEWER"]},
+    "status": {"enum": ["ACTIVE","SUSPENDED","REVOKED"]},
+    "joined_at": {"type": "string", "format": "date-time"},
+    "membership_ref": {"type": "string", "pattern": "^project-membership:sha256:[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}
