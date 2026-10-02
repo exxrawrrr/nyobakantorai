@@ -55,6 +55,10 @@ jobs:
         if: github.ref == 'refs/tags/v0.8.0'
         run: npm run v0.8:readiness:require-ready
 
+      - name: Enforce v0.8.1 Mission Control readiness before publication
+        if: github.ref == 'refs/tags/v0.8.1'
+        run: npm run v0.8.1:readiness:require-ready
+
       - run: npm run release:check
 
       - name: Verify and build reproducible employee packs

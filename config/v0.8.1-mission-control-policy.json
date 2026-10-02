@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "id": "v0-8-1-mission-control",
+  "queue_strategy": "FAIR_EMPLOYEE_ROUND_ROBIN",
+  "max_parallel_tasks": 6,
+  "max_parallel_per_employee": 2,
+  "max_batches_per_slice": 12,
+  "max_wall_clock_ms": 900000,
+  "max_total_attempts": 48,
+  "checkpoint_on_pause": true,
+  "adaptive": {
+    "enabled": true,
+    "max_new_tasks": 4,
+    "max_new_edges": 8,
+    "owner_review_required": true,
+    "automatic_apply_allowed": false,
+    "authority_widening_allowed": false
+  },
+  "recovery": {
+    "checkpoint_reroute_requires_recovery_policy": true,
+    "max_provider_reroutes_per_task": 2
+  },
+  "stop_conditions": {
+    "owner_cancel": true,
+    "cost_governor_stop": true,
+    "attempt_ceiling_escalates": true
+  }
+}

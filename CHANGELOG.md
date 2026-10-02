@@ -1,3 +1,12 @@
+## [0.8.1] - Unreleased — Mission Control contracts verified, release blocked
+
+- Added bounded long-running Mission Control with safe `PAUSED` batch boundaries, fair employee queue balancing, checkpoint resume, explicit slice/escalation limits, and existing-policy-bound provider rerouting.
+- Added evidence-bound adaptive Mission-plan proposals that require owner review, never auto-apply, and cannot widen capability authority.
+- Added application-level sandbox hardening for filesystem, ephemeral browser profiles, allowlisted network access, resource ceilings, and reference-only credentials; no OS/container isolation claim is made.
+- Added fail-closed v0.8.1 readiness evaluation, adversarial tests, CLI, release-manifest snapshot, and tagged-release guard.
+- Static Mission Control, hardening, and pause/recovery contracts PASS; live long-running Mission and hardened-sandbox observations remain unproven, and v0.8.0 remains a blocked prerequisite.
+- Package/stable release remains v0.5.1; no v0.8.1 tag or GitHub Release is authorized.
+
 ## [0.8.0] - Unreleased — Lead Intelligence contracts verified, release blocked
 
 - Added the governed DISCOVER -> ENRICH -> SCORE -> VERIFY -> LEARN prospecting loop with evidence-bound, owner-reviewed adaptive query proposals.

@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "id": "v0-8-1-hardened-sandbox",
+  "filesystem": {
+    "mode": "TEMP_WORKSPACE_ONLY",
+    "production_repo_read_only": true,
+    "host_home_access_allowed": false
+  },
+  "browser": {
+    "mode": "EPHEMERAL_PROFILE_ONLY",
+    "user_profile_reuse_allowed": false,
+    "credential_store_access_allowed": false
+  },
+  "network": {
+    "mode": "ALLOWLIST_ONLY",
+    "allowed_hosts": ["api.example.com"],
+    "max_hosts": 8,
+    "dns_rebinding_protection_required": true
+  },
+  "resources": {
+    "max_processes": 8,
+    "max_workspace_bytes": 268435456
+  },
+  "credentials": {
+    "delivery": "REFERENCE_ONLY",
+    "task_payload_values_allowed": false,
+    "environment_secret_injection_allowed": false
+  },
+  "claim_boundary": {
+    "application_level_guard": true,
+    "os_container_isolation": false
+  }
+}

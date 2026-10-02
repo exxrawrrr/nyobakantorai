@@ -183,11 +183,15 @@ export async function executeMissionPlan(planInput, {
   recovery = null,
   resolveRecoveryRuntime = null,
   shouldCancel = () => false,
+  shouldPause = () => false,
+  selectRunnableBatch = null,
 } = {}) {
   const plan = normalizeMissionPlan(planInput);
   assert(typeof resolveRuntime === "function", "Mission orchestrator requires resolveRuntime().");
   assert(Number.isInteger(maxConcurrency) && maxConcurrency >= 1 && maxConcurrency <= 8, "maxConcurrency must be 1..8.");
   assert(typeof shouldCancel === "function", "Mission orchestrator shouldCancel must be a function.");
+  assert(typeof shouldPause === "function", "Mission orchestrator shouldPause must be a function.");
+  if (selectRunnableBatch != null) assert(typeof selectRunnableBatch === "function", "selectRunnableBatch must be a function or null.");
   if (receiptRefFactory != null) assert(typeof receiptRefFactory === "function", "receiptRefFactory must be a function or null.");
   if (buildVerificationRequest != null) assert(typeof buildVerificationRequest === "function", "buildVerificationRequest must be a function or null.");
   if (costGovernor != null) {
@@ -261,18 +265,27 @@ export async function executeMissionPlan(planInput, {
     }
 
     mission = recoverySeed.mission;
-    mission = transitionMission(mission, "RETRYING", { clock });
-    events.push(event("MISSION_RETRYING", clock, {
-      mission_id:mission.mission_id,
-      checkpoint_ref:recoverySeed.checkpoint_ref,
-      recovery_cycle:recoverySeed.recovery_cycle,
-    }));
-    mission = transitionMission(mission, "RECOVERED", { clock });
-    events.push(event("MISSION_RECOVERED", clock, {
-      mission_id:mission.mission_id,
-      checkpoint_ref:recoverySeed.checkpoint_ref,
-      recovery_cycle:recoverySeed.recovery_cycle,
-    }));
+    if (recoverySeed.resume_kind === "PAUSE_RESUME") {
+      mission = transitionMission(mission, "READY", { clock });
+      events.push(event("MISSION_RESUMED_FROM_CHECKPOINT", clock, {
+        mission_id:mission.mission_id,
+        checkpoint_ref:recoverySeed.checkpoint_ref,
+        recovery_cycle:recoverySeed.recovery_cycle,
+      }));
+    } else {
+      mission = transitionMission(mission, "RETRYING", { clock });
+      events.push(event("MISSION_RETRYING", clock, {
+        mission_id:mission.mission_id,
+        checkpoint_ref:recoverySeed.checkpoint_ref,
+        recovery_cycle:recoverySeed.recovery_cycle,
+      }));
+      mission = transitionMission(mission, "RECOVERED", { clock });
+      events.push(event("MISSION_RECOVERED", clock, {
+        mission_id:mission.mission_id,
+        checkpoint_ref:recoverySeed.checkpoint_ref,
+        recovery_cycle:recoverySeed.recovery_cycle,
+      }));
+    }
   }
 
   const hasImmediatelyRunnable = plan.graph.task_ids.some((taskId) => {
@@ -303,6 +316,8 @@ export async function executeMissionPlan(planInput, {
       cost_snapshot:costGovernor == null ? null : costGovernor.snapshot(),
       events:Object.freeze(events),
       cancelled:false,
+      paused:false,
+      pause_reason:null,
       max_concurrency:maxConcurrency,
     });
   } else {
@@ -310,6 +325,8 @@ export async function executeMissionPlan(planInput, {
   }
 
   let cancelRequested = false;
+  let pauseRequested = false;
+  let pauseReason = null;
 
   async function executeTask(taskId) {
     const current = taskById.get(taskId);
@@ -739,6 +756,29 @@ export async function executeMissionPlan(planInput, {
       break;
     }
 
+    const pauseDecision = await shouldPause(Object.freeze({
+      mission,
+      tasks:Object.freeze(plan.graph.task_ids.map((id) => taskById.get(id))),
+      attempts:Object.freeze([...attempts]),
+      events:Object.freeze([...events]),
+    }));
+    if (pauseDecision) {
+      pauseRequested = true;
+      pauseReason = typeof pauseDecision === "string"
+        ? Object.freeze({ reason:clean(pauseDecision,1000), detail:null })
+        : Object.freeze({
+            reason:clean(pauseDecision.action || pauseDecision.reason || "PAUSE_REQUESTED",160),
+            detail:structuredClone(pauseDecision),
+          });
+      mission = transitionMission(mission, "PAUSED", { clock });
+      events.push(event("MISSION_PAUSED", clock, {
+        mission_id:mission.mission_id,
+        reason:pauseReason.reason,
+        detail:pauseReason.detail,
+      }));
+      break;
+    }
+
     const runnable = plan.graph.task_ids
       .filter((taskId) => ["READY","RECOVERED"].includes(taskById.get(taskId).state))
       .filter((taskId) => dependencies.get(taskId).every((id) => SUCCESS_STATES.has(taskById.get(id).state)))
@@ -746,7 +786,23 @@ export async function executeMissionPlan(planInput, {
 
     if (!runnable.length) break;
 
-    const batch = runnable.slice(0, maxConcurrency);
+    let batch;
+    if (selectRunnableBatch == null) {
+      batch = runnable.slice(0, maxConcurrency);
+    } else {
+      const selected = await selectRunnableBatch(Object.freeze({
+        mission,
+        runnable_task_ids:Object.freeze([...runnable]),
+        tasks:Object.freeze(plan.graph.task_ids.map((id) => taskById.get(id))),
+        attempts:Object.freeze([...attempts]),
+        max_concurrency:maxConcurrency,
+      }));
+      assert(Array.isArray(selected), "selectRunnableBatch must return an array of task IDs.");
+      batch = selected.map((id)=>clean(id,160)).filter(Boolean);
+      assert(batch.length>=1&&batch.length<=maxConcurrency, "selectRunnableBatch must select 1..maxConcurrency tasks.");
+      assert(new Set(batch).size===batch.length, "selectRunnableBatch cannot return duplicate task IDs.");
+      assert(batch.every((id)=>runnable.includes(id)), "selectRunnableBatch may select only currently runnable tasks.");
+    }
     events.push(event("BATCH_STARTED", clock, {
       mission_id:mission.mission_id,
       task_ids:batch,
@@ -773,7 +829,7 @@ export async function executeMissionPlan(planInput, {
     ...verificationEvidence,
   ]);
 
-  let targetState = cancelRequested ? "CANCELLED" : missionTerminalState(finalTasks);
+  let targetState = cancelRequested ? "CANCELLED" : pauseRequested ? "PAUSED" : missionTerminalState(finalTasks);
   const finalCostSnapshot = costGovernor == null ? null : costGovernor.snapshot();
   const finalCostIssues = finalCostSnapshot == null
     ? []
@@ -847,10 +903,13 @@ export async function executeMissionPlan(planInput, {
     cost_snapshot:costGovernor == null ? null : costGovernor.snapshot(),
     events:Object.freeze(events),
     cancelled:cancelRequested,
+    paused:pauseRequested,
+    pause_reason:pauseReason,
     max_concurrency:maxConcurrency,
     recovery:recoverySeed == null ? null : Object.freeze({
       checkpoint_ref:recoverySeed.checkpoint_ref,
       recovery_cycle:recoverySeed.recovery_cycle,
+      resume_kind:recoverySeed.resume_kind,
       completed_task_ids:recoverySeed.completed_task_ids,
       retried_task_ids:Object.freeze(recoverySeed.recovery_tasks.map((item) => item.task_id)),
       dependency_reset_task_ids:recoverySeed.dependency_reset_task_ids,

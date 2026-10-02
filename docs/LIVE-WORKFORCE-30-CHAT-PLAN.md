@@ -583,6 +583,8 @@ Deliverables:
 
 Exit gate: long-running missions remain stoppable, inspectable, budgeted, recoverable, and permission-scoped.
 
+Closure: PASS for deterministic repository delivery and BLOCKED for publication. Mission Control remains a supervisory layer over the existing Mission Engine: queue selections are validated runnable subsets, safe pause occurs only between settled batches, PAUSED checkpoints resume without consuming failure-recovery cycles, and checkpoint reroutes reuse the existing recovery allowlist. Adaptive changes are evidence-bound proposals only, require owner review, cannot auto-apply, and cannot widen authority. The hardened sandbox profile is an application-level guard across filesystem/browser/network/resource/credential boundaries and explicitly does not claim OS/container isolation. Static v0.8.1 components PASS; live long-running Mission evidence, live hardened-sandbox observation, and the blocked v0.8.0 prerequisite keep readiness BLOCKED(3). Package remains 0.5.1; no v0.8.1 tag/release is authorized.
+
 ---
 
 ## Phase G — v0.9.0 Team Office
