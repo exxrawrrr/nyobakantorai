@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/geo-business-profile.schema.json",
+  "title": "nyobakantorai Provenance-Aware Business Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "cluster_ref",
+    "place_id",
+    "fields",
+    "source_refs",
+    "source_types",
+    "as_of",
+    "identity_strength",
+    "completeness_claim",
+    "raw_provider_content_persisted",
+    "profile_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "cluster_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "place_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fields": {
+      "type": "object"
+    },
+    "source_refs": {
+      "type": "array",
+      "uniqueItems": true
+    },
+    "source_types": {
+      "type": "array",
+      "uniqueItems": true
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "identity_strength": {
+      "enum": [
+        "STRONG",
+        "WEAK"
+      ]
+    },
+    "completeness_claim": {
+      "const": false
+    },
+    "raw_provider_content_persisted": {
+      "const": false
+    },
+    "profile_ref": {
+      "type": "string",
+      "pattern": "^geo-business-profile:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
