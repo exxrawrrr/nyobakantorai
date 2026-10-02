@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "candidate": "v1.0.0",
+  "real_world_workflow": {
+    "baseline_policy": "config/real-task-baseline.json",
+    "canonical_status": "benchmarks/real-tasks/collection-status-2026-09-29.json",
+    "require_publication_gate": true,
+    "max_false_successes": 0
+  },
+  "provider_lifecycle": {
+    "required_state": "validated"
+  },
+  "representative_recovery": {
+    "minimum_missions": 5,
+    "require_observed_failure": true,
+    "require_verified_recovery": true,
+    "require_budget_scope": true,
+    "require_permission_scope": true,
+    "max_false_successes": 0
+  },
+  "install_matrix": {
+    "required_modes": ["one_worker", "subset", "full", "lifecycle"],
+    "require_clean_source": true,
+    "require_isolated_python_env": true
+  },
+  "security": {
+    "application_sandbox_required": true,
+    "ephemeral_browser_required": true,
+    "reference_only_credentials_required": true,
+    "cross_workspace_delegation_forbidden": true,
+    "wildcard_resource_access_forbidden": true,
+    "hash_chained_audit_required": true,
+    "fresh_browser_recovery_required": true
+  },
+  "release_claim_audit": {
+    "evidence_inventory_must_validate": true,
+    "maturity_model_must_validate": true
+  },
+  "manual_gate": {
+    "required_only_after_technical_ready": true
+  },
+  "post_release": {
+    "tagged_asset_verification_required_after_tag": true,
+    "install_smoke_required_after_release": true
+  }
+}
