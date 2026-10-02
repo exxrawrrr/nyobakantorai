@@ -5,7 +5,7 @@ export const GEO_OPERATIONS=Object.freeze(["TEXT_SEARCH","NEARBY_SEARCH","PLACE_
 const clean=(v,max=4000)=>String(v??"").trim().slice(0,max);
 function assert(c,m){if(!c)throw new Error(m);}
 function stable(v){if(Array.isArray(v))return v.map(stable);if(v&&typeof v==="object")return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));return v;}
-function ref(kind,v){return kind+":sha256:"+createHash("sha256").update(JSON.stringify(stable(v))).digest("hex");}
+function ref(kind,v){return String(kind).replace(/:+$/,"")+":sha256:"+createHash("sha256").update(JSON.stringify(stable(v))).digest("hex");}
 function validTime(v){return typeof v==="string"&&v.trim()&&!Number.isNaN(Date.parse(v));}
 
 export function normalizeGeoPolicy(input={}){
@@ -255,6 +255,6 @@ export function buildDurableGeoEvidence(processed,{policy:policyInput}={}){
 export function assertProductionFieldMask(fields){
   assert(Array.isArray(fields)&&fields.length>0,"Production FieldMask required.");
   assert(!fields.includes("*"),"Production wildcard FieldMask is forbidden.");
-  assert(fields.every(x=>clean(x,500)&&!/s/.test(x)),"FieldMask entries must be explicit and contain no spaces.");
+  assert(fields.every(x=>Boolean(clean(x,500))&&!/\s/.test(x)),"FieldMask entries must be explicit and contain no spaces.");
   return true;
 }
