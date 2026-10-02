@@ -21,10 +21,17 @@ import {
   validateSharedAuditLog,
 } from "./index.mjs";
 import { createApprovalRequest } from "../scheduler-approval-center/index.mjs";
+import {
+  createConnectorConnection,
+  transitionConnectorConnection,
+  createConnectorGrant,
+  authorizeConnectorAction,
+} from "../connector-center/index.mjs";
 import { createProjectMemoryRecord, promoteProjectMemory } from "../memory-learning/project-brain.mjs";
 
 const root=new URL("../../",import.meta.url);
 const policy=JSON.parse(await readFile(new URL("config/v0.9-team-office-policy.json",root),"utf8"));
+const connectorRegistry=JSON.parse(await readFile(new URL("config/connector-registry.json",root),"utf8"));
 
 const users={
   owner:createHumanUser({schema:1,user_id:"user-owner",display_name:"Owner",status:"ACTIVE"}),
@@ -42,6 +49,31 @@ const memberships=[
 
 function auth(userId,projectId,permission){
   return authorizeProjectAction({policy,users:Object.values(users),workspace,memberships,user_id:userId,project_id:projectId,permission});
+}
+
+function validConnectorRoute(){
+  const resource={resource_type:"google_ads_customer",resource_id:"customers/1234567890"};
+  const initial=createConnectorConnection({
+    registry:connectorRegistry,connectionId:"conn-google-ads-team-001",connectorId:"google-ads-readonly",
+  });
+  const connection=transitionConnectorConnection(initial,"CONNECT",{
+    registry:connectorRegistry,at:"2026-10-02T12:00:00.000Z",
+    evidenceRef:"connector-evidence:team",
+    credentialRef:"connector-secret://google-ads/team",
+    expiresAt:"2026-10-03T12:00:00.000Z",
+  });
+  const grant=createConnectorGrant({
+    schema:1,grant_id:"connector-grant-team-001",employee_id:"gugun",
+    connector_id:"google-ads-readonly",capability_id:"ads.google.read",access_modes:["READ"],
+    actions:["list-campaigns"],resources:[resource],
+    issued_at:"2026-10-02T11:59:00.000Z",expires_at:"2026-10-03T11:59:00.000Z",
+    evidence_ref:"connector-grant-evidence:team",
+  },{registry:connectorRegistry});
+  return authorizeConnectorAction({
+    registry:connectorRegistry,connections:[connection],grants:[grant],
+    employeeId:"gugun",connectorId:"google-ads-readonly",capabilityId:"ads.google.read",
+    accessMode:"READ",action:"list-campaigns",resource,now:"2026-10-02T12:10:00.000Z",
+  });
 }
 
 test("canonical team policy is bounded, role-owned, and content-addressed",()=>{
@@ -107,16 +139,20 @@ test("approval delegation is exact, bounded, time-limited and cannot widen reque
   },{policy,users:Object.values(users),workspace,memberships,request}),/scope|wildcard/i);
 });
 
-test("workspace connector binding requires RBAC plus exact workspace/project and valid route",()=>{
+test("workspace connector binding requires RBAC plus exact workspace/project and cryptographically valid route",()=>{
+  const route=validConnectorRoute();
   const binding=createWorkspaceConnectorBinding({
     schema:1,binding_id:"conn-bind-1",workspace_id:"ws-main",project_id:"alpha",
-    connector_id:"google-ads",connection_ref:"connector-connection:sha256:"+"a".repeat(64),
+    connector_id:"google-ads-readonly",connection_ref:route.connection.connection_ref,
     created_at:"2026-10-02T12:00:00.000Z",evidence_ref:"evidence:connector-binding",
   });
-  const route={allowed:true,connector_id:"google-ads",connection_ref:binding.connection_ref,route_ref:"connector-route:sha256:"+"b".repeat(64),credential_ref:null};
-  assert.equal(authorizeWorkspaceConnectorUse({policy,users:Object.values(users),workspace,memberships,binding,route,user_id:"user-bob",project_id:"alpha"}).allowed,true);
+  const allowed=authorizeWorkspaceConnectorUse({policy,users:Object.values(users),workspace,memberships,binding,route,user_id:"user-bob",project_id:"alpha"});
+  assert.equal(allowed.allowed,true);
   assert.equal(authorizeWorkspaceConnectorUse({policy,users:Object.values(users),workspace,memberships,binding,route,user_id:"user-eve",project_id:"beta"}).allowed,false);
-  assert.equal(authorizeWorkspaceConnectorUse({policy,users:Object.values(users),workspace,memberships,binding,route:{...route,connection_ref:"connector-connection:sha256:"+"c".repeat(64)},user_id:"user-bob",project_id:"alpha"}).allowed,false);
+  const forged={...route,action:"tampered-action"};
+  const forgedDecision=authorizeWorkspaceConnectorUse({policy,users:Object.values(users),workspace,memberships,binding,route:forged,user_id:"user-bob",project_id:"alpha"});
+  assert.equal(forgedDecision.allowed,false);
+  assert.equal(forgedDecision.reason,"INVALID_CONNECTOR_ROUTE");
 });
 
 test("workspace/project budget admission fails closed on cross-scope, unknown spend and hard ceilings",()=>{
@@ -157,6 +193,8 @@ test("Project Brain visibility is derived from memberships and caller cannot inj
     records:[privateRecord,projectRecord],employee_id:"siti",
   },{employeeIds:["siti"]});
   assert.equal(view.visible.some(x=>x.record_ref===projectRecord.record_ref),true);
+  assert.equal(view.visible.some(x=>x.record_ref===privateRecord.record_ref),false);
+  assert.equal(view.denied.some(x=>x.record_ref===privateRecord.record_ref&&x.reason==="PRIVATE_EMPLOYEE_MEMORY_NOT_TEAM_VISIBLE"),true);
   const eveView=buildTeamProjectMemoryView({
     policy,users:Object.values(users),workspace,memberships,user_id:"user-eve",
     records:[privateRecord,projectRecord],employee_id:"siti",

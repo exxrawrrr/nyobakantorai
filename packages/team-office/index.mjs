@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import { createApprovalRequest } from "../scheduler-approval-center/index.mjs";
+import { validateConnectorRouteDecision } from "../connector-center/index.mjs";
 import { buildProjectMemoryView } from "../memory-learning/project-brain.mjs";
 
 export const TEAM_OFFICE_API=1;
@@ -347,9 +348,12 @@ export function authorizeWorkspaceConnectorUse({
   const auth=authorizeProjectAction({policy,users,workspace,memberships,user_id,project_id,permission:"connector.use"});
   if(!auth.allowed)return Object.freeze({allowed:false,reason:auth.reason,authorization_ref:auth.authorization_ref});
   if(binding.workspace_id!==workspace.workspace_id||binding.project_id!==clean(project_id,160))return Object.freeze({allowed:false,reason:"CONNECTOR_SCOPE_MISMATCH"});
-  if(route.allowed!==true)return Object.freeze({allowed:false,reason:"CONNECTOR_ROUTE_NOT_ALLOWED"});
-  if(clean(route.connector_id,120).toLowerCase()!==binding.connector_id||clean(route.connection_ref,1000)!==binding.connection_ref)return Object.freeze({allowed:false,reason:"CONNECTOR_BINDING_MISMATCH"});
-  const body={schema:1,binding_ref:binding.binding_ref,route_ref:clean(route.route_ref,1000),authorization_ref:auth.authorization_ref,user_id:clean(user_id,80).toLowerCase(),project_id:binding.project_id,allowed:true};
+  try{ validateConnectorRouteDecision(route); }
+  catch{ return Object.freeze({allowed:false,reason:"INVALID_CONNECTOR_ROUTE"}); }
+  if(clean(route.connector_id,120).toLowerCase()!==binding.connector_id||clean(route.connection?.connection_ref,1000)!==binding.connection_ref){
+    return Object.freeze({allowed:false,reason:"CONNECTOR_BINDING_MISMATCH"});
+  }
+  const body={schema:1,binding_ref:binding.binding_ref,route_ref:clean(route.connector_route_ref,1000),authorization_ref:auth.authorization_ref,user_id:clean(user_id,80).toLowerCase(),project_id:binding.project_id,allowed:true};
   return Object.freeze({...body,decision_ref:digest("workspace-connector-use",body)});
 }
 
@@ -415,7 +419,24 @@ export function buildTeamProjectMemoryView({
   const view=buildProjectMemoryView({
     records,employeeId:employee_id,authorizedProjectIds:projects,authorizedSharedScopes:sharedScopes,employeeIds,
   });
-  return Object.freeze({...view,visible:view.records,derived_for_user_id:userId,derived_workspace_id:ctx.workspace.workspace_id});
+  const privateVisible=view.records.filter(record=>record.scope==="PRIVATE");
+  const teamVisible=Object.freeze(view.records.filter(record=>record.scope!=="PRIVATE"));
+  const denied=Object.freeze([
+    ...view.denied,
+    ...privateVisible.map(record=>Object.freeze({
+      record_ref:record.record_ref,
+      reason:"PRIVATE_EMPLOYEE_MEMORY_NOT_TEAM_VISIBLE",
+      details:Object.freeze([record.owner?.id||"unknown"]),
+    })),
+  ]);
+  return Object.freeze({
+    ...view,
+    records:teamVisible,
+    visible:teamVisible,
+    denied,
+    derived_for_user_id:userId,
+    derived_workspace_id:ctx.workspace.workspace_id,
+  });
 }
 
 function resourceBindingBody(input){
