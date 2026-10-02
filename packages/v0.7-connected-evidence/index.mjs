@@ -35,6 +35,8 @@ function assessReadOnlyObservations(config){
     if(!item.live_observed) errors.push(item.id+": live_observed must be true.");
     if(!clean(item.user_owned_scope)) errors.push(item.id+": user_owned_scope required.");
     if(!clean(item.operation)) errors.push(item.id+": operation required.");
+    if(item.reviewed_live_lifecycle!==true) errors.push(item.id+": reviewed_live_lifecycle must be true.");
+    if(item.permission_mode_verified!=="READ_ONLY") errors.push(item.id+": connector permission mode is not verified READ_ONLY.");
     if(item.raw_private_payload_committed!==false) errors.push(item.id+": raw private payload must not be committed.");
     if(item.provider==="google-drive"){
       if(item.filenames_committed!==false) errors.push(item.id+": Drive filenames must not be committed.");
@@ -244,10 +246,21 @@ export function assessV07ConnectedEvidenceInputs({config,costPolicy,registry}={}
   const scheduled=buildScheduledMissionEvidence(config,costPolicy);
   const revocation=buildRevocationEvidence(registry);
   const browserState=clean(config.browser_evidence?.state);
+  const browserPass=
+    browserState==="PASS" &&
+    config.browser_evidence?.live_observed===true &&
+    clean(config.browser_evidence?.provider).length>0 &&
+    validTime(config.browser_evidence?.observed_at) &&
+    /^[a-z][a-z0-9+.-]*:/i.test(clean(config.browser_evidence?.evidence_ref)) &&
+    config.browser_evidence?.disposable_profile===true &&
+    config.browser_evidence?.read_only_action===true &&
+    config.browser_evidence?.provider_verified===true;
   const browser=Object.freeze({
-    status:browserState==="PASS"?"PASS":"BLOCKED",
+    status:browserPass?"PASS":"BLOCKED",
     state:browserState||"MISSING",
     reason:clean(config.browser_evidence?.reason)||null,
+    live_observed:config.browser_evidence?.live_observed===true,
+    provider:clean(config.browser_evidence?.provider)||null,
   });
   const components=Object.freeze({
     READ_ONLY_USER_OWNED_CONNECTORS:readOnly.status,
