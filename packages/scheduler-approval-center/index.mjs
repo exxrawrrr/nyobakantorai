@@ -66,8 +66,28 @@ export function createRecurringSchedule(input={}){
   return Object.freeze({...out,schedule_ref:ref("schedule",schedulePayload(out))});
 }
 
-function dayCode(date){return ["SU","MO","TU","WE","TH","FR","SA"][date.getUTCDay()];}
-function hhmm(date){return String(date.getUTCHours()).padStart(2,"0")+":"+String(date.getUTCMinutes()).padStart(2,"0");}
+function zonedParts(date,timeZone){
+  let parts;
+  try{
+    parts=new Intl.DateTimeFormat("en-CA",{
+      timeZone,year:"numeric",month:"2-digit",day:"2-digit",
+      hour:"2-digit",minute:"2-digit",hourCycle:"h23",weekday:"short",
+    }).formatToParts(date);
+  }catch{
+    throw new Error("Schedule timezone is invalid.");
+  }
+  const map=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+  const weekdayMap={Sun:"SU",Mon:"MO",Tue:"TU",Wed:"WE",Thu:"TH",Fri:"FR",Sat:"SA"};
+  return Object.freeze({
+    date:map.year+"-"+map.month+"-"+map.day,
+    hhmm:map.hour+":"+map.minute,
+    weekday:weekdayMap[map.weekday],
+  });
+}
+function calendarDayNumber(dateString){
+  const [y,m,d]=dateString.split("-").map(Number);
+  return Math.floor(Date.UTC(y,m-1,d)/86400000);
+}
 
 export function assessScheduleTrigger(scheduleInput,{at,previousRuns=[]}={}){
   const s=createRecurringSchedule(scheduleInput);
@@ -77,12 +97,22 @@ export function assessScheduleTrigger(scheduleInput,{at,previousRuns=[]}={}){
   if(Date.parse(at)<Date.parse(s.starts_at)) return Object.freeze({due:false,reason:"SCHEDULE_NOT_STARTED"});
   if(s.expires_at&&Date.parse(at)>=Date.parse(s.expires_at)) return Object.freeze({due:false,reason:"SCHEDULE_EXPIRED"});
   if(s.max_runs!=null&&previousRuns.length>=s.max_runs) return Object.freeze({due:false,reason:"SCHEDULE_MAX_RUNS_REACHED"});
-  const current=hhmm(t);
-  if(current<s.time_window.start||current>=s.time_window.end) return Object.freeze({due:false,reason:"OUTSIDE_TIME_WINDOW"});
-  if(s.cadence.frequency==="WEEKLY"&&!s.cadence.days_of_week.includes(dayCode(t))) return Object.freeze({due:false,reason:"CADENCE_DAY_MISMATCH"});
-  const date=t.toISOString().slice(0,10);
-  if(previousRuns.some(r=>String(r.triggered_at||"").slice(0,10)===date)) return Object.freeze({due:false,reason:"ALREADY_TRIGGERED_THIS_DAY"});
-  return Object.freeze({due:true,reason:"DUE"});
+  const local=zonedParts(t,s.time_window.timezone);
+  const startLocal=zonedParts(new Date(s.starts_at),s.time_window.timezone);
+  const dayDelta=calendarDayNumber(local.date)-calendarDayNumber(startLocal.date);
+  if(dayDelta<0) return Object.freeze({due:false,reason:"SCHEDULE_NOT_STARTED"});
+  if(local.hhmm<s.time_window.start||local.hhmm>=s.time_window.end) return Object.freeze({due:false,reason:"OUTSIDE_TIME_WINDOW"});
+  if(s.cadence.frequency==="DAILY"&&dayDelta%s.cadence.interval!==0) return Object.freeze({due:false,reason:"CADENCE_INTERVAL_MISMATCH"});
+  if(s.cadence.frequency==="WEEKLY"){
+    if(!s.cadence.days_of_week.includes(local.weekday)) return Object.freeze({due:false,reason:"CADENCE_DAY_MISMATCH"});
+    const weekDelta=Math.floor(dayDelta/7);
+    if(weekDelta%s.cadence.interval!==0) return Object.freeze({due:false,reason:"CADENCE_INTERVAL_MISMATCH"});
+  }
+  if(previousRuns.some(r=>{
+    if(!validTime(r?.triggered_at)) return false;
+    return zonedParts(new Date(r.triggered_at),s.time_window.timezone).date===local.date;
+  })) return Object.freeze({due:false,reason:"ALREADY_TRIGGERED_THIS_DAY"});
+  return Object.freeze({due:true,reason:"DUE",local_date:local.date,local_time:local.hhmm,timezone:s.time_window.timezone});
 }
 
 export function materializeScheduledMission({
