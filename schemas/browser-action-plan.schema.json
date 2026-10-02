@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/browser-action-plan.schema.json",
+  "title": "nyobakantorai Browser Action Plan v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "employee_id",
+    "flow",
+    "scope_ref",
+    "allowed_origin",
+    "action",
+    "connector_route_ref",
+    "capability_route_ref",
+    "approval_ref",
+    "injection_signals",
+    "content_trust",
+    "decision",
+    "reason",
+    "allowed",
+    "plan_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "flow": {
+      "enum": [
+        "PUBLIC_RESEARCH",
+        "USER_OWNED_AUDIT",
+        "LOCALHOST_QA"
+      ]
+    },
+    "allowed": {
+      "const": true
+    },
+    "plan_ref": {
+      "type": "string",
+      "pattern": "^browser-action-plan:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
