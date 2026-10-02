@@ -1,5 +1,6 @@
 import { assert,clean,contentRef,freeze,iso,stable } from "./common.mjs";
 import { buildXlsxBuffer } from "./xlsx.mjs";
+import { validateGeoVerificationBinding } from "./verification.mjs";
 
 function csvEscape(v){
   const s=String(v??"");
@@ -11,10 +12,15 @@ function fieldValue(profile,name){
 }
 function rowsFor(profiles,scores,verifications){
   const scoreBy=new Map(scores.map(x=>[x.profile_ref,x]));
-  const verBy=new Map(verifications.map(x=>[x.task_node?.evidence_refs?.find(r=>String(r).startsWith("verification:"))||x.verification_ref,x]));
+  const verBy=new Map();
+  for(const bound of verifications){
+    validateGeoVerificationBinding(bound);
+    verBy.set(bound.binding.profile_ref,bound);
+  }
   return profiles.map(profile=>{
     const score=scoreBy.get(profile.profile_ref);
-    const verification=verifications.find(v=>v?.task_node?.evidence_refs?.includes(v.verification_ref)&&v?.kind==="RESEARCH"&&v?.task_id)||null;
+    const bound=verBy.get(profile.profile_ref)||null;
+    const verification=bound?.verification||null;
     return {
       profile_ref:profile.profile_ref,
       place_id:profile.place_id||"",
@@ -51,7 +57,7 @@ export function createGeoResearchExportPack({expansion_plan,profiles=[],scores=[
   const rows=rowsFor(profiles,scores,verifications);
   const csv=buildCsv(rows);
   const xlsx=buildXlsxBuffer(rows,{sheet_name:"Geo Profiles"});
-  const verified=verifications.filter(v=>v.review_state==="PASS"&&v.decision==="VERIFIED").length;
+  const verified=verifications.filter(v=>v.verification?.review_state==="PASS"&&v.verification?.decision==="VERIFIED").length;
   const report=[
     "# Geo Intelligence Research Report",
     "",
@@ -72,14 +78,14 @@ export function createGeoResearchExportPack({expansion_plan,profiles=[],scores=[
     query_refs:expansion_plan.queries.map(x=>x.query_ref),
     profiles:profiles.map(p=>({profile_ref:p.profile_ref,cluster_ref:p.cluster_ref,source_refs:p.source_refs,source_types:p.source_types,completeness_claim:false})),
     scores:scores.map(s=>({score_ref:s.score_ref,profile_ref:s.profile_ref,model_id:s.model_id,model_version:s.model_version,score:s.score,contributions:s.contributions})),
-    verifications:verifications.map(v=>({verification_ref:v.verification_ref,review_state:v.review_state,decision:v.decision,verifier_id:v.verifier_id,independent:v.independent})),
+    verifications:verifications.map(v=>({binding_ref:v.binding.binding_ref,profile_ref:v.binding.profile_ref,score_ref:v.binding.score_ref,verification_ref:v.verification.verification_ref,review_state:v.verification.review_state,decision:v.verification.decision,verifier_id:v.verification.verifier_id,independent:v.verification.independent})),
     sources:sources.map(s=>({source_ref:s.source_ref,source_type:s.source_type,url:s.url,retrieved_at:s.retrieved_at,claim_refs:(s.claims||[]).map(c=>c.claim_ref)})),
     completeness_claim:false,raw_provider_content_included:false,
   };
   const packCore={
     schema:1,created_at:createdAt,plan_ref:expansion_plan.plan_ref,
     profile_refs:profiles.map(x=>x.profile_ref),score_refs:scores.map(x=>x.score_ref),
-    verification_refs:verifications.map(x=>x.verification_ref),
+    verification_refs:verifications.map(x=>x.verification.verification_ref),
     evidence_pack_ref:contentRef("geo-evidence-pack",evidence),
     completeness_claim:false,
   };
