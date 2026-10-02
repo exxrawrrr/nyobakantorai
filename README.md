@@ -41,6 +41,19 @@ Fresh current-commit Codex and Hermes observations both ran inside the canonical
 
 See [v0.6.0 Release Convergence](docs/V0.6-RELEASE-CONVERGENCE.md).
 
+## v0.6.1 reliability status — verified, release blocked
+
+The v0.6.1 reliability feature set is **repository-verified**, covering:
+
+- Full Cost Governor;
+- Artifact Workspace + Execution Replay;
+- Checkpoint + Failure Recovery;
+- Project Brain / Memory 2.0.
+
+That does **not** authorize a v0.6.1 release. The prerequisite v0.6.0 release is still blocked on `REAL_MODEL_EXECUTION` and `COST_QUOTA_ENFORCEMENT`, so v0.6.1 cannot leapfrog it. Package metadata remains `0.5.1`, no `v0.6.1` tag or GitHub Release is authorized, and the tagged-release workflow fails closed unless v0.6.1 readiness becomes `READY`.
+
+See [v0.6.1 Reliability Release Gate](docs/V0.6.1-RELIABILITY-RELEASE-GATE.md).
+
 
 ## What the project currently provides
 

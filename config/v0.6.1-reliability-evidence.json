@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "chat": "CHAT 17",
+  "observed_on": "2026-10-02",
+  "candidate": "v0.6.1",
+  "reliability_verdict": "PASS",
+  "components": [
+    {
+      "id": "COST_GOVERNOR",
+      "status": "PASS",
+      "canonical_doc": "docs/V0.6.1-COST-GOVERNOR.md",
+      "integrated_main_commit": "2b37845b9b58eb6984d6e18a52839e4d86c10034",
+      "exact_main_verify_run": 629,
+      "evaluation_command": "npm run test:cost-governor",
+      "assertions": [
+        "hard budgets cannot be exceeded silently",
+        "UNKNOWN projected or actual cost fails closed",
+        "approval does not override hard-stop budget",
+        "actual cost reconciliation remains canonical"
+      ]
+    },
+    {
+      "id": "ARTIFACT_REPLAY_INTEGRITY",
+      "status": "PASS",
+      "canonical_doc": "docs/V0.6.1-ARTIFACT-WORKSPACE-REPLAY.md",
+      "integrated_main_commit": "bf95a51fab1379a0abd6abad029bb2290b1e18de",
+      "exact_main_verify_run": 634,
+      "evaluation_command": "npm run test:artifact-workspace",
+      "assertions": [
+        "artifact records and payloads are checksum verified",
+        "version ancestry is immutable",
+        "replay derives from canonical records",
+        "tamper or missing-event conditions fail closed"
+      ]
+    },
+    {
+      "id": "CHECKPOINT_RECOVERY",
+      "status": "PASS",
+      "canonical_doc": "docs/V0.6.1-CHECKPOINT-RECOVERY.md",
+      "integrated_main_commit": "2912e6f1cfa5273ca82e0a73dcbcb87c230af640",
+      "exact_main_verify_run": 639,
+      "evaluation_command": "npm run test:checkpoint-recovery",
+      "assertions": [
+        "completed task nodes are not re-executed on resume",
+        "retry and recovery cycles are bounded",
+        "provider fallback is policy-gated",
+        "attempt lineage preserves previous attempt and checkpoint references"
+      ]
+    },
+    {
+      "id": "PROJECT_BRAIN_MEMORY_SCOPE",
+      "status": "PASS",
+      "canonical_doc": "docs/V0.6.1-PROJECT-BRAIN.md",
+      "integrated_main_commit": "f1c2b2d98e8494bcf0710bf143b098ee198880c9",
+      "exact_main_verify_run": 645,
+      "evaluation_command": "npm run test:project-brain && npm run test:project-brain-isolation",
+      "assertions": [
+        "PRIVATE memory cannot leak across employee profiles",
+        "PROJECT reads require exact project grants",
+        "APPROVED_SHARED reads require exact shared scope",
+        "shared knowledge remains attributable through immutable promotion lineage"
+      ]
+    }
+  ],
+  "cross_platform_verification": {
+    "required": [
+      "minimum-versions",
+      "test (ubuntu-latest)",
+      "test (windows-latest)"
+    ],
+    "chat16_exact_main_run": 645,
+    "chat16_exact_main_commit": "f1c2b2d98e8494bcf0710bf143b098ee198880c9",
+    "state": "PASS"
+  },
+  "prerequisite_release": {
+    "candidate": "v0.6.0",
+    "canonical_source": "config/v0.6-release-readiness.json",
+    "required_state": "READY",
+    "observed_state": "BLOCKED",
+    "blocker_ids": [
+      "REAL_MODEL_EXECUTION",
+      "COST_QUOTA_ENFORCEMENT"
+    ]
+  },
+  "claim_boundary": {
+    "allowed": "The v0.6.1 reliability feature set is repository-verified, but v0.6.1 publication remains blocked because its v0.6.0 prerequisite is not release-ready. v0.5.1 remains the published stable release.",
+    "forbidden": [
+      "v0.6.1 is released",
+      "v0.6.1 is publication-ready",
+      "v0.6.0 blockers are bypassed by reliability tests",
+      "green deterministic reliability CI proves qualifying real-model execution"
+    ]
+  }
+}

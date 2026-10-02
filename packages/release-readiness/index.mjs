@@ -226,3 +226,158 @@ export async function readAndAssessV06ReleaseReadiness({root=resolve(import.meta
   const config=JSON.parse(await readFile(resolve(root,"config/v0.6-release-readiness.json"),"utf8"));
   return {config,assessment:await assessV06ReleaseReadiness(config,{root})};
 }
+
+
+const V061_RELIABILITY_COMPONENTS = Object.freeze([
+  "COST_GOVERNOR",
+  "ARTIFACT_REPLAY_INTEGRITY",
+  "CHECKPOINT_RECOVERY",
+  "PROJECT_BRAIN_MEMORY_SCOPE",
+]);
+
+export async function assessV061ReleaseReadiness(config,{
+  root=resolve(import.meta.dirname,"../.."),
+  evidenceOverride=null,
+  v06ConfigOverride=null,
+}={}){
+  const errors=[];
+  if(config?.schema!==1)errors.push("v0.6.1 release readiness schema must be 1");
+  if(config?.candidate!=="v0.6.1")errors.push("v0.6.1 candidate must be v0.6.1");
+  if(!["BLOCKED","READY"].includes(config?.decision))errors.push("v0.6.1 decision must be BLOCKED or READY");
+  if(!["PASS","BLOCKED"].includes(config?.reliability_decision))errors.push("v0.6.1 reliability_decision must be PASS or BLOCKED");
+
+  const readJson=async(path)=>JSON.parse(await readFile(resolve(root,path),"utf8"));
+  const evidence=evidenceOverride??await readJson("config/v0.6.1-reliability-evidence.json");
+  const v06Config=v06ConfigOverride??await readJson("config/v0.6-release-readiness.json");
+  const pkg=await readJson("package.json");
+
+  for(const path of config?.durable_requirement_surfaces||[]){
+    if(!await exists(resolve(root,path)))errors.push("v0.6.1 durable requirement surface missing: "+path);
+  }
+
+  if(evidence?.schema!==1)errors.push("v0.6.1 reliability evidence schema must be 1");
+  if(evidence?.chat!=="CHAT 17")errors.push("v0.6.1 reliability evidence must come from CHAT 17");
+  if(evidence?.candidate!=="v0.6.1")errors.push("v0.6.1 reliability evidence candidate drift");
+
+  const components=Array.isArray(evidence?.components)?evidence.components:[];
+  const componentIds=components.map((item)=>item?.id);
+  if(JSON.stringify(componentIds)!==JSON.stringify([...V061_RELIABILITY_COMPONENTS])){
+    errors.push("v0.6.1 reliability component drift: expected="+JSON.stringify(V061_RELIABILITY_COMPONENTS)+" actual="+JSON.stringify(componentIds));
+  }
+
+  for(const item of components){
+    if(!["PASS","BLOCKED","FAILED"].includes(item?.status))errors.push("v0.6.1 reliability component status invalid: "+String(item?.id));
+    if(!nonEmpty(item?.canonical_doc))errors.push(String(item?.id)+": canonical_doc required");
+    else if(!await exists(resolve(root,item.canonical_doc)))errors.push(String(item?.id)+": canonical_doc missing: "+item.canonical_doc);
+    if(!/^[a-f0-9]{40}$/.test(String(item?.integrated_main_commit||"")))errors.push(String(item?.id)+": integrated_main_commit invalid");
+    if(!Number.isInteger(item?.exact_main_verify_run)||item.exact_main_verify_run<1)errors.push(String(item?.id)+": exact_main_verify_run invalid");
+    if(!nonEmpty(item?.evaluation_command))errors.push(String(item?.id)+": evaluation_command required");
+    if(!Array.isArray(item?.assertions)||item.assertions.length<2||item.assertions.some((value)=>!nonEmpty(value)))errors.push(String(item?.id)+": assertions incomplete");
+  }
+
+  const reliabilityBlockers=components.filter((item)=>item?.status!=="PASS").map((item)=>item.id);
+  const reliabilityDecision=reliabilityBlockers.length?"BLOCKED":"PASS";
+  const passCount=components.filter((item)=>item?.status==="PASS").length;
+  if(evidence?.reliability_verdict!==reliabilityDecision)errors.push("v0.6.1 reliability evidence verdict drift");
+  if(config?.reliability?.observed_pass_count!==passCount||config?.reliability?.total!==components.length)errors.push("v0.6.1 reliability count drift");
+  if(config?.reliability?.required_pass_count!==V061_RELIABILITY_COMPONENTS.length)errors.push("v0.6.1 reliability required pass count drift");
+  if(config?.reliability?.verdict!==reliabilityDecision||config?.reliability_decision!==reliabilityDecision)errors.push("v0.6.1 reliability decision drift");
+
+  const cross=evidence?.cross_platform_verification||{};
+  if(cross.state!=="PASS")errors.push("v0.6.1 cross-platform verification evidence must be PASS");
+  if(!/^[a-f0-9]{40}$/.test(String(cross.chat16_exact_main_commit||"")))errors.push("v0.6.1 cross-platform main commit invalid");
+  if(!Number.isInteger(cross.chat16_exact_main_run)||cross.chat16_exact_main_run<1)errors.push("v0.6.1 cross-platform verify run invalid");
+  const requiredCi=["minimum-versions","test (ubuntu-latest)","test (windows-latest)"];
+  if(JSON.stringify(cross.required)!==JSON.stringify(requiredCi))errors.push("v0.6.1 cross-platform required jobs drift");
+  if(JSON.stringify(config?.verification?.required_ci)!==JSON.stringify(requiredCi))errors.push("v0.6.1 readiness required CI drift");
+
+  const v06Assessment=await assessV06ReleaseReadiness(v06Config,{root});
+  if(!v06Assessment.ok)errors.push("v0.6 prerequisite readiness is internally invalid: "+v06Assessment.errors.join("; "));
+
+  const prereq=evidence?.prerequisite_release||{};
+  if(prereq.candidate!=="v0.6.0")errors.push("v0.6.1 prerequisite candidate must be v0.6.0");
+  if(prereq.canonical_source!=="config/v0.6-release-readiness.json")errors.push("v0.6.1 prerequisite canonical source drift");
+  if(prereq.required_state!=="READY")errors.push("v0.6.1 prerequisite required state must be READY");
+  if(prereq.observed_state!==v06Assessment.decision)errors.push("v0.6.1 prerequisite observed state drift");
+  if(JSON.stringify(prereq.blocker_ids||[])!==JSON.stringify(v06Assessment.blockers||[]))errors.push("v0.6.1 prerequisite blocker drift");
+
+  const computed=[...reliabilityBlockers];
+  if(v06Assessment.decision!=="READY")computed.push("V0_6_0_PREREQUISITE");
+
+  const declared=(config?.release_blockers||[]).map((item)=>item.id);
+  if(JSON.stringify(declared)!==JSON.stringify(computed)){
+    errors.push("v0.6.1 release blocker drift: declared="+JSON.stringify(declared)+" computed="+JSON.stringify(computed));
+  }
+  for(const item of config?.release_blockers||[]){
+    for(const field of ["id","category","status","required_state","current_state","canonical_source","reason","safe_next_action"]){
+      if(!nonEmpty(item?.[field]))errors.push((item?.id||"unknown")+": "+field+" required");
+    }
+    if(item?.canonical_source&&!await exists(resolve(root,item.canonical_source)))errors.push(item.id+": canonical source missing: "+item.canonical_source);
+  }
+
+  const computedDecision=computed.length?"BLOCKED":"READY";
+  if(config?.decision!==computedDecision)errors.push("v0.6.1 decision drift: declared="+String(config?.decision)+" computed="+computedDecision);
+
+  const hold=config?.package_version_hold||{};
+  const candidateVersion="0.6.1";
+  if(hold.current!==pkg?.version)errors.push("v0.6.1 package version hold drift");
+  if(hold.candidate!==candidateVersion)errors.push("v0.6.1 package version candidate drift");
+  if(computedDecision==="BLOCKED"){
+    if(hold.bump_authorized===true)errors.push("v0.6.1 package bump cannot be authorized while readiness is blocked");
+    if(pkg?.version===candidateVersion)errors.push("blocked v0.6.1 candidate must not replace stable package version metadata");
+  }else{
+    if(pkg?.version!==candidateVersion)errors.push("READY v0.6.1 candidate requires package version "+candidateVersion);
+    if(hold.bump_authorized!==true)errors.push("READY v0.6.1 candidate requires package bump authorization");
+  }
+
+  const promotion=config?.promotion||{};
+  if(computedDecision==="BLOCKED"){
+    if(promotion.stable_tag_authorized===true)errors.push("stable tag cannot be authorized while v0.6.1 is blocked");
+    if(promotion.publication_authorized===true)errors.push("publication cannot be authorized while v0.6.1 is blocked");
+  }
+
+  if(!nonEmpty(config?.claim_language?.allowed)||!Array.isArray(config?.claim_language?.forbidden)||config.claim_language.forbidden.length<5)errors.push("v0.6.1 claim language boundaries required");
+  if(!nonEmpty(evidence?.claim_boundary?.allowed)||!Array.isArray(evidence?.claim_boundary?.forbidden)||evidence.claim_boundary.forbidden.length<4)errors.push("v0.6.1 evidence claim boundary required");
+
+  return Object.freeze({
+    ok:errors.length===0,
+    errors:Object.freeze(errors),
+    decision:computedDecision,
+    reliability_decision:reliabilityDecision,
+    blockers:Object.freeze(computed),
+    blocker_count:computed.length,
+    reliability_blockers:Object.freeze(reliabilityBlockers),
+    canonical:Object.freeze({
+      reliability_passed:passCount,
+      reliability_total:components.length,
+      v0_6_prerequisite:v06Assessment.decision,
+      v0_6_blockers:Object.freeze([...(v06Assessment.blockers||[])]),
+      package_version:pkg?.version||"UNKNOWN",
+      cross_platform_verification:cross.state||"UNKNOWN",
+      component_ids:Object.freeze([...componentIds]),
+    }),
+  });
+}
+
+export function buildV061ReadinessSnapshot({config,assessment}){
+  if(!assessment?.ok)throw new Error("cannot snapshot invalid v0.6.1 release readiness");
+  return Object.freeze({
+    schema:1,
+    candidate:config.candidate,
+    reliability_decision:assessment.reliability_decision,
+    decision:assessment.decision,
+    blocker_count:assessment.blocker_count,
+    blockers:assessment.blockers,
+    reliability_blockers:assessment.reliability_blockers,
+    canonical:assessment.canonical,
+    package_bump_authorized:config.package_version_hold.bump_authorized===true,
+    stable_tag_authorized:config.promotion.stable_tag_authorized===true,
+    publication_authorized:config.promotion.publication_authorized===true,
+    truth_boundary:"reliability PASS proves the v0.6.1 reliability feature set under repository gates; it does not authorize publication while prerequisite v0.6.0 readiness is BLOCKED",
+  });
+}
+
+export async function readAndAssessV061ReleaseReadiness({root=resolve(import.meta.dirname,"../..")}={}){
+  const config=JSON.parse(await readFile(resolve(root,"config/v0.6.1-release-readiness.json"),"utf8"));
+  return {config,assessment:await assessV061ReleaseReadiness(config,{root})};
+}

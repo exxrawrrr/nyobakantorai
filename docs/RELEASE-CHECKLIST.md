@@ -16,6 +16,8 @@ For v0.5.1, the release is **READY and PUBLISHED**. Final-main verify #578 passe
 
 For v0.6.0, CHAT 12 convergence is **BLOCKED**. The CHAT 11 acceptance bundle is 9/11 PASS; `REAL_MODEL_EXECUTION` and `COST_QUOTA_ENFORCEMENT` remain blocked. Package metadata therefore stays at `0.5.1`, `v0.6.0` tag/publication is unauthorized, and the tagged release workflow now fails closed unless v0.6 readiness is `READY`. PR verify #619 passed Ubuntu/Windows/minimum versions, and fresh-clone one-worker/subset/full/lifecycle matrices all passed. No public deployment target is configured, so external demo deployment verification is not claimed.
 
+For v0.6.1, CHAT 17 evaluates reliability separately from publication. Cost Governor, Artifact/Replay, Checkpoint/Recovery, and Project Brain are required to remain PASS under their canonical suites. Even when reliability is PASS, v0.6.1 publication remains **BLOCKED** while prerequisite v0.6.0 readiness is BLOCKED. Package metadata stays at `0.5.1`, no `v0.6.1` tag/release is authorized, and the tagged release workflow has a dedicated `v0.6.1:readiness:require-ready` fail-closed guard.
+
 ## Code and tests
 - [ ] `npm run doctor` passes on the release machine.
 - [ ] `npm run ready` passes from the canonical worktree.

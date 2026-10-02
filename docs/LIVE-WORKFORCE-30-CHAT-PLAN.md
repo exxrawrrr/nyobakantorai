@@ -337,6 +337,9 @@ Closure: PASS for repository delivery. Project Brain extends the existing memory
 
 ### CHAT 17 — v0.6.1 Reliability Release Gate
 
+**Status: COMPLETE — RELIABILITY PASS / PUBLICATION BLOCKED — 2026-10-02.**
+Implementation/status: `docs/V0.6.1-RELIABILITY-RELEASE-GATE.md`
+
 Goal: close the reliability milestone.
 
 Deliverables:
@@ -346,6 +349,8 @@ Deliverables:
 - memory-scope evaluation;
 - cross-platform verification;
 - release only if evidence supports it.
+
+Closure: PASS for release-gate implementation. The four v0.6.1 reliability components evaluate PASS, the release manifest reports `v0.6.1_reliability=PASS`, and PR verify #647 passes Ubuntu, Windows, and minimum versions. Publication is intentionally BLOCKED because canonical v0.6.0 readiness remains BLOCKED on REAL_MODEL_EXECUTION and COST_QUOTA_ENFORCEMENT; `v0.6.1:readiness:require-ready` exits 2, package metadata remains 0.5.1, and no v0.6.1 tag/release is authorized.
 
 ---
 

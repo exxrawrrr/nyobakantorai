@@ -121,7 +121,7 @@
     "maturity:check": "node scripts/maturity-model.mjs --check",
     "test:complexity-budget": "node --test packages/complexity-budget/index.test.mjs",
     "complexity:check": "node scripts/complexity-budget.mjs --check",
-    "test:release-readiness": "node --test packages/release-readiness/index.test.mjs packages/release-readiness/v0.6.test.mjs",
+    "test:release-readiness": "node --test packages/release-readiness/index.test.mjs packages/release-readiness/v0.6.test.mjs packages/release-readiness/v0.6.1.test.mjs",
     "v0.5:readiness:check": "node scripts/v0.5-release-readiness.mjs",
     "v0.5:readiness:require-ready": "node scripts/v0.5-release-readiness.mjs --require-ready",
     "test:portability-run-verifier": "python reference-verifier/python/test_portability_run_verifier.py",
@@ -142,6 +142,8 @@
     "test:checkpoint-recovery": "node --test packages/checkpoint-recovery/index.test.mjs packages/checkpoint-recovery/orchestrator-recovery.test.mjs packages/mission-engine/orchestrator.test.mjs packages/mission-engine/contracts.test.mjs packages/task-registry/task-node.test.mjs",
     "test:project-brain": "node --test packages/memory-learning/project-brain.test.mjs",
     "bench:project-brain-isolation": "node benchmarks/project-brain-isolation/run.mjs",
-    "test:project-brain-isolation": "node benchmarks/project-brain-isolation/run.mjs --check"
+    "test:project-brain-isolation": "node benchmarks/project-brain-isolation/run.mjs --check",
+    "v0.6.1:readiness:check": "node scripts/v0.6.1-release-readiness.mjs",
+    "v0.6.1:readiness:require-ready": "node scripts/v0.6.1-release-readiness.mjs --require-ready"
   }
 }

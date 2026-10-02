@@ -39,6 +39,10 @@ jobs:
         if: github.ref == 'refs/tags/v0.6.0'
         run: npm run v0.6:readiness:require-ready
 
+      - name: Enforce v0.6.1 reliability readiness before publication
+        if: github.ref == 'refs/tags/v0.6.1'
+        run: npm run v0.6.1:readiness:require-ready
+
       - run: npm run release:check
 
       - name: Verify and build reproducible employee packs

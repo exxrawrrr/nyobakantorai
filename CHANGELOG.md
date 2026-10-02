@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.6.1] - Unreleased — reliability verified, release blocked
+
+### Added
+- Full Cost Governor with hard budgets, approval/reroute thresholds, UNKNOWN-cost fail-closed handling, and canonical reconciliation.
+- Immutable Artifact Workspace, durable storage, portable bundles, and canonical execution replay.
+- Checkpoint/resume with bounded recovery, policy-gated provider fallback, fresh browser-session recovery, and Attempt lineage.
+- Project Brain / Memory 2.0 with PRIVATE / PROJECT / APPROVED_SHARED scopes, attributable immutable records, exact grants, and durable local storage.
+- Machine-readable v0.6.1 reliability evidence and release-readiness gate.
+
+### Reliability status
+- **PASS — all four v0.6.1 reliability components are repository-verified.**
+- Cost Governor, Artifact/Replay, Recovery, and Project Brain remain part of the normal full repository verification path.
+
+### Release status
+- **BLOCKED — v0.6.0 prerequisite remains BLOCKED 9/11.**
+- `REAL_MODEL_EXECUTION` and `COST_QUOTA_ENFORCEMENT` remain unresolved v0.6.0 release blockers.
+- `v0.5.1` remains the published stable release; package metadata stays at `0.5.1`.
+- No `v0.6.1` tag or GitHub Release is authorized while prerequisite readiness is blocked.
+
 ## [0.6.0] - Unreleased — release blocked
 
 ### Added
