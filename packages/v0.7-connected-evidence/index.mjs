@@ -237,12 +237,7 @@ function buildRevocationEvidence(registry){
   });
 }
 
-export async function assessV07ConnectedEvidence({root=rootDefault}={}){
-  const [config,costPolicy,registry]=await Promise.all([
-    readJson(root,"config/v0.7-connected-live-evidence.json"),
-    readJson(root,"config/cost-governor-policy.json"),
-    readJson(root,"config/connector-registry.json"),
-  ]);
+export function assessV07ConnectedEvidenceInputs({config,costPolicy,registry}={}){
   assert(config?.schema===1&&config.candidate==="v0.7.0"&&config.chat==="CHAT22","v0.7 connected evidence identity invalid.");
   const readOnly=assessReadOnlyObservations(config);
   const write=buildWriteEvidence(config);
@@ -281,4 +276,13 @@ export async function assessV07ConnectedEvidence({root=rootDefault}={}){
       browser_live_claim:browser.status==="PASS",
     }),
   });
+}
+
+export async function assessV07ConnectedEvidence({root=rootDefault}={}){
+  const [config,costPolicy,registry]=await Promise.all([
+    readJson(root,"config/v0.7-connected-live-evidence.json"),
+    readJson(root,"config/cost-governor-policy.json"),
+    readJson(root,"config/connector-registry.json"),
+  ]);
+  return assessV07ConnectedEvidenceInputs({config,costPolicy,registry});
 }
