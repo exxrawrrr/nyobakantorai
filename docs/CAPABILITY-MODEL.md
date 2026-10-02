@@ -139,3 +139,43 @@ npm run test:capability-catalog
 ```
 
 The catalog is generated, not hand-maintained. CI rejects drift, unknown upstream sources, unsafe bundled defaults, and role mappings that accidentally turn specialist capabilities into universal access.
+
+
+## Connector Center boundary (CHAT 18)
+
+External integrations now have a separate lifecycle in `packages/connector-center/`.
+
+This does not replace the Capability Router.
+
+The authorization chain is:
+
+```text
+connector definition
+  -> current connection lifecycle state
+  -> exact connector grant
+  -> connector route evidence
+  -> capability-router employee scope
+  -> exact capability/resource grant
+  -> runtime binding/execution
+```
+
+A connector with state `CONNECTED` proves only that a reviewed connection exists. It does not grant universal employee, capability, action, or resource access.
+
+Connector grants bind exact:
+
+- employee;
+- connector;
+- capability;
+- READ/WRITE mode;
+- action;
+- resource type + resource ID.
+
+Wildcards are rejected.
+
+Disconnect, terminal revoke, implicit expiry, explicit expiry, grant expiry, and grant revocation all fail closed.
+
+Credential material remains reference-only. Repository and connector-route evidence do not contain raw provider secrets.
+
+The initial practical provider adapter is `google-ads-readonly`, which maps to the existing `ads.google.*` read capabilities and exposes no mutation operation.
+
+See `docs/V0.7-CONNECTOR-CENTER.md`.
