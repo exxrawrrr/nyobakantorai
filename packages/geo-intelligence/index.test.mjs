@@ -274,7 +274,7 @@ test("Siti independently verifies a fully evidenced profile and exact profile-sc
   const score=scoreBusinessProfile(profile,{mission:{target_business_types:["driver_training"]},policy});
   const verified=await verifyBusinessProfileWithSiti({
     profile,score,author_employee_id:"alex",now:"2026-10-02T09:30:00.000Z",
-    task_id:"task-chat24-alpha",mission_id:"mission-chat24",
+    task_id:"chat24-workitem-alpha",mission_id:"mission-chat24",
   });
   assert.equal(validateGeoVerificationBinding(verified),true);
   assert.equal(verified.verification.review_state,"PASS");
@@ -313,7 +313,7 @@ test("Siti refuses self-authored or conflicted profiles instead of softening the
   const conflictScore=scoreBusinessProfile(conflicted,{mission:{target_business_types:["driver_training"]},policy});
   const result=await verifyBusinessProfileWithSiti({
     profile:conflicted,score:conflictScore,author_employee_id:"alex",now:"2026-10-02T09:30:00Z",
-    task_id:"task-chat24-conflict",
+    task_id:"chat24-workitem-conflict",
   });
   assert.notEqual(result.verification.review_state,"PASS");
   assert.equal(result.verification.decision,"NOT_VERIFIED");
@@ -324,7 +324,7 @@ test("tampered verification binding is rejected before export/finalization",asyn
   const {profile}=buildFixtureProfile();
   const score=scoreBusinessProfile(profile,{mission:{target_business_types:["driver_training"]},policy});
   const verified=await verifyBusinessProfileWithSiti({
-    profile,score,author_employee_id:"alex",now:"2026-10-02T09:30:00Z",task_id:"task-chat24-tamper",
+    profile,score,author_employee_id:"alex",now:"2026-10-02T09:30:00Z",task_id:"chat24-workitem-tamper",
   });
   const tampered={...verified,binding:{...verified.binding,profile_ref:"geo-business-profile:sha256:"+"0".repeat(64)}};
   assert.throws(()=>validateGeoVerificationBinding(tampered),/checksum mismatch/);
@@ -335,7 +335,7 @@ test("export pack produces CSV, actual XLSX zip, Markdown report, and provenance
   const {profile,sources}=buildFixtureProfile();
   const score=scoreBusinessProfile(profile,{mission:{target_business_types:["driver_training"]},policy});
   const verification=await verifyBusinessProfileWithSiti({
-    profile,score,author_employee_id:"alex",now:"2026-10-02T09:30:00Z",task_id:"task-chat24-export",
+    profile,score,author_employee_id:"alex",now:"2026-10-02T09:30:00Z",task_id:"chat24-workitem-export",
   });
   const pack=createGeoResearchExportPack({
     expansion_plan:p,profiles:[profile],scores:[score],verifications:[verification],sources,
