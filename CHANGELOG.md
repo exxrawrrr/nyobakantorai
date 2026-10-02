@@ -1,3 +1,12 @@
+## [1.0.0] - Unreleased — Production evidence convergence complete, release NO_GO
+
+- Added a reviewed production release policy, canonical production-evidence ledger, fail-closed v1.0 readiness evaluator/CLI, release-manifest snapshot, and dedicated `v1.0.0` tag guard.
+- Added adversarial checks so forged READY fields or a manual GO cannot override computed evidence blockers.
+- Completed repository security review and release-claim audit without promoting static tests into production evidence.
+- Executed one-worker, subset, full-workforce, and upgrade/uninstall/reinstall release matrices across Ubuntu, Windows, and minimum-version CI; all passed in run #737.
+- v1.0.0 remains blocked by four canonical requirements: real-world workflow evidence (1/20), provider lifecycle maturity (partial), representative live recovery evidence, and the blocked v0.9.0 prerequisite.
+- Package/stable release remains v0.5.1; no v1.0.0 tag or GitHub Release is authorized, and tagged-asset/post-release smoke remain NOT_RUN_BLOCKED.
+
 ## [0.9.0] - Unreleased — Team Office contracts verified, release blocked
 
 - Added human user/workspace/project-membership contracts with policy-owned RBAC and no caller-supplied authority widening.
