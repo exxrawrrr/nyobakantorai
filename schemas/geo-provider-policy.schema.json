@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/geo-provider-policy.schema.json",
+  "title": "nyobakantorai Geo Provider Policy v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "policy_id",
+    "provider",
+    "production",
+    "field_mask_profiles",
+    "pricing_policy",
+    "query_bounds",
+    "retention",
+    "attribution",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "production": {
+      "type": "object",
+      "required": [
+        "wildcard_field_mask_allowed",
+        "explicit_field_mask_required",
+        "require_explicit_area_for_search",
+        "ip_bias_fallback_allowed"
+      ]
+    },
+    "field_mask_profiles": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "pricing_policy": {
+      "type": "object"
+    },
+    "query_bounds": {
+      "type": "object"
+    },
+    "retention": {
+      "type": "object",
+      "required": [
+        "provider_response",
+        "raw_response_persistence_allowed",
+        "durable_fields",
+        "place_id_refresh_after_days"
+      ]
+    },
+    "attribution": {
+      "type": "object"
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
