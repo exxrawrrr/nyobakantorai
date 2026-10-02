@@ -188,7 +188,9 @@ export function assertTaskNodeTransition(nodeInput, nextStateInput, {
   assert(TASK_NODE_TRANSITIONS[node.state].includes(nextState), `TaskNode transition ${node.state} -> ${nextState} is not allowed.`);
 
   if (approval != null) {
-    assert(node.state === "WAITING_APPROVAL" && nextState === "READY", "Approval mutation is only allowed atomically with WAITING_APPROVAL -> READY.");
+    const approvalEscalation = node.state === "READY" && nextState === "WAITING_APPROVAL";
+    const approvalResolution = node.state === "WAITING_APPROVAL" && nextState === "READY";
+    assert(approvalEscalation || approvalResolution, "Approval mutation is only allowed for READY -> WAITING_APPROVAL escalation or WAITING_APPROVAL -> READY resolution.");
   }
   const effectiveApproval = approval == null ? node.approval : normalizeApproval(approval);
 
@@ -199,7 +201,8 @@ export function assertTaskNodeTransition(nodeInput, nextStateInput, {
 
   if (nextState === "WAITING_APPROVAL") {
     assert(effectiveApproval.required, "WAITING_APPROVAL requires approval.required=true.");
-    assert(effectiveApproval.status !== "APPROVED", "Approved TaskNode cannot enter WAITING_APPROVAL.");
+    assert(effectiveApproval.status === "PENDING", "WAITING_APPROVAL requires PENDING approval.");
+    assert(effectiveApproval.approval_ref == null, "WAITING_APPROVAL PENDING approval cannot already carry approval_ref.");
   }
 
   if (node.state === "WAITING_APPROVAL" && nextState === "READY") {
