@@ -64,3 +64,10 @@ test("v0.8.1 readiness CLI validates BLOCKED ledger but require-ready exits 2",(
   assert.equal(required.status,2,required.stderr||required.stdout);
   assert.equal(JSON.parse(required.stdout).snapshot.publication_authorized,false);
 });
+
+test("release manifest check surfaces v0.8.1 Mission Control readiness",()=>{
+  const result=spawnSync(process.execPath,["scripts/release-manifest.mjs","--check"],{cwd:root,encoding:"utf8"});
+  assert.equal(result.status,0,result.stderr||result.stdout);
+  assert.match(result.stdout,/v0\.8\.1_mission_control=BLOCKED/);
+  assert.match(result.stdout,/v0\.8\.1_readiness=BLOCKED\(3\)/);
+});
