@@ -133,6 +133,7 @@ Execution progress:
 - [x] CHAT 10 — Siti Verification / Red-Team Engine implemented, independently gated, and verified. Research/code/external-state reviews use the canonical evidence-verifier and Task/Mission VERIFIED transitions; unsupported or contradictory output cannot be promoted to VERIFIED. See [v0.6 Siti Verification](docs/V0.6-SITI-VERIFICATION.md).
 - [x] CHAT 11 — v0.6.0 End-to-End Acceptance Mission completed as an evidence evaluation. Deterministic mission reached VERIFIED and 9/11 criteria passed; fresh current-commit Codex and Hermes attempts remained UNVERIFIED_RUNTIME_ATTEMPT, so REAL_MODEL_EXECUTION and COST_QUOTA_ENFORCEMENT stay blocked for CHAT 12 release convergence. See [v0.6 E2E Acceptance](docs/V0.6-E2E-ACCEPTANCE.md).
 - [x] CHAT 12 — v0.6.0 Release Convergence completed. Readiness is machine-readable and BLOCKED at 9/11 acceptance; cross-platform PR verification and all four fresh-install matrices pass; package version remains 0.5.1 and no v0.6.0 tag/release is authorized or created. See [v0.6 Release Convergence](docs/V0.6-RELEASE-CONVERGENCE.md).
+- [ ] CHAT 13 — Full Cost Governor implemented: per-day/project/mission/employee hard budgets, warning/reroute/approval/stop thresholds, canonical approval escalation, provider/model/tool ledger, UNKNOWN-cost fail-closed semantics, and post-execution reconciliation. Final repository verification pending. See [v0.6.1 Cost Governor](docs/V0.6.1-COST-GOVERNOR.md).
 
 Planned release sequence:
 
