@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "currency": "USD",
+  "thresholds": {
+    "warning_ratio": 0.7,
+    "reroute_ratio": 0.85,
+    "approval_ratio": 0.95
+  },
+  "daily_limit_amount": null,
+  "project_limits": {},
+  "mission_limits": {},
+  "employee_limits": {}
+}
