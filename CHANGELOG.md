@@ -1,3 +1,12 @@
+## [0.7.0] - Unreleased — connected-office evidence partial, release blocked
+
+- Collected live GitHub repository and Google Drive metadata read observations with private Drive details redacted.
+- Executed a bounded GitHub issue write flow (#44) only after a committed owner approval plan, then directly verified and closed it.
+- Added executable application-level connector revocation and scheduled Mission evidence tied to the live read observations.
+- Added fail-closed v0.7.0 connected-evidence/readiness evaluators, release-manifest snapshot, CLI semantics, and tagged-release guard.
+- Release remains BLOCKED: connector permission modes are not proven READ_ONLY, live browser evidence is unavailable, and prerequisite v0.6.1 is not READY.
+- Package/stable release remains v0.5.1.
+
 # Changelog
 
 ## [0.6.1] - Unreleased — reliability verified, release blocked

@@ -62,3 +62,23 @@ For v0.6.1, CHAT 17 evaluates reliability separately from publication. Cost Gove
 - [x] Rerun verification and manual release-gate from the final v0.5.1 `main` commit.
 - [x] Create immutable `v0.5.1` stable tag only after the final gate passes.
 - [x] Tagged release-gate `36812543303` verifies immutable install assets and publishes the GitHub Release successfully.
+
+
+## v0.7.0 Connected Office live-evidence gate
+
+Before any `v0.7.0` tag or publication:
+
+- `npm run test:v0.7-connected-evidence` passes;
+- `npm run v0.7:connected:check` reports all required CHAT 22 live components truthfully;
+- two user-owned connector connections are independently verified READ_ONLY, not merely used for read operations;
+- one scoped write flow proves preview -> approval -> execute -> verify;
+- connector revocation blocks future application routing;
+- scheduled Mission evidence materializes through normal Mission Engine + Cost Governor;
+- live browser evidence is present from an approved provider;
+- `v0.6.1` prerequisite readiness is READY;
+- package version is intentionally promoted to `0.7.0`;
+- `npm run v0.7:readiness:require-ready` exits 0;
+- release tag/package version match;
+- cross-platform verify and immutable tagged asset checks pass.
+
+Current CHAT 22 state is intentionally BLOCKED. See `docs/V0.7-CONNECTED-LIVE-RELEASE-GATE.md`.

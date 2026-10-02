@@ -433,6 +433,9 @@ Closure: PASS for repository delivery. Skills Store catalog/install/attach recor
 
 ### CHAT 22 — Connected Workflow Live Evidence + v0.7.0 Release
 
+**Status: COMPLETE — PARTIAL CONNECTED EVIDENCE VERIFIED / v0.7.0 RELEASE BLOCKED — 2026-10-02.**
+Implementation/status: `docs/V0.7-CONNECTED-LIVE-RELEASE-GATE.md`
+
 Goal: prove real connected-office lifecycle.
 
 Minimum evidence target:
@@ -444,6 +447,8 @@ Minimum evidence target:
 - provider-lifecycle claim updated only to supported level.
 
 Exit gate: v0.7.0 release gates pass or release remains blocked.
+
+Closure: release remains BLOCKED, as required by the exit gate when qualifying evidence is incomplete. Real GitHub/Google Drive reads and the scoped GitHub issue #44 write lifecycle were observed; executable repository evidence proves application-level connector revocation and scheduled Mission materialization. The two observed connector connections are not independently proven READ_ONLY, live browser evidence was unavailable, and prerequisite v0.6.1 remains blocked. Connected-evidence suite passed 8/8; v0.7 readiness suite passed 6/6; implementation-head verify #692 passed Ubuntu, Windows, and minimum versions. Package remains 0.5.1; no v0.7.0 tag/release is authorized.
 
 ---
 
