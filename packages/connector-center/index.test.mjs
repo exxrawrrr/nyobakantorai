@@ -192,6 +192,33 @@ test("disconnect immediately blocks future use without deleting the connector de
   assert.equal(result.reason,"CONNECTOR_DISCONNECTED");
 });
 
+test("stale CONNECTED history cannot resurrect a newer disconnected or revoked connection snapshot",()=>{
+  const active=connected();
+  const disconnected=transitionConnectorConnection(active,"DISCONNECT",{
+    registry,at:"2026-10-02T06:01:00.000Z",evidenceRef:"connector-evidence:disconnect-history",
+  });
+  const afterDisconnect=authorizeConnectorAction({
+    registry,connections:[active,disconnected],grants:[grant()],
+    employeeId:"gugun",connectorId:"google-ads-readonly",
+    capabilityId:"ads.google.read",accessMode:"READ",action:"list-campaigns",
+    resource:customer,now:"2026-10-02T06:02:00.000Z",
+  });
+  assert.equal(afterDisconnect.allowed,false);
+  assert.equal(afterDisconnect.reason,"CONNECTOR_DISCONNECTED");
+
+  const revoked=transitionConnectorConnection(active,"REVOKE",{
+    registry,at:"2026-10-02T06:03:00.000Z",evidenceRef:"connector-evidence:revoke-history",
+  });
+  const afterRevoke=authorizeConnectorAction({
+    registry,connections:[active,revoked],grants:[grant()],
+    employeeId:"gugun",connectorId:"google-ads-readonly",
+    capabilityId:"ads.google.read",accessMode:"READ",action:"list-campaigns",
+    resource:customer,now:"2026-10-02T06:04:00.000Z",
+  });
+  assert.equal(afterRevoke.allowed,false);
+  assert.equal(afterRevoke.reason,"CONNECTOR_REVOKED");
+});
+
 test("connector revocation is terminal and blocks all future use",()=>{
   const revoked=transitionConnectorConnection(connected(),"REVOKE",{
     registry,at:"2026-10-02T06:01:00.000Z",evidenceRef:"connector-evidence:revoke-001",
