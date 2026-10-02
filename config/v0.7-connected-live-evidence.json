@@ -20,7 +20,10 @@
         "visibility": "public",
         "pushed_at": "2026-10-02T07:28:46Z"
       },
-      "raw_private_payload_committed": false
+      "raw_private_payload_committed": false,
+      "reviewed_live_lifecycle": true,
+      "permission_mode_verified": "UNKNOWN_OR_BROADER",
+      "permission_note": "The connected GitHub App demonstrated write capability in the scoped issue flow, so this connection cannot be claimed read-only."
     },
     {
       "id": "google-drive-metadata-read",
@@ -38,7 +41,10 @@
       },
       "filenames_committed": false,
       "file_ids_committed": false,
-      "raw_private_payload_committed": false
+      "raw_private_payload_committed": false,
+      "reviewed_live_lifecycle": true,
+      "permission_mode_verified": "UNKNOWN_OR_BROADER",
+      "permission_note": "The available Google Drive connector exposes write actions; the authenticated connection's effective permission mode was not independently proven read-only."
     }
   ],
   "write_flow": {
