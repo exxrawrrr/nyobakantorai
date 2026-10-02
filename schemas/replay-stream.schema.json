@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/replay-stream.schema.json",
+  "title": "nyobakantorai Replay Stream v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "stream_id",
+    "mission_id",
+    "created_at",
+    "event_count",
+    "head_event_sha256",
+    "canonical_snapshot_sha256",
+    "canonical_snapshot",
+    "events",
+    "stream_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "stream_id": {
+      "type": "string",
+      "pattern": "^replay:.+"
+    },
+    "mission_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "head_event_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "canonical_snapshot_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "canonical_snapshot": {
+      "type": "object",
+      "required": [
+        "mission",
+        "tasks",
+        "attempts"
+      ],
+      "properties": {
+        "mission": {
+          "type": "object"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "stream_id",
+          "sequence",
+          "at",
+          "kind",
+          "mission_id",
+          "task_id",
+          "attempt_id",
+          "source_type",
+          "source_index",
+          "source_record_sha256",
+          "payload",
+          "previous_event_sha256",
+          "event_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": 1
+          },
+          "stream_id": {
+            "type": "string",
+            "pattern": "^replay:.+"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "mission_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "task_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "attempt_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "source_type": {
+            "enum": [
+              "MISSION_ORCHESTRATOR",
+              "ARTIFACT_WORKSPACE"
+            ]
+          },
+          "source_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_record_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "payload": {
+            "type": "object"
+          },
+          "previous_event_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "event_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "stream_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

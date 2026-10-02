@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/artifact-record.schema.json",
+  "title": "nyobakantorai Artifact Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "artifact_id",
+    "version",
+    "artifact_type",
+    "media_type",
+    "ownership",
+    "provenance",
+    "content",
+    "previous_artifact_ref",
+    "created_at",
+    "record_sha256",
+    "artifact_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,159}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "artifact_type": {
+      "enum": [
+        "REPORT",
+        "DATA",
+        "CODE",
+        "IMAGE",
+        "EVIDENCE"
+      ]
+    },
+    "media_type": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 160
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mission_id",
+        "task_id",
+        "attempt_id",
+        "employee_id"
+      ],
+      "properties": {
+        "mission_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "task_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "attempt_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "employee_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_kind",
+        "source_refs",
+        "created_by"
+      ],
+      "properties": {
+        "source_kind": {
+          "enum": [
+            "RUNTIME",
+            "USER",
+            "DERIVED",
+            "IMPORT",
+            "SYSTEM"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "uniqueItems": true
+        },
+        "created_by": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "byte_length",
+        "encoding"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "encoding": {
+          "enum": [
+            "utf8",
+            "base64"
+          ]
+        }
+      }
+    },
+    "previous_artifact_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifact_ref": {
+      "type": "string",
+      "pattern": "^artifact:[a-z0-9][a-z0-9._-]{2,159}:v[1-9][0-9]*:sha256:[a-f0-9]{64}$"
+    }
+  }
+}

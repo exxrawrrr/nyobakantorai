@@ -280,6 +280,9 @@ Closure: PASS for repository delivery. Cost admission is enforced before RUNNING
 
 ### CHAT 14 — Artifact Workspace + Execution Replay
 
+**Status: COMPLETE — DURABLE ARTIFACTS + CANONICAL REPLAY VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.6.1-ARTIFACT-WORKSPACE-REPLAY.md`
+
 Goal: turn outputs and history into durable production records.
 
 Deliverables:
@@ -291,6 +294,8 @@ Deliverables:
 - tamper/missing-event handling.
 
 Exit gate: artifacts survive outside chat history and replay derives from canonical records, not generated narration.
+
+Closure: PASS for repository delivery. Artifact versions are immutable and checksum-addressed; directory-backed storage and verified export/import survive workspace/process recreation; Mission/Task/Attempt ownership is validated; REPORT/DATA/CODE/IMAGE/EVIDENCE fixtures pass; Artifact Workspace events and replay events are hash chained; replay timeline rows expose exact canonical source payloads rather than generated narration; payload/metadata/index tamper, broken ownership/version ancestry, sequence gaps, and missing middle/tail events fail closed. Fresh targeted suite passed 12/12 and PR verify #630 passed Ubuntu, Windows, and minimum-version jobs.
 
 ### CHAT 15 — Checkpoint + Failure Recovery
 
