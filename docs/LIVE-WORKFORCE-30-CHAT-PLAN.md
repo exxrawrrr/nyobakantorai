@@ -299,6 +299,9 @@ Closure: PASS for repository delivery. Artifact versions are immutable and check
 
 ### CHAT 15 — Checkpoint + Failure Recovery
 
+**Status: IMPLEMENTED — FINAL REPOSITORY VERIFICATION PENDING — 2026-10-02.**
+Implementation/status: `docs/V0.6.1-CHECKPOINT-RECOVERY.md`
+
 Goal: resume useful work after bounded failures.
 
 Deliverables:
