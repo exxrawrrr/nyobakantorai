@@ -3,11 +3,12 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
+import { validateEmployeeAdditionGap } from "../packages/skills-store/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const COMMON = ["nyoba-task-truth","nyoba-manual-chatgpt-handoff","nyoba-approval-and-evidence","nyoba-safe-tool-use"];
 const SAFE_TOOLSETS = new Set(["browser","clarify","code_execution","connections","coding","cronjob","delegation","file","image_gen","kanban","memory","safe","search","session_search","skills","terminal","vision","web"]);
-const ALLOWED = new Set(["id","name","role","department","personality","expertise","skills","toolsets","aliases","write"]);
+const ALLOWED = new Set(["id","name","role","department","personality","expertise","skills","toolsets","aliases","capability-gap","write"]);
 
 const csv = (value) => String(value || "").split(",").map((item) => item.trim()).filter(Boolean);
 const unique = (items) => [...new Set(items)];
@@ -36,12 +37,14 @@ export function draftEmployee(options, registry) {
   const toolsets = unique(csv(options.toolsets).length ? csv(options.toolsets) : ["skills","web","search","clarify"]);
   for (const toolset of toolsets) if (!SAFE_TOOLSETS.has(toolset)) throw new Error(`Unknown/unapproved core Hermes toolset: ${toolset}`);
   const expertise = csv(options.expertise).length ? csv(options.expertise) : [role];
+  const capabilityGap = validateEmployeeAdditionGap(options["capability-gap"]);
   const aliases = unique([id, name.toLowerCase(), ...csv(options.aliases)]);
   const slot = registry.employees.length;
 
   return {
     id, name, role, department,
     summary: `${role} specialist added by the repository owner; customize this summary before publishing.`,
+    capability_gap: capabilityGap,
     aliases,
     personality: {
       traits: csv(options.personality).length ? csv(options.personality) : ["practical","evidence-aware"],
@@ -136,7 +139,7 @@ async function main() {
   const preview = {
     mode: options.write ? "WRITE" : "PREVIEW",
     employee,
-    notice: "No secret, credential, MCP authorization, provider token, or finished artwork is generated.",
+    notice: "No secret, credential, MCP authorization, provider token, or finished artwork is generated. Headcount addition requires a documented capability gap after considering reusable skill attachment to existing employees.",
   };
   if (!options.write) { console.log(JSON.stringify(preview, null, 2)); return; }
 
