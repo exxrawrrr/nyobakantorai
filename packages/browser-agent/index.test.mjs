@@ -333,6 +333,8 @@ test("USER_OWNED_AUDIT approved mutation becomes an auditable mutation plan",()=
   assert.equal(plan.decision,"AUTHORIZED_BROWSER_MUTATION");
   assert.equal(plan.action.mode,"MUTATION");
   assert.equal(plan.approval_ref,"approval:browser:write:click");
+  assert.equal(plan.ownership_evidence_ref,"ownership-evidence:site:001");
+  assert.equal(plan.scope_expires_at,"2026-10-03T06:10:00.000Z");
   assert.equal(validateBrowserActionPlan(plan),true);
 });
 
@@ -469,10 +471,46 @@ test("USER_OWNED_AUDIT mutation execution requires pre/action/post evidence and 
     assert.equal(record.post_action_state_ref,"artifact:browser/post-001");
     assert.equal(verifyBrowserActionRecord(record,{plan}).ok,true);
 
-    const tampered={...record,after_url:origin+"/admin?forged=1"};
+    const tampered={...record,after_url:"https://evil.example.net/forged"};
     const check=verifyBrowserActionRecord(tampered,{plan});
     assert.equal(check.ok,false);
     assert.ok(check.errors.some((item)=>/checksum mismatch/.test(item)));
+    assert.ok(check.errors.some((item)=>/after_url escaped authorized origin/.test(item)));
+  } finally {
+    await profile.cleanup();
+  }
+});
+
+test("independent audit rejects malformed profile, observation hash, status, flow, and approval metadata",async()=>{
+  const plan=authorize();
+  const cRoute=connectorRoute();
+  const capRoute=capabilityRoute();
+  const profile=await createDisposableBrowserProfile();
+  try{
+    const agent=createBrowserAgent({transport:async()=>({
+      status:"EXECUTED",
+      before_url:"https://example.com/",
+      after_url:"https://example.com/research",
+      provider_evidence_ref:"browser-provider-evidence:audit-001",
+      observed_text:"Audit me",
+      external_mutation_observed:false,
+    })});
+    const record=await agent.execute({plan,profile,connectorRoute:cRoute,capabilityRoute:capRoute});
+    const malformed={
+      ...record,
+      profile_ref:"browser-profile:bad",
+      observed_text_sha256:"not-a-hash",
+      status:"SUCCESS",
+      flow:"LOCALHOST_QA",
+      approval_ref:"approval:forged",
+    };
+    const check=verifyBrowserActionRecord(malformed,{plan});
+    assert.equal(check.ok,false);
+    assert.ok(check.errors.some((item)=>/profile_ref is invalid/.test(item)));
+    assert.ok(check.errors.some((item)=>/observed_text_sha256 is invalid/.test(item)));
+    assert.ok(check.errors.some((item)=>/status is invalid/.test(item)));
+    assert.ok(check.errors.some((item)=>/flow mismatch/.test(item)));
+    assert.ok(check.errors.some((item)=>/approval_ref mismatch/.test(item)));
   } finally {
     await profile.cleanup();
   }
