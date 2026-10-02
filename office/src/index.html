@@ -19,6 +19,7 @@
       <button class="nav-button" data-view="try" type="button">Try AI</button>
       <button class="nav-button" data-view="people" type="button">People</button>
       <button class="nav-button" data-view="missions" type="button">Missions</button>
+      <button class="nav-button" data-view="geo" type="button">Geo Intel</button>
       <button class="nav-button" data-view="approvals" type="button">Approvals</button>
       <button class="nav-button" data-view="activity" type="button">Activity</button>
       <button class="nav-button" data-view="systems" type="button">Systems</button>
@@ -92,6 +93,10 @@
       <div class="toolbar"><label>Search <input id="task-search" type="search" placeholder="Title atau detail"></label><label>Owner <select id="task-owner"><option value="">All</option></select></label><label>Provenance <select id="task-provenance"><option value="">All</option><option>DEMO</option><option>LOCAL_CLAIM</option><option>AUTHORITATIVE_RUNTIME</option></select></label><button id="export-registry" type="button">Export + backup</button><button id="import-registry" type="button">Import JSON</button></div>
       <div id="quarantine-notice" class="quarantine-notice" hidden></div>
       <div id="mission-board" class="mission-board"></div>
+    </section>
+
+    <section id="view-geo" class="view" hidden aria-labelledby="geo-title">
+      <div id="geo-mission-root" aria-live="polite"></div>
     </section>
 
     <section id="view-approvals" class="view" hidden aria-labelledby="approvals-title">
