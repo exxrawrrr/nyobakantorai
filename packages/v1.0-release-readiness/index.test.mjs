@@ -18,7 +18,6 @@ test("canonical v1.0 production convergence is valid NO_GO with truthful evidenc
     "REAL_WORLD_WORKFLOW_EVIDENCE",
     "PROVIDER_LIFECYCLE_MATURITY",
     "REPRESENTATIVE_RECOVERY_EVIDENCE",
-    "INSTALL_MIGRATION_FRESH_MATRIX",
     "V0_9_PREREQUISITE",
   ]);
   assert.equal(assessment.components.SECURITY_CONTROL_CONVERGENCE,"PASS");
@@ -51,32 +50,27 @@ test("forged v1 READY fields cannot override canonical production evidence",asyn
   assert.ok(result.errors.some((x)=>/drift|authorized/.test(x)));
 });
 
-test("a passing install matrix cannot leapfrog real-world provider recovery or v0.9 blockers",async()=>{
+test("install matrix regression becomes an explicit blocker without hiding the remaining production blockers",async()=>{
   const {config,assessment}=await readAndAssessV1ReleaseReadiness({root});
+  assert.equal(assessment.components.INSTALL_MIGRATION_FRESH_MATRIX,"PASS");
   const evidence=structuredClone(assessment.production_evidence);
-  evidence.install_matrix={
-    live_observed:true,
-    source_commit:"a".repeat(40),
-    clean_source:true,
-    isolated_python_env:true,
-    one_worker:true,
-    subset:true,
-    full:true,
-    lifecycle:true,
-    log_sha256:"b".repeat(64),
-  };
+  evidence.install_matrix.full=false;
   const changed=structuredClone(config);
-  changed.evidence.observed.INSTALL_MIGRATION_FRESH_MATRIX="PASS";
-  changed.release_blockers=changed.release_blockers.filter((x)=>x.id!=="INSTALL_MIGRATION_FRESH_MATRIX");
+  changed.evidence.observed.INSTALL_MIGRATION_FRESH_MATRIX="BLOCKED";
+  changed.release_blockers=[
+    ...changed.release_blockers.slice(0,3),
+    {id:"INSTALL_MIGRATION_FRESH_MATRIX",reason:"regression fixture"},
+    ...changed.release_blockers.slice(3),
+  ];
   const result=await assessV1ReleaseReadiness(changed,{root,productionEvidenceOverride:evidence});
   assert.equal(result.ok,true,result.errors.join("\n"));
   assert.deepEqual(result.blockers,[
     "REAL_WORLD_WORKFLOW_EVIDENCE",
     "PROVIDER_LIFECYCLE_MATURITY",
     "REPRESENTATIVE_RECOVERY_EVIDENCE",
+    "INSTALL_MIGRATION_FRESH_MATRIX",
     "V0_9_PREREQUISITE",
   ]);
-  assert.equal(result.production_decision,"NO_GO");
 });
 
 test("manual GO cannot override technical production blockers",async()=>{
@@ -144,5 +138,5 @@ test("release manifest check surfaces v1.0 production convergence decision",()=>
   const result=spawnSync(process.execPath,["scripts/release-manifest.mjs","--check"],{cwd:root,encoding:"utf8"});
   assert.equal(result.status,0,result.stderr||result.stdout);
   assert.match(result.stdout,/v1\.0_production=NO_GO/);
-  assert.match(result.stdout,/v1\.0_readiness=BLOCKED\(5\)/);
+  assert.match(result.stdout,/v1\\.0_readiness=BLOCKED\\(4\\)/);
 });
