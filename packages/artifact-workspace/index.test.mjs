@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createDirectoryArtifactStorage } from "./node-storage.mjs";
 import {
   archiveMissionRun,
   buildReplayStream,
@@ -117,6 +121,21 @@ test("artifact edit creates an immutable next version linked to the previous ref
   assert.equal(workspace.read(first.artifact_ref).payload.data,fixtures.artifacts[0].payload.data);
   assert.equal(workspace.read(second.artifact_ref).payload.data,"# Fixture Report v2\n");
   assert.deepEqual(workspace.list({artifact_type:"REPORT"}).map((x)=>x.version),[1,2]);
+});
+
+test("directory storage survives a new workspace instance and process-like reopen",()=>{
+  const dir=mkdtempSync(join(tmpdir(),"nyobakantorai-artifacts-"));
+  try{
+    const first=createArtifactWorkspace({storage:createDirectoryArtifactStorage(dir),clock:clock()});
+    const record=putFixture(first,fixtures.artifacts[0]);
+    assert.equal(first.verify().record_count,1);
+
+    const reopened=createArtifactWorkspace({storage:createDirectoryArtifactStorage(dir)});
+    assert.equal(reopened.verify().record_count,1);
+    assert.equal(reopened.read(record.artifact_ref).payload.data,fixtures.artifacts[0].payload.data);
+  }finally{
+    rmSync(dir,{recursive:true,force:true});
+  }
 });
 
 test("artifact workspace survives export/import into a new storage adapter",()=>{
