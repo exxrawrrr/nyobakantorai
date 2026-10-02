@@ -289,3 +289,39 @@ export async function recoverBrowserSession(requestInput,{open_isolated_session}
     credentials_carried:false,
   });
 }
+
+
+export function persistRecoveryCheckpoint({workspace,checkpoint,created_by="system:checkpoint-recovery"}={}){
+  assert(workspace&&typeof workspace.put==="function","Checkpoint persistence requires Artifact Workspace.");
+  const cp=normalizeRecoveryCheckpoint(checkpoint);
+  const artifact=workspace.put({
+    artifact_id:"recovery-checkpoint-"+cp.mission.mission_id.toLowerCase().replace(/[^a-z0-9._-]+/g,"-").replace(/^-+|-+$/g,"").slice(0,120),
+    artifact_type:"EVIDENCE",
+    media_type:"application/json",
+    payload:{encoding:"utf8",data:JSON.stringify(cp)},
+    ownership:{mission_id:cp.mission.mission_id,task_id:null,attempt_id:null,employee_id:null},
+    provenance:{
+      source_kind:"SYSTEM",
+      source_refs:[cp.checkpoint_ref],
+      created_by:clean(created_by,120)||"system:checkpoint-recovery",
+    },
+  });
+  return Object.freeze({
+    checkpoint_ref:cp.checkpoint_ref,
+    artifact_ref:artifact.artifact_ref,
+    artifact_version:artifact.version,
+  });
+}
+
+export function readRecoveryCheckpointArtifact(workspace,artifact_ref){
+  assert(workspace&&typeof workspace.read==="function","Checkpoint restore requires Artifact Workspace.");
+  const archived=workspace.read(artifact_ref);
+  assert(archived.record.artifact_type==="EVIDENCE","Recovery checkpoint artifact must be EVIDENCE.");
+  assert(archived.record.media_type==="application/json","Recovery checkpoint artifact must use application/json.");
+  let parsed;
+  try{parsed=JSON.parse(archived.payload.data);}catch{throw new Error("Recovery checkpoint artifact payload is not valid JSON.");}
+  const checkpoint=normalizeRecoveryCheckpoint(parsed);
+  assert(archived.record.ownership.mission_id===checkpoint.mission.mission_id,"Recovery checkpoint artifact Mission ownership mismatch.");
+  assert(archived.record.provenance.source_refs.includes(checkpoint.checkpoint_ref),"Recovery checkpoint artifact provenance is missing checkpoint_ref.");
+  return checkpoint;
+}
