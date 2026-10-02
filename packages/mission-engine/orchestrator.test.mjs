@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { defineRuntimeExecutionAdapter } from "../runtime-execution-adapter/index.mjs";
 import { planMission } from "./planner.mjs";
 import { executeMissionPlan } from "./orchestrator.mjs";
+import { createCostGovernor } from "../cost-governor/index.mjs";
 
 const root = new URL("../../", import.meta.url);
 const policy = JSON.parse(await readFile(new URL("config/runtime-execution-policy.json", root), "utf8"));
@@ -385,4 +386,183 @@ test("orchestrator without verification hook preserves SUCCEEDED truth and emits
   assert.deepEqual(result.verifications,[]);
   assert.equal(result.mission.state,"SUCCEEDED");
   assert.ok(result.tasks.every((task)=>task.state==="SUCCEEDED"));
+});
+
+
+function costPolicy(overrides={}) {
+  return {
+    schema:1,
+    currency:"USD",
+    thresholds:{warning_ratio:0.70,reroute_ratio:0.85,approval_ratio:0.95},
+    daily_limit_amount:null,
+    project_limits:{},
+    mission_limits:{},
+    employee_limits:{},
+    ...overrides,
+  };
+}
+
+function oneCostTaskPlan({budget=1}={}) {
+  return planMission({
+    objective:"Run one cost-governed bounded task.",
+    risk_class:"READ_ONLY",
+    budget:{hard_limit_amount:budget,currency:"USD"},
+    work_items:[
+      {key:"root",title:"Cost governed task",objective:"Execute within governed cost.",assigned_id:"alex",depends_on:[]},
+    ],
+  },{clock:fixedClock,idFactory:ids});
+}
+
+function costResolution(task,{amount,alternatives=[]}={}) {
+  return {
+    adapter:makeAdapter(task.task_id),
+    policy,
+    required_capabilities:["model_inference","temporary_workspace","evidence_collection"],
+    cost_governance:{
+      project_id:"project-cost-tests",
+      estimate:amount==null
+        ? {status:"UNKNOWN",amount:null,currency:null}
+        : {status:"KNOWN",amount,currency:"USD"},
+      alternatives,
+      provider_id:"fixture-runtime",
+      model_id:"fixture-model",
+      tool_ids:[],
+    },
+  };
+}
+
+test("cost approval threshold escalates canonical READY task to WAITING_APPROVAL before runtime execution",async()=>{
+  const plan=oneCostTaskPlan();
+  const governor=createCostGovernor({policy:costPolicy(),clock:fixedClock});
+  let runtimeCalls=0;
+
+  const result=await executeMissionPlan(plan,{
+    resolveRuntime:async({task})=>{
+      runtimeCalls+=1;
+      return costResolution(task,{amount:0.96});
+    },
+    costGovernor:governor,
+    clock:fixedClock,
+  });
+
+  assert.equal(runtimeCalls,1);
+  assert.equal(result.attempts.length,0);
+  assert.equal(result.tasks[0].state,"WAITING_APPROVAL");
+  assert.equal(result.tasks[0].approval.required,true);
+  assert.equal(result.tasks[0].approval.status,"PENDING");
+  assert.equal(result.mission.state,"WAITING_APPROVAL");
+  assert.equal(result.cost_decisions[0].action,"APPROVAL_REQUIRED");
+  assert.ok(result.events.some((item)=>item.kind==="TASK_WAITING_COST_APPROVAL"));
+});
+
+test("hard cost budget stops execution even when a task could otherwise run",async()=>{
+  const plan=oneCostTaskPlan();
+  const governor=createCostGovernor({policy:costPolicy(),clock:fixedClock});
+  let entered=0;
+
+  const result=await executeMissionPlan(plan,{
+    resolveRuntime:async({task})=>({
+      ...costResolution(task,{amount:1.0}),
+      adapter:makeAdapter(task.task_id,{onEnter:()=>{entered+=1;}}),
+    }),
+    costGovernor:governor,
+    clock:fixedClock,
+  });
+
+  assert.equal(entered,0);
+  assert.equal(result.attempts.length,0);
+  assert.equal(result.tasks[0].state,"BLOCKED");
+  assert.equal(result.tasks[0].blocking.kind,"POLICY");
+  assert.equal(result.mission.state,"BLOCKED");
+  assert.equal(result.cost_decisions[0].action,"STOP");
+  assert.ok(result.cost_decisions[0].reason_codes.includes("HARD_BUDGET_LIMIT_REACHED"));
+});
+
+test("reroute threshold can switch to a cheaper runtime resolution before execution",async()=>{
+  const plan=oneCostTaskPlan();
+  const governor=createCostGovernor({policy:costPolicy(),clock:fixedClock});
+  let reroutes=0;
+
+  const result=await executeMissionPlan(plan,{
+    resolveRuntime:async({task})=>costResolution(task,{
+      amount:0.90,
+      alternatives:[{id:"cheap",cost:{status:"KNOWN",amount:0.20,currency:"USD"}}],
+    }),
+    resolveCostReroute:async({task,recommended_alternative})=>{
+      reroutes+=1;
+      assert.equal(recommended_alternative.id,"cheap");
+      return costResolution(task,{amount:0.20});
+    },
+    reportActualCost:async()=>({
+      cost_type:"MODEL",
+      cost:{status:"KNOWN",amount:0.20,currency:"USD"},
+      evidence_refs:["evidence:cost-actual"],
+    }),
+    costGovernor:governor,
+    clock:fixedClock,
+  });
+
+  assert.equal(reroutes,1);
+  assert.equal(result.mission.state,"SUCCEEDED");
+  assert.deepEqual(result.cost_decisions.map((item)=>item.action),["REROUTE","ALLOW"]);
+  assert.equal(result.cost_entries.length,1);
+  assert.equal(result.cost_entries[0].cost.amount,0.20);
+  assert.ok(result.events.some((item)=>item.kind==="TASK_COST_REROUTED"));
+});
+
+test("missing actual-cost report records UNKNOWN and stops the next budgeted task",async()=>{
+  const plan=planMission({
+    objective:"Run two sequential cost-governed tasks.",
+    risk_class:"READ_ONLY",
+    budget:{hard_limit_amount:1,currency:"USD"},
+    work_items:[
+      {key:"first",title:"First cost task",objective:"Run first bounded task.",assigned_id:"alex",depends_on:[]},
+      {key:"second",title:"Second cost task",objective:"Run only if cost is reconciled.",assigned_id:"nara",depends_on:["first"]},
+    ],
+  },{clock:fixedClock,idFactory:ids});
+  const governor=createCostGovernor({policy:costPolicy(),clock:fixedClock});
+  let runtimeEntries=0;
+
+  const result=await executeMissionPlan(plan,{
+    resolveRuntime:async({task})=>({
+      ...costResolution(task,{amount:0.10}),
+      adapter:makeAdapter(task.task_id,{onEnter:()=>{runtimeEntries+=1;}}),
+    }),
+    costGovernor:governor,
+    clock:fixedClock,
+  });
+
+  assert.equal(runtimeEntries,1);
+  assert.equal(result.cost_entries.length,1);
+  assert.equal(result.cost_entries[0].cost.status,"UNKNOWN");
+  assert.equal(result.cost_decisions.length,2);
+  assert.equal(result.cost_decisions[0].action,"ALLOW");
+  assert.equal(result.cost_decisions[1].action,"STOP");
+  assert.ok(result.cost_decisions[1].reason_codes.includes("UNRECONCILED_UNKNOWN_COST"));
+  assert.deepEqual(result.tasks.map((task)=>task.state),["SUCCEEDED","BLOCKED"]);
+  assert.equal(result.mission.state,"PARTIAL");
+  assert.ok(result.events.some((item)=>item.kind==="COST_RECONCILIATION_REQUIRED"));
+});
+
+
+test("actual cost overrun keeps completed work visible but prevents Mission SUCCEEDED",async()=>{
+  const plan=oneCostTaskPlan();
+  const governor=createCostGovernor({policy:costPolicy(),clock:fixedClock});
+
+  const result=await executeMissionPlan(plan,{
+    resolveRuntime:async({task})=>costResolution(task,{amount:0.20}),
+    reportActualCost:async()=>({
+      cost_type:"MODEL",
+      cost:{status:"KNOWN",amount:1.20,currency:"USD"},
+      evidence_refs:["evidence:actual-overrun"],
+    }),
+    costGovernor:governor,
+    clock:fixedClock,
+  });
+
+  assert.equal(result.tasks[0].state,"SUCCEEDED");
+  assert.equal(result.mission.state,"PARTIAL");
+  const missionScope=result.cost_snapshot.budget_state.find((item)=>item.kind==="MISSION");
+  assert.equal(missionScope.hard_limit_breached,true);
+  assert.ok(result.events.some((item)=>item.kind==="MISSION_COST_RECONCILIATION_REQUIRED"));
 });
