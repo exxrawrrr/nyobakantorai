@@ -112,3 +112,30 @@ The Office UI surfaces the same fields and allows owner edits before approval. A
 Scheduled missions do not receive special approval authority. A recurring trigger materializes a normal Mission Plan only after the normal Cost Governor admits it, and the resulting TaskNodes retain the same risk/approval requirements as interactive work.
 
 See [Scheduler + Approval Center 2.0](V0.7-SCHEDULER-APPROVAL-CENTER.md).
+
+
+## CRM and outreach boundary (CHAT 25)
+
+CRM-ready lead data and outreach drafts remain artifacts until a human owner authorizes an exact external action.
+
+CRM import approval binds:
+
+- action: `crm.import`;
+- resource: one exact `crm-dataset:<export_ref>`;
+- risk: `EXTERNAL_WRITE`;
+- evidence: verified export + Siti verification refs;
+- expiry.
+
+Outreach approval binds:
+
+- action: `outreach.send.<channel>`;
+- resource: one exact `outreach-draft:<draft_ref>`;
+- risk: `EXTERNAL_WRITE`;
+- preview: the exact draft content;
+- expiry.
+
+Neither approval type grants the other action.
+
+CHAT 25 deliberately provides no send/write executor. Approval remains permission only; a later connected execution still needs provider capability/grants and execution evidence.
+
+See `docs/V0.7.1-MAP-MISSIONS-CRM.md`.
