@@ -131,6 +131,7 @@ Execution progress:
 - [x] CHAT 08 — Public Interactive Demo Backend + UI implemented and verified: deterministic no-login demo, isolated anonymous sessions, bounded quotas, visible task graph/employee routing, strict synthetic/live labels, and fail-closed LIVE fallback. The localhost office does not currently inject an arbitrary-mission live runner. See [v0.6 Public Interactive Demo](docs/V0.6-PUBLIC-INTERACTIVE-DEMO.md).
 - [x] CHAT 09 — Execution Telemetry + Evidence UI implemented and verified. Canonical Attempt state, runtime/model/tool/usage/evidence/receipt/unknown/blocker projections are visible without inventing progress or converting unknown usage to zero; public live success now requires canonical Attempt traceability. See [v0.6 Execution Telemetry](docs/V0.6-EXECUTION-TELEMETRY.md).
 - [x] CHAT 10 — Siti Verification / Red-Team Engine implemented, independently gated, and verified. Research/code/external-state reviews use the canonical evidence-verifier and Task/Mission VERIFIED transitions; unsupported or contradictory output cannot be promoted to VERIFIED. See [v0.6 Siti Verification](docs/V0.6-SITI-VERIFICATION.md).
+- [ ] CHAT 11 — v0.6.0 End-to-End Acceptance Mission harness implemented; current-commit live-model/sandbox observation and final integration gates remain pending. See [v0.6 E2E Acceptance](docs/V0.6-E2E-ACCEPTANCE.md).
 
 Planned release sequence:
 
