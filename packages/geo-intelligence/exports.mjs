@@ -47,8 +47,9 @@ export function buildCsv(rows){
   const columns=Object.keys(rows[0]);
   return [columns.join(","),...rows.map(r=>columns.map(c=>csvEscape(r[c])).join(","))].join("\n")+"\n";
 }
-export function createGeoResearchExportPack({expansion_plan,profiles=[],scores=[],verifications=[],sources=[],created_at,require_all_verified=true}={}){
+export function createGeoResearchExportPack({expansion_plan,profiles=[],scores=[],verifications=[],sources=[],created_at,require_all_verified=true,policy=null}={}){
   assert(expansion_plan?.completeness_claim===false,"Export requires bounded non-complete expansion plan.");
+  if(policy) assert(sources.length<=Number(policy.enrichment?.max_sources_per_mission||100),"Export source count exceeds mission bound.");
   assert(profiles.length>0,"Export profiles required.");
   assert(scores.length===profiles.length,"Each exported profile requires a score.");
   const createdAt=iso(created_at,"Export created_at");
