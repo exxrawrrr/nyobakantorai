@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "candidate": "v0.8.0",
+  "lead_decision": "BLOCKED",
+  "decision": "BLOCKED",
+  "lead_evidence": {
+    "required_components": [
+      "LEAD_LOOP_CONTRACTS",
+      "ADAPTIVE_REVIEW_CONTRACTS",
+      "CRM_LIFECYCLE_CONTRACTS",
+      "MONITORING_CONTRACTS",
+      "OUTREACH_APPROVAL_CONTRACTS",
+      "LIVE_PROSPECTING_CYCLE",
+      "LIVE_MONITORING_OBSERVATION",
+      "LIVE_CRM_LIFECYCLE",
+      "LIVE_OUTREACH_APPROVAL_EVIDENCE"
+    ],
+    "observed": {
+      "LEAD_LOOP_CONTRACTS": "PASS",
+      "ADAPTIVE_REVIEW_CONTRACTS": "PASS",
+      "CRM_LIFECYCLE_CONTRACTS": "PASS",
+      "MONITORING_CONTRACTS": "PASS",
+      "OUTREACH_APPROVAL_CONTRACTS": "PASS",
+      "LIVE_PROSPECTING_CYCLE": "BLOCKED",
+      "LIVE_MONITORING_OBSERVATION": "BLOCKED",
+      "LIVE_CRM_LIFECYCLE": "BLOCKED",
+      "LIVE_OUTREACH_APPROVAL_EVIDENCE": "BLOCKED"
+    }
+  },
+  "release_blockers": [
+    {
+      "id": "LIVE_PROSPECTING_CYCLE",
+      "reason": "No qualifying live DISCOVER -> ENRICH -> SCORE -> VERIFY -> LEARN cycle has been recorded."
+    },
+    {
+      "id": "LIVE_MONITORING_OBSERVATION",
+      "reason": "No qualifying live competitor or territory monitoring observation has been recorded through normal scheduler and cost-governor boundaries."
+    },
+    {
+      "id": "LIVE_CRM_LIFECYCLE",
+      "reason": "No qualifying live attributable CRM lifecycle observation has been recorded."
+    },
+    {
+      "id": "LIVE_OUTREACH_APPROVAL_EVIDENCE",
+      "reason": "No qualifying live draft plus exact human approval-request evidence has been recorded."
+    },
+    {
+      "id": "V0_7_1_PREREQUISITE",
+      "reason": "The prerequisite v0.7.1 Geo Intelligence release is still blocked."
+    }
+  ],
+  "package_version_hold": {
+    "current": "0.5.1",
+    "candidate": "0.8.0",
+    "bump_authorized": false
+  },
+  "promotion": {
+    "stable_tag_authorized": false,
+    "publication_authorized": false
+  },
+  "coverage_claim": "VERIFIED_OBSERVED_BOUNDED_ONLY"
+}
