@@ -175,6 +175,9 @@ Closure: PASS for repository delivery. The deterministic no-login path, anonymou
 
 ### CHAT 09 — Execution Telemetry + Evidence UI
 
+**Status: COMPLETE — CANONICAL TELEMETRY + EVIDENCE UI VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.6-EXECUTION-TELEMETRY.md`
+
 Goal: replace vague `WORKING` status with inspectable execution facts.
 
 Deliverables:
@@ -188,6 +191,8 @@ Deliverables:
 - terminal-state traceability.
 
 Exit gate: every visible terminal state comes from canonical data; no invented progress events.
+
+Closure: PASS for repository delivery. Telemetry is a read projection over canonical TaskNode / Execution Attempt / Handoff / Live Sandbox records. Missing model/tool/usage values remain UNKNOWN, public live success requires canonical Attempt traceability, synthetic/unverified responses cannot surface live telemetry, and the full repository verification gate is green.
 
 ### CHAT 10 — Siti Verification / Red-Team Engine
 

@@ -446,6 +446,8 @@ For external actions:
 
 ### 8.9 Evidence UI
 
+CHAT 09 implementation/status source: [v0.6 Execution Telemetry + Evidence UI](V0.6-EXECUTION-TELEMETRY.md). The implementation projects execution facts from canonical TaskNode / Execution Attempt / Handoff / Live Sandbox records, requires canonical Attempt traceability for public live success, preserves unavailable usage/model/tool values as UNKNOWN, redacts private/sensitive reference shapes before browser exposure, and does not invent progress events. Independent verifier outcome remains a CHAT 10 concern and is not fabricated here.
+
 The UI should expose more than a status badge.
 
 Per execution step, show when available:

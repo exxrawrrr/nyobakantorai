@@ -121,6 +121,12 @@ test("4-node synthetic mission executes validated DAG with real bounded parallel
   assert.equal(result.cancelled, false);
   assert.equal(result.tasks.length, 4);
   assert.equal(result.attempts.length, 4);
+  assert.equal(result.telemetry.length, 4);
+  assert.ok(result.telemetry.every((row) => row.execution.state === "SUCCEEDED"));
+  assert.ok(result.telemetry.every((row) => row.execution.terminal === true));
+  assert.ok(result.telemetry.every((row) => row.execution.state_source === "EXECUTION_ATTEMPT_V1"));
+  assert.ok(result.telemetry.every((row) => row.model.status === "UNKNOWN"));
+  assert.ok(result.telemetry.every((row) => row.usage.source === "UNKNOWN"));
   assert.equal(result.handoffs.length, 4);
   assert.equal(result.returns.length, 4);
   assert.equal(maxActive, 2);

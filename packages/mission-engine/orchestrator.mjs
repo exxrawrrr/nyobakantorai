@@ -3,6 +3,7 @@ import { normalizeExecutionAttempt, normalizeMission, attemptFromRuntimeOutcome,
 import { normalizeMissionPlan } from "./planner.mjs";
 import { normalizeTaskNode, transitionTaskNode } from "../task-registry/task-node.mjs";
 import { buildHandoffEnvelope, normalizeHandoffResult, resultFromAttempt } from "./handoff.mjs";
+import { buildMissionTelemetry } from "./telemetry.mjs";
 
 export const MISSION_ORCHESTRATOR_API = 1;
 
@@ -435,12 +436,18 @@ export async function executeMissionPlan(planInput, {
   }));
 
   for (const item of returns) normalizeHandoffResult(item);
+  const telemetry = buildMissionTelemetry({
+    task_nodes:finalTasks,
+    attempts,
+    handoff_results:returns,
+  });
 
   return Object.freeze({
     api:MISSION_ORCHESTRATOR_API,
     mission,
     tasks:Object.freeze(finalTasks),
     attempts:Object.freeze(attempts),
+    telemetry,
     handoffs:Object.freeze(handoffs),
     returns:Object.freeze(returns),
     events:Object.freeze(events),
