@@ -78,3 +78,37 @@ For high-impact authorized actions, the normalized receipt requires an approval 
 A valid signature does not make the outcome correct. Independent evidence and reviewer policy still control `VERIFIED`.
 
 See [EXECUTION-RECEIPTS.md](EXECUTION-RECEIPTS.md).
+
+
+## Approval Center 2.0 boundary (CHAT 20)
+
+Approval Center 2.0 adds a bounded approval-request contract without changing the core rule that only the human owner may approve high-impact work.
+
+A v2 approval request explicitly carries:
+
+- target;
+- risk class;
+- budget;
+- reason;
+- evidence references;
+- human-readable preview;
+- exact action/resource scope;
+- request time;
+- expiry.
+
+Owner decisions are `APPROVED`, `EDITED`, or `REJECTED`.
+
+`EDITED` may only narrow the original action/resource scope and may only shorten expiry. It cannot grant a new action, new resource, wildcard resource, or longer lifetime than the original request.
+
+At point of use, the approval is checked again for:
+
+- rejection;
+- expiry;
+- action scope;
+- resource scope.
+
+The Office UI surfaces the same fields and allows owner edits before approval. Approved local scope cannot be edited in place; changed scope requires a new approval.
+
+Scheduled missions do not receive special approval authority. A recurring trigger materializes a normal Mission Plan only after the normal Cost Governor admits it, and the resulting TaskNodes retain the same risk/approval requirements as interactive work.
+
+See [Scheduler + Approval Center 2.0](V0.7-SCHEDULER-APPROVAL-CENTER.md).
