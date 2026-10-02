@@ -232,13 +232,13 @@ function normalizeBrowserAction(action={}){
   const instructionSource=clean(action.instruction_source||"MISSION_PLAN",40).toUpperCase();
   assert(SOURCE_SET.has(instructionSource),"Browser instruction_source is invalid.");
   const selector=action.selector==null?null:clean(action.selector,500)||null;
-  const payloadRequired=["TYPE","SELECT","UPLOAD"].includes(type);
-  const payloadRef=normalizePayloadRef(action.payload_ref,{required:payloadRequired});
   for(const rawField of ["text","value","password","file_path","cookie","cookies","authorization","token"]){
     if(Object.hasOwn(action,rawField)&&action[rawField]!=null&&String(action[rawField]).trim()!==""){
       throw new Error("Browser action raw payload field is forbidden: "+rawField);
     }
   }
+  const payloadRequired=["TYPE","SELECT","UPLOAD"].includes(type);
+  const payloadRef=normalizePayloadRef(action.payload_ref,{required:payloadRequired});
   if(["CLICK","TYPE","SELECT","UPLOAD","SUBMIT","DRAG_DROP","DELETE"].includes(type)){
     assert(selector,"Browser action "+type+" requires selector.");
   }
