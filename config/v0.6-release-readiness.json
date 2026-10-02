@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "candidate": "v0.6.0",
+  "observed_on": "2026-10-02",
+  "decision": "BLOCKED",
+  "policy": "v0.6.0 may be tagged or published only when all mandatory CHAT 11 acceptance criteria pass, release metadata is coherent, required verification is green, and the dedicated tagged release workflow is authorized. Green CI alone does not override blocked evidence.",
+  "release_blockers": [
+    {
+      "id": "REAL_MODEL_EXECUTION",
+      "category": "acceptance-evidence",
+      "status": "BLOCKED",
+      "required_state": "PASS",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.6-acceptance-evidence.json",
+      "reason": "Fresh current-commit Codex and Hermes attempts did not produce LIVE_RUNTIME_EVIDENCE.",
+      "safe_next_action": "Re-run the bounded canonical live observation only when a provider can complete successfully; do not weaken sandbox or evidence requirements."
+    },
+    {
+      "id": "COST_QUOTA_ENFORCEMENT",
+      "category": "acceptance-evidence",
+      "status": "BLOCKED",
+      "required_state": "PASS",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.6-acceptance-evidence.json",
+      "reason": "Fresh live observations had quota_status PARTIAL and unsuccessful runtime execution, so current-commit enforcement evidence is insufficient for release acceptance.",
+      "safe_next_action": "Collect a successful current-commit live sandbox observation with truthful quota/cost accounting; UNKNOWN dimensions must remain UNKNOWN."
+    }
+  ],
+  "acceptance": {
+    "source": "config/v0.6-acceptance-evidence.json",
+    "required_pass_count": 11,
+    "observed_pass_count": 9,
+    "total": 11,
+    "mission_state": "VERIFIED",
+    "verdict": "BLOCKED"
+  },
+  "package_version_hold": {
+    "current": "0.5.1",
+    "candidate": "0.6.0",
+    "bump_authorized": false,
+    "reason": "Do not replace the published stable version metadata while mandatory v0.6.0 acceptance evidence remains blocked."
+  },
+  "public_demo_deployment": {
+    "configured": false,
+    "state": "NOT_CONFIGURED",
+    "blocking": false,
+    "reason": "Repository audit found no public deployment configuration; deployment verification is conditional on a configured deployment."
+  },
+  "verification": {
+    "required_ci": [
+      "minimum-versions",
+      "test (ubuntu-latest)",
+      "test (windows-latest)"
+    ],
+    "fresh_install_matrix_required": true,
+    "manual_release_gate_required_when_ready": true,
+    "tagged_asset_verification_required_when_ready": true
+  },
+  "promotion": {
+    "repository_merge_authorized": true,
+    "stable_tag_authorized": false,
+    "publication_authorized": false,
+    "manual_release_gate_state": "NOT_RUN_BLOCKED",
+    "tag_state": "NOT_CREATED",
+    "github_release_state": "NOT_CREATED"
+  },
+  "claim_language": {
+    "allowed": "v0.6.0 convergence is implemented and repository-verified, but the release remains blocked because fresh current-commit real-model execution and cost/quota enforcement acceptance are not yet supported by qualifying live evidence. v0.5.1 remains the published stable release.",
+    "forbidden": [
+      "v0.6.0 is released",
+      "v0.6.0 passed all acceptance criteria",
+      "fresh Codex and Hermes live execution succeeded for v0.6.0",
+      "unknown live token or cost values were zero"
+    ]
+  },
+  "durable_requirement_surfaces": [
+    "docs/V0.6-E2E-ACCEPTANCE.md",
+    "config/v0.6-acceptance-evidence.json",
+    "docs/V0.6-PUBLIC-INTERACTIVE-DEMO.md",
+    "docs/V0.6-EXECUTION-TELEMETRY.md",
+    "docs/V0.6-SITI-VERIFICATION.md",
+    "docs/V0.6-LIVE-SANDBOX.md",
+    "docs/LIVE-WORKFORCE-30-CHAT-PLAN.md",
+    "ROADMAP.md"
+  ]
+}
