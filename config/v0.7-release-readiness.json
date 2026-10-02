@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "candidate": "v0.7.0",
+  "observed_on": "2026-10-02",
+  "connected_office_decision": "BLOCKED",
+  "decision": "BLOCKED",
+  "policy": "v0.7.0 may be tagged or published only when every CHAT 22 connected-office live evidence component passes, prerequisite v0.6.1 readiness is READY, package metadata is intentionally promoted to 0.7.0, required verification is green, and the tagged release workflow authorizes publication. Partial live evidence cannot be upgraded into READY by configuration alone.",
+  "connected_evidence": {
+    "source": "config/v0.7-connected-live-evidence.json",
+    "required_components": [
+      "READ_ONLY_USER_OWNED_CONNECTORS",
+      "SCOPED_WRITE_FLOW",
+      "CONNECTOR_REVOCATION",
+      "SCHEDULED_MISSION",
+      "LIVE_BROWSER"
+    ],
+    "observed": {
+      "READ_ONLY_USER_OWNED_CONNECTORS": "BLOCKED",
+      "SCOPED_WRITE_FLOW": "PASS",
+      "CONNECTOR_REVOCATION": "PASS",
+      "SCHEDULED_MISSION": "PASS",
+      "LIVE_BROWSER": "BLOCKED"
+    }
+  },
+  "release_blockers": [
+    {
+      "id": "READ_ONLY_USER_OWNED_CONNECTORS",
+      "category": "connected-live-evidence",
+      "status": "BLOCKED",
+      "required_state": "PASS",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.7-connected-live-evidence.json",
+      "reason": "Two user-owned connectors were read live, but the authenticated connector permission modes were not independently proven READ_ONLY; GitHub demonstrably had scoped write capability.",
+      "safe_next_action": "Use two user-owned connector connections whose effective permission modes can be independently verified as read-only, then repeat the reviewed live read lifecycle without broadening scopes."
+    },
+    {
+      "id": "LIVE_BROWSER",
+      "category": "connected-live-evidence",
+      "status": "BLOCKED",
+      "required_state": "PASS",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.7-connected-live-evidence.json",
+      "reason": "No live Playwright/agent-browser provider was exposed to this session, so CHAT 19 deterministic browser evidence cannot be relabeled as CHAT 22 live browser evidence.",
+      "safe_next_action": "Run the bounded public READ browser evidence flow when an approved live browser provider is available; keep disposable-profile, exact-origin, and no-write requirements intact."
+    },
+    {
+      "id": "V0_6_1_PREREQUISITE",
+      "category": "release-prerequisite",
+      "status": "BLOCKED",
+      "required_state": "READY",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.6.1-release-readiness.json",
+      "reason": "v0.6.1 remains publication-blocked because prerequisite v0.6.0 is still blocked on qualifying live runtime/cost evidence. v0.7.0 cannot leapfrog the unreleased prerequisite chain.",
+      "safe_next_action": "Resolve the canonical v0.6.0 and v0.6.1 release prerequisites without weakening evidence requirements."
+    }
+  ],
+  "package_version_hold": {
+    "current": "0.5.1",
+    "candidate": "0.7.0",
+    "bump_authorized": false,
+    "reason": "CHAT 22 connected-office evidence and the release prerequisite chain are still blocked; stable package metadata stays at the published v0.5.1."
+  },
+  "verification": {
+    "required_ci": [
+      "minimum-versions",
+      "test (ubuntu-latest)",
+      "test (windows-latest)"
+    ],
+    "connected_evidence_suite": "npm run test:v0.7-connected-evidence",
+    "readiness_suite": "npm run test:v0.7-release-readiness",
+    "fresh_install_matrix_required": true,
+    "manual_release_gate_required_when_ready": true,
+    "tagged_asset_verification_required_when_ready": true
+  },
+  "promotion": {
+    "repository_merge_authorized": true,
+    "stable_tag_authorized": false,
+    "publication_authorized": false,
+    "manual_release_gate_state": "NOT_RUN_BLOCKED",
+    "tag_state": "NOT_CREATED",
+    "github_release_state": "NOT_CREATED"
+  },
+  "claim_language": {
+    "allowed": "CHAT 22 collected real GitHub/Google Drive read observations and a scoped GitHub write flow, and repository tests prove application-level revocation plus scheduled Mission Engine materialization. v0.7.0 remains blocked because two connector connections are not proven read-only, live browser evidence is unavailable, and prerequisite v0.6.1 is not release-ready. v0.5.1 remains the published stable release.",
+    "forbidden": [
+      "v0.7.0 is released",
+      "v0.7.0 passed all connected-office live evidence",
+      "GitHub and Google Drive connectors were proven read-only",
+      "live Playwright browser evidence passed",
+      "upstream Google Ads credentials were revoked",
+      "a production scheduler daemon delivered the CHAT 22 mission",
+      "v0.7.0 can bypass v0.6.1 release blockers"
+    ]
+  }
+}
