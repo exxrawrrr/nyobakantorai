@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "chat": "CHAT 11",
+  "observed_on": "2026-10-02",
+  "implementation_commit": "e4cb01a72198d99989587151da82685754d6e9a9",
+  "integrated_main_commit": "47ceb1b39253b65f1ef2391ea2575b85372a819c",
+  "mission_state": "VERIFIED",
+  "verdict": "BLOCKED",
+  "passed": 9,
+  "total": 11,
+  "criteria": [
+    {
+      "id": "USER_OBJECTIVE",
+      "status": "PASS"
+    },
+    {
+      "id": "PRARORO_PLAN",
+      "status": "PASS"
+    },
+    {
+      "id": "SPECIALIZED_WORKERS",
+      "status": "PASS"
+    },
+    {
+      "id": "PARALLEL_BRANCH",
+      "status": "PASS"
+    },
+    {
+      "id": "REAL_MODEL_EXECUTION",
+      "status": "BLOCKED",
+      "reason": "Fresh current-commit Codex and Hermes attempts did not produce LIVE_RUNTIME_EVIDENCE."
+    },
+    {
+      "id": "SAFE_TOOLS",
+      "status": "PASS"
+    },
+    {
+      "id": "ARTIFACT_OUTPUT",
+      "status": "PASS"
+    },
+    {
+      "id": "SITI_VERIFICATION",
+      "status": "PASS"
+    },
+    {
+      "id": "EVIDENCE_UI_DATA",
+      "status": "PASS"
+    },
+    {
+      "id": "COST_QUOTA_ENFORCEMENT",
+      "status": "BLOCKED",
+      "reason": "Fresh live sandbox runs were quota PARTIAL and runtime execution did not succeed."
+    },
+    {
+      "id": "NO_EXTERNAL_WRITE",
+      "status": "PASS"
+    }
+  ],
+  "live_observations": [
+    {
+      "runtime": "codex",
+      "evidence_class": "UNVERIFIED_RUNTIME_ATTEMPT",
+      "qualification_reason": "RUNTIME_EXECUTION_NOT_SUCCESSFUL",
+      "error_category": "RUNTIME_REPORTED_FAILURE",
+      "sandbox_executed": true,
+      "sandbox_status": "FAIL",
+      "quota_status": "PARTIAL",
+      "teardown_verified": true,
+      "unverified_dimensions": [
+        "INPUT_TOKENS",
+        "OUTPUT_TOKENS",
+        "TOOL_CALLS",
+        "TOTAL_TOKENS"
+      ],
+      "external_write_observed": false
+    },
+    {
+      "runtime": "hermes",
+      "evidence_class": "UNVERIFIED_RUNTIME_ATTEMPT",
+      "qualification_reason": "RUNTIME_EXECUTION_NOT_SUCCESSFUL",
+      "error_category": "RUNTIME_REPORTED_FAILURE",
+      "sandbox_executed": true,
+      "sandbox_status": "FAIL",
+      "quota_status": "PARTIAL",
+      "teardown_verified": true,
+      "unverified_dimensions": [
+        "INPUT_TOKENS",
+        "OUTPUT_TOKENS",
+        "TOOL_CALLS",
+        "TOTAL_TOKENS"
+      ],
+      "external_write_observed": false
+    }
+  ],
+  "canonical_doc": "docs/V0.6-E2E-ACCEPTANCE.md"
+}
