@@ -17,7 +17,7 @@
       "PROVIDER_LIFECYCLE_MATURITY": "BLOCKED",
       "REPRESENTATIVE_RECOVERY_EVIDENCE": "BLOCKED",
       "SECURITY_CONTROL_CONVERGENCE": "PASS",
-      "INSTALL_MIGRATION_FRESH_MATRIX": "BLOCKED",
+      "INSTALL_MIGRATION_FRESH_MATRIX": "PASS",
       "RELEASE_CLAIM_AUDIT": "PASS"
     }
   },
@@ -33,10 +33,6 @@
     {
       "id": "REPRESENTATIVE_RECOVERY_EVIDENCE",
       "reason": "No qualifying representative live mission set proves observed failures and verified bounded recovery."
-    },
-    {
-      "id": "INSTALL_MIGRATION_FRESH_MATRIX",
-      "reason": "The CHAT 30 production install/migration matrix has not yet been recorded as live evidence."
     },
     {
       "id": "V0_9_PREREQUISITE",
