@@ -179,3 +179,35 @@ Credential material remains reference-only. Repository and connector-route evide
 The initial practical provider adapter is `google-ads-readonly`, which maps to the existing `ads.google.*` read capabilities and exposes no mutation operation.
 
 See `docs/V0.7-CONNECTOR-CENTER.md`.
+
+
+## Browser Agent action boundary (CHAT 19)
+
+`browser.structured` remains conservatively classified as `EXTERNAL_WRITE`.
+
+CHAT 19 does not lower that risk classification. Instead it adds an operational browser-action layer that must consume both Connector Center and Capability Router authorization.
+
+```text
+browser connector CONNECTED
+  -> exact connector route
+  -> exact capability route
+  -> Browser Scope (employee + exact origin + flow + expiry)
+  -> READ or MUTATION action plan
+  -> disposable browser profile
+  -> provider execution
+  -> content-addressed browser action evidence
+```
+
+Browser Agent supports three canonical flows:
+
+- `PUBLIC_RESEARCH` — exact public HTTPS origins, READ only;
+- `USER_OWNED_AUDIT` — exact owned origin with ownership evidence;
+- `LOCALHOST_QA` — exact loopback origin for QA/reproduction.
+
+Page content remains untrusted data and cannot expand scope, approve actions, or request mutations. Injection signals are recordable on READ and block MUTATION.
+
+MUTATION additionally requires a WRITE route, human approval evidence, pre-action state, execution receipt, and post-action state.
+
+Browser profiles are disposable, cannot reuse the user's normal browser profile, cannot inherit cookies, and must be explicitly cleaned up.
+
+See `docs/V0.7-BROWSER-AGENT.md`.
