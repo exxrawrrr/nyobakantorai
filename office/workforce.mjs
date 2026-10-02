@@ -3362,5 +3362,19 @@ export const CAPABILITY_CATALOG = Object.freeze([
     "risk_class": "READ_ONLY",
     "default_state": "NOT_CONNECTED",
     "requires_human_approval": false
+  },
+  {
+    "id": "geo.places.search",
+    "description": "Bounded provider-aware place discovery using explicit field-mask, geography, cost, retention, and attribution policy.",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
+  },
+  {
+    "id": "geo.places.details",
+    "description": "Bounded place-detail or Place ID refresh lookup using explicit field-mask, retention, attribution, and cost policy.",
+    "risk_class": "READ_ONLY",
+    "default_state": "NOT_CONNECTED",
+    "requires_human_approval": false
   }
 ].map((capability)=>Object.freeze(capability)));
