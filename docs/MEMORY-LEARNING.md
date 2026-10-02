@@ -171,3 +171,38 @@ By default, deletion preserves:
 Deleting shared M3 knowledge requires an explicit `deleteShared=true` request.
 
 This prevents "delete Maya memory" from silently erasing project knowledge or Fikri/Siti state.
+
+
+## Project Brain / Memory 2.0
+
+CHAT 16 extends the same governed memory domain with project knowledge. The implementation lives in:
+
+- `packages/memory-learning/project-brain.mjs`
+- `packages/memory-learning/project-brain-node-storage.mjs`
+- `schemas/project-memory-record.schema.json`
+
+Memory 2.0 introduces three explicit scopes:
+
+```text
+PRIVATE -> PROJECT -> APPROVED_SHARED
+```
+
+The scopes are intentionally not interchangeable.
+
+- PRIVATE remains visible only to the employee owner.
+- PROJECT requires the exact authorized project ID.
+- APPROVED_SHARED requires the exact authorized shared scope.
+- project access never implies private access;
+- project access never implies approved-shared access.
+
+Project Brain records support decisions, facts, assumptions, failures, preferences, terminology, artifacts, and lessons. Each record keeps source references, confidence, timestamp, owner, provenance, sensitivity, and optional expiration/retention metadata.
+
+Scope widening is a reviewed promotion, not an edit. Promotion creates a new content-addressed record and retains the prior record as an attributable parent. PRIVATE must promote to PROJECT before it can promote to APPROVED_SHARED. The underlying knowledge cannot be changed while claiming a promotion.
+
+Existing M1/M2 learning is not automatically converted or widened. This preserves the original profile boundary and prevents a migration helper from becoming an accidental cross-profile leak.
+
+The deterministic Memory 2.0 contamination benchmark lives at:
+
+`benchmarks/project-brain-isolation/run.mjs`
+
+See `docs/V0.6.1-PROJECT-BRAIN.md` for the complete CHAT 16 contract and evidence boundary.

@@ -33,3 +33,17 @@ test("memory policy explicitly blocks secrets and permission widening", () => {
   assert.ok(policy.promotion_guards.includes("runtime_learning_must_not_change_approval_policy"));
   assert.ok(policy.promotion_guards.includes("runtime_learning_must_not_change_verification_authority"));
 });
+
+
+test("Project Brain policy separates PRIVATE, PROJECT, and APPROVED_SHARED without widening authority", () => {
+  assert.deepEqual(policy.project_brain.scopes, ["PRIVATE","PROJECT","APPROVED_SHARED"]);
+  assert.deepEqual(policy.project_brain.scope_promotion_order, ["PRIVATE","PROJECT","APPROVED_SHARED"]);
+  assert.deepEqual(policy.project_brain.knowledge_types, [
+    "DECISION","FACT","ASSUMPTION","FAILURE","PREFERENCE","TERMINOLOGY","ARTIFACT","LESSON",
+  ]);
+  assert.equal(policy.project_brain.promotion_requires_human_review, true);
+  assert.equal(policy.project_brain.content_addressed_records, true);
+  assert.equal(policy.project_brain.project_access_requires_explicit_grant, true);
+  assert.equal(policy.project_brain.approved_shared_access_requires_exact_scope, true);
+  assert.equal(policy.project_brain.shared_records_require_parent_provenance, true);
+});
