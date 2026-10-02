@@ -16,18 +16,23 @@ function parseFrontmatter(markdown){
   assert(match,"Skill frontmatter missing.");
   const lines=match[1].split("\n");
   const out={metadata:{}};
+  const scalar=(value)=>{
+    const raw=String(value??"").trim();
+    if(raw.length>=2&&((raw.startsWith('"')&&raw.endsWith('"'))||(raw.startsWith("'")&&raw.endsWith("'")))) return raw.slice(1,-1);
+    return raw;
+  };
   let inMetadata=false;
   for(const raw of lines){
     const line=raw.replace(/\r$/,"");
     if(/^metadata:\s*$/.test(line)){inMetadata=true;continue;}
     if(inMetadata){
-      const m=line.match(/^\s{2}([a-zA-Z0-9_-]+):\s*["']?([^"']*)["']?\s*$/);
-      if(m){out.metadata[m[1]]=m[2];continue;}
+      const m=line.match(/^\s{2}([a-zA-Z0-9_-]+):\s*(.*)$/);
+      if(m){out.metadata[m[1]]=scalar(m[2]);continue;}
       if(/^\S/.test(line)) inMetadata=false;
     }
     if(!inMetadata){
-      const m=line.match(/^([a-zA-Z0-9_-]+):\s*["']?([^"']*)["']?\s*$/);
-      if(m) out[m[1]]=m[2];
+      const m=line.match(/^([a-zA-Z0-9_-]+):\s*(.*)$/);
+      if(m) out[m[1]]=scalar(m[2]);
     }
   }
   return out;
