@@ -217,7 +217,27 @@ node scripts/ai-installer.mjs --employees growth
 
 Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creative-community`, and `full`.
 
-### Stable versus development
+### Mutable development path — explicit opt-in only
+
+Stable integrity failure never falls back to mutable `main`. Development source requires explicit opt-in.
+
+**Linux / macOS / WSL2**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --channel development --ref main
+```
+
+**Windows PowerShell**
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -Channel development -Ref main
+```
+
+AI agents can generate the equivalent plan first:
+
+```bash
+node scripts/ai-installer.mjs --channel development --ref main
+```
 
 ### Contributor checkout
 
@@ -227,12 +247,6 @@ For a normal source checkout used by contributors:
 git clone https://github.com/exxrawrrr/nyobakantorai.git
 cd nyobakantorai
 npm run smoke
-```
-
-Stable integrity failure never falls back to mutable `main`. Development source requires explicit opt-in:
-
-```bash
-node scripts/ai-installer.mjs --channel development --ref main
 ```
 
 Every successful normal installation writes `.nyobakantorai-install.json` containing channel, version/ref, exact source commit, integrity state, timestamp, and employee selection.
