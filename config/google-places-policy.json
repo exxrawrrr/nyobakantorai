@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "policy_id": "google-places-policy-v1",
+  "provider": "google-places-new",
+  "source_checked_at": "2026-10-02",
+  "official_sources": {
+    "places_policies": "https://developers.google.com/maps/documentation/places/web-service/policies",
+    "place_ids": "https://developers.google.com/maps/documentation/places/web-service/place-id",
+    "nearby_search": "https://developers.google.com/maps/documentation/places/web-service/nearby-search",
+    "text_search": "https://developers.google.com/maps/documentation/places/web-service/text-search",
+    "place_details": "https://developers.google.com/maps/documentation/places/web-service/place-details",
+    "data_fields": "https://developers.google.com/maps/documentation/places/web-service/data-fields",
+    "usage_billing": "https://developers.google.com/maps/documentation/places/web-service/usage-and-billing"
+  },
+  "production": {
+    "wildcard_field_mask_allowed": false,
+    "explicit_field_mask_required": true,
+    "require_explicit_area_for_search": true,
+    "ip_bias_fallback_allowed": false
+  },
+  "field_mask_profiles": {
+    "TEXT_SEARCH_IDENTITY": {
+      "operation": "TEXT_SEARCH",
+      "fields": [
+        "places.id",
+        "places.name",
+        "nextPageToken"
+      ],
+      "highest_sku": "TEXT_SEARCH_ESSENTIALS_ID_ONLY",
+      "durable_result_fields": [
+        "place_id"
+      ],
+      "note": "Identity-first text discovery. Place resource name is not a display label."
+    },
+    "TEXT_SEARCH_CORE": {
+      "operation": "TEXT_SEARCH",
+      "fields": [
+        "places.id",
+        "places.displayName",
+        "places.formattedAddress",
+        "places.primaryType",
+        "places.location",
+        "places.googleMapsUri",
+        "nextPageToken"
+      ],
+      "highest_sku": "TEXT_SEARCH_PRO",
+      "durable_result_fields": [
+        "place_id"
+      ],
+      "note": "Bounded discovery profile; provider content remains ephemeral."
+    },
+    "NEARBY_SEARCH_CORE": {
+      "operation": "NEARBY_SEARCH",
+      "fields": [
+        "places.id",
+        "places.displayName",
+        "places.formattedAddress",
+        "places.primaryType",
+        "places.location",
+        "places.googleMapsUri"
+      ],
+      "highest_sku": "NEARBY_SEARCH_PRO",
+      "durable_result_fields": [
+        "place_id"
+      ],
+      "note": "Nearby Search fields are intentionally capped at Pro; Enterprise/Atmosphere fields are excluded."
+    },
+    "PLACE_DETAILS_ID_REFRESH": {
+      "operation": "PLACE_DETAILS",
+      "fields": [
+        "id"
+      ],
+      "highest_sku": "PLACE_DETAILS_ESSENTIALS_IDS_ONLY",
+      "durable_result_fields": [
+        "place_id"
+      ],
+      "note": "Used to refresh retained Place IDs without pulling unrelated place content."
+    },
+    "PLACE_DETAILS_CORE": {
+      "operation": "PLACE_DETAILS",
+      "fields": [
+        "id",
+        "displayName",
+        "formattedAddress",
+        "primaryType",
+        "location",
+        "googleMapsUri"
+      ],
+      "highest_sku": "PLACE_DETAILS_PRO",
+      "durable_result_fields": [
+        "place_id"
+      ],
+      "note": "Core detail fields remain ephemeral except Place ID."
+    }
+  },
+  "pricing_policy": {
+    "numeric_prices_pinned": false,
+    "billing_rule": "REQUEST_BILLED_AT_HIGHEST_SKU_TRIGGERED_BY_REQUESTED_FIELDS",
+    "reason": "Numeric provider prices can change; policy stores field-to-SKU intent, not stale currency values.",
+    "production_profile_allowlist": [
+      "TEXT_SEARCH_IDENTITY",
+      "TEXT_SEARCH_CORE",
+      "NEARBY_SEARCH_CORE",
+      "PLACE_DETAILS_ID_REFRESH",
+      "PLACE_DETAILS_CORE"
+    ]
+  },
+  "query_bounds": {
+    "text_query_max_chars": 300,
+    "text_page_size_min": 1,
+    "text_page_size_max": 20,
+    "text_max_pages": 3,
+    "text_max_results_per_mission": 60,
+    "nearby_max_result_count_min": 1,
+    "nearby_max_result_count_max": 20,
+    "nearby_radius_m_min_exclusive": 0,
+    "nearby_radius_m_max": 50000,
+    "internal_max_search_area_diagonal_m": 100000,
+    "mission_max_requests": 25
+  },
+  "retention": {
+    "provider_response": "EPHEMERAL_ONLY",
+    "raw_response_persistence_allowed": false,
+    "durable_fields": [
+      "place_id"
+    ],
+    "place_id_retention": "INDEFINITE_ALLOWED",
+    "place_id_refresh_after_days": 365,
+    "durable_record_metadata": [
+      "provider",
+      "place_id",
+      "first_seen_at",
+      "refresh_due_at",
+      "policy_ref"
+    ]
+  },
+  "attribution": {
+    "google_maps_attribution_required_when_displaying_provider_content": true,
+    "extra_google_maps_attribution_not_required_when_content_displayed_on_google_map_with_visible_attribution": true,
+    "third_party_attributions_must_be_preserved_when_returned": true,
+    "photos_reviews_not_enabled_in_chat23_profiles": true
+  },
+  "claim_boundary": "Places discovery is bounded and provider-dependent. No single query or provider response may be described as exhaustive coverage."
+}
