@@ -49,6 +49,35 @@
       "requires_repository_pr": true
     }
   ],
+  "project_brain": {
+    "schema": 1,
+    "scopes": [
+      "PRIVATE",
+      "PROJECT",
+      "APPROVED_SHARED"
+    ],
+    "knowledge_types": [
+      "DECISION",
+      "FACT",
+      "ASSUMPTION",
+      "FAILURE",
+      "PREFERENCE",
+      "TERMINOLOGY",
+      "ARTIFACT",
+      "LESSON"
+    ],
+    "scope_promotion_order": [
+      "PRIVATE",
+      "PROJECT",
+      "APPROVED_SHARED"
+    ],
+    "promotion_requires_human_review": true,
+    "content_addressed_records": true,
+    "project_access_requires_explicit_grant": true,
+    "approved_shared_access_requires_exact_scope": true,
+    "expiration_enforced_on_read": true,
+    "shared_records_require_parent_provenance": true
+  },
   "prohibited_memory_content": [
     "credentials",
     "api_tokens",
