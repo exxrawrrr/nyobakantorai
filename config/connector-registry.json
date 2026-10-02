@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "default_state": "NOT_CONNECTED",
+  "note": "Connector definitions only. No credentials or live account/resource grants are committed.",
+  "connectors": [
+    {
+      "schema": 1,
+      "id": "google-ads-readonly",
+      "provider": "google-ads",
+      "label": "Google Ads Read-Only",
+      "default_state": "NOT_CONNECTED",
+      "capabilities": [
+        "ads.google.read",
+        "ads.google.insights",
+        "ads.google.keywords",
+        "ads.google.creative",
+        "ads.google.verify"
+      ],
+      "access_modes": [
+        "READ"
+      ],
+      "resource_types": [
+        "google_ads_customer"
+      ],
+      "auth": {
+        "mode": "SECRET_REF_REQUIRED",
+        "allowed_ref_prefixes": [
+          "connector-secret://",
+          "env://",
+          "secret://"
+        ]
+      },
+      "verification_method": "Use a reviewed connection evidence reference, exact customer grant, and read-only provider transport; mutation operations are not exposed."
+    }
+  ]
+}
