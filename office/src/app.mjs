@@ -6,6 +6,7 @@ import { attachWorkerBubbles } from "./worker-bubbles.mjs";
 import { WORKFORCE_VIEW as WORKFORCE, EMPLOYEE_BY_ID, runtimePreferencesForEmployee } from "./workforce-view.mjs";
 import { approvalPriorityFacts, buildApprovalSummary, deriveRegistryApprovalSignals } from "./approval-summary.mjs";
 import { attachPublicDemo } from "./public-demo-ui.mjs";
+import { buildMapMissionViewModel, renderMapMissionMarkup, renderMapMissionEmptyMarkup } from "./map-mission-view.mjs";
 
 const STORAGE_KEY = "nyobakantorai-registry-v1";
 const SETTINGS_KEY = "nyobakantorai-settings-v1";
@@ -39,6 +40,7 @@ let selected = "praroro";
 let settings = loadSettings();
 let scene;
 let workerBubbles=null;
+let geoMissionState=null;
 
 function loadRegistry() {
   try { const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY)); validateRegistry(parsed); return parsed; }
@@ -185,7 +187,16 @@ function renderSystems() {
   $("#runtime-evidence").textContent=runtime?JSON.stringify(runtime,null,2):"No runtime snapshot yet.";
 }
 function renderKnowledge() { $("#knowledge-grid").innerHTML=knowledge.map(([title,note,path])=>`<article class="knowledge-card"><p class="eyebrow">READ ON DEMAND</p><h2>${escapeHtml(title)}</h2><p>${escapeHtml(note)}</p><code>${escapeHtml(path)}</code></article>`).join(""); }
-function renderAll(){renderSelected();renderPeople();renderMissions();renderApprovals();renderActivity();renderSystems();renderKnowledge();}
+function renderGeoMission(){
+  const root=$("#geo-mission-root");
+  if(!root)return;
+  if(!geoMissionState){root.innerHTML=renderMapMissionEmptyMarkup();return;}
+  try{root.innerHTML=renderMapMissionMarkup(buildMapMissionViewModel(geoMissionState.map_mission,geoMissionState.candidates));}
+  catch(error){root.innerHTML=renderMapMissionEmptyMarkup();console.warn("Geo mission view rejected:",error.message);}
+}
+window.__NYOBA_LOAD_GEO_MISSION__=(payload)=>{geoMissionState=payload;renderGeoMission();};
+
+function renderAll(){renderSelected();renderPeople();renderMissions();renderApprovals();renderActivity();renderSystems();renderKnowledge();renderGeoMission();}
 
 async function refreshRuntime({ quiet=false }={}) {
   try {
@@ -234,6 +245,6 @@ $("#motion-toggle").addEventListener("click",()=>{settings.motion=!settings.moti
 $("#reduced-motion").addEventListener("change",(event)=>{settings.motion=!event.currentTarget.checked;saveSettings();applyMotion();});
 $("#debug-grid").checked=settings.debug;$("#debug-grid").addEventListener("change",(event)=>{settings.debug=event.currentTarget.checked;saveSettings();scene.debug(settings.debug);});scene.debug(settings.debug);applyMotion();
 
-const allowedViews=new Set(["office","try","workers","people","missions","approvals","activity","systems","architecture","knowledge","settings"]);showView(allowedViews.has(location.hash.slice(1))?location.hash.slice(1):"office");
+const allowedViews=new Set(["office","try","workers","people","missions","geo","approvals","activity","systems","architecture","knowledge","settings"]);showView(allowedViews.has(location.hash.slice(1))?location.hash.slice(1):"office");
 setInterval(()=>{$("#clock").textContent=new Intl.DateTimeFormat("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(new Date());},1000);
 renderAll();refreshRuntime({quiet:true});
