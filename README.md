@@ -219,6 +219,16 @@ Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creat
 
 ### Stable versus development
 
+### Contributor checkout
+
+For a normal source checkout used by contributors:
+
+```bash
+git clone https://github.com/exxrawrrr/nyobakantorai.git
+cd nyobakantorai
+npm run smoke
+```
+
 Stable integrity failure never falls back to mutable `main`. Development source requires explicit opt-in:
 
 ```bash
