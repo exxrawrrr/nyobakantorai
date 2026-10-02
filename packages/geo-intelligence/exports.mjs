@@ -47,7 +47,7 @@ export function buildCsv(rows){
   const columns=Object.keys(rows[0]);
   return [columns.join(","),...rows.map(r=>columns.map(c=>csvEscape(r[c])).join(","))].join("\n")+"\n";
 }
-export function createGeoResearchExportPack({expansion_plan,profiles=[],scores=[],verifications=[],sources=[],created_at}={}){
+export function createGeoResearchExportPack({expansion_plan,profiles=[],scores=[],verifications=[],sources=[],created_at,require_all_verified=true}={}){
   assert(expansion_plan?.completeness_claim===false,"Export requires bounded non-complete expansion plan.");
   assert(profiles.length>0,"Export profiles required.");
   assert(scores.length===profiles.length,"Each exported profile requires a score.");
@@ -57,6 +57,9 @@ export function createGeoResearchExportPack({expansion_plan,profiles=[],scores=[
     assert(p.completeness_claim===false,"Export profile may not claim completeness.");
   }
   const rows=rowsFor(profiles,scores,verifications);
+  if(require_all_verified){
+    assert(rows.every(row=>row.verification_state==="PASS"),"Final geo research export requires Siti PASS for every profile.");
+  }
   const csv=buildCsv(rows);
   const xlsx=buildXlsxBuffer(rows,{sheet_name:"Geo Profiles"});
   const verified=verifications.filter(v=>v.verification?.review_state==="PASS"&&v.verification?.decision==="VERIFIED").length;
@@ -82,7 +85,7 @@ export function createGeoResearchExportPack({expansion_plan,profiles=[],scores=[
     scores:scores.map(s=>({score_ref:s.score_ref,profile_ref:s.profile_ref,model_id:s.model_id,model_version:s.model_version,score:s.score,contributions:s.contributions})),
     verifications:verifications.map(v=>({binding_ref:v.binding.binding_ref,profile_ref:v.binding.profile_ref,score_ref:v.binding.score_ref,verification_ref:v.verification.verification_ref,review_state:v.verification.review_state,decision:v.verification.decision,verifier_id:v.verification.verifier_id,independent:v.verification.independent})),
     sources:sources.map(s=>({source_ref:s.source_ref,source_type:s.source_type,url:s.url,retrieved_at:s.retrieved_at,claim_refs:(s.claims||[]).map(c=>c.claim_ref)})),
-    completeness_claim:false,raw_provider_content_included:false,
+    completeness_claim:false,raw_provider_content_included:false,require_all_verified:require_all_verified===true,
   };
   const packCore={
     schema:1,created_at:createdAt,plan_ref:expansion_plan.plan_ref,
