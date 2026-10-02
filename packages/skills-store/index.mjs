@@ -173,9 +173,25 @@ export function attachSkill(input,{installation,employee,policy,catalog}={}){
   return Object.freeze({...out,attachment_ref:ref("skill-attachment",attachPayload(out))});
 }
 
+export function validateSkillAttachment(attachment,{employee}={}){
+  assert(attachment?.schema===1,"Skill attachment schema must be 1.");
+  assert(attachment.employee_id===employee?.id,"Skill attachment employee mismatch.");
+  assert(attachment.attached_by==="owner","Skill attachment must be owner-reviewed.");
+  assert(attachment.authority_effect==="NONE","Skill attachment cannot carry authority.");
+  assert(/^skill-install:sha256:[a-f0-9]{64}$/.test(clean(attachment.install_ref,200)),"Skill attachment install_ref invalid.");
+  assert(/^skill-attachment:sha256:[a-f0-9]{64}$/.test(clean(attachment.attachment_ref,200)),"Skill attachment_ref invalid.");
+  const snapshot=sha(JSON.stringify(stable(preservedAuthority(employee))));
+  assert(snapshot===attachment.authority_snapshot_sha256,"Skill attachment authority snapshot drift.");
+  const expected=ref("skill-attachment",attachPayload(attachment));
+  assert(expected===attachment.attachment_ref,"Skill attachment_ref checksum mismatch.");
+  return true;
+}
+
 export function applySkillAttachments(employee,attachments=[]){
   const before=preservedAuthority(employee);
-  const skills=uniqSorted([...(employee.skills||[]),...attachments.filter(a=>a.employee_id===employee.id).map(a=>a.skill_id)]);
+  const applicable=attachments.filter(a=>a.employee_id===employee.id);
+  for(const attachment of applicable) validateSkillAttachment(attachment,{employee});
+  const skills=uniqSorted([...(employee.skills||[]),...applicable.map(a=>a.skill_id)]);
   const upgraded=structuredClone(employee);
   upgraded.skills=skills;
   const after=preservedAuthority(upgraded);
