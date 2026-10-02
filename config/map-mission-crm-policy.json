@@ -71,7 +71,7 @@
   },
   "monitoring": {
     "min_interval_days": 1,
-    "max_interval_days": 90,
+    "max_interval_days": 30,
     "max_entries": 500,
     "max_runs": 90,
     "max_hard_limit_per_run": 2,
