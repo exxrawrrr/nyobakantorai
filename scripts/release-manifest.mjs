@@ -11,6 +11,7 @@ import { buildV05ReadinessSnapshot, readAndAssessV05ReleaseReadiness, buildV06Re
 import { buildV07ReadinessSnapshot, readAndAssessV07ReleaseReadiness } from "../packages/v0.7-release-readiness/index.mjs";
 import { buildV071ReadinessSnapshot, readAndAssessV071ReleaseReadiness } from "../packages/v0.7.1-release-readiness/index.mjs";
 import { buildV08ReadinessSnapshot, readAndAssessV08ReleaseReadiness } from "../packages/v0.8-release-readiness/index.mjs";
+import { buildV081ReadinessSnapshot, readAndAssessV081ReleaseReadiness } from "../packages/v0.8.1-release-readiness/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const outPath = resolve(root, "release", "manifest.json");
@@ -79,6 +80,9 @@ const v071Readiness=buildV071ReadinessSnapshot({config:v071ReadinessConfig,asses
 const {config:v08ReadinessConfig,assessment:v08ReadinessAssessment}=await readAndAssessV08ReleaseReadiness({root});
 if(!v08ReadinessAssessment.ok) throw new Error("v0.8 readiness invalid: "+v08ReadinessAssessment.errors.join("; "));
 const v08Readiness=buildV08ReadinessSnapshot({config:v08ReadinessConfig,assessment:v08ReadinessAssessment});
+const {config:v081ReadinessConfig,assessment:v081ReadinessAssessment}=await readAndAssessV081ReleaseReadiness({root});
+if(!v081ReadinessAssessment.ok) throw new Error("v0.8.1 readiness invalid: "+v081ReadinessAssessment.errors.join("; "));
+const v081Readiness=buildV081ReadinessSnapshot({config:v081ReadinessConfig,assessment:v081ReadinessAssessment});
 const manifest = {
   schema: 1,
   project: pkg.name,
@@ -91,6 +95,7 @@ const manifest = {
   v0_7_readiness:v07Readiness,
   v0_7_1_readiness:v071Readiness,
   v0_8_readiness:v08Readiness,
+  v0_8_1_readiness:v081Readiness,
   tracked_files: files.length,
   files,
 };
