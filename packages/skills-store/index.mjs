@@ -243,7 +243,7 @@ export async function materializeConfiguredUpgrades({root=resolve(import.meta.di
 
 export function validateEmployeeAdditionGap(gap,{policy}={}){
   const text=clean(gap,4000);
-  const min=Number(policy.employee_addition?.minimum_gap_length||24);
+  const min=Number(policy?.employee_addition?.minimum_gap_length||24);
   assert(text.length>=min,"New employee requires a documented capability gap of at least "+min+" characters.");
   assert(!/^(more capacity|extra help|need more people|because we want)/i.test(text),"Capability gap must describe a missing role/capability, not generic headcount demand.");
   return text;
