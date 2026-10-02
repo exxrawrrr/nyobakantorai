@@ -10,6 +10,7 @@ import {
   normalizeDiscoveryRecord,
   compareIdentity,
   resolveIdentity,
+  createPublicEnrichmentRequest,
   normalizePublicSourceRecord,
   buildBusinessProfile,
   validateProfileProvenance,
@@ -176,6 +177,29 @@ test("different non-empty Place IDs are a hard identity conflict even with simil
   assert.ok(result.rationale.includes("different_place_id"));
 });
 
+test("public enrichment request is bounded GET/no-auth/read-only and rejects private targets",()=>{
+  const request=createPublicEnrichmentRequest({
+    mission_id:"mission-chat24",
+    profile_ref:"geo-business-profile:fixture",
+    source_type:"OFFICIAL_WEBSITE",
+    url:"https://alpha.example/about#team",
+    requested_at:"2026-10-02T09:05:00Z",
+  },{policy});
+  assert.equal(request.method,"GET");
+  assert.equal(request.access_mode,"PUBLIC_NO_AUTH_READ_ONLY");
+  assert.equal(request.credentials_allowed,false);
+  assert.equal(request.access_control_bypass_allowed,false);
+  assert.equal(request.raw_page_persistence_allowed,false);
+  assert.equal(request.max_response_bytes,2000000);
+  assert.equal(request.timeout_ms,15000);
+  assert.equal(request.url,"https://alpha.example/about");
+  assert.match(request.retrieval_ref,/^geo-public-retrieval:sha256:[a-f0-9]{64}$/);
+  assert.throws(()=>createPublicEnrichmentRequest({
+    mission_id:"mission-chat24",profile_ref:"p",source_type:"OFFICIAL_WEBSITE",
+    url:"http://192.168.1.10/admin",requested_at:"2026-10-02T09:05:00Z",
+  },{policy}),/Private\/local/);
+});
+
 test("public enrichment rejects private/local targets, credentials, and raw-page assumptions",()=>{
   assert.throws(()=>normalizePublicSourceRecord({
     source_type:"OFFICIAL_WEBSITE",url:"http://127.0.0.1/admin",retrieved_at:"2026-10-02T09:00:00Z",
@@ -315,7 +339,7 @@ test("export pack produces CSV, actual XLSX zip, Markdown report, and provenance
   });
   const pack=createGeoResearchExportPack({
     expansion_plan:p,profiles:[profile],scores:[score],verifications:[verification],sources,
-    created_at:"2026-10-02T09:35:00Z",
+    created_at:"2026-10-02T09:35:00Z",policy,
   });
   assert.match(pack.pack_ref,/^geo-export-pack:sha256:[a-f0-9]{64}$/);
   assert.equal(pack.completeness_claim,false);
@@ -343,7 +367,7 @@ test("final export rejects unverified profiles unless draft mode is explicitly r
     expansion_plan:p,profiles:[profile],scores:[score],verifications:[],sources,created_at:"2026-10-02T09:35:00Z",
   }),/requires Siti PASS/);
   const draft=createGeoResearchExportPack({
-    expansion_plan:p,profiles:[profile],scores:[score],verifications:[],sources,created_at:"2026-10-02T09:35:00Z",
+    expansion_plan:p,profiles:[profile],scores:[score],verifications:[],sources,created_at:"2026-10-02T09:35:00Z",policy,
     require_all_verified:false,
   });
   assert.equal(draft.completeness_claim,false);
