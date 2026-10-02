@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "mission_id": "mission-artifact-fixture",
+  "task_id": "task-artifact-fixture",
+  "attempt_id": "attempt-artifact-fixture-1",
+  "employee_id": "alex",
+  "artifacts": [
+    {
+      "artifact_id": "report-fixture",
+      "artifact_type": "REPORT",
+      "media_type": "text/markdown",
+      "payload": {
+        "encoding": "utf8",
+        "data": "# Fixture Report\n\nBounded artifact fixture.\n"
+      },
+      "provenance": {
+        "source_kind": "DERIVED",
+        "source_refs": [
+          "evidence:report-source"
+        ],
+        "created_by": "alex"
+      }
+    },
+    {
+      "artifact_id": "data-fixture",
+      "artifact_type": "DATA",
+      "media_type": "application/json",
+      "payload": {
+        "encoding": "utf8",
+        "data": "{\"rows\":[{\"id\":1,\"status\":\"PASS\"}]}"
+      },
+      "provenance": {
+        "source_kind": "RUNTIME",
+        "source_refs": [
+          "runtime:data-source"
+        ],
+        "created_by": "alex"
+      }
+    },
+    {
+      "artifact_id": "code-fixture",
+      "artifact_type": "CODE",
+      "media_type": "text/javascript",
+      "payload": {
+        "encoding": "utf8",
+        "data": "export const fixture = true;\\n"
+      },
+      "provenance": {
+        "source_kind": "DERIVED",
+        "source_refs": [
+          "artifact:code-source"
+        ],
+        "created_by": "alex"
+      }
+    },
+    {
+      "artifact_id": "image-fixture",
+      "artifact_type": "IMAGE",
+      "media_type": "image/png",
+      "payload": {
+        "encoding": "base64",
+        "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+      },
+      "provenance": {
+        "source_kind": "IMPORT",
+        "source_refs": [
+          "file:image-fixture"
+        ],
+        "created_by": "alex"
+      }
+    },
+    {
+      "artifact_id": "evidence-fixture",
+      "artifact_type": "EVIDENCE",
+      "media_type": "application/json",
+      "payload": {
+        "encoding": "utf8",
+        "data": "{\"observed\":true,\"source\":\"fixture\"}"
+      },
+      "provenance": {
+        "source_kind": "SYSTEM",
+        "source_refs": [
+          "receipt:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "created_by": "system:fixture"
+      }
+    }
+  ]
+}
