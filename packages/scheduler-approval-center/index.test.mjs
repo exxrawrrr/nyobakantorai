@@ -14,6 +14,7 @@ import {
 import { normalizeMissionPlan } from "../mission-engine/planner.mjs";
 
 const costPolicy=JSON.parse(readFileSync(new URL("../../config/cost-governor-policy.json",import.meta.url),"utf8"));
+const morningFixtureJson=JSON.parse(readFileSync(new URL("./fixtures/morning-briefing.json",import.meta.url),"utf8"));
 
 function fixture(overrides={}){
   const base=morningBriefingFixture();
@@ -29,6 +30,12 @@ test("morning briefing fixture is timezone-bound, budgeted, read-only, and evide
   assert.equal(s.risk_class,"READ_ONLY");
   assert.ok(s.required_evidence.includes("briefing-source-evidence"));
   assert.match(s.schedule_ref,/^schedule:sha256:[a-f0-9]{64}$/);
+});
+
+test("Morning Briefing JSON fixture matches canonical helper contract",()=>{
+  const fromFile=createRecurringSchedule(morningFixtureJson);
+  const fromHelper=morningBriefingFixture();
+  assert.deepEqual(fromFile,fromHelper);
 });
 
 test("07:30 Asia/Jakarta is due while 06:59 and 09:00 are outside window",()=>{
