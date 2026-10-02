@@ -262,7 +262,7 @@ Closure: PASS for CHAT 12 itself. Machine-readable readiness computes BLOCKED fr
 
 ### CHAT 13 — Full Cost Governor
 
-**Status: IMPLEMENTED — FINAL REPOSITORY VERIFICATION PENDING — 2026-10-02.**
+**Status: COMPLETE — FULL COST GOVERNOR VERIFIED — 2026-10-02.**
 Implementation/status: `docs/V0.6.1-COST-GOVERNOR.md`
 
 Goal: make spend an operational control rather than telemetry only.
@@ -275,6 +275,8 @@ Deliverables:
 - reconciliation and unknown-cost tests.
 
 Exit gate: configured hard budgets cannot be exceeded silently.
+
+Closure: PASS for repository delivery. Cost admission is enforced before RUNNING; warning/reroute/approval/stop thresholds are explicit; dynamic overage approval reuses canonical TaskNode approval state; approval cannot override hard limits; UNKNOWN projected or actual cost never becomes zero; actual-cost overruns remain visible in budget state and prevent clean Mission SUCCEEDED; provider/model/tool reconciliation comes from one ledger. Fresh targeted suite passed 37/37 and PR verify #625 passed Ubuntu, Windows, and minimum-version jobs.
 
 ### CHAT 14 — Artifact Workspace + Execution Replay
 
