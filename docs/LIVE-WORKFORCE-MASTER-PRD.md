@@ -444,9 +444,11 @@ For external actions:
 - receipt/evidence presence;
 - no `VERIFIED` state when the system cannot establish the result.
 
+CHAT 10 implementation/status source: [v0.6 Siti Verification / Red-Team Engine](V0.6-SITI-VERIFICATION.md). The implementation reuses the canonical evidence-verifier and existing TaskNode/Mission state machines; it adds structured research/code/external-state review inputs, PASS/FAIL/INCOMPLETE outcomes, SUPPORTED/CONTRADICTED/NOT_VERIFIED claim verdicts, registry-backed independence enforcement, self-verification rejection, content-addressed verifier records, and optional Orchestrator verification requests. CHAT 10 repository verification is complete.
+
 ### 8.9 Evidence UI
 
-CHAT 09 implementation/status source: [v0.6 Execution Telemetry + Evidence UI](V0.6-EXECUTION-TELEMETRY.md). The implementation projects execution facts from canonical TaskNode / Execution Attempt / Handoff / Live Sandbox records, requires canonical Attempt traceability for public live success, preserves unavailable usage/model/tool values as UNKNOWN, redacts private/sensitive reference shapes before browser exposure, and does not invent progress events. Independent verifier outcome remains a CHAT 10 concern and is not fabricated here.
+CHAT 09 implementation/status source: [v0.6 Execution Telemetry + Evidence UI](V0.6-EXECUTION-TELEMETRY.md). The implementation projects execution facts from canonical TaskNode / Execution Attempt / Handoff / Live Sandbox records, requires canonical Attempt traceability for public live success, preserves unavailable usage/model/tool values as UNKNOWN, redacts private/sensitive reference shapes before browser exposure, and does not invent progress events. CHAT 10 extends this surface with validated independent verifier outcomes; runtime truth and correctness-verification truth remain separate.
 
 The UI should expose more than a status badge.
 

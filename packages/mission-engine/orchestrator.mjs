@@ -4,6 +4,7 @@ import { normalizeMissionPlan } from "./planner.mjs";
 import { normalizeTaskNode, transitionTaskNode } from "../task-registry/task-node.mjs";
 import { buildHandoffEnvelope, normalizeHandoffResult, resultFromAttempt } from "./handoff.mjs";
 import { buildMissionTelemetry } from "./telemetry.mjs";
+import { runSitiVerification } from "../evidence-verifier/siti.mjs";
 
 export const MISSION_ORCHESTRATOR_API = 1;
 
@@ -152,6 +153,7 @@ export async function executeMissionPlan(planInput, {
   clock = () => new Date().toISOString(),
   idFactory = (kind, taskId, ordinal = 1) => `${kind}:${taskId}:${ordinal}`,
   receiptRefFactory = null,
+  buildVerificationRequest = null,
   shouldCancel = () => false,
 } = {}) {
   const plan = normalizeMissionPlan(planInput);
@@ -159,6 +161,7 @@ export async function executeMissionPlan(planInput, {
   assert(Number.isInteger(maxConcurrency) && maxConcurrency >= 1 && maxConcurrency <= 8, "maxConcurrency must be 1..8.");
   assert(typeof shouldCancel === "function", "Mission orchestrator shouldCancel must be a function.");
   if (receiptRefFactory != null) assert(typeof receiptRefFactory === "function", "receiptRefFactory must be a function or null.");
+  if (buildVerificationRequest != null) assert(typeof buildVerificationRequest === "function", "buildVerificationRequest must be a function or null.");
 
   const taskById = new Map(plan.task_nodes.map((task) => [task.task_id, task]));
   const metaById = new Map(plan.node_meta.map((meta) => [meta.task_id, meta]));
@@ -166,6 +169,7 @@ export async function executeMissionPlan(planInput, {
   const attempts = [];
   const handoffs = [];
   const returns = [];
+  const verifications = [];
   const events = [];
   const artifactsByTask = new Map(plan.graph.task_ids.map((id) => [id, []]));
 
@@ -198,6 +202,7 @@ export async function executeMissionPlan(planInput, {
       attempts:Object.freeze([]),
       handoffs:Object.freeze([]),
       returns:Object.freeze([]),
+      verifications:Object.freeze([]),
       events:Object.freeze(events),
       cancelled:false,
       max_concurrency:maxConcurrency,
@@ -334,6 +339,35 @@ export async function executeMissionPlan(planInput, {
       state:handoffResult.state,
       attempt_id:attempt.attempt_id,
     }));
+
+    if (terminalTask.state === "SUCCEEDED" && buildVerificationRequest != null) {
+      const request = await buildVerificationRequest(Object.freeze({
+        mission,
+        task:terminalTask,
+        attempt,
+        handoff:envelope,
+        handoff_result:handoffResult,
+      }));
+      if (request != null) {
+        assert(request && typeof request === "object" && !Array.isArray(request), "Verification request must be an object or null.");
+        const review = await runSitiVerification({
+          ...request,
+          task_node:terminalTask,
+          now:new Date(clock()),
+        });
+        verifications.push(review);
+        terminalTask = review.task_node;
+        taskById.set(taskId, terminalTask);
+        events.push(event("TASK_VERIFICATION_RECORDED", clock, {
+          mission_id:mission.mission_id,
+          task_id:taskId,
+          verifier_id:review.verifier_id,
+          review_state:review.review_state,
+          decision:review.decision,
+          verification_ref:review.verification_ref,
+        }));
+      }
+    }
   }
 
   function propagateDependencyBlocks() {
@@ -411,7 +445,8 @@ export async function executeMissionPlan(planInput, {
 
   const finalTasks = plan.graph.task_ids.map((id) => taskById.get(id));
   const aggregateArtifacts = unique(returns.flatMap((item) => item.artifact_refs));
-  const aggregateEvidence = unique(returns.flatMap((item) => item.evidence_refs));
+  const verificationEvidence = verifications.map((item) => item.verification_ref);
+  const aggregateEvidence = unique([...returns.flatMap((item) => item.evidence_refs), ...verificationEvidence]);
 
   let targetState = cancelRequested ? "CANCELLED" : missionTerminalState(finalTasks);
   if (mission.state === "RUNNING") {
@@ -419,6 +454,21 @@ export async function executeMissionPlan(planInput, {
       clock,
       evidence_refs:aggregateEvidence,
     });
+    if (
+      mission.state === "SUCCEEDED"
+      && finalTasks.length > 0
+      && finalTasks.every((task) => task.state === "VERIFIED")
+    ) {
+      mission = transitionMission(mission, "VERIFIED", {
+        clock,
+        verification_satisfied:true,
+        evidence_refs:verificationEvidence,
+      });
+      events.push(event("MISSION_VERIFIED", clock, {
+        mission_id:mission.mission_id,
+        verification_refs:Object.freeze([...verificationEvidence]),
+      }));
+    }
   } else if (mission.state === "WAITING_APPROVAL" && targetState !== "WAITING_APPROVAL") {
     throw new Error("Orchestrator cannot resume a WAITING_APPROVAL Mission inside the same run.");
   }
@@ -450,6 +500,7 @@ export async function executeMissionPlan(planInput, {
     telemetry,
     handoffs:Object.freeze(handoffs),
     returns:Object.freeze(returns),
+    verifications:Object.freeze(verifications),
     events:Object.freeze(events),
     cancelled:cancelRequested,
     max_concurrency:maxConcurrency,

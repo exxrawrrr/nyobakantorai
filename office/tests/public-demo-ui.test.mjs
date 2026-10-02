@@ -29,6 +29,23 @@ function telemetryPayload() {
   };
 }
 
+function verificationPayload(overrides={}) {
+  return {
+    verifier_id:"siti",
+    independent:true,
+    kind:"RESEARCH",
+    checked_at:"2026-10-02T01:30:00.000Z",
+    review_state:"PASS",
+    decision:"VERIFIED",
+    verification_ref:"verification:sha256:"+"a".repeat(64),
+    claim_checks:[{claim_id:"claim-1",source_ref:"https://example.test/source",verdict:"SUPPORTED"}],
+    contradictions:[],
+    unknowns:[],
+    external_state:null,
+    ...overrides,
+  };
+}
+
 function planPayload() {
   return {
     mission:{ mission_id:"mission-demo", objective:"Audit SEO", state:"PLANNED" },
@@ -99,6 +116,7 @@ test("only verified live payload gets LIVE RUNTIME label", () => {
       executed_task_id:"task-1",
     },
     telemetry:telemetryPayload(),
+    verification:verificationPayload(),
   }, employees);
 
   assert.equal(view.mode_label,"LIVE RUNTIME");
@@ -112,6 +130,10 @@ test("only verified live payload gets LIVE RUNTIME label", () => {
   assert.equal(view.telemetry.usage.cost.amount_usd,0.01);
   assert.deepEqual(view.telemetry.evidence_refs,["evidence:fixture"]);
   assert.equal(view.telemetry.traceability.terminal_state_ref,"attempt:attempt-live-1");
+  assert.equal(view.verification.verifier_id,"siti");
+  assert.equal(view.verification.review_state,"PASS");
+  assert.equal(view.verification.decision,"VERIFIED");
+  assert.match(view.verification.verification_ref,/^verification:sha256:/);
   assert.deepEqual(view.layers[0].map((node) => node.truth_label),["LIVE_RUNTIME"]);
   assert.deepEqual(view.layers[1].map((node) => node.truth_label),["LIVE_PLANNED"]);
 });
@@ -121,6 +143,7 @@ test("public UI exposes distinct demo/live CTAs, mission input, graph, and ships
   const app = await readFile(new URL("../src/app.mjs", import.meta.url), "utf8");
   const styles = await readFile(new URL("../src/styles.css", import.meta.url), "utf8");
   const build = await readFile(new URL("../build.mjs", import.meta.url), "utf8");
+  const ui = await readFile(new URL("../src/public-demo-ui.mjs", import.meta.url), "utf8");
 
   assert.match(html,/id="view-try"/);
   assert.match(html,/id="public-mission-objective"/);
@@ -134,6 +157,7 @@ test("public UI exposes distinct demo/live CTAs, mission input, graph, and ships
   assert.match(build,/public-demo-ui\.mjs/);
   assert.match(styles,/\.public-experience-grid/);
   assert.match(styles,/\.public-telemetry-grid/);
+  assert.match(ui,/Independent verification/);
   assert.match(styles,/@media\(max-width:680px\)[\s\S]*\.public-experience-actions/);
 });
 
@@ -175,7 +199,38 @@ test("synthetic payload cannot surface injected live telemetry", () => {
     live:false,
     state:"DEMO_COMPLETE",
     telemetry:telemetryPayload(),
+    verification:verificationPayload(),
   }, employees);
   assert.equal(view.is_live,false);
   assert.equal(view.telemetry,null);
+  assert.equal(view.verification,null);
+});
+
+
+test("live verifier FAIL keeps contradictions visible without changing execution truth", () => {
+  const plan=planPayload();
+  const view=buildPublicExperienceViewModel({
+    experience:"LIVE",
+    truth_label:"LIVE_RUNTIME",
+    live:true,
+    state:"LIVE_COMPLETE",
+    plan,
+    presentation:{
+      task_nodes:[{...plan.task_nodes[0],employee_id:"alex",truth_label:"LIVE_RUNTIME"}],
+      graph:{topological_layers:[["task-1"]],edges:[]},
+      executed_task_id:"task-1",
+    },
+    telemetry:telemetryPayload(),
+    verification:verificationPayload({
+      review_state:"FAIL",
+      decision:"NOT_VERIFIED",
+      contradictions:[{code:"VALUE_MISMATCH",details:["claim-1","42","41"]}],
+    }),
+  },employees);
+
+  assert.equal(view.is_live,true);
+  assert.equal(view.verification.review_state,"FAIL");
+  assert.equal(view.verification.decision,"NOT_VERIFIED");
+  assert.deepEqual(view.verification.contradictions,[{code:"VALUE_MISMATCH",details:["claim-1","42","41"]}]);
+  assert.equal(view.telemetry.execution.state,"SUCCEEDED");
 });

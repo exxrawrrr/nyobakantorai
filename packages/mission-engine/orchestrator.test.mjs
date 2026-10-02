@@ -277,3 +277,112 @@ test("runtime contract rejection becomes a BLOCKED Attempt and blocks dependents
   assert.equal(result.tasks[0].blocking.kind, "POLICY");
   assert.equal(result.mission.state, "BLOCKED");
 });
+
+
+function verificationRequestFor({ task, attempt }) {
+  const evidenceRef = attempt.artifact_refs[0] || "artifact:verification-fallback";
+  const fact = "attempt="+attempt.attempt_id;
+  return {
+    verifier_id:"siti",
+    kind:"RESEARCH",
+    evidence_packet:{
+      expected:{
+        required_facts:[fact],
+        required_artifacts:[evidenceRef],
+        required_completion_items:["runtime-succeeded"],
+        required_evidence_refs:[evidenceRef],
+      },
+      report:{
+        text:"Independent review "+fact,
+        claimed_executed:false,
+      },
+      evidence:{
+        observed_text:"Observed "+fact,
+        refs:[evidenceRef],
+        artifacts:[evidenceRef],
+        completion_items:["runtime-succeeded"],
+        checked_at:fixedClock(),
+      },
+    },
+    research:{
+      claims:[{
+        claim_id:"attempt-state",
+        statement:"Runtime attempt succeeded.",
+        source_ref:evidenceRef,
+        source_exists:true,
+        source_relevant:true,
+        source_current:true,
+        expected_value:"SUCCEEDED",
+        observed_value:attempt.state,
+        expected_unit:"state",
+        observed_unit:"state",
+      }],
+    },
+  };
+}
+
+test("canonical verification request hook can promote independently reviewed tasks and Mission", async () => {
+  const plan = planMission({
+    objective:"Execute and independently verify a two-step fixture.",
+    risk_class:"READ_ONLY",
+    work_items:[
+      {key:"a",title:"Research",objective:"Produce bounded evidence.",assigned_id:"alex",depends_on:[]},
+      {key:"b",title:"Code review",objective:"Produce bounded evidence.",assigned_id:"subagjo",depends_on:["a"]},
+    ],
+  }, {clock:fixedClock,idFactory:ids});
+
+  const result = await executeMissionPlan(plan,{
+    resolveRuntime:runtimeResolver(),
+    buildVerificationRequest:verificationRequestFor,
+    clock:fixedClock,
+  });
+
+  assert.equal(result.verifications.length,2);
+  assert.ok(result.verifications.every((review)=>review.review_state==="PASS"));
+  assert.ok(result.verifications.every((review)=>review.decision==="VERIFIED"));
+  assert.ok(result.tasks.every((task)=>task.state==="VERIFIED"));
+  assert.equal(result.mission.state,"VERIFIED");
+  assert.ok(result.mission.evidence_refs.some((ref)=>ref.startsWith("verification:sha256:")));
+  assert.equal(result.events.filter((item)=>item.kind==="TASK_VERIFICATION_RECORDED").length,2);
+});
+
+test("verification contradiction remains visible and prevents Mission VERIFIED", async () => {
+  const plan = planMission({
+    objective:"Execute and catch a contradicted verification fixture.",
+    risk_class:"READ_ONLY",
+    work_items:[
+      {key:"a",title:"Research",objective:"Produce bounded evidence.",assigned_id:"alex",depends_on:[]},
+    ],
+  }, {clock:fixedClock,idFactory:ids});
+
+  const result = await executeMissionPlan(plan,{
+    resolveRuntime:runtimeResolver(),
+    buildVerificationRequest:({task,attempt}) => {
+      const request=verificationRequestFor({task,attempt});
+      request.decision="VERIFIED";
+      request.task_node={...task,state:"VERIFIED"};
+      request.research.claims[0].observed_value="FAILED";
+      return request;
+    },
+    clock:fixedClock,
+  });
+
+  assert.equal(result.verifications.length,1);
+  assert.equal(result.verifications[0].review_state,"FAIL");
+  assert.equal(result.verifications[0].decision,"NOT_VERIFIED");
+  assert.ok(result.verifications[0].contradictions.some((item)=>item.code==="VALUE_MISMATCH"));
+  assert.equal(result.tasks[0].state,"SUCCEEDED");
+  assert.equal(result.mission.state,"SUCCEEDED");
+  assert.equal(result.events.filter((item)=>item.kind==="TASK_VERIFICATION_RECORDED").length,1);
+});
+
+test("orchestrator without verification hook preserves SUCCEEDED truth and emits no verification records", async () => {
+  const result = await executeMissionPlan(missionPlan(),{
+    resolveRuntime:runtimeResolver(),
+    maxConcurrency:2,
+    clock:fixedClock,
+  });
+  assert.deepEqual(result.verifications,[]);
+  assert.equal(result.mission.state,"SUCCEEDED");
+  assert.ok(result.tasks.every((task)=>task.state==="SUCCEEDED"));
+});

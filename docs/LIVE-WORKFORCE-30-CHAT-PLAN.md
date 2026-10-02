@@ -196,6 +196,9 @@ Closure: PASS for repository delivery. Telemetry is a read projection over canon
 
 ### CHAT 10 — Siti Verification / Red-Team Engine
 
+**Status: COMPLETE — INDEPENDENT VERIFICATION + RED-TEAM GATE VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.6-SITI-VERIFICATION.md`
+
 Goal: operationalize independent verification.
 
 Deliverables:
@@ -207,6 +210,8 @@ Deliverables:
 - self-verification rejection.
 
 Exit gate: unsupported output cannot become `VERIFIED`; contradictions remain visible.
+
+Closure: PASS for repository delivery. Research, code, and external-state verification produce structured PASS/FAIL/INCOMPLETE reviews; self-verification and unauthorized reviewers fail closed; only canonical PASS reviews may promote TaskNode/Mission to VERIFIED; contradictions and unknowns remain visible through the Evidence UI. Fresh staged `npm run verify` completed exit 0, and browser product checks confirmed DEMO/LIVE_UNAVAILABLE never surface fabricated verifier outcomes.
 
 ### CHAT 11 — v0.6.0 End-to-End Acceptance Mission
 
