@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "candidate": "v0.6.1",
+  "observed_on": "2026-10-02",
+  "reliability_decision": "PASS",
+  "decision": "BLOCKED",
+  "policy": "v0.6.1 may be tagged or published only when all CHAT 17 reliability components pass, v0.6.0 prerequisite readiness is READY, package metadata matches 0.6.1, required verification is green, and the dedicated tagged release workflow is authorized. Reliability PASS alone does not authorize publication.",
+  "reliability": {
+    "source": "config/v0.6.1-reliability-evidence.json",
+    "required_pass_count": 4,
+    "observed_pass_count": 4,
+    "total": 4,
+    "verdict": "PASS"
+  },
+  "release_blockers": [
+    {
+      "id": "V0_6_0_PREREQUISITE",
+      "category": "release-prerequisite",
+      "status": "BLOCKED",
+      "required_state": "READY",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.6-release-readiness.json",
+      "reason": "v0.6.0 remains evidence-blocked on REAL_MODEL_EXECUTION and COST_QUOTA_ENFORCEMENT, so v0.6.1 cannot leapfrog the unreleased prerequisite.",
+      "safe_next_action": "Collect qualifying v0.6.0 live evidence and reconverge v0.6.0 readiness without weakening evidence, sandbox, cost, or verification requirements."
+    }
+  ],
+  "package_version_hold": {
+    "current": "0.5.1",
+    "candidate": "0.6.1",
+    "bump_authorized": false,
+    "reason": "Reliability features are verified but the prerequisite v0.6.0 release is still blocked; stable package metadata must remain at the published v0.5.1 release."
+  },
+  "verification": {
+    "required_ci": [
+      "minimum-versions",
+      "test (ubuntu-latest)",
+      "test (windows-latest)"
+    ],
+    "reliability_suites": [
+      "npm run test:cost-governor",
+      "npm run test:artifact-workspace",
+      "npm run test:checkpoint-recovery",
+      "npm run test:project-brain",
+      "npm run test:project-brain-isolation"
+    ],
+    "fresh_install_matrix_required": true,
+    "manual_release_gate_required_when_ready": true,
+    "tagged_asset_verification_required_when_ready": true
+  },
+  "promotion": {
+    "repository_merge_authorized": true,
+    "stable_tag_authorized": false,
+    "publication_authorized": false,
+    "manual_release_gate_state": "NOT_RUN_BLOCKED",
+    "tag_state": "NOT_CREATED",
+    "github_release_state": "NOT_CREATED"
+  },
+  "claim_language": {
+    "allowed": "v0.6.1 reliability is repository-verified, but the release remains blocked because prerequisite v0.6.0 is not release-ready. v0.5.1 remains the published stable release.",
+    "forbidden": [
+      "v0.6.1 is released",
+      "v0.6.1 is ready to publish",
+      "v0.6.1 can bypass v0.6.0 release blockers",
+      "v0.6.0 real-model execution is now verified",
+      "green reliability CI converts blocked live evidence into PASS"
+    ]
+  },
+  "durable_requirement_surfaces": [
+    "config/v0.6.1-reliability-evidence.json",
+    "config/v0.6-release-readiness.json",
+    "docs/V0.6.1-COST-GOVERNOR.md",
+    "docs/V0.6.1-ARTIFACT-WORKSPACE-REPLAY.md",
+    "docs/V0.6.1-CHECKPOINT-RECOVERY.md",
+    "docs/V0.6.1-PROJECT-BRAIN.md",
+    "docs/LIVE-WORKFORCE-30-CHAT-PLAN.md",
+    "ROADMAP.md"
+  ]
+}
