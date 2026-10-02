@@ -79,6 +79,27 @@ test("TaskNode state graph rejects skips and accepts the bounded happy path", ()
   assert.equal(succeeded.state, "SUCCEEDED");
 });
 
+test("cost policy may escalate a READY task into canonical WAITING_APPROVAL", () => {
+  const planned = normalizeTaskNode(baseNode());
+  const ready = transitionTaskNode(planned, "READY", { clock:() => stamp(1) });
+  const waiting = transitionTaskNode(ready, "WAITING_APPROVAL", {
+    approval:{ required:true, status:"PENDING", approval_ref:null },
+    clock:() => stamp(2),
+  });
+  assert.equal(waiting.state,"WAITING_APPROVAL");
+  assert.equal(waiting.approval.required,true);
+  assert.equal(waiting.approval.status,"PENDING");
+  assert.equal(waiting.blocking.kind,"APPROVAL");
+
+  assert.throws(
+    () => transitionTaskNode(ready, "WAITING_APPROVAL", {
+      approval:{ required:true, status:"APPROVED", approval_ref:"approval:too-early" },
+      clock:() => stamp(2),
+    }),
+    /requires PENDING approval/,
+  );
+});
+
 test("required approval blocks RUNNING until approval status and evidence ref both exist", () => {
   const pending = normalizeTaskNode(baseNode({
     risk_class:"EXTERNAL_WRITE",
