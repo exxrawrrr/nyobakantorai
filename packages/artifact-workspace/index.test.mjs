@@ -225,7 +225,7 @@ test("replay detects payload tamper, missing middle event, missing tail event, a
 
   const payloadTamper=structuredClone(stream);
   payloadTamper.events[1].payload.kind="FAKE_EVENT";
-  assert.throws(()=>validateReplayStream(payloadTamper),/(source record|event checksum|stream checksum) mismatch/i);
+  assert.throws(()=>validateReplayStream(payloadTamper),/source record checksum mismatch|event checksum mismatch|stream checksum mismatch/i);
 
   const missingMiddle=structuredClone(stream);
   missingMiddle.events.splice(1,1);
