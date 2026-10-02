@@ -9,17 +9,51 @@ function isPrivateHost(host){
   return false;
 }
 
-export function normalizePublicSourceRecord(input,{policy}={}){
-  const cfg=policy.enrichment||{};
-  const sourceType=clean(input?.source_type,80).toUpperCase();
-  assert((cfg.allowed_source_types||[]).includes(sourceType),"Public source type not allowed.");
-  const rawUrl=clean(input?.url,3000);
+function normalizePublicUrl(rawInput,cfg){
+  const rawUrl=clean(rawInput,3000);
   assert(rawUrl,"Public source URL required.");
   let url; try{url=new URL(rawUrl);}catch{throw new Error("Public source URL invalid.");}
   assert((cfg.allowed_schemes||[]).includes(url.protocol),"Public source URL scheme not allowed.");
   if(cfg.reject_url_userinfo===true) assert(!url.username&&!url.password,"Public source URL userinfo forbidden.");
   if(cfg.reject_private_network_targets===true) assert(!isPrivateHost(url.hostname),"Private/local enrichment target forbidden.");
   url.hash="";
+  return url;
+}
+
+export function createPublicEnrichmentRequest(input,{policy}={}){
+  const cfg=policy.enrichment||{};
+  const sourceType=clean(input?.source_type,80).toUpperCase();
+  assert((cfg.allowed_source_types||[]).includes(sourceType),"Public source type not allowed.");
+  const url=normalizePublicUrl(input?.url,cfg);
+  const requestedAt=iso(input?.requested_at,"Public enrichment requested_at");
+  const core={
+    schema:1,
+    mission_id:clean(input?.mission_id,160),
+    profile_ref:clean(input?.profile_ref,300),
+    source_type:sourceType,
+    url:url.toString(),
+    requested_at:requestedAt,
+    method:"GET",
+    access_mode:cfg.access_mode,
+    credentials_allowed:false,
+    access_control_bypass_allowed:false,
+    raw_page_persistence_allowed:false,
+    max_response_bytes:Number(cfg.max_response_bytes),
+    timeout_ms:Number(cfg.timeout_ms),
+  };
+  assert(core.mission_id,"Public enrichment mission_id required.");
+  assert(core.profile_ref,"Public enrichment profile_ref required.");
+  assert(core.access_mode==="PUBLIC_NO_AUTH_READ_ONLY","Public enrichment must be no-auth read-only.");
+  assert(core.max_response_bytes>0&&core.max_response_bytes<=2000000,"Public enrichment response bound invalid.");
+  assert(core.timeout_ms>0&&core.timeout_ms<=15000,"Public enrichment timeout bound invalid.");
+  return freeze({...core,retrieval_ref:contentRef("geo-public-retrieval",core)});
+}
+
+export function normalizePublicSourceRecord(input,{policy}={}){
+  const cfg=policy.enrichment||{};
+  const sourceType=clean(input?.source_type,80).toUpperCase();
+  assert((cfg.allowed_source_types||[]).includes(sourceType),"Public source type not allowed.");
+  const url=normalizePublicUrl(input?.url,cfg);
   const retrievedAt=iso(input?.retrieved_at,"Public source retrieved_at");
   const claims=[];
   for(const raw of Array.isArray(input?.claims)?input.claims:[]){
