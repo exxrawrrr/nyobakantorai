@@ -243,7 +243,7 @@ export async function materializeConfiguredUpgrades({root=resolve(import.meta.di
     const loop=loops.loops.find(l=>l.employee_id===req.employee_id);assert(loop,"Missing configured capability loop.");
     assert(loop.recommended_upgrade_skill===req.skill_id,"Configured attachment must match capability-loop recommendation.");
     assert(req.authority_effect==="NONE","Configured attachment authority_effect must be NONE.");
-    const key=req.skill_id+"@"+req.version;
+    const key=req.skill_id+"::"+req.version;
     let installation=installations.get(key);
     if(!installation){
       installation=installSkill({
