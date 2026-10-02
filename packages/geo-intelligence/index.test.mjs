@@ -57,7 +57,7 @@ function discoveryRecords(){
       source_type:"PUBLIC_WEB",
       name:"Alpha Driver Training Centre",
       website:"https://www.alpha.example/training",
-      phone:"0812-3456-7890",
+      phone:"+62 812 3456 7890",
       address:"Jl Example 1 Surabaya",
       location:{latitude:-7.2504,longitude:112.7402},
     },
