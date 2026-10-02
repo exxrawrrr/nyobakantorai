@@ -23,14 +23,13 @@
       "operation": "TEXT_SEARCH",
       "fields": [
         "places.id",
-        "places.name",
-        "nextPageToken"
+        "places.name"
       ],
       "highest_sku": "TEXT_SEARCH_ESSENTIALS_ID_ONLY",
       "durable_result_fields": [
         "place_id"
       ],
-      "note": "Identity-first text discovery. Place resource name is not a display label."
+      "note": "Identity-first bounded text discovery; CHAT 23 does not persist or consume paging tokens."
     },
     "TEXT_SEARCH_CORE": {
       "operation": "TEXT_SEARCH",
@@ -40,14 +39,13 @@
         "places.formattedAddress",
         "places.primaryType",
         "places.location",
-        "places.googleMapsUri",
-        "nextPageToken"
+        "places.googleMapsUri"
       ],
       "highest_sku": "TEXT_SEARCH_PRO",
       "durable_result_fields": [
         "place_id"
       ],
-      "note": "Bounded discovery profile; provider content remains ephemeral."
+      "note": "Single-page bounded discovery profile; provider content remains ephemeral. Search expansion/pagination belongs to CHAT 24."
     },
     "NEARBY_SEARCH_CORE": {
       "operation": "NEARBY_SEARCH",
@@ -109,8 +107,8 @@
     "text_query_max_chars": 300,
     "text_page_size_min": 1,
     "text_page_size_max": 20,
-    "text_max_pages": 3,
-    "text_max_results_per_mission": 60,
+    "text_max_pages": 1,
+    "text_max_results_per_mission": 20,
     "nearby_max_result_count_min": 1,
     "nearby_max_result_count_max": 20,
     "nearby_radius_m_min_exclusive": 0,
