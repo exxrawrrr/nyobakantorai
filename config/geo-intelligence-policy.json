@@ -53,7 +53,13 @@
     "raw_page_persistence_allowed": false,
     "durable_claims_require_source_ref": true,
     "retrieval_timestamp_required": true,
-    "credentials_allowed": false
+    "credentials_allowed": false,
+    "max_response_bytes": 2000000,
+    "timeout_ms": 15000,
+    "max_sources_per_profile": 10,
+    "max_sources_per_mission": 100,
+    "access_mode": "PUBLIC_NO_AUTH_READ_ONLY",
+    "access_control_bypass_allowed": false
   },
   "field_confidence": {
     "source_trust": {
