@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/recovery-checkpoint.schema.json",
+  "title": "nyobakantorai Recovery Checkpoint v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "mission",
+    "tasks",
+    "attempts",
+    "completed_task_ids",
+    "events",
+    "recovery_cycle",
+    "reason",
+    "created_at",
+    "checkpoint_sha256",
+    "checkpoint_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "mission": {
+      "type": "object"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "completed_task_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      },
+      "uniqueItems": true
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "recovery_cycle": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "checkpoint_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "checkpoint_ref": {
+      "type": "string",
+      "pattern": "^checkpoint:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
