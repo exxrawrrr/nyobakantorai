@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "candidate": "v0.8.1",
+  "evidence_state": "NOT_OBSERVED_LIVE",
+  "long_running_mission": {
+    "live_observed": false,
+    "control_ref": null,
+    "checkpoint_ref": null,
+    "resumed_from_checkpoint": false,
+    "stoppable": false,
+    "inspectable": false,
+    "budgeted": false,
+    "permission_scoped": false
+  },
+  "hardened_sandbox": {
+    "live_observed": false,
+    "hardening_ref": null,
+    "filesystem_boundary_observed": false,
+    "ephemeral_browser_observed": false,
+    "network_allowlist_observed": false,
+    "resource_ceiling_observed": false,
+    "credential_reference_only_observed": false,
+    "application_level_guard": true,
+    "os_container_isolation_claim": false
+  },
+  "notes": [
+    "Deterministic CHAT 28 tests are not promoted to live operational evidence.",
+    "No OS/container isolation claim is made by this ledger.",
+    "v0.8.1 remains fail-closed until live evidence and v0.8.0 prerequisite readiness exist."
+  ]
+}

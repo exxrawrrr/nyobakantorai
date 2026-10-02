@@ -169,10 +169,11 @@ export function buildRecoverySeed(planInput,checkpointInput,policyInput){
   const checkpoint=normalizeRecoveryCheckpoint(checkpointInput);
   const policy=normalizeRecoveryPolicy(policyInput);
   assert(checkpoint.mission.mission_id===plan.mission.mission_id,"Checkpoint Mission does not match plan.");
-  assert(["PARTIAL","FAILED","BLOCKED"].includes(checkpoint.mission.state),"Checkpoint Mission state is not a safe recovery boundary.");
+  assert(["PARTIAL","FAILED","BLOCKED","PAUSED"].includes(checkpoint.mission.state),"Checkpoint Mission state is not a safe recovery boundary.");
+  const pauseResume=checkpoint.mission.state==="PAUSED";
   assert(!checkpoint.tasks.some((task)=>task.state==="RUNNING"),"Checkpoint cannot resume while a TaskNode is RUNNING.");
   assert(!checkpoint.attempts.some((attempt)=>attempt.state==="RUNNING"),"Checkpoint cannot resume while an Execution Attempt is RUNNING.");
-  assert(checkpoint.recovery_cycle<policy.max_recovery_cycles,"Recovery cycle limit reached.");
+  if(!pauseResume) assert(checkpoint.recovery_cycle<policy.max_recovery_cycles,"Recovery cycle limit reached.");
 
   const planIds=[...plan.graph.task_ids].sort();
   const cpIds=checkpoint.tasks.map(t=>t.task_id).sort();
@@ -221,7 +222,8 @@ export function buildRecoverySeed(planInput,checkpointInput,policyInput){
   return Object.freeze({
     schema:1,
     checkpoint_ref:checkpoint.checkpoint_ref,
-    recovery_cycle:checkpoint.recovery_cycle+1,
+    recovery_cycle:pauseResume?checkpoint.recovery_cycle:checkpoint.recovery_cycle+1,
+    resume_kind:pauseResume?"PAUSE_RESUME":"FAILURE_RECOVERY",
     mission:checkpoint.mission,
     tasks:checkpoint.tasks,
     attempts:checkpoint.attempts,
