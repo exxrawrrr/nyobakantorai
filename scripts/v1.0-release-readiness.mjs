@@ -6,4 +6,4 @@ let snapshot=null;
 if(assessment.ok)snapshot=buildV1ReadinessSnapshot({config,assessment});
 process.stdout.write(JSON.stringify({assessment,snapshot},null,2)+"\n");
 if(!assessment.ok)process.exit(1);
-if(requireReady&&assessment.decision!=="READY")process.exit(2);
+if(requireReady&&(assessment.decision!=="READY"||assessment.promotion_ready!==true))process.exit(2);
