@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/geo-profile-verification.schema.json",
+  "title": "nyobakantorai Geo Profile Verification Binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "profile_ref",
+    "score_ref",
+    "verification_ref",
+    "verifier_id",
+    "independent",
+    "review_state",
+    "decision",
+    "binding_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "profile_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "score_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verification_ref": {
+      "type": "string",
+      "pattern": "^verification:sha256:[a-f0-9]{64}$"
+    },
+    "verifier_id": {
+      "const": "siti"
+    },
+    "independent": {
+      "const": true
+    },
+    "review_state": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCOMPLETE"
+      ]
+    },
+    "decision": {
+      "enum": [
+        "VERIFIED",
+        "NOT_VERIFIED"
+      ]
+    },
+    "binding_ref": {
+      "type": "string",
+      "pattern": "^geo-profile-verification:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
