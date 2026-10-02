@@ -10,6 +10,8 @@
     "flow",
     "scope_ref",
     "allowed_origin",
+    "ownership_evidence_ref",
+    "scope_expires_at",
     "action",
     "connector_route_ref",
     "capability_route_ref",
@@ -38,6 +40,53 @@
     "plan_ref": {
       "type": "string",
       "pattern": "^browser-action-plan:sha256:[a-f0-9]{64}$"
+    },
+    "ownership_evidence_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scope_expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "allowed_origin": {
+      "type": "string",
+      "format": "uri"
+    },
+    "scope_ref": {
+      "type": "string",
+      "pattern": "^browser-scope:sha256:[a-f0-9]{64}$"
+    },
+    "connector_route_ref": {
+      "type": "string",
+      "pattern": "^connector-route:sha256:[a-f0-9]{64}$"
+    },
+    "capability_route_ref": {
+      "type": "string",
+      "pattern": "^capability-route:sha256:[a-f0-9]{64}$"
+    },
+    "approval_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "injection_signals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "content_trust": {
+      "enum": [
+        "NO_INJECTION_SIGNAL",
+        "UNTRUSTED_PAGE_DATA"
+      ]
     }
   }
 }
