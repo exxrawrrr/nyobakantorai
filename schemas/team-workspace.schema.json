@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Team Workspace",
+  "type": "object",
+  "required": ["schema","workspace_id","name","status","workspace_ref"],
+  "properties": {
+    "schema": {"const": 1},
+    "workspace_id": {"type": "string", "pattern": "^ws-[a-z0-9][a-z0-9-]{1,94}$"},
+    "name": {"type": "string", "minLength": 1},
+    "status": {"enum": ["ACTIVE","SUSPENDED","ARCHIVED"]},
+    "workspace_ref": {"type": "string", "pattern": "^team-workspace:sha256:[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

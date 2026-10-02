@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Team Audit Event",
+  "type": "object",
+  "required": ["schema","sequence","at","workspace_id","project_id","actor_user_id","action","resource_ref","outcome","evidence_refs","decision_ref","previous_event_ref","event_ref"],
+  "properties": {
+    "schema": {"const": 1},
+    "sequence": {"type": "integer", "minimum": 1},
+    "at": {"type": "string", "format": "date-time"},
+    "workspace_id": {"type": "string"},
+    "project_id": {"type": "string"},
+    "actor_user_id": {"type": "string", "pattern": "^user-"},
+    "action": {"type": "string"},
+    "resource_ref": {"type": "string"},
+    "outcome": {"enum": ["ALLOWED","DENIED","RECORDED"]},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "decision_ref": {"type": ["string","null"]},
+    "previous_event_ref": {"type": ["string","null"]},
+    "event_ref": {"type": "string", "pattern": "^team-audit-event:sha256:[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

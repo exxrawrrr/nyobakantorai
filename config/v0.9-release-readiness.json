@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "candidate": "v0.9.0",
+  "team_office_decision": "BLOCKED",
+  "decision": "BLOCKED",
+  "evidence": {
+    "required_components": [
+      "TEAM_IDENTITY_RBAC_CONTRACTS",
+      "DELEGATED_APPROVAL_CONTRACTS",
+      "WORKSPACE_RESOURCE_SCOPE_CONTRACTS",
+      "SHARED_AUDIT_CONTRACTS",
+      "LIVE_MULTI_USER_ISOLATION",
+      "LIVE_DELEGATED_APPROVAL",
+      "LIVE_SHARED_AUDIT_OBSERVATION"
+    ],
+    "observed": {
+      "TEAM_IDENTITY_RBAC_CONTRACTS": "PASS",
+      "DELEGATED_APPROVAL_CONTRACTS": "PASS",
+      "WORKSPACE_RESOURCE_SCOPE_CONTRACTS": "PASS",
+      "SHARED_AUDIT_CONTRACTS": "PASS",
+      "LIVE_MULTI_USER_ISOLATION": "BLOCKED",
+      "LIVE_DELEGATED_APPROVAL": "BLOCKED",
+      "LIVE_SHARED_AUDIT_OBSERVATION": "BLOCKED"
+    }
+  },
+  "release_blockers": [
+    {
+      "id": "LIVE_MULTI_USER_ISOLATION",
+      "reason": "No qualifying live team workspace has proven cross-project denial and no silent authority/data bleed."
+    },
+    {
+      "id": "LIVE_DELEGATED_APPROVAL",
+      "reason": "No qualifying live delegated approval has proven exact user/project/action/resource binding without owner impersonation."
+    },
+    {
+      "id": "LIVE_SHARED_AUDIT_OBSERVATION",
+      "reason": "No qualifying live multi-actor shared audit chain has been recorded and revalidated."
+    },
+    {
+      "id": "V0_8_1_PREREQUISITE",
+      "reason": "The prerequisite v0.8.1 Mission Control release remains blocked."
+    }
+  ],
+  "package_version_hold": {
+    "current": "0.5.1",
+    "candidate": "0.9.0",
+    "bump_authorized": false
+  },
+  "promotion": {
+    "stable_tag_authorized": false,
+    "publication_authorized": false
+  },
+  "claim_boundary": "REPOSITORY_LEVEL_TEAM_GOVERNANCE_ONLY"
+}

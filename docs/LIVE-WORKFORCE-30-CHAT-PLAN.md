@@ -591,6 +591,9 @@ Closure: PASS for deterministic repository delivery and BLOCKED for publication.
 
 ### CHAT 29 — Multi-User Projects + RBAC + Shared Audit
 
+**Status: COMPLETE — TEAM OFFICE CONTRACTS VERIFIED / LIVE v0.9.0 EVIDENCE BLOCKED — 2026-10-02.**
+Implementation/status: `docs/V0.9-TEAM-OFFICE.md`
+
 Goal: move from one owner/operator to a governed team workspace.
 
 Deliverables:
@@ -607,6 +610,8 @@ Deliverables:
 - v0.9.0 release gate.
 
 Exit gate: one user's authority/data cannot silently bleed into another user's scope.
+
+Closure: PASS for deterministic repository delivery and BLOCKED for publication. Human identities, workspace/project membership, role-derived RBAC, bounded delegated approval, workspace-scoped connectors, workspace/project budget envelopes, collaboration-safe Project Brain access, exact artifact/evidence resource bindings, and hash-chained shared audit are implemented. Authority is derived from canonical identity + membership + policy and cannot be caller-injected. Static Team Office contracts PASS. Live multi-user isolation, live delegated approval, live shared-audit observation, and the blocked v0.8.1 prerequisite keep v0.9.0 readiness BLOCKED(4). Package remains 0.5.1; no v0.9.0 tag/release is authorized.
 
 ---
 

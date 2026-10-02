@@ -1,3 +1,13 @@
+## [0.9.0] - Unreleased — Team Office contracts verified, release blocked
+
+- Added human user/workspace/project-membership contracts with policy-owned RBAC and no caller-supplied authority widening.
+- Added bounded approval delegation with exact approval/action/resource/project binding, expiry, and no legacy-owner impersonation.
+- Added workspace/project-scoped connector use, budget envelopes, Project Brain visibility derivation, and shared Artifact/Evidence access rules.
+- Added immutable content-addressed shared audit history plus an explicit multi-user threat model covering horizontal access, confused deputy, role spoofing, IDOR, budget mixing, and audit tampering.
+- Added fail-closed v0.9.0 readiness evaluation, adversarial tests, CLI, release-manifest snapshot, and tagged-release guard.
+- Static Team Office contracts PASS; live multi-user isolation, delegated approval, shared audit, and v0.8.1 prerequisite readiness remain blocked.
+- Package/stable release remains v0.5.1; no v0.9.0 tag or GitHub Release is authorized.
+
 ## [0.8.1] - Unreleased — Mission Control contracts verified, release blocked
 
 - Added bounded long-running Mission Control with safe `PAUSED` batch boundaries, fair employee queue balancing, checkpoint resume, explicit slice/escalation limits, and existing-policy-bound provider rerouting.

@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "candidate": "v0.9.0",
+  "evidence_state": "NOT_OBSERVED_LIVE",
+  "multi_user_isolation": {
+    "live_observed": false,
+    "workspace_ref": null,
+    "project_a_ref": null,
+    "project_b_ref": null,
+    "cross_project_denial_ref": null,
+    "rbac_authorization_ref": null,
+    "data_bleed_observed": null
+  },
+  "delegated_approval": {
+    "live_observed": false,
+    "approval_ref": null,
+    "delegation_ref": null,
+    "decision_ref": null,
+    "exact_scope_enforced": false,
+    "owner_impersonation_used": false
+  },
+  "shared_audit": {
+    "live_observed": false,
+    "audit_head_ref": null,
+    "multiple_human_actors_observed": false,
+    "cross_project_events_separated": false,
+    "tamper_check_passed": false
+  },
+  "notes": [
+    "Deterministic CHAT 29 tests are not promoted to live multi-user evidence.",
+    "No enterprise SSO, production tenant database, or remote tenant-isolation claim is made.",
+    "v0.9.0 remains fail-closed until qualifying live team evidence and v0.8.1 prerequisite readiness exist."
+  ]
+}

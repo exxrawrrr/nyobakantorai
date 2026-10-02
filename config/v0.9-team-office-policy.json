@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "id": "v0-9-team-office",
+  "roles": {
+    "OWNER": ["project.read","project.execute","project.manage","approval.request","approval.decide","approval.delegate","connector.use","artifact.read","artifact.write","evidence.read","memory.read","memory.promote","budget.view","budget.spend","audit.read"],
+    "ADMIN": ["project.read","project.execute","project.manage","approval.request","approval.decide","approval.delegate","connector.use","artifact.read","artifact.write","evidence.read","memory.read","memory.promote","budget.view","budget.spend","audit.read"],
+    "APPROVER": ["project.read","project.execute","approval.request","approval.decide","connector.use","artifact.read","evidence.read","memory.read","budget.view","audit.read"],
+    "MEMBER": ["project.read","project.execute","approval.request","connector.use","artifact.read","artifact.write","evidence.read","memory.read","budget.view","budget.spend"],
+    "VIEWER": ["project.read","artifact.read","evidence.read","memory.read","budget.view"]
+  },
+  "delegation": {
+    "max_duration_minutes": 480,
+    "wildcards_allowed": false,
+    "cross_project_allowed": false,
+    "cross_workspace_allowed": false
+  },
+  "resource_access": {
+    "wildcards_allowed": false
+  },
+  "audit": {
+    "hash_chain_required": true,
+    "actor_required": true,
+    "scope_required": true
+  }
+}
