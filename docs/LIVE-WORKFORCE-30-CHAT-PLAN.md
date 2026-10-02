@@ -640,6 +640,10 @@ Decision rule:
 
 v1.0 is **evidence-gated, not schedule-gated**.
 
+**Status: COMPLETE — PRODUCTION CONVERGENCE VERIFIED / v1.0.0 NO_GO — 2026-10-02.**
+
+Closure: repository security controls and release-claim consistency PASS; the one-worker, subset, full-workforce, and upgrade/uninstall/reinstall matrices PASS across Linux, Windows, and minimum-version CI. v1.0.0 remains blocked by four canonical requirements: real-world workflow evidence is still 1/20, provider lifecycle maturity is still partial, representative live recovery evidence is not yet qualifying, and v0.9.0 remains blocked. The manual GO gate is therefore not reached; immutable tagged-asset verification and post-release install smoke remain NOT_RUN_BLOCKED. Package/stable version stays 0.5.1 and no v1.0.0 tag/release is authorized.
+
 ---
 
 ## Version mapping
