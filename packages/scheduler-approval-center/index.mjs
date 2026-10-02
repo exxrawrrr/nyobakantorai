@@ -129,7 +129,7 @@ export function materializeScheduledMission({
     context:{at,project_id:projectId,mission_id:missionId,mission_budget:schedule.budget},
     estimate:estimatedCost,approval_ref:approvalRef,
   });
-  if(cost.action==="STOP"||cost.action==="APPROVAL_REQUIRED"){
+  if(!["ALLOW","WARN"].includes(cost.action)){
     return Object.freeze({dispatched:false,reason:"COST_"+cost.action,schedule_ref:schedule.schedule_ref,cost_decision:cost});
   }
   const plan=planMission({
