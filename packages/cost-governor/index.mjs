@@ -253,6 +253,24 @@ export function createCostGovernor({policy:policyInput,ledger=[],clock=()=>new D
   const policy=normalizeCostPolicy(policyInput);
   const entries=ledger.map(normalizeCostLedgerEntry);
   const decisions=[];
+  const observedScopes=new Map();
+
+  const rememberScopes=(scopes=[])=>{
+    for(const scope of scopes){
+      const key=scope.kind+":"+scope.id;
+      const existing=observedScopes.get(key);
+      if(!existing||scope.limit<existing.limit) observedScopes.set(key,Object.freeze({kind:scope.kind,id:scope.id,limit:scope.limit}));
+    }
+  };
+
+  const budgetState=()=>Object.freeze([...observedScopes.values()]
+    .map((scope)=>scopeSnapshot(scope,entries,policy.currency))
+    .map((scope)=>Object.freeze({
+      ...scope,
+      hard_limit_breached:scope.spent_amount>scope.limit,
+      reconciliation_required:scope.unknown_entries>0,
+    }))
+    .sort((a,b)=>(a.kind+":"+a.id).localeCompare(b.kind+":"+b.id)));
 
   return Object.freeze({
     policy,
@@ -266,6 +284,7 @@ export function createCostGovernor({policy:policyInput,ledger=[],clock=()=>new D
         approval_ref:input.approval_ref,
       });
       decisions.push(decision);
+      rememberScopes(decision.scopes);
       return decision;
     },
     record(input={}){
@@ -284,6 +303,7 @@ export function createCostGovernor({policy:policyInput,ledger=[],clock=()=>new D
         schema:1,
         policy,
         ledger:reconcileCostLedger({policy,ledger:entries}),
+        budget_state:budgetState(),
         decisions:Object.freeze([...decisions]),
       });
     },
