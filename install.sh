@@ -16,6 +16,8 @@ REPO_URL="https://github.com/exxrawrrr/nyobakantorai.git"
 RELEASE_API="https://api.github.com/repos/exxrawrrr/nyobakantorai/releases/latest"
 RELEASE_BASE="https://github.com/exxrawrrr/nyobakantorai/releases/download"
 
+echo "nyobakantorai installer: stable installs use published immutable releases only; unreleased main candidates are ignored."
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --with-hermes) WITH_HERMES=1; shift ;;
