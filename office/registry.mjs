@@ -57,11 +57,21 @@ export function createTask(registry, input, idFactory = () => id("task"), clock 
     lifecycle_status: "PLANNED", execution_mode: "DEMO", provenance: "DEMO", quarantined: false,
     risk_class: RISK_CLASSES.includes(input.risk_class) ? input.risk_class : "READ_ONLY",
     approval_required: false, approval_status: "NOT_REQUIRED", approval_actor: "", approval_at: "", approval_evidence_ref: "",
+    approval_target: "", approval_reason: "", approval_preview: "", approval_scope_actions: [], approval_scope_resources: [], approval_expires_at: "",
+    approval_budget_amount: null, approval_budget_currency: "",
     runtime_ref: "", runtime_state: "", comments: [], attachments: [], evidence_refs: [],
     created_at: at, updated_at: at,
   };
   task.approval_required = AUTO_APPROVAL_RISKS.has(task.risk_class) || Boolean(input.approval_required);
   task.approval_status = task.approval_required ? "PENDING" : "NOT_REQUIRED";
+  task.approval_target = clean(input.approval_target || ("task:"+task.id), 500);
+  task.approval_reason = clean(input.approval_reason || task.detail || task.title, 4000);
+  task.approval_preview = clean(input.approval_preview || task.detail || task.title, 8000);
+  task.approval_scope_actions = Array.isArray(input.approval_scope_actions) ? [...new Set(input.approval_scope_actions.map((x)=>clean(x,160)).filter(Boolean))] : ["execute"];
+  task.approval_scope_resources = Array.isArray(input.approval_scope_resources) ? [...new Set(input.approval_scope_resources.map((x)=>clean(x,500)).filter(Boolean))] : [task.approval_target];
+  task.approval_expires_at = /^\d{4}-\d{2}-\d{2}T/.test(input.approval_expires_at || "") ? new Date(input.approval_expires_at).toISOString() : "";
+  task.approval_budget_amount = input.approval_budget_amount == null || input.approval_budget_amount === "" ? null : Math.max(0, Number(input.approval_budget_amount));
+  task.approval_budget_currency = task.approval_budget_amount == null ? "" : clean(input.approval_budget_currency || "USD", 3).toUpperCase();
   next.tasks.push(task);
   next.events.push(eventFor(task, "TASK_CREATED", "owner", at, "LOCAL_MANUAL"));
   next.updated_at = at;
@@ -93,6 +103,33 @@ export function updateTask(registry, taskId, patch, clock = now) {
   task.assignee_id = EMPLOYEE_IDS.has(patch.assignee_id) ? patch.assignee_id : task.assignee_id;
   task.priority = ["LOW", "MEDIUM", "HIGH", "CRITICAL"].includes(patch.priority) ? patch.priority : task.priority;
   task.due_date = /^\d{4}-\d{2}-\d{2}$/.test(patch.due_date || "") ? patch.due_date : task.due_date;
+  const approvalFields = ["approval_reason","approval_preview","approval_scope_actions","approval_scope_resources","approval_expires_at","approval_budget_amount","approval_budget_currency"];
+  const touchesApproval = approvalFields.some((field)=>Object.prototype.hasOwnProperty.call(patch,field));
+  if (touchesApproval && actor !== "owner") throw new Error("Only the owner may edit approval scope/preview/expiry.");
+  if (touchesApproval && task.approval_status === "APPROVED") throw new Error("Approved scope cannot be edited in place; create a new approval.");
+  if (Object.prototype.hasOwnProperty.call(patch,"approval_reason")) task.approval_reason = clean(patch.approval_reason,4000);
+  if (Object.prototype.hasOwnProperty.call(patch,"approval_preview")) task.approval_preview = clean(patch.approval_preview,8000);
+  if (Object.prototype.hasOwnProperty.call(patch,"approval_scope_actions")) {
+    const values=String(patch.approval_scope_actions||"").split(",").map((x)=>clean(x,160)).filter(Boolean);
+    if(!values.length) throw new Error("Approval scope actions cannot be empty.");
+    task.approval_scope_actions=[...new Set(values)];
+  }
+  if (Object.prototype.hasOwnProperty.call(patch,"approval_scope_resources")) {
+    const values=String(patch.approval_scope_resources||"").split(",").map((x)=>clean(x,500)).filter(Boolean);
+    if(!values.length||values.some((x)=>x==="*"||x.includes("*"))) throw new Error("Approval scope resources must be exact and non-wildcard.");
+    task.approval_scope_resources=[...new Set(values)];
+  }
+  if (Object.prototype.hasOwnProperty.call(patch,"approval_expires_at")) {
+    const value=clean(patch.approval_expires_at,80);
+    if(value && Number.isNaN(Date.parse(value))) throw new Error("Approval expiry must be a valid timestamp.");
+    task.approval_expires_at=value?new Date(value).toISOString():"";
+  }
+  if (Object.prototype.hasOwnProperty.call(patch,"approval_budget_amount")) {
+    const raw=patch.approval_budget_amount;
+    task.approval_budget_amount=raw==null||raw===""?null:Number(raw);
+    if(task.approval_budget_amount!=null&&(!Number.isFinite(task.approval_budget_amount)||task.approval_budget_amount<0)) throw new Error("Approval budget must be non-negative.");
+  }
+  if (Object.prototype.hasOwnProperty.call(patch,"approval_budget_currency")) task.approval_budget_currency=task.approval_budget_amount==null?"":clean(patch.approval_budget_currency||"USD",3).toUpperCase();
   if (evidence && !task.evidence_refs.includes(evidence)) task.evidence_refs.push(evidence);
   if (clean(patch.comment, 1000)) task.comments.push({ id: id("comment"), actor, text: clean(patch.comment, 1000), at: clock() });
   if (patch.attachment_name) task.attachments.push({ name: clean(patch.attachment_name, 240), type: clean(patch.attachment_type, 120), size: Number(patch.attachment_size) || 0, metadata_only: true });
@@ -145,6 +182,14 @@ export function importRegistry(text) {
     approval_actor: clean(task.approval_actor, 40),
     approval_at: clean(task.approval_at, 80),
     approval_evidence_ref: clean(task.approval_evidence_ref, 1000),
+    approval_target: clean(task.approval_target || ("task:"+task.id), 500),
+    approval_reason: clean(task.approval_reason || task.detail || task.title, 4000),
+    approval_preview: clean(task.approval_preview || task.detail || task.title, 8000),
+    approval_scope_actions: Array.isArray(task.approval_scope_actions) && task.approval_scope_actions.length ? [...new Set(task.approval_scope_actions.map((x)=>clean(x,160)).filter(Boolean))] : ["execute"],
+    approval_scope_resources: Array.isArray(task.approval_scope_resources) && task.approval_scope_resources.length ? [...new Set(task.approval_scope_resources.map((x)=>clean(x,500)).filter(Boolean))] : [clean(task.approval_target || ("task:"+task.id),500)],
+    approval_expires_at: clean(task.approval_expires_at,80),
+    approval_budget_amount: task.approval_budget_amount == null ? null : Number(task.approval_budget_amount),
+    approval_budget_currency: clean(task.approval_budget_currency,3).toUpperCase(),
     provenance: task.execution_mode && !["DEMO","LOCAL"].includes(task.execution_mode) ? "LOCAL_CLAIM" : "DEMO",
     quarantined: Boolean(task.execution_mode && !["DEMO","LOCAL"].includes(task.execution_mode)),
     reconcile_reason: task.execution_mode && !["DEMO","LOCAL"].includes(task.execution_mode) ? "NOT_RECONCILED" : "",
@@ -165,6 +210,13 @@ export function validateRegistry(registry) {
     if (!task.title || !EMPLOYEE_IDS.has(task.assignee_id) || !STATUSES.includes(task.lifecycle_status)) throw new Error("Invalid task.");
     if (!RISK_CLASSES.includes(task.risk_class || "READ_ONLY") || !APPROVAL_STATUSES.includes(task.approval_status || "NOT_REQUIRED")) throw new Error("Invalid approval policy.");
     if (AUTO_APPROVAL_RISKS.has(task.risk_class) && task.approval_required !== true) throw new Error("High-impact task requires approval.");
+    if (task.approval_required) {
+      if (!task.approval_target || !task.approval_reason || !task.approval_preview) throw new Error("Approval Center metadata is incomplete.");
+      if (!Array.isArray(task.approval_scope_actions) || !task.approval_scope_actions.length) throw new Error("Approval scope actions required.");
+      if (!Array.isArray(task.approval_scope_resources) || !task.approval_scope_resources.length || task.approval_scope_resources.some((x)=>x==="*"||x.includes("*"))) throw new Error("Approval scope resources must be exact.");
+      if (task.approval_expires_at && Number.isNaN(Date.parse(task.approval_expires_at))) throw new Error("Approval expiry invalid.");
+      if (task.approval_budget_amount != null && (!Number.isFinite(Number(task.approval_budget_amount)) || Number(task.approval_budget_amount)<0)) throw new Error("Approval budget invalid.");
+    }
     if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(task.lifecycle_status) && task.approval_status !== "APPROVED") throw new Error("High-impact task cannot execute without approval.");
     if (task.lifecycle_status === "VERIFIED") {
       const verified = registry.events.find((entry) => entry.task_id === task.id && entry.action === "STATUS_CHANGED"
