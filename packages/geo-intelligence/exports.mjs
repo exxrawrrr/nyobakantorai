@@ -19,7 +19,9 @@ function rowsFor(profiles,scores,verifications){
   }
   return profiles.map(profile=>{
     const score=scoreBy.get(profile.profile_ref);
+    assert(score&&score.profile_ref===profile.profile_ref,"Export profile score binding missing: "+profile.profile_ref);
     const bound=verBy.get(profile.profile_ref)||null;
+    if(bound) assert(bound.binding.score_ref===score.score_ref,"Export verification/score binding mismatch: "+profile.profile_ref);
     const verification=bound?.verification||null;
     return {
       profile_ref:profile.profile_ref,
