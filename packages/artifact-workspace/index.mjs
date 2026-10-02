@@ -292,6 +292,57 @@ export function createArtifactWorkspace({storage,clock=()=>new Date().toISOStrin
   return Object.freeze(api);
 }
 
+
+export function importArtifactWorkspaceBundle(text,{storage}={}){
+  storageAssert(storage);
+  let bundle;
+  try { bundle=typeof text==="string"?JSON.parse(text):structuredClone(text); }
+  catch { throw new Error("Artifact workspace bundle requires valid JSON."); }
+  assert(bundle?.schema===1 && bundle?.format==="nyobakantorai-artifact-workspace","Artifact workspace bundle format is invalid.");
+  assert(Array.isArray(bundle.records),"Artifact workspace bundle records are required.");
+  assert(bundle.index?.schema===1 && Array.isArray(bundle.index.records) && Array.isArray(bundle.index.events),"Artifact workspace bundle index is invalid.");
+  const payload={
+    schema:bundle.schema,
+    format:bundle.format,
+    index:bundle.index,
+    records:bundle.records,
+  };
+  assert(/^[a-f0-9]{64}$/.test(bundle.bundle_sha256||""),"Artifact workspace bundle checksum is invalid.");
+  assert(sha256Hex(canonicalArtifactJson(payload))===bundle.bundle_sha256,"Artifact workspace bundle integrity check failed.");
+  validateWorkspaceEvents(bundle.index.events);
+  assert(bundle.index.records.length===bundle.records.length,"Artifact workspace bundle record count mismatch.");
+
+  const byRef=new Map();
+  for(const item of bundle.records){
+    assert(item?.record && item?.payload,"Artifact workspace bundle record entry is invalid.");
+    const record=normalizeArtifactRecord(item.record);
+    const content=payloadBytes(item.payload);
+    assert(content.encoding===record.content.encoding,"Artifact workspace bundle payload encoding mismatch.");
+    assert(content.bytes.length===record.content.byte_length,"Artifact workspace bundle payload length mismatch.");
+    assert(sha256Hex(content.bytes)===record.content.sha256,"Artifact workspace bundle payload checksum mismatch.");
+    byRef.set(record.artifact_ref,{record,content});
+  }
+  for(const entry of bundle.index.records){
+    const found=byRef.get(entry.artifact_ref);
+    assert(found,"Artifact workspace bundle index references missing record.");
+    assert(found.record.artifact_id===entry.artifact_id && found.record.version===entry.version,"Artifact workspace bundle index identity mismatch.");
+    if(found.record.version>1){
+      const previous=byRef.get(found.record.previous_artifact_ref);
+      assert(previous,"Artifact workspace bundle version chain is missing previous version.");
+      assert(previous.record.artifact_id===found.record.artifact_id && previous.record.version===found.record.version-1,"Artifact workspace bundle version chain mismatch.");
+    }
+  }
+
+  for(const {record,content} of byRef.values()){
+    storage.set(blobKey(record.content.sha256),content.data);
+    storage.set(recordKey(record.artifact_id,record.version),JSON.stringify(record));
+  }
+  writeIndex(storage,structuredClone(bundle.index));
+  const workspace=createArtifactWorkspace({storage});
+  workspace.verify();
+  return workspace;
+}
+
 export function validateArtifactOwnership(recordInput,{mission,tasks=[],attempts=[]}={}){
   const record=normalizeArtifactRecord(recordInput);
   assert(mission && typeof mission==="object","Mission is required for artifact ownership validation.");
