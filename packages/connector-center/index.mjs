@@ -121,6 +121,7 @@ function connectionPayload(input){
     revoked_at:input.revoked_at,
     expires_at:input.expires_at,
     evidence_ref:input.evidence_ref,
+    credential_ref_sha256:input.credential_ref_sha256,
     previous_connection_ref:input.previous_connection_ref,
     lifecycle_seq:input.lifecycle_seq,
   });
@@ -151,6 +152,7 @@ export function createConnectorConnection({
     revoked_at:null,
     expires_at:null,
     evidence_ref:null,
+    credential_ref_sha256:null,
     previous_connection_ref:null,
     lifecycle_seq:0,
   };
@@ -183,6 +185,7 @@ export function normalizeConnectorConnection(input,{registry}={}){
     revoked_at:input.revoked_at==null?null:new Date(input.revoked_at).toISOString(),
     expires_at:input.expires_at==null?null:new Date(input.expires_at).toISOString(),
     evidence_ref:input.evidence_ref==null?null:clean(input.evidence_ref,1000)||null,
+    credential_ref_sha256:input.credential_ref_sha256==null?null:clean(input.credential_ref_sha256,64),
     previous_connection_ref:input.previous_connection_ref==null?null:clean(input.previous_connection_ref,1000)||null,
     lifecycle_seq:Number(input.lifecycle_seq),
   };
@@ -190,6 +193,8 @@ export function normalizeConnectorConnection(input,{registry}={}){
     if(payload[key]!=null) assert(validTime(payload[key]),"Connector "+key+" is invalid.");
   }
   assert(Number.isInteger(payload.lifecycle_seq)&&payload.lifecycle_seq>=0,"Connector lifecycle_seq must be a non-negative integer.");
+  const credentialHash=credentialRef==null?null:createHash("sha256").update(credentialRef).digest("hex");
+  assert(payload.credential_ref_sha256===credentialHash,"Connector credential_ref hash mismatch.");
   const expected=sha256Ref("connector-connection:sha256:",connectionPayload(payload));
   assert(clean(input.connection_ref,200)===expected,"Connector connection_ref checksum mismatch.");
   if(state==="CONNECTED"){
@@ -267,6 +272,7 @@ export function transitionConnectorConnection(connection,event,{registry,at,evid
     revoked_at:revokedAt,
     expires_at:nextExpires,
     evidence_ref:evidence,
+    credential_ref_sha256:nextCredential==null?null:createHash("sha256").update(nextCredential).digest("hex"),
     previous_connection_ref:current.connection_ref,
     lifecycle_seq:current.lifecycle_seq+1,
   };
