@@ -6,6 +6,22 @@ It combines a visual office, a canonical workforce registry, installable employe
 
 ![nyobakantorai office overview](docs/assets/office-overview.png)
 
+## v0.7.0 connected-office status — partial live evidence, release blocked
+
+CHAT 22 collected real connected-account evidence without widening repository authority claims:
+
+- live GitHub repository metadata read;
+- live Google Drive metadata read with filenames, file IDs, and file contents excluded from committed evidence;
+- one scoped GitHub issue write (#44) after a committed owner approval plan, followed by direct read-back and closure verification;
+- executable Connector Center application-level revocation evidence;
+- scheduled Mission materialization through the normal Mission Engine + Cost Governor using the live observation IDs.
+
+The milestone is **not release-ready**. The current blockers are: the two connector connections are not independently proven READ_ONLY, no live browser provider is available for CHAT 22 evidence, and prerequisite v0.6.1 remains blocked by the v0.6.0 release chain.
+
+Package/stable version therefore remains `0.5.1`. No `v0.7.0` tag or GitHub Release is authorized.
+
+See [v0.7 Connected Workflow Live Evidence + Release Gate](docs/V0.7-CONNECTED-LIVE-RELEASE-GATE.md).
+
 ## Current release — v0.5.1
 
 `v0.5.1` is the current published stable release.
