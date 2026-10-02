@@ -53,6 +53,32 @@
         "allowed_ref_prefixes": []
       },
       "verification_method": "Use an explicitly connected Playwright MCP transport with a disposable browser profile; every action still requires exact Connector Center and Capability Router authorization."
+    },
+    {
+      "schema": 1,
+      "id": "google-places-readonly",
+      "provider": "google-places-new",
+      "label": "Google Places (New) Read-Only",
+      "default_state": "NOT_CONNECTED",
+      "capabilities": [
+        "geo.places.search",
+        "geo.places.details"
+      ],
+      "access_modes": [
+        "READ"
+      ],
+      "resource_types": [
+        "geo_policy_scope"
+      ],
+      "auth": {
+        "mode": "SECRET_REF_REQUIRED",
+        "allowed_ref_prefixes": [
+          "connector-secret://",
+          "env://",
+          "secret://"
+        ]
+      },
+      "verification_method": "Use an exact geo policy scope, explicit non-wildcard FieldMask profile, bounded query/area request, ephemeral response handling, and durable Place ID-only retention policy. Connector is definition-only until reviewed live connection evidence exists."
     }
   ]
 }

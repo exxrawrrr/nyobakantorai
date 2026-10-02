@@ -456,6 +456,9 @@ Closure: release remains BLOCKED, as required by the exit gate when qualifying e
 
 ### CHAT 23 — Geo Core + Google Places Policy Layer
 
+**Status: COMPLETE — GEO CORE / GOOGLE PLACES POLICY LAYER VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.7.1-GEO-CORE.md`
+
 Goal: build compliant provider-aware discovery before lead-machine behavior.
 
 Deliverables:
@@ -469,6 +472,8 @@ Deliverables:
 - query/area bounds.
 
 Exit gate: production wildcard field masks are rejected and provider data cannot be stored outside configured policy by accident.
+
+Closure: PASS for repository delivery. Production wildcard masks fail closed; reviewed explicit FieldMask/SKU profiles bind every request; Text/Nearby/Details requests have bounded query/area/result/request contracts; provider responses are EPHEMERAL_ONLY; durable provider content is limited to Place ID plus policy/timestamp metadata; attribution is tracked separately; and the Google Places connector remains READ-only / NOT_CONNECTED by default. Targeted Geo Core suite passed 11/11, capability catalog check passed for 79 entries, and implementation-head verify #698 passed Ubuntu, Windows, and minimum versions. No live Places request, numeric billing observation, or exhaustive-coverage claim is made.
 
 ### CHAT 24 — Search Expansion + Dedupe + Web Enrichment + Siti Verification
 

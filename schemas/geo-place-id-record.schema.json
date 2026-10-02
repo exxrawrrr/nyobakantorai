@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/geo-place-id-record.schema.json",
+  "title": "nyobakantorai Durable Geo Place ID Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provider",
+    "place_id",
+    "first_seen_at",
+    "refresh_due_at",
+    "policy_ref",
+    "record_ref"
+  ],
+  "properties": {
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "place_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "first_seen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "refresh_due_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "policy_ref": {
+      "type": "string",
+      "pattern": "^geo-policy:sha256:[a-f0-9]{64}$"
+    },
+    "record_ref": {
+      "type": "string",
+      "pattern": "^geo-place-id:sha256:[a-f0-9]{64}$"
+    }
+  }
+}

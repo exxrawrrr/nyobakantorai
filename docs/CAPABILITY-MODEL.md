@@ -242,3 +242,44 @@ All 16 current employees have one capability loop and one reviewed upgrade attac
 New headcount now requires a documented capability gap after considering whether an existing employee can be upgraded through reusable skills.
 
 See `docs/V0.7-SKILLS-STORE.md`.
+
+
+## Geo provider policy boundary (CHAT 23)
+
+Geo discovery adds provider-data policy after the normal capability and connector gates.
+
+```text
+geo capability contract
+  -> exact Connector Center route
+  -> exact geo policy scope
+  -> bounded query/area contract
+  -> reviewed explicit FieldMask profile
+  -> provider response (EPHEMERAL_ONLY)
+  -> attribution/display requirements
+  -> Place-ID-only durable record
+```
+
+These states are intentionally distinct:
+
+```text
+authorized to query
+!=
+allowed to persist provider response
+!=
+allowed to display without attribution
+!=
+complete market coverage
+```
+
+Current Google Places capabilities are:
+
+- `geo.places.search`
+- `geo.places.details`
+
+Both remain `READ_ONLY` and `NOT_CONNECTED` by default.
+
+The connector `google-places-readonly` requires an exact `geo_policy_scope` resource and cannot expose write access.
+
+Production wildcard FieldMasks are rejected. Pricing policy pins reviewed SKU tiers rather than stale numeric prices. Raw Places responses are ephemeral; only Place IDs plus approved policy/timestamp metadata may become durable records.
+
+See `docs/V0.7.1-GEO-CORE.md`.
