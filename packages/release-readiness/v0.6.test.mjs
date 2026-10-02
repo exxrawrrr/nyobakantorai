@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import {
   assessV06ReleaseReadiness,
   buildV06ReadinessSnapshot,
@@ -62,7 +64,7 @@ test("public demo deployment is explicitly NOT_CONFIGURED rather than silently c
 });
 
 test("v0.6 convergence preserves both fresh live attempts as unsuccessful but safely torn down", async () => {
-  const evidence=(await import("../../config/v0.6-acceptance-evidence.json",{with:{type:"json"}})).default;
+  const evidence=JSON.parse(await readFile(resolve(import.meta.dirname,"../../config/v0.6-acceptance-evidence.json"),"utf8"));
   assert.equal(evidence.live_observations.length,2);
   for(const item of evidence.live_observations){
     assert.equal(item.evidence_class,"UNVERIFIED_RUNTIME_ATTEMPT");
