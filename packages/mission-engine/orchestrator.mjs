@@ -6,6 +6,7 @@ import { buildHandoffEnvelope, normalizeHandoffResult, resultFromAttempt } from 
 import { buildMissionTelemetry } from "./telemetry.mjs";
 import { runSitiVerification } from "../evidence-verifier/siti.mjs";
 import { normalizeCostAmount } from "../cost-governor/index.mjs";
+import { buildRecoverySeed } from "../checkpoint-recovery/index.mjs";
 
 export const MISSION_ORCHESTRATOR_API = 1;
 
@@ -179,6 +180,8 @@ export async function executeMissionPlan(planInput, {
   costGovernor = null,
   resolveCostReroute = null,
   reportActualCost = null,
+  recovery = null,
+  resolveRecoveryRuntime = null,
   shouldCancel = () => false,
 } = {}) {
   const plan = normalizeMissionPlan(planInput);
@@ -194,38 +197,96 @@ export async function executeMissionPlan(planInput, {
   }
   if (resolveCostReroute != null) assert(typeof resolveCostReroute === "function", "resolveCostReroute must be a function or null.");
   if (reportActualCost != null) assert(typeof reportActualCost === "function", "reportActualCost must be a function or null.");
+  if (resolveRecoveryRuntime != null) assert(typeof resolveRecoveryRuntime === "function", "resolveRecoveryRuntime must be a function or null.");
 
-  const taskById = new Map(plan.task_nodes.map((task) => [task.task_id, task]));
+  const recoverySeed = recovery == null
+    ? null
+    : buildRecoverySeed(plan, recovery.checkpoint, recovery.policy);
+
+  const taskById = new Map((recoverySeed ? recoverySeed.tasks : plan.task_nodes).map((task) => [task.task_id, task]));
   const metaById = new Map(plan.node_meta.map((meta) => [meta.task_id, meta]));
   const { dependencies } = dependencyMaps(plan);
-  const attempts = [];
+  const attempts = recoverySeed ? [...recoverySeed.attempts] : [];
   const handoffs = [];
   const returns = [];
   const verifications = [];
   const costDecisions = [];
   const costEntries = [];
-  const events = [];
-  const artifactsByTask = new Map(plan.graph.task_ids.map((id) => [id, []]));
+  const events = recoverySeed ? [...recoverySeed.events] : [];
+  const artifactsByTask = new Map(plan.graph.task_ids.map((id) => [
+    id,
+    unique(attempts.filter((attempt) => attempt.task_id === id).flatMap((attempt) => attempt.artifact_refs)),
+  ]));
+  const recoveryByTask = new Map((recoverySeed?.recovery_tasks || []).map((item) => [item.task_id, item]));
 
-  for (const taskId of plan.graph.task_ids) {
-    const task = taskById.get(taskId);
-    const next = task.approval.required && task.approval.status !== "APPROVED"
-      ? transitionTaskNode(task, "WAITING_APPROVAL", { clock })
-      : transitionTaskNode(task, "READY", { clock });
-    taskById.set(taskId, next);
+  let mission;
+  if (recoverySeed == null) {
+    for (const taskId of plan.graph.task_ids) {
+      const task = taskById.get(taskId);
+      const next = task.approval.required && task.approval.status !== "APPROVED"
+        ? transitionTaskNode(task, "WAITING_APPROVAL", { clock })
+        : transitionTaskNode(task, "READY", { clock });
+      taskById.set(taskId, next);
+    }
+
+    mission = transitionMission(plan.mission, "READY", { clock });
+    events.push(event("MISSION_READY", clock, { mission_id:mission.mission_id }));
+  } else {
+    for (const taskId of recoverySeed.dependency_reset_task_ids) {
+      const task = taskById.get(taskId);
+      const reset = transitionTaskNode(task, "PLANNED", { clock });
+      taskById.set(taskId, reset);
+      events.push(event("TASK_RECOVERY_DEPENDENCY_RESET", clock, {
+        mission_id:recoverySeed.mission.mission_id,
+        task_id:taskId,
+        checkpoint_ref:recoverySeed.checkpoint_ref,
+      }));
+    }
+    for (const item of recoverySeed.recovery_tasks) {
+      let task = taskById.get(item.task_id);
+      task = transitionTaskNode(task, "RETRYING", { clock });
+      events.push(event("TASK_RETRYING", clock, {
+        mission_id:recoverySeed.mission.mission_id,
+        task_id:item.task_id,
+        checkpoint_ref:recoverySeed.checkpoint_ref,
+        previous_attempt_id:item.previous_attempt_id,
+      }));
+      task = transitionTaskNode(task, "RECOVERED", { clock });
+      taskById.set(item.task_id, task);
+      events.push(event("TASK_RECOVERED", clock, {
+        mission_id:recoverySeed.mission.mission_id,
+        task_id:item.task_id,
+        checkpoint_ref:recoverySeed.checkpoint_ref,
+      }));
+    }
+
+    mission = recoverySeed.mission;
+    mission = transitionMission(mission, "RETRYING", { clock });
+    events.push(event("MISSION_RETRYING", clock, {
+      mission_id:mission.mission_id,
+      checkpoint_ref:recoverySeed.checkpoint_ref,
+      recovery_cycle:recoverySeed.recovery_cycle,
+    }));
+    mission = transitionMission(mission, "RECOVERED", { clock });
+    events.push(event("MISSION_RECOVERED", clock, {
+      mission_id:mission.mission_id,
+      checkpoint_ref:recoverySeed.checkpoint_ref,
+      recovery_cycle:recoverySeed.recovery_cycle,
+    }));
   }
-
-  let mission = transitionMission(plan.mission, "READY", { clock });
-  events.push(event("MISSION_READY", clock, { mission_id:mission.mission_id }));
 
   const hasImmediatelyRunnable = plan.graph.task_ids.some((taskId) => {
     const task = taskById.get(taskId);
-    return task.state === "READY" && dependencies.get(taskId).length === 0;
+    return ["READY","RECOVERED"].includes(task.state)
+      && dependencies.get(taskId).every((id) => SUCCESS_STATES.has(taskById.get(id).state));
   });
 
   if (hasImmediatelyRunnable) {
     mission = transitionMission(mission, "RUNNING", { clock });
-    events.push(event("MISSION_RUNNING", clock, { mission_id:mission.mission_id }));
+    events.push(event("MISSION_RUNNING", clock, {
+      mission_id:mission.mission_id,
+      recovery_checkpoint_ref:recoverySeed?.checkpoint_ref || null,
+    }));
   } else if (plan.graph.task_ids.some((taskId) => taskById.get(taskId).state === "WAITING_APPROVAL")) {
     mission = transitionMission(mission, "WAITING_APPROVAL", { clock });
     events.push(event("MISSION_WAITING_APPROVAL", clock, { mission_id:mission.mission_id }));
@@ -233,7 +294,7 @@ export async function executeMissionPlan(planInput, {
       api:MISSION_ORCHESTRATOR_API,
       mission,
       tasks:Object.freeze(plan.graph.task_ids.map((id) => taskById.get(id))),
-      attempts:Object.freeze([]),
+      attempts:Object.freeze([...attempts]),
       handoffs:Object.freeze([]),
       returns:Object.freeze([]),
       verifications:Object.freeze([]),
@@ -253,16 +314,43 @@ export async function executeMissionPlan(planInput, {
   async function executeTask(taskId) {
     const current = taskById.get(taskId);
     const meta = metaById.get(taskId);
-    assert(current.state === "READY", `Task must be READY before dispatch: ${taskId}`);
-
+    assert(["READY","RECOVERED"].includes(current.state), `Task must be READY or RECOVERED before dispatch: ${taskId}`);
+    const recoveryMeta = recoveryByTask.get(taskId) || null;
+    const runtimeContext = Object.freeze({
+      mission,
+      task:current,
+      node_meta:meta,
+      recovery:recoveryMeta == null ? null : Object.freeze({
+        checkpoint_ref:recoverySeed.checkpoint_ref,
+        recovery_cycle:recoverySeed.recovery_cycle,
+        previous_attempt_id:recoveryMeta.previous_attempt_id,
+        previous_provider:recoveryMeta.previous_provider,
+        provider_recovery:recoveryMeta.provider_recovery,
+      }),
+    });
+    const runtimeResolver = recoveryMeta != null && resolveRecoveryRuntime != null
+      ? resolveRecoveryRuntime
+      : resolveRuntime;
     let resolution = normalizeResolution(
-      await resolveRuntime(Object.freeze({
-        mission,
-        task:current,
-        node_meta:meta,
-      })),
+      await runtimeResolver(runtimeContext),
       current,
     );
+
+    if (recoveryMeta != null) {
+      const selectedProvider = clean(resolution.adapter.runtime?.provider, 120).toLowerCase();
+      const providerRecovery = recoveryMeta.provider_recovery;
+      const expectedProvider = providerRecovery.action === "FALLBACK_PROVIDER"
+        ? providerRecovery.fallback_provider
+        : providerRecovery.current_provider;
+      assert(selectedProvider === expectedProvider, `Recovery runtime provider ${selectedProvider || "(empty)"} violates recovery policy; expected ${expectedProvider}.`);
+      events.push(event("RECOVERY_RUNTIME_SELECTED", clock, {
+        mission_id:mission.mission_id,
+        task_id:taskId,
+        checkpoint_ref:recoverySeed.checkpoint_ref,
+        action:providerRecovery.action,
+        provider_id:selectedProvider,
+      }));
+    }
 
     if (costGovernor != null && resolution.cost_governance == null) {
       const blocked = transitionTaskNode(current, "BLOCKED", {
@@ -439,6 +527,8 @@ export async function executeMissionPlan(planInput, {
         model_route_ref:resolution.model_route_ref,
         capability_route_refs:resolution.capability_route_refs,
         receipt_ref:receiptRef,
+        previous_attempt_id:recoveryMeta?.previous_attempt_id || null,
+        recovery_checkpoint_ref:recoveryMeta == null ? null : recoverySeed.checkpoint_ref,
       });
     } catch (error) {
       if (!clean(error?.code, 120)) throw error;
@@ -458,8 +548,8 @@ export async function executeMissionPlan(planInput, {
         receipt_ref:null,
         evidence_refs:[],
         artifact_refs:[],
-        previous_attempt_id:null,
-        recovery_checkpoint_ref:null,
+        previous_attempt_id:recoveryMeta?.previous_attempt_id || null,
+        recovery_checkpoint_ref:recoveryMeta == null ? null : recoverySeed.checkpoint_ref,
       });
     }
     attempts.push(attempt);
@@ -613,8 +703,31 @@ export async function executeMissionPlan(planInput, {
     }
   }
 
+  function promoteRecoveredDependencies() {
+    let changed = false;
+    for (const taskId of plan.graph.task_ids) {
+      const task = taskById.get(taskId);
+      if (task.state !== "PLANNED") continue;
+      if (!dependencies.get(taskId).every((id) => SUCCESS_STATES.has(taskById.get(id).state))) continue;
+      const ready = task.approval.required && task.approval.status !== "APPROVED"
+        ? transitionTaskNode(task, "WAITING_APPROVAL", { clock })
+        : transitionTaskNode(task, "READY", { clock });
+      taskById.set(taskId, ready);
+      events.push(event("TASK_RECOVERY_DEPENDENCY_READY", clock, {
+        mission_id:mission.mission_id,
+        task_id:taskId,
+        checkpoint_ref:recoverySeed?.checkpoint_ref || null,
+      }));
+      changed = true;
+    }
+    return changed;
+  }
+
   while (true) {
     while (propagateDependencyBlocks()) {}
+    if (recoverySeed != null) {
+      while (promoteRecoveredDependencies()) {}
+    }
 
     if (await shouldCancel(Object.freeze({
       mission,
@@ -627,7 +740,7 @@ export async function executeMissionPlan(planInput, {
     }
 
     const runnable = plan.graph.task_ids
-      .filter((taskId) => taskById.get(taskId).state === "READY")
+      .filter((taskId) => ["READY","RECOVERED"].includes(taskById.get(taskId).state))
       .filter((taskId) => dependencies.get(taskId).every((id) => SUCCESS_STATES.has(taskById.get(id).state)))
       .sort();
 
@@ -649,9 +762,16 @@ export async function executeMissionPlan(planInput, {
   while (propagateDependencyBlocks()) {}
 
   const finalTasks = plan.graph.task_ids.map((id) => taskById.get(id));
-  const aggregateArtifacts = unique(returns.flatMap((item) => item.artifact_refs));
+  const aggregateArtifacts = unique([
+    ...(recoverySeed == null ? [] : recoverySeed.mission.artifact_refs),
+    ...returns.flatMap((item) => item.artifact_refs),
+  ]);
   const verificationEvidence = verifications.map((item) => item.verification_ref);
-  const aggregateEvidence = unique([...returns.flatMap((item) => item.evidence_refs), ...verificationEvidence]);
+  const aggregateEvidence = unique([
+    ...(recoverySeed == null ? [] : recoverySeed.mission.evidence_refs),
+    ...returns.flatMap((item) => item.evidence_refs),
+    ...verificationEvidence,
+  ]);
 
   let targetState = cancelRequested ? "CANCELLED" : missionTerminalState(finalTasks);
   const finalCostSnapshot = costGovernor == null ? null : costGovernor.snapshot();
@@ -728,5 +848,12 @@ export async function executeMissionPlan(planInput, {
     events:Object.freeze(events),
     cancelled:cancelRequested,
     max_concurrency:maxConcurrency,
+    recovery:recoverySeed == null ? null : Object.freeze({
+      checkpoint_ref:recoverySeed.checkpoint_ref,
+      recovery_cycle:recoverySeed.recovery_cycle,
+      completed_task_ids:recoverySeed.completed_task_ids,
+      retried_task_ids:Object.freeze(recoverySeed.recovery_tasks.map((item) => item.task_id)),
+      dependency_reset_task_ids:recoverySeed.dependency_reset_task_ids,
+    }),
   });
 }
