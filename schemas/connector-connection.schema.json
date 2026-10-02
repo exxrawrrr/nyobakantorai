@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/connector-connection.schema.json",
+  "title": "nyobakantorai Connector Connection Snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "connection_id",
+    "connector_id",
+    "state",
+    "connected_at",
+    "disconnected_at",
+    "revoked_at",
+    "expires_at",
+    "evidence_ref",
+    "credential_ref",
+    "credential_ref_sha256",
+    "previous_connection_ref",
+    "lifecycle_seq",
+    "connection_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "connection_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "connector_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,79}$"
+    },
+    "state": {
+      "enum": [
+        "NOT_CONNECTED",
+        "CONNECTED",
+        "DISCONNECTED",
+        "REVOKED",
+        "EXPIRED",
+        "ERROR"
+      ]
+    },
+    "connected_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "disconnected_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "evidence_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "credential_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^(secret|env|connector-secret)://"
+    },
+    "credential_ref_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "previous_connection_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "lifecycle_seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "connection_ref": {
+      "type": "string",
+      "pattern": "^connector-connection:sha256:[a-f0-9]{64}$"
+    }
+  }
+}

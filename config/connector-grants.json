@@ -1,0 +1,5 @@
+{
+  "schema": 1,
+  "note": "Safe default: no connector resource grants are committed. Deployment/runtime policy must inject reviewed exact grants with evidence.",
+  "grants": []
+}

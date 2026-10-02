@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/connector-registry.schema.json",
+  "title": "nyobakantorai Connector Registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "default_state",
+    "note",
+    "connectors"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "default_state": {
+      "const": "NOT_CONNECTED"
+    },
+    "note": {
+      "type": "string"
+    },
+    "connectors": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "id",
+          "provider",
+          "label",
+          "default_state",
+          "capabilities",
+          "access_modes",
+          "resource_types",
+          "auth",
+          "verification_method"
+        ],
+        "properties": {
+          "schema": {
+            "const": 1
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,79}$"
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "default_state": {
+            "const": "NOT_CONNECTED"
+          },
+          "capabilities": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "access_modes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "READ",
+                "WRITE"
+              ]
+            }
+          },
+          "resource_types": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "auth": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode",
+              "allowed_ref_prefixes"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "NONE",
+                  "SECRET_REF_REQUIRED",
+                  "SECRET_REF_OPTIONAL"
+                ]
+              },
+              "allowed_ref_prefixes": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "verification_method": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
