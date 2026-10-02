@@ -8,6 +8,7 @@ import {
   installSkill,
   validateSkillInstallation,
   attachSkill,
+  validateSkillAttachment,
   applySkillAttachments,
   validateCapabilityLoops,
   materializeConfiguredUpgrades,
@@ -103,6 +104,25 @@ test("skill attachment can extend procedures but cannot self-grant tools, connec
   const upgraded=applySkillAttachments(employee,[attachment]);
   assert.ok(upgraded.skills.includes("nyoba-follow-up"));
   assert.deepEqual(authority(upgraded),before);
+});
+
+test("attachment integrity rejects tampered skill or authority snapshot before effective resolution",async()=>{
+  const [catalog,policy,employees]=await Promise.all([
+    buildSkillCatalog({root}),readJson("config/skills-store-policy.json"),readJson("config/employees.json"),
+  ]);
+  const employee=employees.employees.find(e=>e.id==="praroro");
+  const installed=installSkill({
+    actor:"owner",skill_id:"nyoba-follow-up",version:"1.0.0",
+    installed_at:"2026-10-02T07:05:00.000Z",evidence_ref:"chat21:tamper-install",
+  },{catalog,policy});
+  const attachment=attachSkill({
+    actor:"owner",employee_id:"praroro",skill_id:"nyoba-follow-up",version:"1.0.0",
+    attached_at:"2026-10-02T07:06:00.000Z",evidence_ref:"chat21:tamper-attach",
+  },{installation:installed,employee,policy,catalog});
+  assert.equal(validateSkillAttachment(attachment,{employee}),true);
+
+  assert.throws(()=>applySkillAttachments(employee,[{...attachment,skill_id:"nyoba-google-ads-operations"}]),/checksum mismatch/);
+  assert.throws(()=>applySkillAttachments(employee,[{...attachment,authority_snapshot_sha256:"0".repeat(64)}]),/authority snapshot drift/);
 });
 
 test("capability-loop config covers all 16 employees exactly once with a real new reusable skill",async()=>{
