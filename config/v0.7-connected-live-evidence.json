@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "candidate": "v0.7.0",
+  "chat": "CHAT22",
+  "state": "COLLECTING",
+  "observed_on": "2026-10-02",
+  "claim_boundary": "External connector tool observations are evidence of live account access only. They do not automatically become Connector Center runtime authority or capability grants.",
+  "read_only_observations": [
+    {
+      "id": "github-user-repo-read",
+      "provider": "github",
+      "user_owned_scope": "repository:exxrawrrr/nyobakantorai",
+      "operation": "repository_metadata_read",
+      "live_observed": true,
+      "sanitized_result": {
+        "repository": "exxrawrrr/nyobakantorai",
+        "default_branch": "main",
+        "private": false,
+        "archived": false,
+        "visibility": "public",
+        "pushed_at": "2026-10-02T07:28:46Z"
+      },
+      "raw_private_payload_committed": false
+    },
+    {
+      "id": "google-drive-metadata-read",
+      "provider": "google-drive",
+      "user_owned_scope": "my-drive:recent-viewed-documents",
+      "operation": "recent_documents_metadata",
+      "live_observed": true,
+      "sanitized_result": {
+        "returned_count": 4,
+        "mime_counts": {
+          "application/vnd.google-apps.spreadsheet": 2,
+          "application/pdf": 2
+        },
+        "next_page_token_present": false
+      },
+      "filenames_committed": false,
+      "file_ids_committed": false,
+      "raw_private_payload_committed": false
+    }
+  ],
+  "write_flow": {
+    "id": "github-issue-scoped-write",
+    "provider": "github",
+    "resource": "repository:exxrawrrr/nyobakantorai",
+    "preview": {
+      "title": "CHAT22 live write evidence — scoped GitHub issue",
+      "body": "Temporary bounded evidence issue for CHAT 22. It will be read back and then closed after verification. No production code or release state is changed by this issue."
+    },
+    "approval": {
+      "actor": "owner",
+      "decision": "APPROVED",
+      "requested_at": "2026-10-02T07:32:00.000Z",
+      "decided_at": "2026-10-02T07:32:30.000Z",
+      "expires_at": "2026-10-02T08:00:00.000Z",
+      "evidence_ref": "chat22:user-request:2026-10-02",
+      "scope": {
+        "actions": [
+          "create_issue",
+          "close_issue"
+        ],
+        "resources": [
+          "repository:exxrawrrr/nyobakantorai"
+        ]
+      }
+    },
+    "execution_state": "NOT_RUN",
+    "verification_state": "NOT_RUN"
+  },
+  "browser_evidence": {
+    "required": true,
+    "state": "BLOCKED_PROVIDER_UNAVAILABLE",
+    "reason": "No live Playwright/agent-browser provider is exposed to this session. Repository Browser Agent deterministic evidence exists from CHAT 19, but it is not relabeled as CHAT 22 live browser evidence."
+  },
+  "scheduled_mission_evidence": {
+    "required": true,
+    "state": "PENDING_REPOSITORY_MATERIALIZATION"
+  },
+  "connector_revocation_evidence": {
+    "required": true,
+    "state": "PENDING_REPOSITORY_MATERIALIZATION"
+  }
+}
