@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/connector-route-decision.schema.json",
+  "title": "nyobakantorai Connector Route Decision v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "employee_id",
+    "connector_id",
+    "capability_id",
+    "access_mode",
+    "action",
+    "resource",
+    "connection",
+    "grant",
+    "decision",
+    "reason",
+    "allowed",
+    "connector_route_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "employee_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "connector_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capability_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "access_mode": {
+      "enum": [
+        "READ",
+        "WRITE"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "allowed": {
+      "const": true
+    },
+    "connector_route_ref": {
+      "type": "string",
+      "pattern": "^connector-route:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
