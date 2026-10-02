@@ -7,6 +7,7 @@ export const COST_TYPES=Object.freeze(["MODEL","TOOL","PROVIDER","OTHER"]);
 const ACTION_SET=new Set(COST_ACTIONS);
 const TYPE_SET=new Set(COST_TYPES);
 const clean=(value,max=4000)=>String(value??"").trim().slice(0,max);
+const money=(value)=>Number(Number(value).toFixed(12));
 
 function assert(condition,message){ if(!condition) throw new Error(message); }
 function finite(value,label,{min=0}={}){
@@ -42,7 +43,7 @@ export function normalizeCostAmount(input={},label="cost"){
   const amount=finite(input.amount,label+".amount");
   const currency=clean(input.currency,3).toUpperCase();
   assert(/^[A-Z]{3}$/.test(currency),label+" KNOWN requires 3-letter currency.");
-  return Object.freeze({status:"KNOWN",amount,currency});
+  return Object.freeze({status:"KNOWN",amount:money(amount),currency});
 }
 
 function normalizeLimitMap(value,label){
@@ -146,7 +147,7 @@ function scopeSnapshot(scope,ledger,currency){
   for(const entry of entries){
     if(entry.cost.status==="UNKNOWN"){ unknown+=1; continue; }
     assert(entry.cost.currency===currency,"Ledger currency mismatch inside governed scope.");
-    spent+=entry.cost.amount;
+    spent=money(spent+entry.cost.amount);
   }
   return Object.freeze({...scope,spent_amount:spent,unknown_entries:unknown});
 }
@@ -179,7 +180,7 @@ export function assessCostAdmission({policy:policyInput,ledger=[],context={},est
     return Object.freeze({...payload,decision_ref:ref("cost-decision",payload)});
   }
 
-  const projected=scopes.map((scope)=>Object.freeze({...scope,projected_amount:scope.spent_amount+cost.amount,utilization:scope.limit===0?Infinity:(scope.spent_amount+cost.amount)/scope.limit}));
+  const projected=scopes.map((scope)=>{ const projectedAmount=money(scope.spent_amount+cost.amount); return Object.freeze({...scope,projected_amount:projectedAmount,utilization:scope.limit===0?Infinity:projectedAmount/scope.limit}); });
   const maxUtil=Math.max(...projected.map((scope)=>scope.utilization));
 
   let action="ALLOW";
@@ -225,7 +226,7 @@ export function reconcileCostLedger({policy:policyInput,ledger=[]}={}){
     const current=map.get(key)||{known_amount:0,unknown_entries:0,currency:policy.currency};
     if(entry.cost.status==="KNOWN"){
       assert(entry.cost.currency===policy.currency,"Cost ledger currency mismatch.");
-      current.known_amount+=entry.cost.amount;
+      current.known_amount=money(current.known_amount+entry.cost.amount);
     }else current.unknown_entries+=1;
     map.set(key,current);
   };
@@ -240,7 +241,7 @@ export function reconcileCostLedger({policy:policyInput,ledger=[]}={}){
     currency:policy.currency,
     entries:Object.freeze(normalized),
     totals:Object.freeze({
-      known_amount:normalized.filter((e)=>e.cost.status==="KNOWN").reduce((sum,e)=>sum+e.cost.amount,0),
+      known_amount:normalized.filter((e)=>e.cost.status==="KNOWN").reduce((sum,e)=>money(sum+e.cost.amount),0),
       unknown_entries:normalized.filter((e)=>e.cost.status==="UNKNOWN").length,
     }),
     by_provider:mapOut(byProvider),
