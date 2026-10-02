@@ -52,6 +52,7 @@ function currentness(source,policy,asOf){
 export function buildBusinessProfile({cluster,public_sources=[],as_of}, {policy}={}){
   assert(cluster?.schema===1&&Array.isArray(cluster.records),"Identity cluster required.");
   const asOf=iso(as_of,"Profile as_of");
+  assert(public_sources.length<=Number(policy.enrichment?.max_sources_per_profile||10),"Public enrichment source count exceeds profile bound.");
   const sources=public_sources.map(x=>normalizePublicSourceRecord(x,{policy}));
   const placeIds=uniq(cluster.records.map(x=>x.place_id).filter(Boolean));
   assert(placeIds.length<=1,"Profile cluster Place ID conflict.");
@@ -87,7 +88,7 @@ export function buildBusinessProfile({cluster,public_sources=[],as_of}, {policy}
       value:conflict?policy.field_confidence.unresolved_value:top.value,
       confidence:Number(Math.min(1,top.weight/Math.max(1,top.claims.length)).toFixed(4)),
       source_refs:uniq(top.claims.map(x=>x.source_ref)).sort(),
-      alternatives:ranked.slice(1).map(x=>({value:x.value,weight:Number(x.weight.toFixed(4)),source_refs:uniq(x.claims.map(c=>c.source_ref)).sort()})),
+      alternatives:(conflict?ranked:ranked.slice(1)).map(x=>({value:x.value,weight:Number(x.weight.toFixed(4)),source_refs:uniq(x.claims.map(c=>c.source_ref)).sort()})),
       rationale:conflict?"top evidence groups are too close to resolve safely":"highest weighted public-source evidence",
     });
   }
