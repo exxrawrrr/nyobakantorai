@@ -319,6 +319,9 @@ Closure: PASS for repository delivery. Recovery checkpoints are checksumed and d
 
 ### CHAT 16 — Project Brain / Memory 2.0
 
+**Status: COMPLETE — PROJECT BRAIN / MEMORY 2.0 VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.6.1-PROJECT-BRAIN.md`
+
 Goal: create useful project knowledge while preserving memory isolation.
 
 Deliverables:
@@ -329,6 +332,8 @@ Deliverables:
 - contamination/access tests.
 
 Exit gate: private profile memory cannot leak into another employee and shared memory remains attributable.
+
+Closure: PASS for repository delivery. Project Brain extends the existing memory-learning domain with PRIVATE / PROJECT / APPROVED_SHARED scopes, eight knowledge classes, immutable SHA-256 records, explicit reviewed promotion, exact project/shared grants, expiration enforcement, durable directory-backed storage, and fail-closed promotion lineage. Targeted Project Brain tests passed 13/13; deterministic contamination benchmark passed 6/6 with zero false successes; PR verify #641 passed Ubuntu, Windows, and minimum versions.
 
 ### CHAT 17 — v0.6.1 Reliability Release Gate
 
