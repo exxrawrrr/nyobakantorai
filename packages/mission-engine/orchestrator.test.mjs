@@ -543,3 +543,26 @@ test("missing actual-cost report records UNKNOWN and stops the next budgeted tas
   assert.equal(result.mission.state,"PARTIAL");
   assert.ok(result.events.some((item)=>item.kind==="COST_RECONCILIATION_REQUIRED"));
 });
+
+
+test("actual cost overrun keeps completed work visible but prevents Mission SUCCEEDED",async()=>{
+  const plan=oneCostTaskPlan();
+  const governor=createCostGovernor({policy:costPolicy(),clock:fixedClock});
+
+  const result=await executeMissionPlan(plan,{
+    resolveRuntime:async({task})=>costResolution(task,{amount:0.20}),
+    reportActualCost:async()=>({
+      cost_type:"MODEL",
+      cost:{status:"KNOWN",amount:1.20,currency:"USD"},
+      evidence_refs:["evidence:actual-overrun"],
+    }),
+    costGovernor:governor,
+    clock:fixedClock,
+  });
+
+  assert.equal(result.tasks[0].state,"SUCCEEDED");
+  assert.equal(result.mission.state,"PARTIAL");
+  const missionScope=result.cost_snapshot.budget_state.find((item)=>item.kind==="MISSION");
+  assert.equal(missionScope.hard_limit_breached,true);
+  assert.ok(result.events.some((item)=>item.kind==="MISSION_COST_RECONCILIATION_REQUIRED"));
+});
