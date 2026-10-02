@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "candidate": "v1.0.0",
+  "observed_on": "2026-10-02",
+  "implementation_baseline": "5862f72330d0d5119af5f59c48bde2081f7fd700",
+  "representative_recovery": {
+    "live_observed": false,
+    "source_commit": null,
+    "mission_count": 0,
+    "failure_cases": 0,
+    "verified_recoveries": 0,
+    "false_successes": 0,
+    "budget_scope_observed": false,
+    "permission_scope_observed": false,
+    "evidence_ref": null
+  },
+  "install_matrix": {
+    "live_observed": false,
+    "source_commit": null,
+    "clean_source": false,
+    "isolated_python_env": false,
+    "one_worker": false,
+    "subset": false,
+    "full": false,
+    "lifecycle": false,
+    "log_sha256": null
+  },
+  "manual_gate": {
+    "status": "NOT_REACHED",
+    "decision": null,
+    "approval_ref": null,
+    "reason": "Technical production-evidence gates are not yet ready."
+  },
+  "post_release": {
+    "tagged_asset_verification": "NOT_RUN_BLOCKED",
+    "post_release_install_smoke": "NOT_RUN_BLOCKED"
+  },
+  "notes": [
+    "CHAT 30 is evidence-gated. Repository tests are not promoted into real-world production evidence.",
+    "Tagged-asset verification and post-release install smoke are intentionally not run while the pre-release decision is NO_GO.",
+    "The stable package version remains unchanged until every pre-release gate and the manual gate pass."
+  ]
+}
