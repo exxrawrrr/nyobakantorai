@@ -15,28 +15,34 @@
     "evidence_ref": null
   },
   "install_matrix": {
-    "live_observed": false,
-    "source_commit": null,
-    "clean_source": false,
-    "isolated_python_env": false,
-    "one_worker": false,
-    "subset": false,
-    "full": false,
-    "lifecycle": false,
-    "log_sha256": null
+    "live_observed": true,
+    "source_commit": "b345a6de86f3fce145c6b23e55e3b5e5b8a2fca2",
+    "clean_source": true,
+    "isolated_python_env": true,
+    "one_worker": true,
+    "subset": true,
+    "full": true,
+    "lifecycle": true,
+    "log_sha256": "062349e4b42cb78bd46808a2c5892f705e562db417fd8e1bfb2e6ba60e8c3ac1",
+    "workflow_run_id": 37008232728,
+    "workflow_run_number": 737,
+    "workflow_url": "https://github.com/exxrawrrr/nyobakantorai/actions/runs/37008232728",
+    "evidence_record": "benchmarks/v1.0/install-matrix-2026-10-02.json"
   },
   "manual_gate": {
     "status": "NOT_REACHED",
     "decision": null,
     "approval_ref": null,
-    "reason": "Technical production-evidence gates are not yet ready."
+    "reason": "Four technical production-evidence blockers remain after the install matrix passed."
   },
   "post_release": {
     "tagged_asset_verification": "NOT_RUN_BLOCKED",
     "post_release_install_smoke": "NOT_RUN_BLOCKED"
   },
   "notes": [
-    "CHAT 30 is evidence-gated. Repository tests are not promoted into real-world production evidence.",
+    "CHAT 30 is evidence-gated. Repository tests are not promoted into real-world workflow or provider-lifecycle evidence.",
+    "Three-lane GitHub CI run #737 executed and passed the one-worker, subset, full-workforce, and lifecycle install matrices on the exact recorded branch head.",
+    "The install matrix is deterministic isolated release evidence and does not claim a real Hermes provider/account or production workstation lifecycle.",
     "Tagged-asset verification and post-release install smoke are intentionally not run while the pre-release decision is NO_GO.",
     "The stable package version remains unchanged until every pre-release gate and the manual gate pass."
   ]
