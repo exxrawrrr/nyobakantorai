@@ -14,7 +14,9 @@ import {
   createTerritoryMonitor,
   createMonitoringLearningSignal,
   createQualifiedOutreachPackage,
+  applyApprovedOutreachDecision,
 } from "./index.mjs";
+import { decideApprovalRequest } from "../scheduler-approval-center/index.mjs";
 import { createSearchExpansionPlan } from "../geo-intelligence/index.mjs";
 import { buildCompetitorRadar, createMapMission, createTerritoryPlan } from "../map-missions/index.mjs";
 
@@ -214,4 +216,55 @@ test("policy keeps adaptive search, CRM writes and outreach fail-closed",()=>{
   assert.equal(policy.crm_lifecycle.external_write_default,"BLOCKED");
   assert.equal(policy.outreach.automatic_send_allowed,false);
   assert.equal(policy.outreach.approval_required,true);
+});
+
+
+test("exact owner approval advances CONTACT_REVIEW to CONTACT_APPROVED without performing the send",()=>{
+  const lead=candidate("a");
+  const qualified=createCrmLifecycleRecord(lead,{policy,created_at:"2026-10-02T10:30:00Z"});
+  const pack=createQualifiedOutreachPackage({
+    record:qualified,candidate:lead,channel:"EMAIL",subject:"Training discussion",
+    body:"Draft only.",created_at:"2026-10-02T11:00:00Z",
+    requested_at:"2026-10-02T11:01:00Z",expires_at:"2026-10-02T12:01:00Z",
+  },{policy,map_policy:mapPolicy});
+  const review=transitionCrmLifecycle(qualified,{
+    event:"REQUEST_CONTACT",at:"2026-10-02T11:02:00Z",
+    evidence_refs:[pack.draft.draft_ref,pack.approval_request.approval_ref],
+  },{policy});
+  const decision=decideApprovalRequest(pack.approval_request,{
+    actor:"owner",decision:"APPROVED",decided_at:"2026-10-02T11:03:00Z",
+    evidence_ref:"chat27:owner-outreach-approval",
+  });
+  const result=applyApprovedOutreachDecision({
+    record:review,outreach_package:pack,decision,at:"2026-10-02T11:04:00Z",
+  },{policy});
+  assert.equal(result.authorization.allowed,true);
+  assert.equal(result.record.state,"CONTACT_APPROVED");
+  assert.equal(result.external_send_performed,false);
+  assert.equal(result.send_authorized_by_package,false);
+  assert.equal(result.record.history.at(-1).evidence_refs.includes(decision.decision_ref),true);
+});
+
+test("outreach lifecycle binding rejects approval for another draft/resource",()=>{
+  const lead=candidate("a");
+  const qualified=createCrmLifecycleRecord(lead,{policy,created_at:"2026-10-02T10:30:00Z"});
+  const pack=createQualifiedOutreachPackage({
+    record:qualified,candidate:lead,channel:"EMAIL",body:"Draft A",created_at:"2026-10-02T11:00:00Z",
+    requested_at:"2026-10-02T11:01:00Z",expires_at:"2026-10-02T12:01:00Z",
+  },{policy,map_policy:mapPolicy});
+  const other=createQualifiedOutreachPackage({
+    record:qualified,candidate:lead,channel:"EMAIL",body:"Draft B",created_at:"2026-10-02T11:00:30Z",
+    requested_at:"2026-10-02T11:01:30Z",expires_at:"2026-10-02T12:01:30Z",
+  },{policy,map_policy:mapPolicy});
+  const review=transitionCrmLifecycle(qualified,{
+    event:"REQUEST_CONTACT",at:"2026-10-02T11:02:00Z",
+    evidence_refs:[pack.draft.draft_ref,pack.approval_request.approval_ref],
+  },{policy});
+  const wrongDecision=decideApprovalRequest(other.approval_request,{
+    actor:"owner",decision:"APPROVED",decided_at:"2026-10-02T11:03:00Z",
+    evidence_ref:"chat27:owner-wrong-draft",
+  });
+  assert.throws(()=>applyApprovedOutreachDecision({
+    record:review,outreach_package:pack,decision:wrongDecision,at:"2026-10-02T11:04:00Z",
+  },{policy}),/approval/i);
 });
