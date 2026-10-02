@@ -138,5 +138,5 @@ test("release manifest check surfaces v1.0 production convergence decision",()=>
   const result=spawnSync(process.execPath,["scripts/release-manifest.mjs","--check"],{cwd:root,encoding:"utf8"});
   assert.equal(result.status,0,result.stderr||result.stdout);
   assert.match(result.stdout,/v1\.0_production=NO_GO/);
-  assert.match(result.stdout,/v1\\.0_readiness=BLOCKED\\(4\\)/);
+  assert.match(result.stdout,/v1\.0_readiness=BLOCKED\(4\)/);
 });
