@@ -73,6 +73,39 @@ function publicTelemetry(value, employeeById) {
   });
 }
 
+function publicVerification(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const issueList = (items) => Object.freeze((Array.isArray(items) ? items : []).map((item) => Object.freeze({
+    code:clean(item?.code || "UNKNOWN",120),
+    details:cleanList(item?.details),
+  })));
+  return Object.freeze({
+    verifier_id:clean(value.verifier_id || "UNKNOWN",40),
+    independent:value.independent === true,
+    kind:clean(value.kind || "UNKNOWN",40),
+    checked_at:value.checked_at == null ? null : clean(value.checked_at,80),
+    review_state:clean(value.review_state || "INCOMPLETE",40),
+    decision:clean(value.decision || "NOT_VERIFIED",40),
+    verification_ref:value.verification_ref == null ? null : clean(value.verification_ref,200),
+    claim_checks:Object.freeze((Array.isArray(value.claim_checks) ? value.claim_checks : []).map((claim) => Object.freeze({
+      claim_id:clean(claim?.claim_id || "",120),
+      source_ref:claim?.source_ref == null ? null : clean(claim.source_ref,1000),
+      verdict:clean(claim?.verdict || "NOT_VERIFIED",40),
+    }))),
+    contradictions:issueList(value.contradictions),
+    unknowns:issueList(value.unknowns),
+    external_state:value.external_state == null ? null : Object.freeze({
+      status:clean(value.external_state.status || "UNKNOWN",40),
+      target_ref:value.external_state.target_ref == null ? null : clean(value.external_state.target_ref,1000),
+      expected_state:value.external_state.expected_state == null ? null : clean(value.external_state.expected_state,1000),
+      observed_state:value.external_state.observed_state == null ? null : clean(value.external_state.observed_state,1000),
+      evidence_refs:cleanList(value.external_state.evidence_refs),
+      checked_at:value.external_state.checked_at == null ? null : clean(value.external_state.checked_at,80),
+      read_only:value.external_state.read_only === true,
+    }),
+  });
+}
+
 function publicNode(node, employeeById) {
   const employee = employeeById?.[node.employee_id] || {};
   return Object.freeze({
@@ -118,6 +151,7 @@ export function buildPublicExperienceViewModel(payload = {}, employeeById = {}) 
     session:payload?.session || null,
     sandbox:payload?.sandbox || null,
     telemetry:isLive ? publicTelemetry(payload?.telemetry, employeeById) : null,
+    verification:isLive ? publicVerification(payload?.verification) : null,
     layers,
     edges:Array.isArray(graph.edges) ? Object.freeze(graph.edges.map((edge) => Object.freeze({
       from:clean(edge?.from,160),
@@ -231,6 +265,32 @@ function renderTelemetry(root, view) {
       ["Recovery checkpoint", displayValue(telemetry.traceability.recovery_checkpoint_ref,"NONE")],
     ]),
   );
+
+  const verification = view.verification;
+  if (verification) {
+    const contradictionText = verification.contradictions.length
+      ? verification.contradictions.map((item) => item.code+(item.details.length ? " · "+item.details.join(" · ") : "")).join(" | ")
+      : "NONE";
+    const unknownText = verification.unknowns.length
+      ? verification.unknowns.map((item) => item.code+(item.details.length ? " · "+item.details.join(" · ") : "")).join(" | ")
+      : "NONE";
+    const claimText = verification.claim_checks.length
+      ? verification.claim_checks.map((item) => item.claim_id+":"+item.verdict).join(" · ")
+      : "NONE";
+    grid.append(telemetryCard(root, "Independent verification", [
+      ["Verifier", verification.verifier_id],
+      ["Independent", verification.independent ? "YES" : "NO"],
+      ["Kind", verification.kind],
+      ["Review state", verification.review_state],
+      ["Decision", verification.decision],
+      ["Checked at", displayValue(verification.checked_at)],
+      ["Claims", claimText],
+      ["Contradictions", contradictionText],
+      ["Unknowns", unknownText],
+      ["Verification ref", displayValue(verification.verification_ref,"NONE")],
+    ]));
+  }
+
   target.append(grid);
 }
 

@@ -53,7 +53,7 @@
     "employee:pack:check": "node scripts/employee-pack.mjs --check --employees=all",
     "bench:adversarial": "node benchmarks/adversarial-policy/run.mjs",
     "test:adversarial": "node benchmarks/adversarial-policy/run.mjs --check",
-    "test:verifier": "node --test packages/evidence-verifier/index.test.mjs",
+    "test:verifier": "node --test packages/evidence-verifier/index.test.mjs packages/evidence-verifier/siti.test.mjs",
     "hermes:remove": "node scripts/hermes-remove-selected.mjs",
     "test:remove": "node --test scripts/hermes-remove-selected.test.mjs",
     "skills:export": "node scripts/export-skills.mjs",

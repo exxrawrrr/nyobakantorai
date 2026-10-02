@@ -3,6 +3,7 @@ import { planMission } from "../packages/mission-engine/planner.mjs";
 import { validateSandboxRecord } from "../packages/live-sandbox/index.mjs";
 import { buildExecutionTelemetry } from "../packages/mission-engine/telemetry.mjs";
 import { containsSecretLikeContent } from "../packages/execution-receipt/index.mjs";
+import { validateSitiVerificationRecord } from "../packages/evidence-verifier/siti.mjs";
 
 export const PUBLIC_DEMO_API = 1;
 export const PUBLIC_DEMO_DEFAULT_LIMITS = Object.freeze({
@@ -53,6 +54,39 @@ function publicTelemetryProjection(value) {
       recovery_checkpoint_ref:value.traceability?.recovery_checkpoint_ref == null
         ? null
         : publicSafeText(value.traceability.recovery_checkpoint_ref),
+    }),
+  });
+}
+
+function publicVerificationProjection(value) {
+  if (!value) return null;
+  const safeIssue = (item) => Object.freeze({
+    code:publicSafeText(item?.code,120),
+    details:Object.freeze((Array.isArray(item?.details) ? item.details : []).map((detail) => publicSafeText(detail))),
+  });
+  return Object.freeze({
+    verifier_id:publicSafeText(value.verifier_id,40),
+    independent:value.independent === true,
+    kind:publicSafeText(value.kind,40),
+    checked_at:publicSafeText(value.checked_at,80),
+    review_state:publicSafeText(value.review_state,40),
+    decision:publicSafeText(value.decision,40),
+    verification_ref:publicSafeText(value.verification_ref,200),
+    claim_checks:Object.freeze((Array.isArray(value.claim_checks) ? value.claim_checks : []).map((claim) => Object.freeze({
+      claim_id:publicSafeText(claim?.claim_id,120),
+      source_ref:claim?.source_ref == null ? null : publicSafeText(claim.source_ref),
+      verdict:publicSafeText(claim?.verdict,40),
+    }))),
+    contradictions:Object.freeze((Array.isArray(value.contradictions) ? value.contradictions : []).map(safeIssue)),
+    unknowns:Object.freeze((Array.isArray(value.unknowns) ? value.unknowns : []).map(safeIssue)),
+    external_state:value.external_state == null ? null : Object.freeze({
+      status:publicSafeText(value.external_state.status,40),
+      target_ref:value.external_state.target_ref == null ? null : publicSafeText(value.external_state.target_ref),
+      expected_state:value.external_state.expected_state == null ? null : publicSafeText(value.external_state.expected_state),
+      observed_state:value.external_state.observed_state == null ? null : publicSafeText(value.external_state.observed_state),
+      evidence_refs:Object.freeze((Array.isArray(value.external_state.evidence_refs) ? value.external_state.evidence_refs : []).map((ref) => publicSafeText(ref))),
+      checked_at:value.external_state.checked_at == null ? null : publicSafeText(value.external_state.checked_at,80),
+      read_only:value.external_state.read_only === true,
     }),
   });
 }
@@ -202,7 +236,16 @@ function verifyLiveResult(value, plan) {
     return null;
   }
   if (telemetry.execution.terminal !== true || telemetry.execution.state !== "SUCCEEDED") return null;
-  return Object.freeze({ record:value.record, telemetry });
+
+  let verification = null;
+  if (value.verification != null) {
+    try { validateSitiVerificationRecord(value.verification); } catch { return null; }
+    if (value.verification.task_id !== value.record.task_id) return null;
+    if (value.verification.mission_id !== plan.mission.mission_id) return null;
+    if (value.verification.employee_id !== plannedTask.employee_id) return null;
+    verification = value.verification;
+  }
+  return Object.freeze({ record:value.record, telemetry, verification });
 }
 
 export function createPublicDemoService({
@@ -362,7 +405,7 @@ export function createPublicDemoService({
         });
       }
 
-      const { record, telemetry } = verified;
+      const { record, telemetry, verification } = verified;
       return Object.freeze({
         status:200,
         body:Object.freeze({
@@ -377,6 +420,7 @@ export function createPublicDemoService({
           plan,
           presentation:presentation(plan, "LIVE_PLANNED", record.task_id),
           telemetry:publicTelemetryProjection(telemetry),
+          verification:publicVerificationProjection(verification),
           sandbox:Object.freeze({
             provider_id:record.provider_id,
             model_identity:record.model_identity,

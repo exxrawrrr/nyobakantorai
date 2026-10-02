@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { admitLiveSandboxDispatch, defineLiveSandboxPolicy, settleLiveSandbox } from "../../packages/live-sandbox/index.mjs";
 import { attemptFromRuntimeOutcome } from "../../packages/mission-engine/contracts.mjs";
+import { runSitiVerification } from "../../packages/evidence-verifier/siti.mjs";
 import { createPublicDemoService, PUBLIC_DEMO_API, PUBLIC_DEMO_DEFAULT_LIMITS } from "../public-demo.mjs";
 
 const fixedNow = Date.parse("2026-10-01T12:00:00.000Z");
@@ -319,4 +320,103 @@ test("public live telemetry redacts private machine references before browser ex
   assert.equal(serialized.includes("C:\\\\Users"),false);
   assert.equal(serialized.includes("D:\\\\Private"),false);
   assert.equal(serialized.includes("/home/user/private"),false);
+});
+
+
+async function reviewForLive(live, { observed_value="SUCCEEDED" } = {}) {
+  const sourceRef = live.attempt.artifact_refs[0] || "artifact:verification-source";
+  const fact = "attempt="+live.attempt.attempt_id;
+  return runSitiVerification({
+    task_node:live.task_node,
+    verifier_id:"siti",
+    kind:"RESEARCH",
+    evidence_packet:{
+      expected:{
+        required_facts:[fact],
+        required_artifacts:[sourceRef],
+        required_completion_items:["runtime-succeeded"],
+        required_evidence_refs:[sourceRef],
+      },
+      report:{text:"Independent "+fact,claimed_executed:false},
+      evidence:{
+        observed_text:"Observed "+fact,
+        refs:[sourceRef],
+        artifacts:[sourceRef],
+        completion_items:["runtime-succeeded"],
+        checked_at:"2026-10-01T12:00:01.000Z",
+      },
+    },
+    research:{claims:[{
+      claim_id:"runtime-state",
+      statement:"Runtime attempt succeeded.",
+      source_ref:sourceRef,
+      source_exists:true,
+      source_relevant:true,
+      source_current:true,
+      expected_value:"SUCCEEDED",
+      observed_value,
+      expected_unit:"state",
+      observed_unit:"state",
+    }]},
+    now:new Date("2026-10-01T12:00:02.000Z"),
+  });
+}
+
+test("public live response exposes canonical independent verification when provided", async () => {
+  const service = createPublicDemoService({
+    now:() => fixedNow,
+    token_factory:tokenFactory("token-verify-pass"),
+    live_runner:async ({plan}) => {
+      const live=safeLiveResult(plan,{artifact_ref:"artifact:verification-source"});
+      return {...live,verification:await reviewForLive(live)};
+    },
+  });
+  const session=service.createSession();
+  const result=await service.runLive(session.token,{objective:"Handle xyzzy frobnicator."});
+
+  assert.equal(result.status,200);
+  assert.equal(result.body.live,true);
+  assert.equal(result.body.verification.review_state,"PASS");
+  assert.equal(result.body.verification.decision,"VERIFIED");
+  assert.equal(result.body.verification.verifier_id,"siti");
+  assert.equal(result.body.verification.independent,true);
+  assert.match(result.body.verification.verification_ref,/^verification:sha256:/);
+  assert.deepEqual(result.body.verification.contradictions,[]);
+});
+
+test("public live response keeps independent verification contradictions visible", async () => {
+  const service = createPublicDemoService({
+    now:() => fixedNow,
+    token_factory:tokenFactory("token-verify-fail"),
+    live_runner:async ({plan}) => {
+      const live=safeLiveResult(plan,{artifact_ref:"artifact:verification-source"});
+      return {...live,verification:await reviewForLive(live,{observed_value:"FAILED"})};
+    },
+  });
+  const session=service.createSession();
+  const result=await service.runLive(session.token,{objective:"Handle xyzzy frobnicator."});
+
+  assert.equal(result.status,200);
+  assert.equal(result.body.truth_label,"LIVE_RUNTIME");
+  assert.equal(result.body.verification.review_state,"FAIL");
+  assert.equal(result.body.verification.decision,"NOT_VERIFIED");
+  assert.ok(result.body.verification.contradictions.some((item)=>item.code==="VALUE_MISMATCH"));
+});
+
+test("tampered independent verification sidecar fails live response closed", async () => {
+  const service = createPublicDemoService({
+    now:() => fixedNow,
+    token_factory:tokenFactory("token-verify-tampered"),
+    live_runner:async ({plan}) => {
+      const live=safeLiveResult(plan,{artifact_ref:"artifact:verification-source"});
+      const review=await reviewForLive(live);
+      return {...live,verification:{...review,review_state:"FAIL",decision:"NOT_VERIFIED"}};
+    },
+  });
+  const session=service.createSession();
+  const result=await service.runLive(session.token,{objective:"Handle xyzzy frobnicator."});
+
+  assert.equal(result.status,502);
+  assert.equal(result.body.live,false);
+  assert.equal(result.body.state,"LIVE_VERIFICATION_FAILED");
 });
