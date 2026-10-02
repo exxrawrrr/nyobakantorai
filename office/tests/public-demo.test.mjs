@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { admitLiveSandboxDispatch, defineLiveSandboxPolicy, settleLiveSandbox } from "../../packages/live-sandbox/index.mjs";
+import { attemptFromRuntimeOutcome } from "../../packages/mission-engine/contracts.mjs";
 import { createPublicDemoService, PUBLIC_DEMO_API, PUBLIC_DEMO_DEFAULT_LIMITS } from "../public-demo.mjs";
 
 const fixedNow = Date.parse("2026-10-01T12:00:00.000Z");
@@ -10,7 +11,7 @@ function tokenFactory(...tokens) {
   return () => tokens[index++] || `token-${index}`;
 }
 
-function safeLiveResult(plan) {
+function safeLiveResult(plan, { runtime_ref="fixture:ephemeral", evidence_ref="evidence:fixture", artifact_ref=null } = {}) {
   const task = plan.task_nodes[0];
   const policy = defineLiveSandboxPolicy({
     schema:1,
@@ -56,13 +57,13 @@ function safeLiveResult(plan) {
     ok:true,
     state:"SUCCEEDED",
     error_category:null,
-    runtime:{provider:"fixture-runtime",runtime_ref:"fixture:ephemeral",provider_version:"1"},
+    runtime:{provider:"fixture-runtime",runtime_ref,provider_version:"1"},
     evidence:{
       workspace_mutation_check:{temporary_workspace_only:true,production_repo_changed:false},
       prohibited_action_check:{passed:true,observed:[]},
       runtime_actions:{install:false,login:false,account_mutation:false,external_write:false},
-      evidence_refs:["evidence:fixture"],
-      artifact_refs:[],
+      evidence_refs:[evidence_ref],
+      artifact_refs:artifact_ref ? [artifact_ref] : [],
     },
     cleanup:{attempted:true,ok:true},
     started_at:"2026-10-01T12:00:00.000Z",
@@ -75,7 +76,24 @@ function safeLiveResult(plan) {
     output_tokens:50,
     cost:{status:"KNOWN",amount_usd:0.01},
   });
-  return { executed:true, outcome, record };
+  const attempt = attemptFromRuntimeOutcome(outcome, {
+    attempt_id:"attempt-public-live-001",
+    task_id:task.task_id,
+    ordinal:1,
+    model_route_ref:admission.model_route_ref,
+    capability_route_refs:admission.capability_route_refs,
+    receipt_ref:"receipt:sha256:"+"4".repeat(64),
+  });
+  const task_node = {
+    ...task,
+    state:"SUCCEEDED",
+    attempt_ids:[attempt.attempt_id],
+    evidence_refs:[...task.evidence_refs,...attempt.evidence_refs],
+    receipt_refs:[attempt.receipt_ref],
+    blocking:null,
+    updated_at:"2026-10-01T12:00:01.000Z",
+  };
+  return { executed:true, outcome, admission, record, attempt, task_node };
 }
 
 test("public demo API exposes bounded defaults", () => {
@@ -188,6 +206,19 @@ test("live success is labeled LIVE only with passing sandbox and teardown eviden
   assert.equal(result.body.sandbox.status,"PASS");
   assert.equal(result.body.sandbox.quota_status,"PASS");
   assert.equal(result.body.sandbox.teardown_verified,true);
+  assert.equal(result.body.telemetry.execution.state,"SUCCEEDED");
+  assert.equal(result.body.telemetry.execution.terminal,true);
+  assert.equal(result.body.telemetry.execution.state_source,"EXECUTION_ATTEMPT_V1");
+  assert.equal(result.body.telemetry.employee.employee_id,result.body.presentation.task_nodes.find((node)=>node.truth_label==="LIVE_RUNTIME").employee_id);
+  assert.equal(result.body.telemetry.model.model_id,"fixture-model");
+  assert.equal(result.body.telemetry.runtime.provider,"fixture-runtime");
+  assert.equal(result.body.telemetry.usage.input_tokens,100);
+  assert.equal(result.body.telemetry.usage.output_tokens,50);
+  assert.equal(result.body.telemetry.usage.total_tokens,150);
+  assert.equal(result.body.telemetry.usage.cost.amount_usd,0.01);
+  assert.ok(result.body.telemetry.evidence_refs.includes("evidence:fixture"));
+  assert.match(result.body.telemetry.receipt_ref,/^receipt:sha256:/);
+  assert.equal(result.body.telemetry.traceability.sandbox_record_ref,result.body.sandbox.sandbox_record_ref);
   const executed = result.body.presentation.task_nodes.filter((node) => node.truth_label === "LIVE_RUNTIME");
   const planned = result.body.presentation.task_nodes.filter((node) => node.truth_label === "LIVE_PLANNED");
   assert.equal(executed.length,1);
@@ -243,4 +274,49 @@ test("max session capacity evicts the oldest disposable session before admitting
   assert.equal(oldest.body.error_code,"ANONYMOUS_SESSION_REQUIRED");
   assert.equal((await service.runDemo(b.token,{objective:"SEO audit."})).status,200);
   assert.equal((await service.runDemo(c.token,{objective:"SEO audit."})).status,200);
+});
+
+
+test("live success without canonical Attempt traceability fails closed", async () => {
+  const service = createPublicDemoService({
+    now:() => fixedNow,
+    token_factory:tokenFactory("token-a"),
+    live_runner:async ({ plan }) => {
+      const result = safeLiveResult(plan);
+      const { attempt, task_node, admission, ...incomplete } = result;
+      return incomplete;
+    },
+  });
+  const session = service.createSession();
+  const result = await service.runLive(session.token,{objective:"Handle xyzzy frobnicator."});
+  assert.equal(result.status,502);
+  assert.equal(result.body.live,false);
+  assert.equal(result.body.state,"LIVE_VERIFICATION_FAILED");
+  assert.equal(result.body.truth_label,"NOT_LIVE");
+});
+
+
+test("public live telemetry redacts private machine references before browser exposure", async () => {
+  const privateRuntime = "C:\\Users\\User\\private\\runtime";
+  const privateEvidence = "D:\\Private\\evidence.json";
+  const privateArtifact = "/home/user/private/report.json";
+  const service = createPublicDemoService({
+    now:() => fixedNow,
+    token_factory:tokenFactory("token-redaction"),
+    live_runner:async ({ plan }) => safeLiveResult(plan, {
+      runtime_ref:privateRuntime,
+      evidence_ref:privateEvidence,
+      artifact_ref:privateArtifact,
+    }),
+  });
+  const session = service.createSession();
+  const result = await service.runLive(session.token,{objective:"Handle xyzzy frobnicator."});
+  assert.equal(result.status,200);
+  assert.equal(result.body.telemetry.runtime.runtime_ref,"REDACTED_PRIVATE_REF");
+  assert.deepEqual(result.body.telemetry.evidence_refs,["REDACTED_PRIVATE_REF"]);
+  assert.deepEqual(result.body.telemetry.artifact_refs,["REDACTED_PRIVATE_REF"]);
+  const serialized = JSON.stringify(result.body);
+  assert.equal(serialized.includes("C:\\\\Users"),false);
+  assert.equal(serialized.includes("D:\\\\Private"),false);
+  assert.equal(serialized.includes("/home/user/private"),false);
 });

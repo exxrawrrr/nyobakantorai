@@ -129,6 +129,7 @@ Execution progress:
 - [x] CHAT 06 — capability action policy with exact employee/resource grants, READ/WRITE distinction, connection + approval evidence and Attempt route-ref propagation. See [v0.6 Capability Policy](docs/V0.6-CAPABILITY-POLICY.md).
 - [x] CHAT 07 — Live Sandbox implemented, verified, and closed for repository delivery. CHAT 07B traced the current Codex status-1 failure to external provider quota exhaustion, not an adapter/sandbox regression. The quota limitation remains documented but is not a repository-development blocker. See [v0.6 Live Sandbox](docs/V0.6-LIVE-SANDBOX.md) and [Codex Runtime Diagnosis](docs/V0.6-CODEX-RUNTIME-DIAGNOSIS.md).
 - [x] CHAT 08 — Public Interactive Demo Backend + UI implemented and verified: deterministic no-login demo, isolated anonymous sessions, bounded quotas, visible task graph/employee routing, strict synthetic/live labels, and fail-closed LIVE fallback. The localhost office does not currently inject an arbitrary-mission live runner. See [v0.6 Public Interactive Demo](docs/V0.6-PUBLIC-INTERACTIVE-DEMO.md).
+- [x] CHAT 09 — Execution Telemetry + Evidence UI implemented and verified. Canonical Attempt state, runtime/model/tool/usage/evidence/receipt/unknown/blocker projections are visible without inventing progress or converting unknown usage to zero; public live success now requires canonical Attempt traceability. See [v0.6 Execution Telemetry](docs/V0.6-EXECUTION-TELEMETRY.md).
 
 Planned release sequence:
 

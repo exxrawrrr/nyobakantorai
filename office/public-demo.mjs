@@ -1,6 +1,8 @@
 import { createHash, randomBytes } from "node:crypto";
 import { planMission } from "../packages/mission-engine/planner.mjs";
 import { validateSandboxRecord } from "../packages/live-sandbox/index.mjs";
+import { buildExecutionTelemetry } from "../packages/mission-engine/telemetry.mjs";
+import { containsSecretLikeContent } from "../packages/execution-receipt/index.mjs";
 
 export const PUBLIC_DEMO_API = 1;
 export const PUBLIC_DEMO_DEFAULT_LIMITS = Object.freeze({
@@ -19,6 +21,41 @@ const DEMO_GENERATED_AT = "2026-10-01T00:00:00.000Z";
 const clean = (value, max = 4000) => String(value ?? "").trim().slice(0, max);
 const sha = (value) => createHash("sha256").update(String(value)).digest("hex");
 const iso = (ms) => new Date(ms).toISOString();
+const PRIVATE_REF_PATTERN = /(?:^[A-Za-z]:[\\/]|^\\\\|^file:\/\/|\/(?:home|Users|root)\/)/i;
+const CREDENTIAL_URL_PATTERN = /^[a-z][a-z0-9+.-]*:\/\/[^/@\s]+:[^/@\s]+@/i;
+
+function publicSafeText(value, max = 1000) {
+  if (value == null) return null;
+  const text = clean(value, max);
+  if (!text) return text;
+  if (containsSecretLikeContent(text) || CREDENTIAL_URL_PATTERN.test(text)) return "REDACTED_SENSITIVE_REF";
+  if (PRIVATE_REF_PATTERN.test(text)) return "REDACTED_PRIVATE_REF";
+  return text;
+}
+
+function publicTelemetryProjection(value) {
+  return Object.freeze({
+    ...value,
+    runtime:Object.freeze({
+      ...value.runtime,
+      runtime_ref:publicSafeText(value.runtime?.runtime_ref,512),
+    }),
+    artifact_refs:Object.freeze((value.artifact_refs || []).map((item) => publicSafeText(item))),
+    evidence_refs:Object.freeze((value.evidence_refs || []).map((item) => publicSafeText(item))),
+    unknowns:Object.freeze((value.unknowns || []).map((item) => publicSafeText(item))),
+    blockers:Object.freeze((value.blockers || []).map((item) => Object.freeze({
+      ...item,
+      detail:item.detail == null ? null : publicSafeText(item.detail),
+    }))),
+    residual_risks:Object.freeze((value.residual_risks || []).map((item) => publicSafeText(item))),
+    traceability:Object.freeze({
+      ...value.traceability,
+      recovery_checkpoint_ref:value.traceability?.recovery_checkpoint_ref == null
+        ? null
+        : publicSafeText(value.traceability.recovery_checkpoint_ref),
+    }),
+  });
+}
 
 function numericLimit(value, fallback, label) {
   const selected = value == null ? fallback : Number(value);
@@ -139,15 +176,33 @@ function sessionPublic(session, limits) {
 }
 
 function verifyLiveResult(value, plan) {
-  if (!value || value.executed !== true || value.outcome?.ok !== true || !value.record) return null;
+  if (!value || value.executed !== true || value.outcome?.ok !== true) return null;
+  if (!value.record || !value.admission || !value.attempt || !value.task_node) return null;
   try { validateSandboxRecord(value.record); } catch { return null; }
-  const taskIds = new Set(plan.task_nodes.map((task) => task.task_id));
+  const plannedTask = plan.task_nodes.find((task) => task.task_id === value.record.task_id);
+  if (!plannedTask) return null;
   if (value.record.mission_id !== plan.mission.mission_id) return null;
-  if (!taskIds.has(value.record.task_id)) return null;
+  if (value.task_node.task_id !== plannedTask.task_id) return null;
+  if (value.task_node.mission_id !== plan.mission.mission_id) return null;
+  if (value.task_node.employee_id !== plannedTask.employee_id) return null;
   if (value.record.status !== "PASS") return null;
   if (value.record.quota_status !== "PASS") return null;
   if (value.record.teardown_verified !== true || value.record.execution_ok !== true) return null;
-  return value.record;
+
+  let telemetry;
+  try {
+    telemetry = buildExecutionTelemetry({
+      task_node:value.task_node,
+      attempt:value.attempt,
+      sandbox_admission:value.admission,
+      sandbox_record:value.record,
+      handoff_result:value.handoff_result || null,
+    });
+  } catch {
+    return null;
+  }
+  if (telemetry.execution.terminal !== true || telemetry.execution.state !== "SUCCEEDED") return null;
+  return Object.freeze({ record:value.record, telemetry });
 }
 
 export function createPublicDemoService({
@@ -297,8 +352,8 @@ export function createPublicDemoService({
         });
       }
 
-      const record = verifyLiveResult(liveResult, plan);
-      if (!record) {
+      const verified = verifyLiveResult(liveResult, plan);
+      if (!verified) {
         return Object.freeze({
           status:502,
           body:fallbackBody("LIVE_VERIFICATION_FAILED", "Live runtime result did not satisfy sandbox verification. It is not labeled live success.", {
@@ -307,6 +362,7 @@ export function createPublicDemoService({
         });
       }
 
+      const { record, telemetry } = verified;
       return Object.freeze({
         status:200,
         body:Object.freeze({
@@ -320,6 +376,7 @@ export function createPublicDemoService({
           session:sessionPublic(session, limits),
           plan,
           presentation:presentation(plan, "LIVE_PLANNED", record.task_id),
+          telemetry:publicTelemetryProjection(telemetry),
           sandbox:Object.freeze({
             provider_id:record.provider_id,
             model_identity:record.model_identity,
