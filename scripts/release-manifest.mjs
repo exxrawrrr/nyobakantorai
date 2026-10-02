@@ -8,6 +8,7 @@ import { buildDeferredEvidenceSnapshot, validateDeferredEvidenceLedger } from ".
 import { buildEvidenceClassificationSnapshot, validateEvidenceInventory } from "../packages/evidence-classification/index.mjs";
 import { buildMaturitySnapshot, validateMaturityModel } from "../packages/maturity-model/index.mjs";
 import { buildV05ReadinessSnapshot, readAndAssessV05ReleaseReadiness, buildV06ReadinessSnapshot, readAndAssessV06ReleaseReadiness, buildV061ReadinessSnapshot, readAndAssessV061ReleaseReadiness } from "../packages/release-readiness/index.mjs";
+import { buildV07ReadinessSnapshot, readAndAssessV07ReleaseReadiness } from "../packages/v0.7-release-readiness/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const outPath = resolve(root, "release", "manifest.json");
@@ -67,6 +68,9 @@ const v06Readiness=buildV06ReadinessSnapshot({config:v06ReadinessConfig,assessme
 const {config:v061ReadinessConfig,assessment:v061ReadinessAssessment}=await readAndAssessV061ReleaseReadiness({root});
 if(!v061ReadinessAssessment.ok) throw new Error("v0.6.1 readiness invalid: "+v061ReadinessAssessment.errors.join("; "));
 const v061Readiness=buildV061ReadinessSnapshot({config:v061ReadinessConfig,assessment:v061ReadinessAssessment});
+const {config:v07ReadinessConfig,assessment:v07ReadinessAssessment}=await readAndAssessV07ReleaseReadiness({root});
+if(!v07ReadinessAssessment.ok) throw new Error("v0.7 readiness invalid: "+v07ReadinessAssessment.errors.join("; "));
+const v07Readiness=buildV07ReadinessSnapshot({config:v07ReadinessConfig,assessment:v07ReadinessAssessment});
 const manifest = {
   schema: 1,
   project: pkg.name,
@@ -76,12 +80,13 @@ const manifest = {
   v0_5_readiness:v05Readiness,
   v0_6_readiness:v06Readiness,
   v0_6_1_readiness:v061Readiness,
+  v0_7_readiness:v07Readiness,
   tracked_files: files.length,
   files,
 };
 
 if (check) {
-  console.log(`Release manifest check passed: ${files.length} files @ ${commit.slice(0, 12)} · live_evaluation_complete=${claims.live_evaluation_complete} · deferred=${claims.deferred_evidence?.open_blockers ?? "n/a"} · behavior=${claims.maturity?.dimensions?.behavioral_evidence ?? "n/a"} · portability=${claims.evidence_inventory?.claims?.["reference-case-portability"]?.status ?? "n/a"} · v0.5_readiness=${v05Readiness.decision}(${v05Readiness.blocker_count}) · v0.6_readiness=${v06Readiness.decision}(${v06Readiness.blocker_count}) · v0.6.1_reliability=${v061Readiness.reliability_decision} · v0.6.1_readiness=${v061Readiness.decision}(${v061Readiness.blocker_count})`);
+  console.log(`Release manifest check passed: ${files.length} files @ ${commit.slice(0, 12)} · live_evaluation_complete=${claims.live_evaluation_complete} · deferred=${claims.deferred_evidence?.open_blockers ?? "n/a"} · behavior=${claims.maturity?.dimensions?.behavioral_evidence ?? "n/a"} · portability=${claims.evidence_inventory?.claims?.["reference-case-portability"]?.status ?? "n/a"} · v0.5_readiness=${v05Readiness.decision}(${v05Readiness.blocker_count}) · v0.6_readiness=${v06Readiness.decision}(${v06Readiness.blocker_count}) · v0.6.1_reliability=${v061Readiness.reliability_decision} · v0.6.1_readiness=${v061Readiness.decision}(${v061Readiness.blocker_count}) · v0.7_connected=${v07Readiness.connected_office_decision} · v0.7_readiness=${v07Readiness.decision}(${v07Readiness.blocker_count})`);
 } else {
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, JSON.stringify(manifest, null, 2) + "\n");
