@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "candidate": "v1.0.0",
+  "production_decision": "NO_GO",
+  "decision": "BLOCKED",
+  "evidence": {
+    "required_components": [
+      "REAL_WORLD_WORKFLOW_EVIDENCE",
+      "PROVIDER_LIFECYCLE_MATURITY",
+      "REPRESENTATIVE_RECOVERY_EVIDENCE",
+      "SECURITY_CONTROL_CONVERGENCE",
+      "INSTALL_MIGRATION_FRESH_MATRIX",
+      "RELEASE_CLAIM_AUDIT"
+    ],
+    "observed": {
+      "REAL_WORLD_WORKFLOW_EVIDENCE": "BLOCKED",
+      "PROVIDER_LIFECYCLE_MATURITY": "BLOCKED",
+      "REPRESENTATIVE_RECOVERY_EVIDENCE": "BLOCKED",
+      "SECURITY_CONTROL_CONVERGENCE": "PASS",
+      "INSTALL_MIGRATION_FRESH_MATRIX": "BLOCKED",
+      "RELEASE_CLAIM_AUDIT": "PASS"
+    }
+  },
+  "release_blockers": [
+    {
+      "id": "REAL_WORLD_WORKFLOW_EVIDENCE",
+      "reason": "The canonical real-task baseline has not reached its reviewed publication threshold."
+    },
+    {
+      "id": "PROVIDER_LIFECYCLE_MATURITY",
+      "reason": "Provider lifecycle maturity is not yet validated."
+    },
+    {
+      "id": "REPRESENTATIVE_RECOVERY_EVIDENCE",
+      "reason": "No qualifying representative live mission set proves observed failures and verified bounded recovery."
+    },
+    {
+      "id": "INSTALL_MIGRATION_FRESH_MATRIX",
+      "reason": "The CHAT 30 production install/migration matrix has not yet been recorded as live evidence."
+    },
+    {
+      "id": "V0_9_PREREQUISITE",
+      "reason": "The prerequisite v0.9.0 Team Office release remains blocked."
+    }
+  ],
+  "package_version_hold": {
+    "current": "0.5.1",
+    "candidate": "1.0.0",
+    "highest_truthful_pre_v1": "0.5.1",
+    "bump_authorized": false
+  },
+  "promotion": {
+    "stable_tag_authorized": false,
+    "publication_authorized": false
+  },
+  "post_release": {
+    "tagged_asset_verification": "NOT_RUN_BLOCKED",
+    "post_release_install_smoke": "NOT_RUN_BLOCKED"
+  },
+  "claim_boundary": "PRODUCTION_EVIDENCE_CONVERGENCE_NO_GO"
+}
