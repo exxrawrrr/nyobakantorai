@@ -97,8 +97,8 @@ test("subset capability isolation preserves worker-specific skill closures witho
   assert.equal(byId.get("bimo").attached_skill,"nyoba-source-provenance");
   assert.ok(byId.get("subagjo").installed_skills.includes("nyoba-source-provenance"));
   assert.ok(byId.get("siti").installed_skills.includes("nyoba-research-synthesis"));
-  assert.equal(byId.get("siti").installed_skills.includes("nyoba-source-provenance"),false);
   assert.equal(byId.get("subagjo").installed_skills.includes("nyoba-research-synthesis"),false);
+  assert.equal(byId.get("bimo").installed_skills.includes("nyoba-research-synthesis"),false);
   for(const item of byId.values()){
     assert.equal(item.baseline_skills_exact,true,item.employee_id);
     assert.equal(item.skill_store_attachment_exact,true,item.employee_id);
