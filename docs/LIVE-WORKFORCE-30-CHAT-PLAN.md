@@ -215,6 +215,9 @@ Closure: PASS for repository delivery. Research, code, and external-state verifi
 
 ### CHAT 11 — v0.6.0 End-to-End Acceptance Mission
 
+**Status: IMPLEMENTED — CURRENT-COMMIT LIVE OBSERVATION PENDING — 2026-10-02.**
+Implementation/status: `docs/V0.6-E2E-ACCEPTANCE.md`
+
 Goal: prove the headline workflow as one bounded mission.
 
 Reference acceptance mission includes:
