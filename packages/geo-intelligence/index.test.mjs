@@ -165,7 +165,7 @@ test("identity resolution merges strong duplicate evidence but never merges fuzz
   assert.equal(resolved.cluster_count,2);
   const alpha=resolved.clusters.find(c=>c.place_id==="ChIJ-alpha");
   assert.equal(alpha.record_count,2);
-  assert.deepEqual(alpha.source_record_refs.sort(),[records[0].record_ref,records[1].record_ref].sort());
+  assert.deepEqual([...alpha.source_record_refs].sort(),[records[0].record_ref,records[1].record_ref].sort());
   assert.equal(resolved.completeness_claim,false);
 });
 
