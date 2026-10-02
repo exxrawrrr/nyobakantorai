@@ -72,11 +72,17 @@ export function scoreBusinessProfile(profile,{mission={},policy}={}){
 
 export function finalizeVerifiedProfile({profile,score,verification}={}){
   assert(profile?.profile_ref===score?.profile_ref,"Profile/score mismatch.");
-  assert(verification?.review_state==="PASS"&&verification?.decision==="VERIFIED","Siti PASS verification required.");
-  assert(verification?.verifier_id==="siti"&&verification?.independent===true,"Final profile requires independent Siti verification.");
+  const record=verification?.verification||verification;
+  const binding=verification?.binding||null;
+  if(binding){
+    assert(binding.profile_ref===profile.profile_ref&&binding.score_ref===score.score_ref,"Profile/score verification binding mismatch.");
+    assert(binding.verification_ref===record?.verification_ref,"Verification binding ref mismatch.");
+  }
+  assert(record?.review_state==="PASS"&&record?.decision==="VERIFIED","Siti PASS verification required.");
+  assert(record?.verifier_id==="siti"&&record?.independent===true,"Final profile requires independent Siti verification.");
   const result={
     schema:1,profile_ref:profile.profile_ref,score_ref:score.score_ref,
-    verification_ref:verification.verification_ref,
+    verification_ref:record.verification_ref,
     score:score.score,max_score:score.max_score,status:"VERIFIED_PROFILE",
   };
   return freeze({...result,verified_profile_ref:contentRef("geo-verified-profile",result)});
