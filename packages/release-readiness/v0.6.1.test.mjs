@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { spawnSync } from "node:child_process";
 import {
   assessV061ReleaseReadiness,
   buildV061ReadinessSnapshot,
@@ -89,4 +90,27 @@ test("release workflow has a dedicated fail-closed v0.6.1 readiness guard",async
   const workflow=await readFile(resolve(root,".github/workflows/release.yml"),"utf8");
   assert.match(workflow,/refs\/tags\/v0\.6\.1/);
   assert.match(workflow,/v0\.6\.1:readiness:require-ready/);
+});
+
+
+test("v0.6.1 readiness CLI validates BLOCKED state but require-ready exits 2",()=>{
+  const normal=spawnSync(process.execPath,["scripts/v0.6.1-release-readiness.mjs"],{
+    cwd:root,
+    encoding:"utf8",
+  });
+  assert.equal(normal.status,0,normal.stderr||normal.stdout);
+  const normalPayload=JSON.parse(normal.stdout);
+  assert.equal(normalPayload.assessment.ok,true);
+  assert.equal(normalPayload.assessment.reliability_decision,"PASS");
+  assert.equal(normalPayload.assessment.decision,"BLOCKED");
+  assert.deepEqual(normalPayload.assessment.blockers,["V0_6_0_PREREQUISITE"]);
+
+  const required=spawnSync(process.execPath,["scripts/v0.6.1-release-readiness.mjs","--require-ready"],{
+    cwd:root,
+    encoding:"utf8",
+  });
+  assert.equal(required.status,2,required.stderr||required.stdout);
+  const requiredPayload=JSON.parse(required.stdout);
+  assert.equal(requiredPayload.assessment.decision,"BLOCKED");
+  assert.equal(requiredPayload.snapshot.publication_authorized,false);
 });
