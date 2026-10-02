@@ -7,6 +7,7 @@ export const SCHEDULE_STATES=Object.freeze(["ACTIVE","PAUSED","REVOKED","EXPIRED
 export const APPROVAL_DECISIONS=Object.freeze(["APPROVED","EDITED","REJECTED"]);
 const clean=(v,max=4000)=>String(v??"").trim().slice(0,max);
 const uniq=(a,max=1000)=>Object.freeze([...new Set((Array.isArray(a)?a:[]).map(x=>clean(x,max)).filter(Boolean))]);
+const sortedUniq=(a,max=1000)=>Object.freeze([...uniq(a,max)].sort((x,y)=>x.localeCompare(y)));
 function assert(c,m){if(!c)throw new Error(m);}
 function validTime(v){return typeof v==="string"&&v.trim()&&!Number.isNaN(Date.parse(v));}
 function stable(v){if(Array.isArray(v))return v.map(stable);if(v&&typeof v==="object")return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));return v;}
@@ -166,7 +167,7 @@ export function createApprovalRequest(input={}){
   const evidence=uniq(input.evidence_refs); assert(evidence.length>0,"Approval evidence_refs required.");
   const preview=clean(input.preview,8000); assert(preview,"Approval preview required.");
   const scope=input.scope||{};
-  const actions=uniq(scope.actions,160); const resources=uniq(scope.resources,500);
+  const actions=sortedUniq(scope.actions,160); const resources=sortedUniq(scope.resources,500);
   assert(actions.length>0&&resources.length>0,"Approval scope actions/resources required.");
   assert(!resources.some(r=>r==="*"||r.includes("*")),"Approval scope wildcard resources forbidden.");
   const requested=clean(input.requested_at,80),expires=clean(input.expires_at,80);
@@ -194,7 +195,7 @@ export function decideApprovalRequest(request,decision={}){
   const at=clean(decision.decided_at,80); assert(validTime(at),"Approval decision timestamp invalid.");
   assert(Date.parse(at)>=Date.parse(expected.requested_at)&&Date.parse(at)<Date.parse(expected.expires_at),"Approval decision outside request validity.");
   const evidenceRef=clean(decision.evidence_ref,1000); assert(/^[a-z][a-z0-9+.-]*:/i.test(evidenceRef),"Approval decision evidence_ref required.");
-  const nextScope=decision.scope?{actions:uniq(decision.scope.actions,160),resources:uniq(decision.scope.resources,500)}:expected.scope;
+  const nextScope=decision.scope?{actions:sortedUniq(decision.scope.actions,160),resources:sortedUniq(decision.scope.resources,500)}:expected.scope;
   assert(nextScope.actions.length>0&&nextScope.resources.length>0,"Approval decision scope required.");
   assert(!nextScope.resources.some(r=>r==="*"||r.includes("*")),"Approval decision wildcard resources forbidden.");
   assert(nextScope.actions.every(a=>expected.scope.actions.includes(a)),"Edited approval cannot expand action scope.");
