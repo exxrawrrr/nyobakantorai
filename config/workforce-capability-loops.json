@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "workforce_size": 16,
+  "rule": "Upgrade existing employees through reusable skills and measured role loops before adding headcount. Skill attachment never grants tool, connector, or provider authority.",
+  "loops": [
+    {
+      "employee_id": "praroro",
+      "focus": "delegation closure and recurring blocker routing",
+      "observe": "orphaned work, stalled handoffs, unresolved ownership",
+      "practice": "route with owner/deadline/evidence and follow-up receipts",
+      "measure": "handoff closure rate and orphaned-task reduction",
+      "recommended_upgrade_skill": "nyoba-follow-up"
+    },
+    {
+      "employee_id": "paijo",
+      "focus": "finance/KPI source integrity",
+      "observe": "metric-definition disputes, missing provenance, forecast assumptions",
+      "practice": "tie KPI conclusions to source provenance and sensitivity evidence",
+      "measure": "forecast correction rate and unsupported-metric findings",
+      "recommended_upgrade_skill": "nyoba-source-provenance"
+    },
+    {
+      "employee_id": "subagjo",
+      "focus": "engineering change provenance",
+      "observe": "integration regressions, undocumented source assumptions, CI drift",
+      "practice": "attach source/provenance evidence to codebase verification and rollback decisions",
+      "measure": "regressions caught before merge and provenance completeness",
+      "recommended_upgrade_skill": "nyoba-source-provenance"
+    },
+    {
+      "employee_id": "alex",
+      "focus": "research completion discipline",
+      "observe": "good research without explicit closure/verification conditions",
+      "practice": "finish synthesis with verification-before-completion gate",
+      "measure": "reopened research tasks and unsupported completion claims",
+      "recommended_upgrade_skill": "nyoba-verification-before-completion"
+    },
+    {
+      "employee_id": "sumiati",
+      "focus": "creative execution closure",
+      "observe": "strong concepts that lack execution checklist or proof",
+      "practice": "plan-execute-review creative outputs before completion claims",
+      "measure": "revision cycles and claim/brand QA misses",
+      "recommended_upgrade_skill": "nyoba-plan-execute-review"
+    },
+    {
+      "employee_id": "siti",
+      "focus": "research-to-QA synthesis",
+      "observe": "large evidence sets with fragmented conclusions",
+      "practice": "synthesize evidence into traceable decision briefs before QA verdicts",
+      "measure": "verification latency and contradiction detection",
+      "recommended_upgrade_skill": "nyoba-research-synthesis"
+    },
+    {
+      "employee_id": "maya",
+      "focus": "paid-media outcome measurement",
+      "observe": "creative/audience changes without normalized KPI framing",
+      "practice": "pair Meta Ads operations with KPI definition and post-change measurement",
+      "measure": "experiments with valid baseline/post metrics",
+      "recommended_upgrade_skill": "nyoba-kpi-analysis"
+    },
+    {
+      "employee_id": "gugun",
+      "focus": "search campaign experiment design",
+      "observe": "keyword/bid changes without explicit hypothesis or stopping rule",
+      "practice": "frame bounded experiments before approved Google Ads mutations",
+      "measure": "experiments with hypothesis, guardrail, and readback",
+      "recommended_upgrade_skill": "nyoba-experiment-design"
+    },
+    {
+      "employee_id": "ratri",
+      "focus": "SEO/CRO evidence synthesis",
+      "observe": "audits with many findings but weak prioritization narrative",
+      "practice": "synthesize multi-source audit evidence into ranked decision rationale",
+      "measure": "accepted recommendations and contradiction resolution",
+      "recommended_upgrade_skill": "nyoba-research-synthesis"
+    },
+    {
+      "employee_id": "bimo",
+      "focus": "integration provenance and trust boundaries",
+      "observe": "connector behavior that depends on undocumented provider/source assumptions",
+      "practice": "record source provenance alongside MCP/integration contracts",
+      "measure": "integration incidents attributable to missing provenance",
+      "recommended_upgrade_skill": "nyoba-source-provenance"
+    },
+    {
+      "employee_id": "nara",
+      "focus": "reproducible data provenance",
+      "observe": "metric outputs whose source lineage is hard to reconstruct",
+      "practice": "attach source provenance to data analysis and experiment evaluation",
+      "measure": "reproducibility failures and lineage completeness",
+      "recommended_upgrade_skill": "nyoba-source-provenance"
+    },
+    {
+      "employee_id": "dina",
+      "focus": "project closure verification",
+      "observe": "follow-ups marked done without explicit completion evidence",
+      "practice": "apply verification-before-completion to client/project operations",
+      "measure": "stale commitments and reopened completed tasks",
+      "recommended_upgrade_skill": "nyoba-verification-before-completion"
+    },
+    {
+      "employee_id": "bambang",
+      "focus": "automation outcome verification",
+      "observe": "automations that run but do not prove value or safe completion",
+      "practice": "verify automation result before declaring queue optimization complete",
+      "measure": "automation rollback/rework rate",
+      "recommended_upgrade_skill": "nyoba-verification-before-completion"
+    },
+    {
+      "employee_id": "fikri",
+      "focus": "context artifact completion verification",
+      "observe": "well-compressed context that may omit acceptance evidence",
+      "practice": "verify protected atoms, source integrity, and acceptance before completion",
+      "measure": "context rework and missing-constraint findings",
+      "recommended_upgrade_skill": "nyoba-verification-before-completion"
+    },
+    {
+      "employee_id": "tari",
+      "focus": "follow-up source and commitment provenance",
+      "observe": "closure claims detached from original commitment/evidence",
+      "practice": "preserve provenance for follow-up receipts and escalations",
+      "measure": "untraceable commitments and stale-owner disputes",
+      "recommended_upgrade_skill": "nyoba-source-provenance"
+    },
+    {
+      "employee_id": "caca",
+      "focus": "community/partnership completion verification",
+      "observe": "draft outreach/community actions treated as finished without receipt",
+      "practice": "verify delivery/result evidence before completion claims",
+      "measure": "unverified outreach completion claims",
+      "recommended_upgrade_skill": "nyoba-verification-before-completion"
+    }
+  ]
+}
