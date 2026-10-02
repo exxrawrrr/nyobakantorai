@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/map-mission.schema.json",
+  "title": "nyobakantorai Map Mission v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "mission_id",
+    "title",
+    "created_at",
+    "candidate_refs",
+    "feature_refs",
+    "features",
+    "qualification",
+    "completeness_claim",
+    "persistable_view_model",
+    "ephemeral_feature_count",
+    "google_maps_attribution_required",
+    "claim_boundary",
+    "map_mission_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "mission_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "candidate_refs": {
+      "type": "array",
+      "minItems": 1
+    },
+    "feature_refs": {
+      "type": "array"
+    },
+    "features": {
+      "type": "array"
+    },
+    "qualification": {
+      "type": "object"
+    },
+    "completeness_claim": {
+      "const": false
+    },
+    "persistable_view_model": {
+      "type": "boolean"
+    },
+    "ephemeral_feature_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "google_maps_attribution_required": {
+      "type": "boolean"
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "map_mission_ref": {
+      "type": "string",
+      "pattern": "^map-mission:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
