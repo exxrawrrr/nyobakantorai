@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import {
   assessCostAdmission,
   createCostGovernor,
@@ -216,4 +217,16 @@ test("post-execution actual overrun is explicit in budget state and blocks the n
   });
   assert.equal(next.action,"STOP");
   assert.ok(next.reason_codes.includes("HARD_BUDGET_LIMIT_REACHED"));
+});
+
+
+test("canonical cost policy is valid and keeps hard budgets opt-in by default",async()=>{
+  const root=new URL("../../",import.meta.url);
+  const canonical=JSON.parse(await readFile(new URL("config/cost-governor-policy.json",root),"utf8"));
+  const governor=createCostGovernor({policy:canonical,clock:()=>"2026-10-02T03:00:00.000Z"});
+  assert.equal(governor.policy.currency,"USD");
+  assert.equal(governor.policy.daily_limit_amount,null);
+  assert.deepEqual(governor.policy.project_limits,{});
+  assert.deepEqual(governor.policy.mission_limits,{});
+  assert.deepEqual(governor.policy.employee_limits,{});
 });
