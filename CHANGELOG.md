@@ -1,3 +1,11 @@
+## [0.7.1] - Unreleased — Geo contracts verified, release blocked
+
+- Added a fail-closed v0.7.1 Geo release-readiness evaluator, adversarial tests, CLI, release-manifest snapshot, and tagged-release guard.
+- Reverified Geo Core, Geo Intelligence, Map Missions/CRM, retention, attribution, verification, and bounded-coverage contracts.
+- No active Google Maps connection was available in CHAT 26, so no live bounded Places mission, live FieldMask/SKU observation, live retention/attribution audit, or live Siti-derived profile evidence is claimed.
+- Release also remains blocked by the unreleased v0.7.0 prerequisite chain.
+- Package/stable release remains v0.5.1; no v0.7.1 tag or GitHub Release is authorized.
+
 ## [0.7.0] - Unreleased — connected-office evidence partial, release blocked
 
 - Collected live GitHub repository and Google Drive metadata read observations with private Drive details redacted.
