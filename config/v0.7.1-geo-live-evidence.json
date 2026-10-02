@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "candidate": "v0.7.1",
+  "observed_on": "2026-10-02",
+  "provider_connection": {
+    "toolkit": "google_maps",
+    "provider": "google-places-new",
+    "state": "NOT_CONNECTED",
+    "tool_surface_observed": true,
+    "credential_material_committed": false,
+    "note": "A Google Maps tool surface was discoverable during CHAT 26, but no active Google Maps connection was available. No connection was created and no API credential was requested, minted, copied, or committed."
+  },
+  "mission": {
+    "live_observed": false,
+    "provider": "google-places-new",
+    "observed_at": null,
+    "request_ref": null,
+    "field_profile": null,
+    "requested_fields": [],
+    "highest_sku": null,
+    "numeric_price_pinned": false,
+    "area_explicit": false,
+    "result_limit": 0,
+    "returned_place_count": 0,
+    "completeness_claim": false,
+    "raw_response_persisted": false,
+    "durable_fields": ["place_id"],
+    "attribution_reviewed": false,
+    "provider_attribution_required": true,
+    "reason": "No qualifying live Google Places request was executed because the Google Maps connection was not active. Deterministic CHAT 23-25 fixtures are not promoted to live release evidence."
+  },
+  "pipeline": {
+    "live_observed": false,
+    "dedupe_evidence": false,
+    "enrichment_evidence": false,
+    "siti_verified_profile_count": 0,
+    "source_provenance_preserved": false,
+    "completeness_claim": false,
+    "reason": "Without a qualifying live bounded mission there is no live dedupe/enrichment/Siti evidence bundle to promote."
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "candidate": "v0.7.1",
+  "observed_on": "2026-10-02",
+  "geo_decision": "BLOCKED",
+  "decision": "BLOCKED",
+  "policy": "v0.7.1 may be tagged or published only when Geo policy/pipeline contracts pass, a qualifying live bounded geo mission is observed with exact FieldMask/SKU evidence, retention/attribution is audited on that live observation, live dedupe/enrichment reaches Siti-verified evidence, coverage claims remain bounded, prerequisite v0.7.0 readiness is READY, package metadata is intentionally promoted to 0.7.1, and tagged release gates pass.",
+  "geo_evidence": {
+    "source": "config/v0.7.1-geo-live-evidence.json",
+    "required_components": [
+      "GEO_POLICY_CONTRACTS",
+      "GEO_PIPELINE_CONTRACTS",
+      "COVERAGE_CLAIM_BOUNDARY",
+      "LIVE_BOUNDED_GEO_MISSION",
+      "LIVE_COST_FIELD_MASK_EVIDENCE",
+      "LIVE_RETENTION_ATTRIBUTION_AUDIT",
+      "LIVE_DEDUPE_ENRICHMENT_SITI_EVIDENCE"
+    ],
+    "observed": {
+      "GEO_POLICY_CONTRACTS": "PASS",
+      "GEO_PIPELINE_CONTRACTS": "PASS",
+      "COVERAGE_CLAIM_BOUNDARY": "PASS",
+      "LIVE_BOUNDED_GEO_MISSION": "BLOCKED",
+      "LIVE_COST_FIELD_MASK_EVIDENCE": "BLOCKED",
+      "LIVE_RETENTION_ATTRIBUTION_AUDIT": "BLOCKED",
+      "LIVE_DEDUPE_ENRICHMENT_SITI_EVIDENCE": "BLOCKED"
+    }
+  },
+  "release_blockers": [
+    {
+      "id": "LIVE_BOUNDED_GEO_MISSION",
+      "category": "geo-live-evidence",
+      "status": "BLOCKED",
+      "required_state": "PASS",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.7.1-geo-live-evidence.json",
+      "reason": "No qualifying live bounded Google Places mission was executed because the available Google Maps toolkit had no active connection.",
+      "safe_next_action": "Connect an approved Google Maps/Places account, run one small explicit-area read-only mission, and commit only sanitized evidence metadata."
+    },
+    {
+      "id": "LIVE_COST_FIELD_MASK_EVIDENCE",
+      "category": "geo-live-evidence",
+      "status": "BLOCKED",
+      "required_state": "PASS",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.7.1-geo-live-evidence.json",
+      "reason": "FieldMask/SKU policy is deterministic and valid, but no live request exists to bind an observed request_ref to the exact reviewed FieldMask profile and highest SKU.",
+      "safe_next_action": "Use a reviewed production profile such as TEXT_SEARCH_IDENTITY or TEXT_SEARCH_CORE and record exact fields, request_ref, and highest_sku without pinning stale numeric prices."
+    },
+    {
+      "id": "LIVE_RETENTION_ATTRIBUTION_AUDIT",
+      "category": "geo-live-evidence",
+      "status": "BLOCKED",
+      "required_state": "PASS",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.7.1-geo-live-evidence.json",
+      "reason": "Repository contracts enforce ephemeral provider content, Place-ID-only durable retention, and attribution rules, but no live provider response exists for a release-grade audit.",
+      "safe_next_action": "Audit the live mission evidence to prove raw response persistence is false, durable provider fields are limited to place_id, and required attribution is surfaced."
+    },
+    {
+      "id": "LIVE_DEDUPE_ENRICHMENT_SITI_EVIDENCE",
+      "category": "geo-live-evidence",
+      "status": "BLOCKED",
+      "required_state": "PASS",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.7.1-geo-live-evidence.json",
+      "reason": "CHAT 24-25 deterministic suites prove pipeline behavior, but no live mission has produced a provenance-preserving dedupe/enrichment bundle finalized by independent Siti verification.",
+      "safe_next_action": "Run the bounded live result set through the existing CHAT 24 pipeline and record at least one exact Siti-verified profile binding."
+    },
+    {
+      "id": "V0_7_0_PREREQUISITE",
+      "category": "release-prerequisite",
+      "status": "BLOCKED",
+      "required_state": "READY",
+      "current_state": "BLOCKED",
+      "canonical_source": "config/v0.7-release-readiness.json",
+      "reason": "v0.7.0 remains blocked, so v0.7.1 cannot leapfrog the unreleased prerequisite chain.",
+      "safe_next_action": "Resolve canonical v0.7.0 prerequisites without weakening its evidence rules."
+    }
+  ],
+  "package_version_hold": {
+    "current": "0.5.1",
+    "candidate": "0.7.1",
+    "bump_authorized": false,
+    "reason": "Live Geo evidence and prerequisite v0.7.0 readiness remain blocked; stable package metadata stays at published v0.5.1."
+  },
+  "verification": {
+    "required_ci": [
+      "minimum-versions",
+      "test (ubuntu-latest)",
+      "test (windows-latest)"
+    ],
+    "geo_core_suite": "npm run test:geo-core",
+    "geo_intelligence_suite": "npm run test:geo-intelligence",
+    "map_missions_suite": "npm run test:map-missions",
+    "readiness_suite": "npm run test:v0.7.1-release-readiness",
+    "manual_release_gate_required_when_ready": true,
+    "tagged_asset_verification_required_when_ready": true
+  },
+  "promotion": {
+    "repository_merge_authorized": true,
+    "stable_tag_authorized": false,
+    "publication_authorized": false,
+    "manual_release_gate_state": "NOT_RUN_BLOCKED",
+    "tag_state": "NOT_CREATED",
+    "github_release_state": "NOT_CREATED"
+  },
+  "claim_language": {
+    "allowed": "CHAT 23-25 Geo policy, research, verification, map, CRM-export, and approval contracts are verified for deterministic repository behavior. CHAT 26 found no active Google Maps connection, so no qualifying live bounded Places mission or live derived evidence is claimed. Coverage claims remain observed-bounded-only, v0.7.1 publication remains blocked, and v0.5.1 remains the published stable release.",
+    "forbidden": [
+      "v0.7.1 is released",
+      "Geo Intelligence has exhaustive market coverage",
+      "Google Maps scraping is policy-free",
+      "a live Google Places mission passed",
+      "live Google Places billing was observed",
+      "raw Places responses may be durably stored",
+      "v0.7.1 can bypass v0.7.0 blockers"
+    ]
+  }
+}

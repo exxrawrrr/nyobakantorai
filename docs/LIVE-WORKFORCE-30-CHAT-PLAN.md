@@ -519,6 +519,9 @@ Closure: PASS for repository delivery. Google-provider map coordinates remain pr
 
 ### CHAT 26 — v0.7.1 Geo Release Gate
 
+**Status: COMPLETE — GEO CONTRACTS VERIFIED / LIVE EVIDENCE + v0.7.1 RELEASE BLOCKED — 2026-10-02.**
+Implementation/status: `docs/V0.7.1-GEO-RELEASE-GATE.md`
+
 Goal: prove Geo Intelligence without presenting it as exhaustive or policy-free scraping.
 
 Deliverables:
@@ -530,6 +533,8 @@ Deliverables:
 - release claims scoped to observed coverage.
 
 Exit gate: release passes or remains blocked; no exhaustive-coverage claim.
+
+Closure: PASS for release-gate implementation, BLOCKED for publication. Geo policy contracts, Geo pipeline contracts, and the bounded-coverage claim boundary PASS. A Google Maps tool surface was available but no active connection existed, so CHAT 26 correctly refuses to promote deterministic fixtures into live Places evidence; the bounded live mission, live FieldMask/SKU evidence, live retention/attribution audit, and live dedupe/enrichment/Siti bundle remain BLOCKED. v0.7.0 also remains a blocked prerequisite. The v0.7.1 readiness evaluator is fail-closed against forged PASS/READY configuration, release manifest exposes the blocked state, and the tagged release workflow requires readiness. Targeted v0.7.1 suite passed 5/5; combined release-readiness passed 27/27; Geo Core 11/11; Geo Intelligence 15/15; Map Missions 17/17; implementation-head verify #719 passed Ubuntu, Windows, and minimum versions. Package stays 0.5.1; no v0.7.1 tag/release is authorized.
 
 ---
 
