@@ -1,6 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createArtifactWorkspace } from "../artifact-workspace/index.mjs";
+import { createDirectoryArtifactStorage } from "../artifact-workspace/node-storage.mjs";
 import { planMission } from "../mission-engine/planner.mjs";
 import { normalizeMission, normalizeExecutionAttempt } from "../mission-engine/contracts.mjs";
 import { normalizeTaskNode } from "../task-registry/task-node.mjs";
@@ -12,6 +17,8 @@ import {
   normalizeRecoveryCheckpoint,
   normalizeRecoveryPolicy,
   recoverBrowserSession,
+  persistRecoveryCheckpoint,
+  readRecoveryCheckpointArtifact,
 } from "./index.mjs";
 
 const root=new URL("../../",import.meta.url);
@@ -252,4 +259,28 @@ test("browser recovery session restarts are bounded",()=>{
     }),
     /restart limit reached/,
   );
+});
+
+
+test("recovery checkpoint persists through Artifact Workspace and reopens in a new process-like instance",()=>{
+  const {result}=failedResult();
+  const checkpoint=createRecoveryCheckpoint(result,{clock:fixedClock});
+  const dir=mkdtempSync(join(tmpdir(),"nyobakantorai-recovery-checkpoint-"));
+  try{
+    const first=createArtifactWorkspace({
+      storage:createDirectoryArtifactStorage(dir),
+      clock:()=>"2026-10-02T05:01:00.000Z",
+    });
+    const stored=persistRecoveryCheckpoint({workspace:first,checkpoint});
+    assert.equal(stored.checkpoint_ref,checkpoint.checkpoint_ref);
+    assert.match(stored.artifact_ref,/^artifact:/);
+
+    const reopened=createArtifactWorkspace({storage:createDirectoryArtifactStorage(dir)});
+    const restored=readRecoveryCheckpointArtifact(reopened,stored.artifact_ref);
+    assert.equal(restored.checkpoint_ref,checkpoint.checkpoint_ref);
+    assert.deepEqual(restored.completed_task_ids,checkpoint.completed_task_ids);
+    assert.equal(reopened.verify().record_count,1);
+  }finally{
+    rmSync(dir,{recursive:true,force:true});
+  }
 });
