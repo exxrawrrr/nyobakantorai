@@ -27,6 +27,7 @@ export function createDirectoryProjectBrainStorage(directory){
       const path=pathFor(key);
       const tmp=path+".tmp";
       writeFileSync(tmp,String(value),"utf8");
+      rmSync(path,{force:true});
       renameSync(tmp,path);
     },
     remove(key){
