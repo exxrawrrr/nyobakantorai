@@ -443,9 +443,15 @@ export function authorizeConnectorAction({
   const normalizedConnections=(Array.isArray(connections)?connections:[]).map((item)=>normalizeConnectorConnection(item,{registry}))
     .filter((item)=>item.connector_id===connector.id)
     .sort((a,b)=>b.lifecycle_seq-a.lifecycle_seq||a.connection_id.localeCompare(b.connection_id));
-  const connection=normalizedConnections.find((item)=>effectiveConnectionState(item,now)==="CONNECTED")||null;
+  const latestByConnection=new Map();
+  for(const item of normalizedConnections){
+    if(!latestByConnection.has(item.connection_id)) latestByConnection.set(item.connection_id,item);
+  }
+  const currentConnections=[...latestByConnection.values()]
+    .sort((a,b)=>b.lifecycle_seq-a.lifecycle_seq||a.connection_id.localeCompare(b.connection_id));
+  const connection=currentConnections.find((item)=>effectiveConnectionState(item,now)==="CONNECTED")||null;
   if(!connection){
-    const observed=normalizedConnections[0]||null;
+    const observed=currentConnections[0]||null;
     return Object.freeze({
       allowed:false,decision:"BLOCKED",reason:observed?("CONNECTOR_"+effectiveConnectionState(observed,now)):"CONNECTOR_NOT_CONNECTED",
       employee_id:employee,connector_id:connector.id,capability_id:capability,access_mode:mode,action:normalizedAction,resource:target,
