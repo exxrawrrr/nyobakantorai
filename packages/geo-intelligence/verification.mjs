@@ -1,5 +1,5 @@
 import { runSitiVerification,validateSitiVerificationRecord } from "../evidence-verifier/siti.mjs";
-import { assert,clean,freeze,uniq } from "./common.mjs";
+import { assert,clean,contentRef,freeze,uniq } from "./common.mjs";
 
 function allProfileSourceRefs(profile){return uniq([profile.cluster_ref,...(profile.source_refs||[])]).sort();}
 
@@ -68,5 +68,33 @@ export async function verifyBusinessProfileWithSiti({
     now:new Date(now),
   });
   validateSitiVerificationRecord(verification);
-  return freeze(verification);
+  const binding={
+    schema:1,
+    profile_ref:profile.profile_ref,
+    score_ref:score.score_ref,
+    verification_ref:verification.verification_ref,
+    verifier_id:verification.verifier_id,
+    independent:verification.independent,
+    review_state:verification.review_state,
+    decision:verification.decision,
+  };
+  return freeze({
+    verification,
+    binding:{...binding,binding_ref:contentRef("geo-profile-verification",binding)},
+  });
+}
+
+export function validateGeoVerificationBinding(input){
+  assert(input?.verification&&input?.binding,"Geo verification binding required.");
+  validateSitiVerificationRecord(input.verification);
+  const b=input.binding;
+  const core={
+    schema:b.schema,profile_ref:b.profile_ref,score_ref:b.score_ref,verification_ref:b.verification_ref,
+    verifier_id:b.verifier_id,independent:b.independent,review_state:b.review_state,decision:b.decision,
+  };
+  assert(b.verification_ref===input.verification.verification_ref,"Geo verification ref mismatch.");
+  assert(b.verifier_id===input.verification.verifier_id,"Geo verifier mismatch.");
+  assert(b.review_state===input.verification.review_state&&b.decision===input.verification.decision,"Geo verification decision mismatch.");
+  assert(b.binding_ref===contentRef("geo-profile-verification",core),"Geo verification binding checksum mismatch.");
+  return true;
 }
