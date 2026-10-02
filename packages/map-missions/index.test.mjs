@@ -161,7 +161,7 @@ test("CRM import is approval-gated and scope cannot authorize outreach",async()=
 test("watchlist stores hashes/refs, not provider raw payloads, and creates normal bounded scheduler work",async()=>{
   const {candidate}=await fixtureBundle();
   const watch=createLeadWatchlist({
-    watchlist_id:"chat25-watch",created_at:"2026-10-02T10:20:00Z",interval_days:7,candidates:[candidate],hard_limit_amount:1,
+    watchlist_id:"chat25-watch",created_at:"2026-10-02T01:00:00Z",interval_days:7,candidates:[candidate],hard_limit_amount:1,
   },{policy});
   assert.equal(watch.raw_provider_content_persisted,false);
   assert.equal(JSON.stringify(watch).includes("Alpha Driver Training"),false);
@@ -173,7 +173,7 @@ test("watchlist stores hashes/refs, not provider raw payloads, and creates norma
   assert.ok(schedule.constraints.includes("Do not write to CRM."));
 
   const run=materializeScheduledMission({
-    schedule,at:"2026-10-09T08:30:00Z",previousRuns:[],costPolicy,costLedger:[],
+    schedule,at:"2026-10-09T01:30:00Z",previousRuns:[],costPolicy,costLedger:[],
     estimatedCost:{status:"KNOWN",amount:0.2,currency:"USD"},projectId:"chat25-watch",
     idFactory:(kind,index,label)=>kind+"-"+index+"-"+String(label).replace(/[^a-z0-9]+/gi,"-").toLowerCase(),
   });
