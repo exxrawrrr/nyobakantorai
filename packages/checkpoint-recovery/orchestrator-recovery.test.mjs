@@ -256,7 +256,7 @@ test("timeout failure injection produces a checkpoint that can be retried within
   assert.equal(resumed.attempts[1].recovery_checkpoint_ref,checkpoint.checkpoint_ref);
 });
 
-test("unsafe RUNNING checkpoint is refused as a resume boundary",()=>{
+test("unsafe RUNNING checkpoint is refused as a resume boundary",async()=>{
   const {plan:p,result}=(()=>{
     const p=plan();
     return {plan:p,result:null};
@@ -294,7 +294,7 @@ test("unsafe RUNNING checkpoint is refused as a resume boundary",()=>{
     events:[],
   };
   const checkpoint=createRecoveryCheckpoint(unsafeResult,{clock:()=>"2026-10-02T06:10:00.000Z"});
-  assert.throws(
+  await assert.rejects(
     ()=>executeMissionPlan(p,{
       recovery:{checkpoint,policy:recoveryPolicyBase},
       resolveRuntime:async({task})=>resolution(task,{provider:"provider-primary"}),
