@@ -6,21 +6,25 @@ It combines a visual office, a canonical workforce registry, installable employe
 
 ![nyobakantorai office overview](docs/assets/office-overview.png)
 
-## v0.7.0 connected-office status — partial live evidence, release blocked
+## Project status — 30-chat roadmap complete, v1.0 candidate is evidence-blocked
 
-CHAT 22 collected real connected-account evidence without widening repository authority claims:
+The implementation roadmap through **CHAT 30** is complete on `main`. The final production-convergence work was merged in PR #56 and exact promoted `main` passed Linux, Windows, and minimum-version verification.
 
-- live GitHub repository metadata read;
-- live Google Drive metadata read with filenames, file IDs, and file contents excluded from committed evidence;
-- one scoped GitHub issue write (#44) after a committed owner approval plan, followed by direct read-back and closure verification;
-- executable Connector Center application-level revocation evidence;
-- scheduled Mission materialization through the normal Mission Engine + Cost Governor using the live observation IDs.
+That does **not** mean `v1.0.0` is published. The v1 gate is intentionally fail-closed.
 
-The milestone is **not release-ready**. The current blockers are: the two connector connections are not independently proven READ_ONLY, no live browser provider is available for CHAT 22 evidence, and prerequisite v0.6.1 remains blocked by the v0.6.0 release chain.
+Current v1 evidence state:
 
-Package/stable version therefore remains `0.5.1`. No `v0.7.0` tag or GitHub Release is authorized.
+- security-control convergence — **PASS**;
+- release-claim/evidence audit — **PASS**;
+- production install/migration matrix — **PASS** across one-worker, subset, full-workforce, and lifecycle cases;
+- real-world workflow evidence — **BLOCKED**, currently 1/20 eligible real tasks;
+- provider lifecycle — **BLOCKED**, currently `partial`;
+- representative live failure/recovery evidence — **BLOCKED**;
+- v0.9 prerequisite chain — **BLOCKED**.
 
-See [v0.7 Connected Workflow Live Evidence + Release Gate](docs/V0.7-CONNECTED-LIVE-RELEASE-GATE.md).
+Therefore the published stable package remains **v0.5.1**. There is no authorized `v1.0.0` tag or GitHub Release yet.
+
+See [v1.0 Production Evidence Convergence](docs/V1.0-PRODUCTION-CONVERGENCE.md) and [v1.0 Operator Runbook](docs/V1.0-OPERATOR-RUNBOOK.md).
 
 ## Current release — v0.5.1
 
@@ -163,11 +167,11 @@ The workforce uses recreated/adapted workflow concepts with explicit provenance 
 **Fikri** is the default Knowledge / Markdown / Context / Prompt Engineer. See [MARKDOWN-KNOWLEDGE.md](docs/MARKDOWN-KNOWLEDGE.md).
 ## Install
 
-> **Stable means immutable here.** In v0.5.1, the recommended installer resolves a tagged GitHub release, downloads the core release artifact, verifies `install-manifest.json` + SHA-256 checksums, and only then unpacks it. Stable mode never falls back to mutable `main`.
+There are two explicit installation paths.
 
-### Hermes-first — recommended stable path
+### For people
 
-Hermes remains the reference runtime. The installer can reuse an existing Hermes installation or, only when you explicitly pass `WithHermes` / `--with-hermes`, invoke the official upstream installer.
+The normal installer defaults to the latest **published immutable stable release**.
 
 **Windows PowerShell**
 
@@ -181,100 +185,73 @@ Hermes remains the reference runtime. The installer can reuse an existing Hermes
 curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --start
 ```
 
-The latest-release URL resolves the current stable release. The installer verifies the immutable release artifact before installation. If Hermes is already installed and discoverable, the installer can reuse it and bootstrap the selected employee profiles; `-WithHermes` / `--with-hermes` is only required when you want the installer to install Hermes itself.
+Full human guide: **[docs/INSTALL-HUMAN.md](docs/INSTALL-HUMAN.md)**.
 
-To pin an exact release, download that release's installer asset and pass the same version explicitly:
+### For AI agents
 
-```bash
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.1/install.sh | bash -s -- --version v0.5.1 --with-hermes
-```
-
-```powershell
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/download/v0.5.1/install.ps1))) -Version v0.5.1 -WithHermes
-```
-
-### Install only part of the office
-
-The selector remains independent from the stable source channel.
-
-Windows:
-
-```powershell
-# one worker
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "siti"
-
-# arbitrary subset
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "praroro,siti"
-
-# preset
-& ([scriptblock]::Create((irm https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.ps1))) -WithHermes -Employees "growth"
-```
-
-Linux / macOS / WSL2:
+Agents use a separate fail-closed wrapper. It is **plan-only by default**:
 
 ```bash
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees siti
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees praroro,siti
-curl -fsSL https://github.com/exxrawrrr/nyobakantorai/releases/latest/download/install.sh | bash -s -- --with-hermes --employees growth
+node scripts/ai-installer.mjs --with-hermes --employees all
+```
+
+Only explicit `--apply` performs installation through the canonical platform installer:
+
+```bash
+node scripts/ai-installer.mjs --apply --with-hermes --employees all
+```
+
+It emits machine-readable JSON, defaults to stable immutable releases, accepts no secret argument, and never silently converts stable installation into a mutable `main` checkout.
+
+Full agent guide: **[docs/INSTALL-AI.md](docs/INSTALL-AI.md)**.
+
+### Employee selection
+
+All installer paths support one worker, comma-separated subsets, or presets:
+
+```bash
+node scripts/ai-installer.mjs --employees siti
+node scripts/ai-installer.mjs --employees praroro,siti
+node scripts/ai-installer.mjs --employees growth
 ```
 
 Presets: `leadership`, `engineering`, `growth`, `research`, `operations`, `creative-community`, and `full`.
 
-Tagged releases also publish standalone employee ZIPs with their own checksums. See [docs/EMPLOYEE-PACKS.md](docs/EMPLOYEE-PACKS.md).
-
-Every successful install writes `.nyobakantorai-install.json` with the install channel, version/ref, exact source commit, stable artifact checksum when applicable, integrity state, timestamp, and selected employees. See [docs/INSTALL-INTEGRITY.md](docs/INSTALL-INTEGRITY.md).
-
-For v0.5.1, the published core ZIP SHA-256 is `973c939db4710b6a7255ae4b8834a1107238367878f7d898899948d931ce8d93`, and the published TAR.GZ SHA-256 is `ba85b324e811db50ddb497a185874c881b1cf33ab0a1ad81b9a85899d5c4537e`. Both match `INSTALL-SHA256SUMS.txt` from the release.
-
-It never copies the author's API keys, provider credentials, billing configuration, sessions, memories, messaging tokens, or runtime databases. Configure your own model/provider after installation with:
-
-```bash
-hermes setup --portal
-```
-
 ### Mutable development path — explicit opt-in only
 
-`main` is no longer the stable default. Contributors who intentionally want mutable source must opt in.
+Stable integrity failure never falls back to mutable `main`. Development source requires explicit opt-in.
 
-POSIX:
+**Linux / macOS / WSL2**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.sh | bash -s -- --channel development --ref main
 ```
 
-PowerShell:
+**Windows PowerShell**
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/exxrawrrr/nyobakantorai/main/install.ps1))) -Channel development -Ref main
 ```
 
-A stable integrity failure does **not** downgrade to this path.
+AI agents can generate the equivalent plan first:
 
-### Core-only / contributor path
+```bash
+node scripts/ai-installer.mjs --channel development --ref main
+```
 
-The office can run without Hermes. Runtime requires **Node.js 20+**. Python 3.10+ and PyYAML are needed only for contributor/release utilities.
+### Contributor checkout
 
-For a source checkout used for development:
+For a normal source checkout used by contributors:
 
 ```bash
 git clone https://github.com/exxrawrrr/nyobakantorai.git
 cd nyobakantorai
-
-node scripts/preflight.mjs --runtime
 npm run smoke
-npm start
 ```
 
-Open `http://127.0.0.1:4322`.
+Every successful normal installation writes `.nyobakantorai-install.json` containing channel, version/ref, exact source commit, integrity state, timestamp, and employee selection.
 
-For contributor/release verification:
-
-```bash
-python -m pip install -r requirements-dev.txt
-npm run ready
-```
-
-The root package keeps `"private": true` intentionally to prevent accidental npm publication; it does **not** make the GitHub repository private.
+The installer never bundles maintainer API keys, provider credentials, billing state, sessions, memories, messaging tokens, or runtime databases. Configure your own provider separately, for example with `hermes setup --portal`.
 
 ## Hermes runtime configuration
 

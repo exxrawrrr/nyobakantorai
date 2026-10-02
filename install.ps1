@@ -16,6 +16,8 @@ $RepoUrl = "https://github.com/exxrawrrr/nyobakantorai.git"
 $ReleaseApi = "https://api.github.com/repos/exxrawrrr/nyobakantorai/releases/latest"
 $ReleaseBase = "https://github.com/exxrawrrr/nyobakantorai/releases/download"
 
+Write-Host "nyobakantorai installer: stable installs use published immutable releases only; unreleased main candidates are ignored."
+
 function Refresh-Path {
   $machine = [Environment]::GetEnvironmentVariable("Path","Machine")
   $user = [Environment]::GetEnvironmentVariable("Path","User")
