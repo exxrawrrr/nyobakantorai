@@ -397,6 +397,9 @@ Closure: PASS for repository delivery. Browser Agent separates READ from MUTATIO
 
 ### CHAT 20 — Scheduler + Approval Center 2.0
 
+**Status: COMPLETE — SCHEDULER / APPROVAL CENTER 2.0 VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.7-SCHEDULER-APPROVAL-CENTER.md`
+
 Goal: support recurring work without creating a governance bypass.
 
 Deliverables:
@@ -407,6 +410,8 @@ Deliverables:
 - approve/edit/reject + scope/expiry.
 
 Exit gate: scheduled work obeys the same evidence/cost/approval rules as interactive work.
+
+Closure: PASS for repository delivery. Recurring triggers are timezone/cadence/expiry/max-run bounded, pass through Cost Governor, and materialize only as normal Mission Engine plans. REROUTE / APPROVAL_REQUIRED / STOP never auto-dispatch. Morning Briefing fixture is contract-locked. Approval Center v2 provides target/risk/budget/reason/evidence/preview, owner-only approve/edit/reject, exact non-wildcard scope, bounded expiry, and point-of-use authorization checks. Office registry/UI enforce owner-only edits, expiry, no post-approval in-place scope mutation, and runtime read-only boundaries. Targeted suite passed 12/12; implementation-head PR verify #675 passed Ubuntu, Windows, and minimum versions.
 
 ### CHAT 21 — Skills Store + 16-Employee Capability Upgrade
 
