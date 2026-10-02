@@ -19,6 +19,7 @@ test("custom employee defaults are guarded and secret-free", () => {
   assert.ok(employee.operational_contract.verification_method);
   assert.deepEqual(employee.optional_integrations, []);
   assert.ok(employee.skills.includes("nyoba-follow-up"));
+  assert.match(employee.capability_gap, /regulated operations analysis/);
   assert.equal("auth" in employee, false);
   assert.equal("token" in employee, false);
 });
