@@ -14,7 +14,7 @@ For v0.4.0, the owner explicitly accepted the six still-open evidence classes as
 
 For v0.5.1, the release is **READY and PUBLISHED**. Final-main verify #578 passed on exact source commit `3004220522fee1971453f63bb50e6f9ed1264687`, manual release-gate `36811702004` passed, fresh-clone require-ready exited 0, tagged release-gate `36812543303` verified immutable assets, and the GitHub Release published 25 assets. The immutable `v0.5.0` tag remains a failed publication attempt and was not published as a GitHub Release.
 
-For v0.6.0, CHAT 12 convergence is **BLOCKED**. The CHAT 11 acceptance bundle is 9/11 PASS; `REAL_MODEL_EXECUTION` and `COST_QUOTA_ENFORCEMENT` remain blocked. Package metadata therefore stays at `0.5.1`, `v0.6.0` tag/publication is unauthorized, and the tagged release workflow now fails closed unless v0.6 readiness is `READY`. No public deployment target is configured, so external demo deployment verification is not claimed.
+For v0.6.0, CHAT 12 convergence is **BLOCKED**. The CHAT 11 acceptance bundle is 9/11 PASS; `REAL_MODEL_EXECUTION` and `COST_QUOTA_ENFORCEMENT` remain blocked. Package metadata therefore stays at `0.5.1`, `v0.6.0` tag/publication is unauthorized, and the tagged release workflow now fails closed unless v0.6 readiness is `READY`. PR verify #619 passed Ubuntu/Windows/minimum versions, and fresh-clone one-worker/subset/full/lifecycle matrices all passed. No public deployment target is configured, so external demo deployment verification is not claimed.
 
 ## Code and tests
 - [ ] `npm run doctor` passes on the release machine.
