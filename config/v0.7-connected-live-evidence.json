@@ -2,7 +2,7 @@
   "schema": 1,
   "candidate": "v0.7.0",
   "chat": "CHAT22",
-  "state": "COLLECTING",
+  "state": "COLLECTED_PARTIAL",
   "observed_on": "2026-10-02",
   "claim_boundary": "External connector tool observations are evidence of live account access only. They do not automatically become Connector Center runtime authority or capability grants.",
   "read_only_observations": [
@@ -64,10 +64,23 @@
         "resources": [
           "repository:exxrawrrr/nyobakantorai"
         ]
-      }
+      },
+      "plan_commit": "a61d1b3433e89d03c3e4dcc3ae1459a2aa3eedc8",
+      "plan_commit_at": "2026-10-02T07:37:43.000Z"
     },
-    "execution_state": "NOT_RUN",
-    "verification_state": "NOT_RUN"
+    "execution_state": "PASS",
+    "verification_state": "PASS",
+    "execution": {
+      "issue_number": 44,
+      "issue_url": "https://github.com/exxrawrrr/nyobakantorai/issues/44",
+      "created_at": "2026-10-02T07:37:55.000Z",
+      "closed_at": "2026-10-02T07:38:13.000Z",
+      "final_state": "closed",
+      "state_reason": "completed",
+      "author_association": "OWNER",
+      "performed_via": "chatgpt-codex-connector",
+      "direct_readback": true
+    }
   },
   "browser_evidence": {
     "required": true,
