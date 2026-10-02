@@ -169,6 +169,9 @@ export function buildRecoverySeed(planInput,checkpointInput,policyInput){
   const checkpoint=normalizeRecoveryCheckpoint(checkpointInput);
   const policy=normalizeRecoveryPolicy(policyInput);
   assert(checkpoint.mission.mission_id===plan.mission.mission_id,"Checkpoint Mission does not match plan.");
+  assert(["PARTIAL","FAILED","BLOCKED"].includes(checkpoint.mission.state),"Checkpoint Mission state is not a safe recovery boundary.");
+  assert(!checkpoint.tasks.some((task)=>task.state==="RUNNING"),"Checkpoint cannot resume while a TaskNode is RUNNING.");
+  assert(!checkpoint.attempts.some((attempt)=>attempt.state==="RUNNING"),"Checkpoint cannot resume while an Execution Attempt is RUNNING.");
   assert(checkpoint.recovery_cycle<policy.max_recovery_cycles,"Recovery cycle limit reached.");
 
   const planIds=[...plan.graph.task_ids].sort();
