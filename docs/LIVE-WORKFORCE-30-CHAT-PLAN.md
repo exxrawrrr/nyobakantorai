@@ -477,6 +477,9 @@ Closure: PASS for repository delivery. Production wildcard masks fail closed; re
 
 ### CHAT 24 — Search Expansion + Dedupe + Web Enrichment + Siti Verification
 
+**Status: COMPLETE — GEO INTELLIGENCE RESEARCH PIPELINE VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.7.1-GEO-INTELLIGENCE.md`
+
 Goal: produce provenance-aware business profiles from incomplete discovery.
 
 Deliverables:
@@ -490,6 +493,8 @@ Deliverables:
 - CSV/XLSX/report/evidence pack.
 
 Exit gate: duplicates reconcile with provenance preserved and scoring rationale is inspectable.
+
+Closure: PASS for deterministic repository delivery. Search expansion is bounded and validated through CHAT 23 Geo Core; adaptive expansion remains proposal/review-only; identity resolution never auto-merges fuzzy-name-only records and treats different non-empty Place IDs as a hard conflict; public enrichment is HTTP/HTTPS public/no-auth/read-only with private-network, credential, access-bypass, response-size, timeout, and source-count guards; conflicting claims remain explicit with provenance; scoring is versioned/explainable and every positive point requires evidence; Siti uses the canonical RESEARCH verifier with trusted artifact evidence refs and exact profile/score binding; final exports require Siti PASS by default and produce CSV/XLSX/Markdown/JSON evidence artifacts without raw provider/page content. Targeted Geo Intelligence suite passed 15/15 and implementation-head verify #708 passed Ubuntu, Windows, and minimum versions. No live exhaustive web/Places discovery, CRM mutation, or outreach claim is made.
 
 ### CHAT 25 — Map Missions + CRM-Ready Lead Intelligence
 
