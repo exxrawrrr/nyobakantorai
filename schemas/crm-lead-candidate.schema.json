@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/crm-lead-candidate.schema.json",
+  "title": "nyobakantorai CRM Lead Candidate v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "crm_lead_id",
+    "profile_ref",
+    "verified_profile_ref",
+    "score",
+    "score_model",
+    "qualification_tier",
+    "verification_ref",
+    "source_refs",
+    "source_types",
+    "created_at",
+    "updated_at",
+    "external_write_state",
+    "completeness_claim",
+    "candidate_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "crm_lead_id": {
+      "type": "string",
+      "pattern": "^crm-lead-identity:sha256:[a-f0-9]{64}$"
+    },
+    "profile_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verified_profile_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "score_model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "qualification_tier": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "verification_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1
+    },
+    "source_types": {
+      "type": "array"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "external_write_state": {
+      "const": "NOT_WRITTEN"
+    },
+    "completeness_claim": {
+      "const": false
+    },
+    "candidate_ref": {
+      "type": "string",
+      "pattern": "^crm-lead-candidate:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
