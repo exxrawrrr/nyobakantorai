@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/browser-agent-policy.schema.json",
+  "title": "nyobakantorai Browser Agent Policy v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "action_modes",
+    "read_actions",
+    "mutation_actions",
+    "instruction_sources",
+    "flows",
+    "injection_policy",
+    "profile_policy",
+    "evidence_policy",
+    "claim_limit"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "action_modes": {
+      "const": [
+        "READ",
+        "MUTATION"
+      ]
+    },
+    "read_actions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "mutation_actions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "instruction_sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "USER",
+          "MISSION_PLAN",
+          "PAGE_CONTENT"
+        ]
+      }
+    },
+    "flows": {
+      "type": "object",
+      "required": [
+        "PUBLIC_RESEARCH",
+        "USER_OWNED_AUDIT",
+        "LOCALHOST_QA"
+      ]
+    },
+    "claim_limit": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
