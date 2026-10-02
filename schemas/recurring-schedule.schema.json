@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/recurring-schedule.schema.json",
+  "title": "nyobakantorai Recurring Schedule v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "schedule_id",
+    "objective",
+    "state",
+    "cadence",
+    "time_window",
+    "budget",
+    "risk_class",
+    "created_at",
+    "starts_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "schedule_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "ACTIVE",
+        "PAUSED",
+        "REVOKED",
+        "EXPIRED"
+      ]
+    },
+    "cadence": {
+      "type": "object",
+      "required": [
+        "frequency",
+        "interval",
+        "days_of_week"
+      ],
+      "properties": {
+        "frequency": {
+          "enum": [
+            "DAILY",
+            "WEEKLY"
+          ]
+        },
+        "interval": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "days_of_week": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "MO",
+              "TU",
+              "WE",
+              "TH",
+              "FR",
+              "SA",
+              "SU"
+            ]
+          }
+        }
+      }
+    },
+    "time_window": {
+      "type": "object",
+      "required": [
+        "start",
+        "end",
+        "timezone"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "pattern": "^([01]\\\\d|2[0-3]):[0-5]\\\\d$"
+        },
+        "end": {
+          "type": "string",
+          "pattern": "^([01]\\\\d|2[0-3]):[0-5]\\\\d$"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "risk_class": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "starts_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "max_runs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "schedule_ref": {
+      "type": "string",
+      "pattern": "^schedule:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
