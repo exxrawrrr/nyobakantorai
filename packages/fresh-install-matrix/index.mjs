@@ -6,6 +6,7 @@ import { buildEmployeePack, verifyEmployeePack } from "../../scripts/employee-pa
 import { planSelectedProfileActions, USER_OWNED_HERMES_STATE } from "../../scripts/hermes-bootstrap-plan.mjs";
 import { resolveEmployeeSelection } from "../../scripts/employee-selection.mjs";
 import { planSelectedProfileRemoval } from "../../scripts/hermes-remove-selected.mjs";
+import { materializeConfiguredUpgrades } from "../skills-store/index.mjs";
 
 const root=resolve(import.meta.dirname,"../..");
 const hashBuffer=(value)=>createHash("sha256").update(value).digest("hex");
@@ -239,6 +240,7 @@ export async function runSubsetFreshInstallMatrix({
 
   try{
     const registry=JSON.parse(await readFile(resolve(root,"config/employees.json"),"utf8"));
+    const skillStore=await materializeConfiguredUpgrades({root});
     const allIds=registry.employees.map(x=>x.id);
     const selectedIds=resolveEmployeeSelection(selection,allIds);
     if(selectedIds.length<2) throw new Error("subset matrix requires at least two selected employees");
@@ -266,9 +268,15 @@ export async function runSubsetFreshInstallMatrix({
       if(!packCheck.ok) throw new Error("employee pack failed verification before subset install: "+employeeId);
 
       const employee=registry.employees.find(x=>x.id===employeeId);
+      const effectiveEmployee=skillStore.upgraded.find(x=>x.id===employeeId);
+      const expectedAttachment=skillStore.attachments.find(x=>x.employee_id===employeeId);
+      if(!effectiveEmployee||!expectedAttachment) throw new Error("Skills Store state missing for subset employee: "+employeeId);
       const manifest=JSON.parse(await readFile(resolve(packDir,"employee-pack.json"),"utf8"));
-      const expectedSkills=[...employee.skills].sort();
+      const baselineSkills=[...employee.skills].sort();
+      const expectedSkills=[...effectiveEmployee.skills].sort();
       const declaredSkills=[...(manifest.skills||[])].sort();
+      const declaredBaseline=[...(manifest.baseline_skills||[])].sort();
+      const declaredAttachments=[...(manifest.skill_store_attachments||[])];
 
       await copyDistributionOwned(packDir,resolve(profilesDir,employeeId));
 
@@ -279,6 +287,14 @@ export async function runSubsetFreshInstallMatrix({
 
       const skillsExact=JSON.stringify(installedSkillEntries)===JSON.stringify(expectedSkills);
       const manifestSkillsExact=JSON.stringify(declaredSkills)===JSON.stringify(expectedSkills);
+      const baselineSkillsExact=JSON.stringify(declaredBaseline)===JSON.stringify(baselineSkills);
+      const skillStoreAttachmentExact=
+        declaredAttachments.length===1 &&
+        declaredAttachments[0].skill_id===expectedAttachment.skill_id &&
+        declaredAttachments[0].version===expectedAttachment.version &&
+        declaredAttachments[0].install_ref===expectedAttachment.install_ref &&
+        declaredAttachments[0].attachment_ref===expectedAttachment.attachment_ref &&
+        declaredAttachments[0].authority_effect==="NONE";
       const integrationsExact=
         JSON.stringify([...(manifest.optional_integrations||[])].sort())===
         JSON.stringify([...(employee.optional_integrations||[])].sort());
@@ -286,9 +302,14 @@ export async function runSubsetFreshInstallMatrix({
       capabilityIsolation.push(Object.freeze({
         employee_id:employeeId,
         installed_skills:Object.freeze(installedSkillEntries),
+        baseline_skills:Object.freeze(baselineSkills),
         expected_skills:Object.freeze(expectedSkills),
+        attached_skill:expectedAttachment.skill_id,
         skills_exact:skillsExact,
         manifest_skills_exact:manifestSkillsExact,
+        baseline_skills_exact:baselineSkillsExact,
+        skill_store_attachment_exact:skillStoreAttachmentExact,
+        skill_store_authority_effect:declaredAttachments[0]?.authority_effect||null,
         optional_integrations_exact:integrationsExact
       }));
       packResults.push(Object.freeze({
@@ -350,7 +371,14 @@ export async function runSubsetFreshInstallMatrix({
     }
 
     const removedProfileAbsent=!(await exists(resolve(profilesDir,removeEmployeeId)));
-    const isolationPassed=capabilityIsolation.every(x=>x.skills_exact&&x.manifest_skills_exact&&x.optional_integrations_exact);
+    const isolationPassed=capabilityIsolation.every(x=>
+      x.skills_exact &&
+      x.manifest_skills_exact &&
+      x.baseline_skills_exact &&
+      x.skill_store_attachment_exact &&
+      x.skill_store_authority_effect==="NONE" &&
+      x.optional_integrations_exact
+    );
     const survivorsPreserved=survivorsByteIdentical.every(x=>x.unchanged);
 
     const passed=
@@ -409,6 +437,7 @@ export async function runFullWorkforceFreshInstallMatrix({
 
   try{
     const registry=JSON.parse(await readFile(resolve(root,"config/employees.json"),"utf8"));
+    const skillStore=await materializeConfiguredUpgrades({root});
     const allIds=registry.employees.map(x=>x.id);
     const selectedIds=resolveEmployeeSelection("all",allIds);
     const expectedProfiles=[...allIds].sort();
@@ -449,9 +478,15 @@ export async function runFullWorkforceFreshInstallMatrix({
         throw new Error("employee pack failed verification before full install: "+employeeId);
       }
 
+      const effectiveEmployee=skillStore.upgraded.find(x=>x.id===employeeId);
+      const expectedAttachment=skillStore.attachments.find(x=>x.employee_id===employeeId);
+      if(!effectiveEmployee||!expectedAttachment) throw new Error("Skills Store state missing for full-workforce employee: "+employeeId);
       const manifest=JSON.parse(await readFile(resolve(packDir,"employee-pack.json"),"utf8"));
-      const expectedSkills=[...employee.skills].sort();
+      const baselineSkills=[...employee.skills].sort();
+      const expectedSkills=[...effectiveEmployee.skills].sort();
       const declaredSkills=[...(manifest.skills||[])].sort();
+      const declaredBaseline=[...(manifest.baseline_skills||[])].sort();
+      const declaredAttachments=[...(manifest.skill_store_attachments||[])];
       const expectedIntegrations=[...(employee.optional_integrations||[])].sort();
       const declaredIntegrations=[...(manifest.optional_integrations||[])].sort();
 
@@ -468,12 +503,24 @@ export async function runFullWorkforceFreshInstallMatrix({
         return distributionOwned.some(x=>x===literal||x.startsWith(literal+"/"));
       });
 
+      const skillStoreAttachmentExact=
+        declaredAttachments.length===1 &&
+        declaredAttachments[0].skill_id===expectedAttachment.skill_id &&
+        declaredAttachments[0].version===expectedAttachment.version &&
+        declaredAttachments[0].install_ref===expectedAttachment.install_ref &&
+        declaredAttachments[0].attachment_ref===expectedAttachment.attachment_ref &&
+        declaredAttachments[0].authority_effect==="NONE";
       capabilityIsolation.push(Object.freeze({
         employee_id:employeeId,
         installed_skills:Object.freeze(installedSkillEntries),
+        baseline_skills:Object.freeze(baselineSkills),
         expected_skills:Object.freeze(expectedSkills),
+        attached_skill:expectedAttachment.skill_id,
         skills_exact:JSON.stringify(installedSkillEntries)===JSON.stringify(expectedSkills),
         manifest_skills_exact:JSON.stringify(declaredSkills)===JSON.stringify(expectedSkills),
+        baseline_skills_exact:JSON.stringify(declaredBaseline)===JSON.stringify(baselineSkills),
+        skill_store_attachment_exact:skillStoreAttachmentExact,
+        skill_store_authority_effect:declaredAttachments[0]?.authority_effect||null,
         optional_integrations_exact:JSON.stringify(declaredIntegrations)===JSON.stringify(expectedIntegrations),
         distribution_contains_user_owned_state:forbiddenGenerated.length>0
       }));
@@ -547,6 +594,9 @@ export async function runFullWorkforceFreshInstallMatrix({
     const capabilityIsolationPassed=capabilityIsolation.every(x=>
       x.skills_exact &&
       x.manifest_skills_exact &&
+      x.baseline_skills_exact &&
+      x.skill_store_attachment_exact &&
+      x.skill_store_authority_effect==="NONE" &&
       x.optional_integrations_exact &&
       !x.distribution_contains_user_owned_state
     );
@@ -628,6 +678,7 @@ export async function runUpgradeUninstallLifecycleMatrix({
 
   try{
     const registry=JSON.parse(await readFile(resolve(root,"config/employees.json"),"utf8"));
+    const skillStore=await materializeConfiguredUpgrades({root});
     const allIds=registry.employees.map(x=>x.id);
     const expectedProfiles=[...allIds].sort();
     if(!allIds.includes(removeEmployeeId)) throw new Error("removeEmployeeId must be a canonical employee");
