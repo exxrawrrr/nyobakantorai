@@ -654,6 +654,22 @@ export async function executeMissionPlan(planInput, {
   const aggregateEvidence = unique([...returns.flatMap((item) => item.evidence_refs), ...verificationEvidence]);
 
   let targetState = cancelRequested ? "CANCELLED" : missionTerminalState(finalTasks);
+  const finalCostSnapshot = costGovernor == null ? null : costGovernor.snapshot();
+  const finalCostIssues = finalCostSnapshot == null
+    ? []
+    : finalCostSnapshot.budget_state.filter((item) => item.hard_limit_breached || item.reconciliation_required);
+  if (!cancelRequested && targetState === "SUCCEEDED" && finalCostIssues.length) {
+    targetState = "PARTIAL";
+    events.push(event("MISSION_COST_RECONCILIATION_REQUIRED",clock,{
+      mission_id:mission.mission_id,
+      scopes:Object.freeze(finalCostIssues.map((item)=>Object.freeze({
+        kind:item.kind,
+        id:item.id,
+        hard_limit_breached:item.hard_limit_breached,
+        reconciliation_required:item.reconciliation_required,
+      }))),
+    }));
+  }
   if (mission.state === "RUNNING") {
     mission = transitionMission(mission, targetState, {
       clock,
