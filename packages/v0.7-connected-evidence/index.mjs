@@ -168,7 +168,9 @@ function buildScheduledMissionEvidence(config,costPolicy){
     result.cost_decision?.action==="ALLOW" &&
     result.mission_plan?.mission?.state==="PLANNED" &&
     result.mission_plan?.mission?.autonomy?.mode==="GUARDED" &&
-    observationIds.every((id)=>result.mission_plan.mission.required_evidence.includes(id));
+    Array.isArray(result.mission_plan?.node_meta) &&
+    result.mission_plan.node_meta.length>0 &&
+    observationIds.every((id)=>result.mission_plan.node_meta.every((meta)=>meta.required_evidence.includes(id)));
   return Object.freeze({
     status:pass?"PASS":"BLOCKED",
     schedule_ref:schedule.schedule_ref,
