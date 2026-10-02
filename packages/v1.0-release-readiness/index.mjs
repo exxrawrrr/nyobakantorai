@@ -11,6 +11,7 @@ const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 const sha40=(v)=>/^[a-f0-9]{40}$/.test(String(v??"").trim());
 const sha256=(v)=>/^[a-f0-9]{64}$/.test(String(v??"").trim());
 const contentRef=(prefix,v)=>new RegExp("^"+prefix+":sha256:[a-f0-9]{64}$").test(String(v??"").trim());
+const preV1Semver=(v)=>/^0\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/.test(String(v??"").trim());
 
 function assessRealWorld(status,baselinePolicy,policy){
   return Boolean(
@@ -78,6 +79,52 @@ function assessSecurity({sandbox,team,recovery,pkg,policy}){
   );
 }
 
+export function assessV1PromotionState({config,pkgVersion,decision}={}){
+  const errors=[];
+  const hold=config?.package_version_hold||{};
+  const promotion=config?.promotion||{};
+  const candidate=hold.candidate;
+  const highestPreV1=hold.highest_truthful_pre_v1;
+  const packageMatchesCandidate=pkgVersion===candidate;
+  const packageMatchesPreV1=pkgVersion===highestPreV1;
+
+  if(hold.current!==pkgVersion)errors.push("package version hold current does not match package.json.");
+  if(candidate!=="1.0.0")errors.push("package version hold candidate must be 1.0.0.");
+  if(!preV1Semver(highestPreV1))errors.push("highest truthful pre-v1 version must remain a 0.x semantic version.");
+
+  if(decision==="BLOCKED"){
+    if(!packageMatchesPreV1)errors.push("blocked release must remain on the highest truthful pre-v1 package version.");
+    if(hold.bump_authorized!==false)errors.push("package bump cannot be authorized while blocked.");
+    if(promotion.stable_tag_authorized!==false)errors.push("stable tag cannot be authorized while blocked.");
+    if(promotion.publication_authorized!==false)errors.push("publication cannot be authorized while blocked.");
+  }else if(decision==="READY"){
+    if(hold.bump_authorized!==true)errors.push("READY must authorize the candidate version bump.");
+    if(!packageMatchesCandidate&&(promotion.stable_tag_authorized===true||promotion.publication_authorized===true)){
+      errors.push("pre-bump READY cannot authorize stable tag or publication.");
+    }
+    if(packageMatchesCandidate){
+      if(promotion.stable_tag_authorized!==true)errors.push("candidate package requires stable tag authorization.");
+      if(promotion.publication_authorized!==true)errors.push("candidate package requires publication authorization.");
+    }
+  }
+
+  const promotionReady=Boolean(
+    errors.length===0 &&
+    decision==="READY" &&
+    packageMatchesCandidate &&
+    hold.bump_authorized===true &&
+    promotion.stable_tag_authorized===true &&
+    promotion.publication_authorized===true
+  );
+
+  return Object.freeze({
+    ok:errors.length===0,
+    errors:Object.freeze(errors),
+    package_matches_candidate:packageMatchesCandidate,
+    promotion_ready:promotionReady,
+  });
+}
+
 export async function assessV1ReleaseReadiness(config,{
   root=rootDefault,
   productionEvidenceOverride=null,
@@ -140,14 +187,10 @@ export async function assessV1ReleaseReadiness(config,{
   if(!same(config.evidence?.observed||{},components))errors.push("observed component status drift.");
   if(!same(configured,blockers))errors.push("release blocker drift.");
   if(config.decision!==decision)errors.push("decision drift.");
-  if(config.package_version_hold?.current!==pkg.version)errors.push("package version hold current does not match package.json.");
-  if(config.package_version_hold?.candidate!=="1.0.0")errors.push("package version hold candidate must be 1.0.0.");
-  if(config.package_version_hold?.highest_truthful_pre_v1!==pkg.version)errors.push("highest truthful pre-v1 version must match current stable package.");
-  if(decision==="BLOCKED"&&config.package_version_hold?.bump_authorized!==false)errors.push("package bump cannot be authorized while blocked.");
-  if(decision==="BLOCKED"&&config.promotion?.stable_tag_authorized!==false)errors.push("stable tag cannot be authorized while blocked.");
-  if(decision==="BLOCKED"&&config.promotion?.publication_authorized!==false)errors.push("publication cannot be authorized while blocked.");
   if(decision==="BLOCKED"&&manual.decision==="GO")errors.push("manual GO cannot override technical blockers.");
-  if(decision==="READY"&&pkg.version!=="1.0.0")errors.push("READY requires package.json version 1.0.0.");
+
+  const promotionState=assessV1PromotionState({config,pkgVersion:pkg.version,decision});
+  errors.push(...promotionState.errors);
 
   const post=productionEvidence?.post_release||{};
   if(decision==="BLOCKED"){
@@ -160,6 +203,7 @@ export async function assessV1ReleaseReadiness(config,{
     errors:Object.freeze(errors),
     decision,
     production_decision:productionDecision,
+    promotion_ready:promotionState.promotion_ready,
     components,
     blockers:Object.freeze(blockers),
     canonical:Object.freeze({
@@ -181,6 +225,7 @@ export function buildV1ReadinessSnapshot({config,assessment}={}){
     candidate:"v1.0.0",
     production_decision:assessment.production_decision,
     decision:assessment.decision,
+    promotion_ready:assessment.promotion_ready,
     blocker_count:assessment.blockers.length,
     blockers:assessment.blockers,
     components:assessment.components,
