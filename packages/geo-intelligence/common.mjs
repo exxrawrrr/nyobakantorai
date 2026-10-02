@@ -18,8 +18,7 @@ export function iso(v,label="timestamp"){
 export function freeze(value){
   if(Array.isArray(value)) return Object.freeze(value.map(freeze));
   if(value&&typeof value==="object"){
-    for(const key of Object.keys(value)) value[key]=freeze(value[key]);
-    return Object.freeze(value);
+    return Object.freeze(Object.fromEntries(Object.entries(value).map(([key,item])=>[key,freeze(item)])));
   }
   return value;
 }
