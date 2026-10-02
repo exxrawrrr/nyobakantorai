@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "policy_id": "map-mission-crm-policy-v1",
+  "version": "1.0.0",
+  "map_mission": {
+    "max_profiles": 250,
+    "max_features": 250,
+    "qualification_tiers": [
+      {
+        "id": "A",
+        "min_score": 80,
+        "label": "High priority"
+      },
+      {
+        "id": "B",
+        "min_score": 60,
+        "label": "Qualified"
+      },
+      {
+        "id": "C",
+        "min_score": 40,
+        "label": "Watch / nurture"
+      },
+      {
+        "id": "D",
+        "min_score": 0,
+        "label": "Low priority"
+      }
+    ],
+    "require_verified_profiles": true,
+    "completeness_claim_allowed": false,
+    "provider_location_retention": "EPHEMERAL_PRESENTATION_ONLY",
+    "public_location_retention": "DURABLE_IF_SOURCE_POLICY_ALLOWS",
+    "google_maps_attribution_required_for_google_provider_features": true
+  },
+  "crm": {
+    "require_siti_verified": true,
+    "allowed_fields": [
+      "crm_lead_id",
+      "profile_ref",
+      "verified_profile_ref",
+      "place_id",
+      "name",
+      "website",
+      "business_type",
+      "phone",
+      "email",
+      "address",
+      "score",
+      "score_model",
+      "qualification_tier",
+      "verification_ref",
+      "source_refs",
+      "source_types",
+      "created_at",
+      "updated_at"
+    ],
+    "forbidden_fields": [
+      "provider_raw_payload",
+      "ephemeral_provider_content",
+      "provider_coordinates",
+      "google_maps_uri",
+      "reviews",
+      "photos",
+      "next_page_token",
+      "provider_attributions"
+    ],
+    "external_write_default": "BLOCKED",
+    "write_action": "crm.import",
+    "write_risk_class": "EXTERNAL_WRITE"
+  },
+  "monitoring": {
+    "min_interval_days": 1,
+    "max_interval_days": 90,
+    "max_entries": 500,
+    "max_runs": 90,
+    "max_hard_limit_per_run": 2,
+    "currency": "USD",
+    "raw_provider_content_persistence_allowed": false,
+    "allowed_baseline_fields": [
+      "name",
+      "website",
+      "business_type",
+      "phone",
+      "email",
+      "address",
+      "score",
+      "qualification_tier"
+    ],
+    "place_id_refresh_profile": "PLACE_DETAILS_ID_REFRESH",
+    "require_normal_scheduler": true,
+    "require_cost_governor": true
+  },
+  "competitor_radar": {
+    "max_entities": 200,
+    "allowed_roles": [
+      "COMPETITOR",
+      "TARGET",
+      "PARTNER",
+      "UNKNOWN"
+    ],
+    "competitor_classification_requires_evidence": true,
+    "require_verified_profiles": true
+  },
+  "territory_planning": {
+    "max_territories": 25,
+    "max_profiles_per_territory": 250,
+    "require_explicit_rectangles": true,
+    "require_bounded_geo_core_area": true,
+    "completeness_claim_allowed": false
+  },
+  "outreach": {
+    "allowed_channels": [
+      "EMAIL",
+      "WHATSAPP",
+      "LINKEDIN",
+      "OTHER"
+    ],
+    "artifact_state": "DRAFT_ONLY",
+    "automatic_send_allowed": false,
+    "external_send_risk_class": "EXTERNAL_WRITE",
+    "approval_action_prefix": "outreach.send.",
+    "require_verified_crm_candidate": true
+  },
+  "claim_boundary": "Map missions, CRM-ready exports, watchlists, competitor radar, and territory plans describe verified observed data only. No automatic outreach, no provider-policy bypass, and no exhaustive coverage claim."
+}
