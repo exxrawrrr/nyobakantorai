@@ -95,10 +95,21 @@
   },
   "scheduled_mission_evidence": {
     "required": true,
-    "state": "PENDING_REPOSITORY_MATERIALIZATION"
+    "state": "PASS_REPOSITORY_MATERIALIZATION",
+    "evidence_type": "repository-executable",
+    "binds_live_observations": [
+      "github-user-repo-read",
+      "google-drive-metadata-read"
+    ],
+    "production_daemon_delivery_claim": false,
+    "evaluator": "packages/v0.7-connected-evidence/index.mjs"
   },
   "connector_revocation_evidence": {
     "required": true,
-    "state": "PENDING_REPOSITORY_MATERIALIZATION"
+    "state": "PASS_APPLICATION_LEVEL",
+    "evidence_type": "repository-executable",
+    "post_revocation_reason": "CONNECTOR_REVOKED",
+    "upstream_provider_credential_revocation_claim": false,
+    "evaluator": "packages/v0.7-connected-evidence/index.mjs"
   }
 }
