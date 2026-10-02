@@ -358,6 +358,9 @@ Closure: PASS for release-gate implementation. The four v0.6.1 reliability compo
 
 ### CHAT 18 — Connector Center + Least-Privilege Grants
 
+**Status: COMPLETE — CONNECTOR CENTER / LEAST-PRIVILEGE GRANTS VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.7-CONNECTOR-CENTER.md`
+
 Goal: establish a canonical external-integration lifecycle.
 
 Deliverables:
@@ -369,6 +372,8 @@ Deliverables:
 - at least one practical read-only connector using an already supported provider where possible.
 
 Exit gate: `CONNECTED` never means universal access and revocation blocks future use.
+
+Closure: PASS for repository delivery. Connector Center keeps default state NOT_CONNECTED, requires exact employee/capability/action/resource grants, rejects wildcard resources and raw credential material, and uses only credential references. Disconnect, connection expiry, terminal revocation, grant expiry, and grant revocation all block future use. Historical CONNECTED snapshots cannot override newer DISCONNECTED/REVOKED snapshots. Targeted Connector Center suite passed 16/16; implementation-head PR verify #657 passed Ubuntu, Windows, and minimum versions.
 
 ### CHAT 19 — Browser Agent
 
