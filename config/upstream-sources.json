@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "reviewed_at": "2026-09-29",
+  "reviewed_at": "2026-10-02",
   "policy": "Prefer recreated/adapted concepts with explicit attribution. Vendor upstream text/code only when the specific license permits it and notices are preserved.",
   "sources": [
     {
@@ -299,6 +299,62 @@
         "non-interactive prompt execution",
         "JSONL output contract"
       ]
+    },
+    {
+      "id": "google-maps-services-js",
+      "name": "Google Maps Services Node.js Client",
+      "repo": "https://github.com/googlemaps/google-maps-services-js",
+      "commit": "0c3fc50b7e6a378c55d07f14d8a8ec1f2a3102be",
+      "license": "Apache-2.0",
+      "usage_mode": "architecture-reference",
+      "used_for": [
+        "server-side Google Maps request discipline",
+        "API-key restriction and secret-handling reference",
+        "transport timeout/request-shape reference"
+      ],
+      "note": "Architecture reference only. CHAT 23/24 target Places API (New) policy contracts; legacy Places interfaces from this repo are not copied."
+    },
+    {
+      "id": "gosom-google-maps-scraper",
+      "name": "gosom Google Maps Scraper",
+      "repo": "https://github.com/gosom/google-maps-scraper",
+      "commit": "d0b51bcf3cd56d9a3f71e049cb6e226554e24162",
+      "license": "MIT",
+      "usage_mode": "architecture-reference-no-vendoring",
+      "used_for": [
+        "query/task expansion architecture",
+        "structured local-business result/export workflow",
+        "bounded agent-driven validation before larger searches"
+      ],
+      "note": "Reference does not authorize or enable Google Maps UI scraping in nyobakantorai. Default implementation remains policy-aware Google Places plus bounded public-source enrichment."
+    },
+    {
+      "id": "dedupeio-dedupe",
+      "name": "Dedupe",
+      "repo": "https://github.com/dedupeio/dedupe",
+      "commit": "3f61e79102910bd355e920a2df7e44c14c9cb247",
+      "license": "MIT",
+      "usage_mode": "recreated-concepts",
+      "used_for": [
+        "entity-resolution architecture",
+        "record-linkage comparison features",
+        "candidate clustering and review discipline"
+      ],
+      "note": "CHAT 24 uses a deterministic conservative policy model rather than copying Dedupe's ML implementation."
+    },
+    {
+      "id": "projectdiscovery-katana",
+      "name": "ProjectDiscovery Katana",
+      "repo": "https://github.com/projectdiscovery/katana",
+      "commit": "04a51b81beae4891f41d472adbdd3cd8be662ed9",
+      "license": "MIT",
+      "usage_mode": "recreated-concepts",
+      "used_for": [
+        "crawler scope-control architecture",
+        "bounded depth/duration/response-size thinking",
+        "URL filtering and crawl-output discipline"
+      ],
+      "note": "CHAT 24 does not vendor Katana or perform authenticated/private crawling. Enrichment remains public/no-auth/read-only and rejects private-network targets."
     }
   ]
 }
