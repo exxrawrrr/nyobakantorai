@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/workforce-capability-loop.schema.json",
+  "title": "nyobakantorai Workforce Capability Loops v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "workforce_size",
+    "rule",
+    "loops"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "workforce_size": {
+      "const": 16
+    },
+    "rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "loops": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "employee_id",
+          "focus",
+          "observe",
+          "practice",
+          "measure",
+          "recommended_upgrade_skill"
+        ],
+        "properties": {
+          "employee_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "focus": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observe": {
+            "type": "string",
+            "minLength": 1
+          },
+          "practice": {
+            "type": "string",
+            "minLength": 1
+          },
+          "measure": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recommended_upgrade_skill": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
