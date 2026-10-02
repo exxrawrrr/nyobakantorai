@@ -211,3 +211,34 @@ MUTATION additionally requires a WRITE route, human approval evidence, pre-actio
 Browser profiles are disposable, cannot reuse the user's normal browser profile, cannot inherit cookies, and must be explicitly cleaned up.
 
 See `docs/V0.7-BROWSER-AGENT.md`.
+
+
+## Skills Store authority boundary (CHAT 21)
+
+Reusable skills are procedural capability, not authority.
+
+```text
+skill catalog
+  -> owner-reviewed installation
+  -> owner-reviewed attachment
+  -> effective employee procedures
+  != connector/tool/provider permission
+```
+
+Skill installation and attachment must preserve the employee's existing:
+
+- capability scope;
+- preferred toolsets;
+- external capabilities;
+- optional integrations;
+- approval policy;
+- verification policy;
+- memory boundary.
+
+The Skills Store rejects attempts to smuggle connector grants, capability grants, toolsets, permissions, autonomy changes, or approval-policy changes into install/attach input.
+
+All 16 current employees have one capability loop and one reviewed upgrade attachment. These upgrades improve procedures without widening the authority graph.
+
+New headcount now requires a documented capability gap after considering whether an existing employee can be upgraded through reusable skills.
+
+See `docs/V0.7-SKILLS-STORE.md`.
