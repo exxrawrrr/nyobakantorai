@@ -254,6 +254,8 @@ function planPayload(input){
     flow:input.flow,
     scope_ref:input.scope_ref,
     allowed_origin:input.allowed_origin,
+    ownership_evidence_ref:input.ownership_evidence_ref,
+    scope_expires_at:input.scope_expires_at,
     action:input.action,
     connector_route_ref:input.connector_route_ref,
     capability_route_ref:input.capability_route_ref,
@@ -339,6 +341,8 @@ export function authorizeBrowserAction({
     flow:scope.flow,
     scope_ref:scope.scope_ref,
     allowed_origin:normalizedAction.origin,
+    ownership_evidence_ref:scope.ownership_evidence_ref,
+    scope_expires_at:scope.expires_at,
     action:normalizedAction,
     connector_route_ref:connectorRoute.connector_route_ref,
     capability_route_ref:capabilityRoute.capability_route_ref,
@@ -359,6 +363,9 @@ export function validateBrowserActionPlan(plan={}){
   const expected=contentRef("browser-action-plan:sha256:",planPayload(plan));
   assert(expected===plan.plan_ref,"Browser action plan_ref checksum mismatch.");
   assert(plan.action?.mode==="READ"||plan.action?.mode==="MUTATION","Browser action plan mode is invalid.");
+  assert(plan.action?.origin===plan.allowed_origin,"Browser action plan origin mismatch.");
+  if(plan.flow==="USER_OWNED_AUDIT") assert(nonEmpty(plan.ownership_evidence_ref),"Browser user-owned audit plan requires ownership evidence.");
+  if(plan.scope_expires_at!=null) assert(validTime(plan.scope_expires_at),"Browser action plan scope expiry is invalid.");
   if(plan.action.mode==="MUTATION") assert(nonEmpty(plan.approval_ref),"Browser mutation plan requires approval_ref.");
   return true;
 }
@@ -526,14 +533,24 @@ export function verifyBrowserActionRecord(record,{plan}={}){
     if(expected!==record.action_record_ref) errors.push("Browser action_record_ref checksum mismatch.");
   }
   if(plan?.plan_ref!==record?.plan_ref) errors.push("Browser record plan_ref mismatch.");
-  if(plan?.profile_ref!=null&&plan.profile_ref!==record?.profile_ref) errors.push("Browser record profile_ref mismatch.");
   if(plan?.connector_route_ref!==record?.connector_route_ref) errors.push("Browser record connector_route_ref mismatch.");
   if(plan?.capability_route_ref!==record?.capability_route_ref) errors.push("Browser record capability_route_ref mismatch.");
+  if(plan?.flow!==record?.flow) errors.push("Browser record flow mismatch.");
+  if(plan?.approval_ref!==record?.approval_ref) errors.push("Browser record approval_ref mismatch.");
   if(JSON.stringify(plan?.action)!==JSON.stringify(record?.action)) errors.push("Browser record action mismatch.");
+  if(!/^browser-profile:sha256:[a-f0-9]{64}$/.test(clean(record?.profile_ref,200))) errors.push("Browser record profile_ref is invalid.");
+  if(!/^[a-f0-9]{64}$/.test(clean(record?.observed_text_sha256,80))) errors.push("Browser record observed_text_sha256 is invalid.");
+  if(!["EXECUTED","FAILED","PARTIAL"].includes(record?.status)) errors.push("Browser record status is invalid.");
   if(!validTime(record?.started_at)||!validTime(record?.completed_at)) errors.push("Browser record timestamps invalid.");
   else if(Date.parse(record.completed_at)<Date.parse(record.started_at)) errors.push("Browser record completed_at precedes started_at.");
   try{ normalizeOpaqueRef(record?.provider_evidence_ref,"Browser provider_evidence_ref"); }
   catch(error){ errors.push(error.message); }
+  try{
+    const before=normalizeUrl(record?.before_url,"Browser record before_url");
+    const after=normalizeUrl(record?.after_url,"Browser record after_url");
+    if(before.origin!==plan?.allowed_origin) errors.push("Browser record before_url escaped authorized origin.");
+    if(after.origin!==plan?.allowed_origin) errors.push("Browser record after_url escaped authorized origin.");
+  }catch(error){ errors.push(error.message); }
 
   if(record?.action?.mode==="READ"&&record?.external_mutation_observed===true) errors.push("Browser READ record cannot contain external mutation.");
   if(record?.action?.mode==="MUTATION"){
