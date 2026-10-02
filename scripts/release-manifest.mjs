@@ -7,7 +7,7 @@ import { buildReleaseClaimSnapshot } from "../packages/release-claims/index.mjs"
 import { buildDeferredEvidenceSnapshot, validateDeferredEvidenceLedger } from "../packages/release-claims/deferred-evidence.mjs";
 import { buildEvidenceClassificationSnapshot, validateEvidenceInventory } from "../packages/evidence-classification/index.mjs";
 import { buildMaturitySnapshot, validateMaturityModel } from "../packages/maturity-model/index.mjs";
-import { buildV05ReadinessSnapshot, readAndAssessV05ReleaseReadiness } from "../packages/release-readiness/index.mjs";
+import { buildV05ReadinessSnapshot, readAndAssessV05ReleaseReadiness, buildV06ReadinessSnapshot, readAndAssessV06ReleaseReadiness } from "../packages/release-readiness/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const outPath = resolve(root, "release", "manifest.json");
@@ -61,6 +61,9 @@ const claims = buildReleaseClaimSnapshot(evaluationReport,{deferredEvidence,evid
 const {config:v05ReadinessConfig,assessment:v05ReadinessAssessment}=await readAndAssessV05ReleaseReadiness({root});
 if(!v05ReadinessAssessment.ok) throw new Error("v0.5 readiness invalid: "+v05ReadinessAssessment.errors.join("; "));
 const v05Readiness=buildV05ReadinessSnapshot({config:v05ReadinessConfig,assessment:v05ReadinessAssessment});
+const {config:v06ReadinessConfig,assessment:v06ReadinessAssessment}=await readAndAssessV06ReleaseReadiness({root});
+if(!v06ReadinessAssessment.ok) throw new Error("v0.6 readiness invalid: "+v06ReadinessAssessment.errors.join("; "));
+const v06Readiness=buildV06ReadinessSnapshot({config:v06ReadinessConfig,assessment:v06ReadinessAssessment});
 const manifest = {
   schema: 1,
   project: pkg.name,
@@ -68,12 +71,13 @@ const manifest = {
   commit,
   claims,
   v0_5_readiness:v05Readiness,
+  v0_6_readiness:v06Readiness,
   tracked_files: files.length,
   files,
 };
 
 if (check) {
-  console.log(`Release manifest check passed: ${files.length} files @ ${commit.slice(0, 12)} · live_evaluation_complete=${claims.live_evaluation_complete} · deferred=${claims.deferred_evidence?.open_blockers ?? "n/a"} · behavior=${claims.maturity?.dimensions?.behavioral_evidence ?? "n/a"} · portability=${claims.evidence_inventory?.claims?.["reference-case-portability"]?.status ?? "n/a"} · v0.5_readiness=${v05Readiness.decision}(${v05Readiness.blocker_count})`);
+  console.log(`Release manifest check passed: ${files.length} files @ ${commit.slice(0, 12)} · live_evaluation_complete=${claims.live_evaluation_complete} · deferred=${claims.deferred_evidence?.open_blockers ?? "n/a"} · behavior=${claims.maturity?.dimensions?.behavioral_evidence ?? "n/a"} · portability=${claims.evidence_inventory?.claims?.["reference-case-portability"]?.status ?? "n/a"} · v0.5_readiness=${v05Readiness.decision}(${v05Readiness.blocker_count}) · v0.6_readiness=${v06Readiness.decision}(${v06Readiness.blocker_count})`);
 } else {
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, JSON.stringify(manifest, null, 2) + "\n");
