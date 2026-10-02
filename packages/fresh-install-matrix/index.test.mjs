@@ -90,6 +90,20 @@ test("subset capability isolation preserves worker-specific skill closures witho
   assert.equal(byId.get("siti").installed_skills.includes("nyoba-automation-queue"),false);
   assert.ok(byId.get("siti").installed_skills.includes("nyoba-independent-qa"));
   assert.equal(byId.get("subagjo").installed_skills.includes("nyoba-independent-qa"),false);
+
+  // CHAT 21 Skills Store overlays remain employee-specific rather than becoming a subset union.
+  assert.equal(byId.get("subagjo").attached_skill,"nyoba-source-provenance");
+  assert.equal(byId.get("siti").attached_skill,"nyoba-research-synthesis");
+  assert.equal(byId.get("bimo").attached_skill,"nyoba-source-provenance");
+  assert.ok(byId.get("subagjo").installed_skills.includes("nyoba-source-provenance"));
+  assert.ok(byId.get("siti").installed_skills.includes("nyoba-research-synthesis"));
+  assert.equal(byId.get("subagjo").installed_skills.includes("nyoba-research-synthesis"),false);
+  assert.equal(byId.get("bimo").installed_skills.includes("nyoba-research-synthesis"),false);
+  for(const item of byId.values()){
+    assert.equal(item.baseline_skills_exact,true,item.employee_id);
+    assert.equal(item.skill_store_attachment_exact,true,item.employee_id);
+    assert.equal(item.skill_store_authority_effect,"NONE",item.employee_id);
+  }
 });
 
 test("custom two-worker subset removal preserves the non-removed profile byte-for-byte",async()=>{
@@ -155,6 +169,11 @@ test("full workforce matrix verifies every worker's exact skill and integration 
   for(const item of result.capability_isolation){
     assert.equal(item.skills_exact,true,item.employee_id);
     assert.equal(item.manifest_skills_exact,true,item.employee_id);
+    assert.equal(item.baseline_skills_exact,true,item.employee_id);
+    assert.equal(item.skill_store_attachment_exact,true,item.employee_id);
+    assert.equal(item.skill_store_authority_effect,"NONE",item.employee_id);
+    assert.equal(item.expected_skills.length,item.baseline_skills.length+1,item.employee_id);
+    assert.ok(item.expected_skills.includes(item.attached_skill),item.employee_id);
     assert.equal(item.optional_integrations_exact,true,item.employee_id);
     assert.equal(item.distribution_contains_user_owned_state,false,item.employee_id);
   }

@@ -149,3 +149,30 @@ It still does **not** claim identical runtime behavior across them. Runtime acti
 - model behavior.
 
 A future live compatibility evaluation must actually install/activate representative skills in each external harness before the project claims behavioral parity.
+
+
+## Skills Store lifecycle (CHAT 21)
+
+Canonical skill packaging is now consumed through the Skills Store layer in `packages/skills-store/`.
+
+The lifecycle is:
+
+```text
+canonical SKILL.md
+  -> catalog (version + SHA-256 + provenance)
+  -> owner-reviewed install
+  -> owner-reviewed employee attachment
+  -> effective procedural skill set
+```
+
+Installation/attachment records are content-addressed and carry `authority_effect: NONE`.
+
+A skill attachment never changes connector grants, capability scope, toolsets, external capabilities, approval policy, or runtime/provider state.
+
+Configured CHAT 21 attachments are listed in `config/skill-store-attachments.json` and audited by:
+
+```bash
+npm run skills:store:check
+```
+
+See `docs/V0.7-SKILLS-STORE.md`.

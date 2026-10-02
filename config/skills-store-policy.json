@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "catalog_root": "skills/canonical",
+  "version_source": "metadata.nyoba-version",
+  "provenance_source": "config/skill-provenance.json",
+  "install_actors": [
+    "owner"
+  ],
+  "attach_actors": [
+    "owner"
+  ],
+  "authority_effect": "NONE",
+  "exact_version_pin_required": true,
+  "content_hash_required": true,
+  "self_install_forbidden": true,
+  "self_attach_forbidden": true,
+  "attachment_must_preserve": [
+    "operational_contract.capability_scope",
+    "preferred_toolsets",
+    "external_capabilities",
+    "optional_integrations",
+    "approval_policy",
+    "verification_policy",
+    "memory_boundary"
+  ],
+  "employee_addition": {
+    "capability_gap_required": true,
+    "minimum_gap_length": 24,
+    "rule": "Add headcount only after documenting a role/capability gap that is not solved merely by attaching an existing reusable skill to an existing employee."
+  },
+  "claim_boundary": "Installed or attached skill means procedural availability only. It never proves tool installation, connector connection, provider authorization, execution, success, or verification."
+}

@@ -78,7 +78,13 @@ Default output:
 dist/employees/<employee-id>/
 ```
 
-Each directory is a standalone Hermes distribution plus pack metadata:
+Each directory is a standalone Hermes distribution plus pack metadata.
+
+CHAT 21 applies owner-reviewed Skills Store attachments as a **procedural overlay** during pack build. The canonical employee registry remains the baseline authority source; attached skills do not modify connector grants, capability scope, toolsets, approval policy, or external-account access.
+
+The pack manifest records both `baseline_skills` and effective `skills`, plus `skill_store_attachments` with immutable install/attachment refs and `authority_effect: NONE`.
+
+
 
 ```text
 SOUL.md
@@ -198,3 +204,14 @@ The removal script:
 - fails closed if any selected profile still exists.
 
 This is intentionally not an automatic uninstall step inside the normal installer.
+
+
+## Skills Store upgrade overlay
+
+The current 16 employees receive one reviewed capability-loop skill attachment each from `config/skill-store-attachments.json`.
+
+Pack generation copies the corresponding canonical skill into the standalone pack and records the attachment provenance. This is a procedural upgrade only.
+
+Installing a pack still does **not** connect Playwright, Google Ads, Meta Ads, or any other provider, and it does not create or widen resource grants.
+
+See `docs/V0.7-SKILLS-STORE.md`.

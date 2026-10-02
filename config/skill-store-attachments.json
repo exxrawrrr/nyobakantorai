@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "approved_by": "owner",
+  "approved_at": "2026-10-02T07:05:00.000Z",
+  "evidence_ref": "chat21:capability-loop-upgrade",
+  "attachments": [
+    {
+      "employee_id": "praroro",
+      "skill_id": "nyoba-follow-up",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "paijo",
+      "skill_id": "nyoba-source-provenance",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "subagjo",
+      "skill_id": "nyoba-source-provenance",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "alex",
+      "skill_id": "nyoba-verification-before-completion",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "sumiati",
+      "skill_id": "nyoba-plan-execute-review",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "siti",
+      "skill_id": "nyoba-research-synthesis",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "maya",
+      "skill_id": "nyoba-kpi-analysis",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "gugun",
+      "skill_id": "nyoba-experiment-design",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "ratri",
+      "skill_id": "nyoba-research-synthesis",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "bimo",
+      "skill_id": "nyoba-source-provenance",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "nara",
+      "skill_id": "nyoba-source-provenance",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "dina",
+      "skill_id": "nyoba-verification-before-completion",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "bambang",
+      "skill_id": "nyoba-verification-before-completion",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "fikri",
+      "skill_id": "nyoba-verification-before-completion",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "tari",
+      "skill_id": "nyoba-source-provenance",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    },
+    {
+      "employee_id": "caca",
+      "skill_id": "nyoba-verification-before-completion",
+      "version": "1.0.0",
+      "source": "CHAT_21_CAPABILITY_LOOP",
+      "authority_effect": "NONE"
+    }
+  ]
+}

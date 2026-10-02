@@ -415,6 +415,9 @@ Closure: PASS for repository delivery. Recurring triggers are timezone/cadence/e
 
 ### CHAT 21 — Skills Store + 16-Employee Capability Upgrade
 
+**Status: COMPLETE — SKILLS STORE / 16-EMPLOYEE CAPABILITY UPGRADE VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.7-SKILLS-STORE.md`
+
 Goal: make the current workforce modular and more capable before adding headcount.
 
 Deliverables:
@@ -425,6 +428,8 @@ Deliverables:
 - no self-granted tools/permissions.
 
 Exit gate: reusable skills extend existing employees without implicitly granting connector authority.
+
+Closure: PASS for repository delivery. Skills Store catalog/install/attach records are exact-version, hash/provenance-backed, owner-reviewed, and `authority_effect: NONE`; self-install/self-attach and authority-field injection fail closed. Capability loops cover all 16 employees exactly once and configured upgrades add exactly one effective procedural skill per employee while preserving capability scope, toolsets, connector-related fields, approval policy, verification policy, and memory boundary. Employee packs/fresh-install matrices verify the overlay without union leakage. Employee #17 now requires a documented capability gap. Targeted Skills Store suite passed 9/9; fresh-install matrix passed 14/14; implementation-head PR verify #686 passed Ubuntu, Windows, and minimum versions.
 
 ### CHAT 22 — Connected Workflow Live Evidence + v0.7.0 Release
 

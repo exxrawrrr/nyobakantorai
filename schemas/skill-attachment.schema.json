@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/skill-attachment.schema.json",
+  "title": "nyobakantorai Skill Attachment v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "employee_id",
+    "skill_id",
+    "version",
+    "install_ref",
+    "attached_by",
+    "attached_at",
+    "evidence_ref",
+    "authority_effect",
+    "authority_snapshot_sha256",
+    "attachment_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "employee_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+    },
+    "skill_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,99}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "install_ref": {
+      "type": "string",
+      "pattern": "^skill-install:sha256:[a-f0-9]{64}$"
+    },
+    "attached_by": {
+      "const": "owner"
+    },
+    "attached_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evidence_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority_effect": {
+      "const": "NONE"
+    },
+    "authority_snapshot_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "attachment_ref": {
+      "type": "string",
+      "pattern": "^skill-attachment:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
