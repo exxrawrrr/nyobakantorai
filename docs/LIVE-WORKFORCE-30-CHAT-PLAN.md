@@ -262,6 +262,9 @@ Closure: PASS for CHAT 12 itself. Machine-readable readiness computes BLOCKED fr
 
 ### CHAT 13 — Full Cost Governor
 
+**Status: IMPLEMENTED — FINAL REPOSITORY VERIFICATION PENDING — 2026-10-02.**
+Implementation/status: `docs/V0.6.1-COST-GOVERNOR.md`
+
 Goal: make spend an operational control rather than telemetry only.
 
 Deliverables:
