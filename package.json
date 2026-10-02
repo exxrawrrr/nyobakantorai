@@ -121,7 +121,7 @@
     "maturity:check": "node scripts/maturity-model.mjs --check",
     "test:complexity-budget": "node --test packages/complexity-budget/index.test.mjs",
     "complexity:check": "node scripts/complexity-budget.mjs --check",
-    "test:release-readiness": "node --test packages/release-readiness/index.test.mjs packages/release-readiness/v0.6.test.mjs packages/release-readiness/v0.6.1.test.mjs packages/v0.7-release-readiness/index.test.mjs packages/v0.7.1-release-readiness/index.test.mjs packages/v0.8-release-readiness/index.test.mjs packages/v0.8.1-release-readiness/index.test.mjs packages/v0.9-release-readiness/index.test.mjs",
+    "test:release-readiness": "node --test packages/release-readiness/index.test.mjs packages/release-readiness/v0.6.test.mjs packages/release-readiness/v0.6.1.test.mjs packages/v0.7-release-readiness/index.test.mjs packages/v0.7.1-release-readiness/index.test.mjs packages/v0.8-release-readiness/index.test.mjs packages/v0.8.1-release-readiness/index.test.mjs packages/v0.9-release-readiness/index.test.mjs packages/v1.0-release-readiness/index.test.mjs",
     "v0.5:readiness:check": "node scripts/v0.5-release-readiness.mjs",
     "v0.5:readiness:require-ready": "node scripts/v0.5-release-readiness.mjs --require-ready",
     "test:portability-run-verifier": "python reference-verifier/python/test_portability_run_verifier.py",
@@ -173,6 +173,9 @@
     "test:team-office": "node --test packages/team-office/index.test.mjs",
     "test:v0.9-release-readiness": "node --test packages/v0.9-release-readiness/index.test.mjs",
     "v0.9:readiness:check": "node scripts/v0.9-release-readiness.mjs",
-    "v0.9:readiness:require-ready": "node scripts/v0.9-release-readiness.mjs --require-ready"
+    "v0.9:readiness:require-ready": "node scripts/v0.9-release-readiness.mjs --require-ready",
+    "test:v1-release-readiness": "node --test packages/v1.0-release-readiness/index.test.mjs",
+    "v1.0:readiness:check": "node scripts/v1.0-release-readiness.mjs",
+    "v1.0:readiness:require-ready": "node scripts/v1.0-release-readiness.mjs --require-ready"
   }
 }
