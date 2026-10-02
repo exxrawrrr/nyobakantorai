@@ -24,6 +24,21 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -r requirements-dev.txt
+
+      - name: Verify release tag matches package version
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          expected="v$(node -p "require('./package.json').version")"
+          test "$GITHUB_REF_NAME" = "$expected" || {
+            echo "release tag/package version mismatch: tag=$GITHUB_REF_NAME package=$expected" >&2
+            exit 1
+          }
+
+      - name: Enforce v0.6.0 evidence readiness before publication
+        if: github.ref == 'refs/tags/v0.6.0'
+        run: npm run v0.6:readiness:require-ready
+
       - run: npm run release:check
 
       - name: Verify and build reproducible employee packs
