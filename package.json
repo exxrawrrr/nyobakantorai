@@ -148,7 +148,7 @@
     "test:connector-center": "node --test packages/connector-center/index.test.mjs",
     "test:browser-agent": "node --test packages/browser-agent/index.test.mjs",
     "test:scheduler-approval-center": "node --test packages/scheduler-approval-center/index.test.mjs",
-    "test:skills-store": "node --test packages/skills-store/index.test.mjs",
+    "test:skills-store": "node --test packages/skills-store/index.test.mjs scripts/skills-store.test.mjs",
     "skills:store:check": "node scripts/skills-store.mjs check"
   }
 }
