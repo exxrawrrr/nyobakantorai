@@ -215,6 +215,9 @@ Closure: PASS for repository delivery. Research, code, and external-state verifi
 
 ### CHAT 11 — v0.6.0 End-to-End Acceptance Mission
 
+**Status: COMPLETE — ACCEPTANCE EVALUATED; 9/11 PASS, LIVE BLOCKERS RECORDED — 2026-10-02.**
+Implementation/status: `docs/V0.6-E2E-ACCEPTANCE.md`
+
 Goal: prove the headline workflow as one bounded mission.
 
 Reference acceptance mission includes:
@@ -231,6 +234,8 @@ Reference acceptance mission includes:
 - no external write.
 
 Exit gate: reviewed evidence bundle reconciles every v0.6.0 acceptance criterion and records remaining blockers.
+
+Closure: PASS for CHAT 11 itself. The deterministic bounded mission reached VERIFIED and 9/11 acceptance criteria passed. Fresh current-commit Codex and Hermes runs both executed inside the canonical Live Sandbox with teardown verified, but neither produced LIVE_RUNTIME_EVIDENCE; both remained UNVERIFIED_RUNTIME_ATTEMPT with RUNTIME_EXECUTION_NOT_SUCCESSFUL. Therefore the acceptance verdict remains BLOCKED on REAL_MODEL_EXECUTION and COST_QUOTA_ENFORCEMENT. This blocker is carried forward as evidence for CHAT 12 rather than treated as unfinished CHAT 11 implementation.
 
 ### CHAT 12 — v0.6.0 Release Convergence
 
