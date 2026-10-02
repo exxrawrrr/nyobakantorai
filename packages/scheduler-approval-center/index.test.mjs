@@ -39,7 +39,7 @@ test("Morning Briefing JSON fixture matches canonical helper contract",()=>{
 });
 
 test("07:30 Asia/Jakarta is due while 06:59 and 09:00 are outside window",()=>{
-  const s=morningBriefingFixture();
+  const s=fixture({starts_at:"2026-10-01T00:00:00.000Z"});
   assert.equal(assessScheduleTrigger(s,{at:"2026-10-02T00:30:00.000Z"}).due,true);
   assert.equal(assessScheduleTrigger(s,{at:"2026-10-01T23:59:00.000Z"}).reason,"OUTSIDE_TIME_WINDOW");
   assert.equal(assessScheduleTrigger(s,{at:"2026-10-02T02:00:00.000Z"}).reason,"OUTSIDE_TIME_WINDOW");
