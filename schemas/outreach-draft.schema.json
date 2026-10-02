@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/outreach-draft.schema.json",
+  "title": "nyobakantorai Outreach Draft v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "crm_lead_id",
+    "candidate_ref",
+    "channel",
+    "body",
+    "created_at",
+    "state",
+    "automatic_send_allowed",
+    "send_authorized",
+    "verification_ref",
+    "source_refs",
+    "draft_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "crm_lead_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "channel": {
+      "enum": [
+        "EMAIL",
+        "WHATSAPP",
+        "LINKEDIN",
+        "OTHER"
+      ]
+    },
+    "subject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state": {
+      "const": "DRAFT_ONLY"
+    },
+    "automatic_send_allowed": {
+      "const": false
+    },
+    "send_authorized": {
+      "const": false
+    },
+    "verification_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1
+    },
+    "draft_ref": {
+      "type": "string",
+      "pattern": "^outreach-draft:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
