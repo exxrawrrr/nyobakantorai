@@ -4,6 +4,7 @@ import {
   createLeadWatchlist,createWatchlistSchedule,
   createOutreachDraft,createOutreachApprovalRequest,
 } from "../map-missions/index.mjs";
+import { authorizeWithApproval } from "../scheduler-approval-center/index.mjs";
 
 function requirePolicy(policy){
   assert(policy?.schema===1&&policy?.prospecting_loop&&policy?.adaptive_queries&&policy?.crm_lifecycle,"Lead Intelligence policy required.");
@@ -257,9 +258,45 @@ export function createQualifiedOutreachPackage({
   const approval_request=createOutreachApprovalRequest(draft,{policy:map_policy,requested_at,expires_at});
   const core={
     schema:1,record_ref:record.record_ref,candidate_ref:candidate.candidate_ref,draft_ref:draft.draft_ref,
-    approval_request_ref:approval_request.request_ref,
+    approval_request_ref:approval_request.approval_ref,
     approval_required:true,external_send_performed:false,automatic_send_allowed:false,
     recommended_lifecycle_event:"REQUEST_CONTACT",
   };
   return freeze({...core,package_ref:contentRef("qualified-outreach-package",core),draft,approval_request});
+}
+
+
+export function applyApprovedOutreachDecision({
+  record,outreach_package,decision,at,
+}={}, {policy}={}){
+  requirePolicy(policy);
+  assert(record?.record_ref&&record.state==="CONTACT_REVIEW","Outreach approval requires CONTACT_REVIEW lifecycle state.");
+  assert(outreach_package?.package_ref&&outreach_package?.approval_request?.approval_ref,"Qualified outreach package required.");
+  assert(record.crm_lead_id===outreach_package.draft?.crm_lead_id,"Outreach approval CRM identity mismatch.");
+  assert(record.candidate_ref===outreach_package.candidate_ref,"Outreach approval candidate mismatch.");
+  assert(record.previous_record_ref===outreach_package.record_ref,"Outreach approval package is not bound to the lifecycle record under review.");
+  assert(outreach_package.approval_request_ref===outreach_package.approval_request.approval_ref,"Outreach approval request ref mismatch.");
+  const actions=outreach_package.approval_request.scope?.actions||[];
+  const resources=outreach_package.approval_request.scope?.resources||[];
+  assert(actions.length===1&&resources.length===1,"Outreach approval request must have exact single action/resource scope.");
+  const authorization=authorizeWithApproval(outreach_package.approval_request,decision,{
+    action:actions[0],resource:resources[0],at,
+  });
+  assert(authorization.allowed===true,"Outreach approval authorization failed: "+authorization.reason);
+  const next=transitionCrmLifecycle(record,{
+    event:"APPROVE_CONTACT",at,
+    evidence_refs:[
+      authorization.decision_ref,
+      outreach_package.approval_request.approval_ref,
+      outreach_package.draft.draft_ref,
+    ],
+    note:"Exact human approval validated for one outreach draft; no send performed.",
+  },{policy});
+  const core={
+    schema:1,package_ref:outreach_package.package_ref,record_ref:record.record_ref,
+    next_record_ref:next.record_ref,approval_ref:authorization.approval_ref,
+    decision_ref:authorization.decision_ref,authorized_action:actions[0],authorized_resource:resources[0],
+    approval_validated:true,external_send_performed:false,send_authorized_by_package:false,
+  };
+  return freeze({...core,binding_ref:contentRef("outreach-lifecycle-approval",core),record:next,authorization});
 }
