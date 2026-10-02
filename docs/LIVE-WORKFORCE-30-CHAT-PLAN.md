@@ -498,6 +498,9 @@ Closure: PASS for deterministic repository delivery. Search expansion is bounded
 
 ### CHAT 25 — Map Missions + CRM-Ready Lead Intelligence
 
+**Status: COMPLETE — MAP MISSIONS / CRM-READY LEAD INTELLIGENCE VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.7.1-MAP-MISSIONS-CRM.md`
+
 Goal: turn verified geo research into operationally useful datasets.
 
 Deliverables:
@@ -511,6 +514,8 @@ Deliverables:
 - approval boundary before send/write.
 
 Exit gate: map attribution reviewed, monitoring respects retention/cost policy, no automatic outreach by default.
+
+Closure: PASS for repository delivery. Google-provider map coordinates remain presentation-only and are removed from durable summaries/CRM export; attribution is surfaced in the Office Geo view. CRM candidates require exact Siti-verified CHAT 24 bundles. Watchlists store hashes/refs and materialize through normal Scheduler + Cost Governor. Competitor labels require evidence, territory planning reuses bounded Geo Core rectangles, and outreach remains DRAFT_ONLY with no send executor. CRM import and outreach each require exact owner approval scopes. Targeted suite passed 17/17; implementation-head verify #715 passed Ubuntu, Windows, and minimum versions.
 
 ### CHAT 26 — v0.7.1 Geo Release Gate
 
