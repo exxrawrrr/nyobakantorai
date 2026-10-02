@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/geo-public-source.schema.json",
+  "title": "nyobakantorai Geo Public Source v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source_type",
+    "url",
+    "retrieved_at",
+    "claims",
+    "raw_page_persisted",
+    "credentials_used",
+    "source_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "source_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1
+    },
+    "raw_page_persisted": {
+      "const": false
+    },
+    "credentials_used": {
+      "const": false
+    },
+    "source_ref": {
+      "type": "string",
+      "pattern": "^geo-public-source:sha256:[a-f0-9]{64}$"
+    }
+  }
+}

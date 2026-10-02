@@ -283,3 +283,34 @@ The connector `google-places-readonly` requires an exact `geo_policy_scope` reso
 Production wildcard FieldMasks are rejected. Pricing policy pins reviewed SKU tiers rather than stale numeric prices. Raw Places responses are ephemeral; only Place IDs plus approved policy/timestamp metadata may become durable records.
 
 See `docs/V0.7.1-GEO-CORE.md`.
+
+
+## Geo intelligence research boundary (CHAT 24)
+
+Geo discovery becomes durable operational research only through a provenance/verification pipeline:
+
+```text
+bounded Geo Core query
+  -> working-set discovery records
+  -> conservative identity resolution
+  -> public/no-auth enrichment
+  -> field-level provenance/conflict state
+  -> versioned explainable score
+  -> independent Siti research verification
+  -> research export pack
+```
+
+Important separations:
+
+- fuzzy name similarity alone is not merge authority;
+- different Place IDs are a hard identity conflict;
+- Google Places working-set fields do not become durable profile fields merely because the provider returned them;
+- public-source enrichment is bounded, no-auth, read-only, and may not target localhost/private networks or bypass access controls;
+- positive scoring points require evidence refs;
+- score does not equal verified profile;
+- Siti cannot author and independently verify the same profile;
+- final research export requires Siti PASS for every profile by default;
+- CSV/XLSX/report generation is an artifact operation, not a CRM write or outreach action;
+- expanded query coverage remains bounded and cannot be described as exhaustive.
+
+See `docs/V0.7.1-GEO-INTELLIGENCE.md`.

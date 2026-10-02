@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "policy_id": "geo-intelligence-profile-v1",
+  "version": "1.0.0",
+  "search_expansion": {
+    "max_keywords": 12,
+    "max_geographies": 12,
+    "max_queries": 24,
+    "max_queries_per_geography": 6,
+    "completeness_claim_allowed": false,
+    "adaptive_expansion_requires_review": true,
+    "dedupe_query_text_case_insensitive": true
+  },
+  "identity_resolution": {
+    "merge_threshold": 70,
+    "review_threshold": 45,
+    "hard_conflict_fields": [
+      "place_id"
+    ],
+    "evidence_weights": {
+      "same_place_id": 100,
+      "same_domain": 70,
+      "same_phone": 65,
+      "same_address": 35,
+      "name_similarity_high": 30,
+      "location_within_150m": 20
+    },
+    "conflict_weights": {
+      "different_place_id": -200,
+      "different_domain": -45,
+      "different_phone": -30
+    },
+    "rules": [
+      "Fuzzy name similarity alone may never auto-merge records.",
+      "Different non-empty Place IDs are a hard conflict.",
+      "Every merge must preserve all source record refs and rationale."
+    ]
+  },
+  "enrichment": {
+    "allowed_source_types": [
+      "OFFICIAL_WEBSITE",
+      "PUBLIC_DIRECTORY",
+      "PUBLIC_ORG_PAGE",
+      "PUBLIC_NEWS",
+      "OTHER_PUBLIC_WEB"
+    ],
+    "allowed_schemes": [
+      "http:",
+      "https:"
+    ],
+    "reject_private_network_targets": true,
+    "reject_url_userinfo": true,
+    "raw_page_persistence_allowed": false,
+    "durable_claims_require_source_ref": true,
+    "retrieval_timestamp_required": true,
+    "credentials_allowed": false,
+    "max_response_bytes": 2000000,
+    "timeout_ms": 15000,
+    "max_sources_per_profile": 10,
+    "max_sources_per_mission": 100,
+    "access_mode": "PUBLIC_NO_AUTH_READ_ONLY",
+    "access_control_bypass_allowed": false
+  },
+  "field_confidence": {
+    "source_trust": {
+      "GOOGLE_PLACES": 0.8,
+      "OFFICIAL_WEBSITE": 1,
+      "PUBLIC_ORG_PAGE": 0.9,
+      "PUBLIC_DIRECTORY": 0.75,
+      "PUBLIC_NEWS": 0.7,
+      "OTHER_PUBLIC_WEB": 0.55
+    },
+    "current_after_days": {
+      "OFFICIAL_WEBSITE": 180,
+      "PUBLIC_ORG_PAGE": 180,
+      "PUBLIC_DIRECTORY": 120,
+      "PUBLIC_NEWS": 365,
+      "OTHER_PUBLIC_WEB": 90,
+      "GOOGLE_PLACES": 365
+    },
+    "conflict_status": "CONFLICT",
+    "unresolved_value": null
+  },
+  "scoring": {
+    "model_id": "geo-business-fit-v1",
+    "version": "1.0.0",
+    "max_score": 100,
+    "criteria": [
+      {
+        "id": "identity_strength",
+        "max_points": 20,
+        "description": "Identity resolved with strong non-fuzzy evidence."
+      },
+      {
+        "id": "source_diversity",
+        "max_points": 15,
+        "description": "Profile supported by multiple independent source classes."
+      },
+      {
+        "id": "official_web_presence",
+        "max_points": 15,
+        "description": "Public official website evidence exists."
+      },
+      {
+        "id": "business_type_fit",
+        "max_points": 20,
+        "description": "Evidence-backed business type matches mission target types."
+      },
+      {
+        "id": "contactability",
+        "max_points": 10,
+        "description": "Evidence-backed public contact channel exists."
+      },
+      {
+        "id": "geographic_fit",
+        "max_points": 10,
+        "description": "Evidence-backed profile is inside mission geography."
+      },
+      {
+        "id": "evidence_freshness",
+        "max_points": 10,
+        "description": "Material source claims are within configured freshness windows."
+      }
+    ],
+    "missing_evidence_points": 0,
+    "conflicted_field_points": 0,
+    "verification_required_for_final_status": true
+  },
+  "verification": {
+    "reviewer_id": "siti",
+    "kind": "RESEARCH",
+    "require_independent_reviewer": true,
+    "require_all_scored_claims_supported": true,
+    "allow_incomplete_as_verified": false
+  },
+  "exports": {
+    "csv": true,
+    "xlsx": true,
+    "markdown_report": true,
+    "evidence_pack_json": true,
+    "include_raw_provider_content": false,
+    "include_private_source_content": false
+  },
+  "claim_boundary": "Expanded searches and merged profiles describe observed bounded coverage only. They never prove exhaustive market coverage."
+}
