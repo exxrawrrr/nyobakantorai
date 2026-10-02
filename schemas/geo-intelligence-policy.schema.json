@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/geo-intelligence-policy.schema.json",
+  "title": "nyobakantorai Geo Intelligence Policy v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "policy_id",
+    "version",
+    "search_expansion",
+    "identity_resolution",
+    "enrichment",
+    "field_confidence",
+    "scoring",
+    "verification",
+    "exports",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "search_expansion": {
+      "type": "object"
+    },
+    "identity_resolution": {
+      "type": "object"
+    },
+    "enrichment": {
+      "type": "object"
+    },
+    "field_confidence": {
+      "type": "object"
+    },
+    "scoring": {
+      "type": "object"
+    },
+    "verification": {
+      "type": "object"
+    },
+    "exports": {
+      "type": "object"
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
