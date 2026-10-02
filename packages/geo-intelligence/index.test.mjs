@@ -22,6 +22,7 @@ import {
 
 const root=resolve(import.meta.dirname,"../..");
 const policy=JSON.parse(await readFile(resolve(root,"config/geo-intelligence-policy.json"),"utf8"));
+const geoPolicy=JSON.parse(await readFile(resolve(root,"config/google-places-policy.json"),"utf8"));
 
 function plan(){
   return createSearchExpansionPlan({
@@ -223,7 +224,8 @@ test("close competing public claims remain an explicit conflict instead of silen
   const profile=buildBusinessProfile({cluster:alpha,public_sources:sources,as_of:"2026-10-02T09:20:00Z"},{policy});
   assert.equal(profile.fields.phone.status,"CONFLICT");
   assert.equal(profile.fields.phone.value,null);
-  assert.equal(profile.fields.phone.alternatives.length,1);
+  assert.equal(profile.fields.phone.alternatives.length,2);
+  assert.ok(profile.fields.phone.alternatives.every(x=>x.source_refs.length===1));
 });
 
 test("versioned scoring is explainable, capped, and every positive point has evidence",()=>{
@@ -331,6 +333,21 @@ test("export pack produces CSV, actual XLSX zip, Markdown report, and provenance
   assert.equal(evidence.verifications[0].profile_ref,profile.profile_ref);
   assert.equal(evidence.verifications[0].review_state,"PASS");
   assert.equal(JSON.stringify(evidence).includes("ephemeral_provider_content"),false);
+});
+
+test("final export rejects unverified profiles unless draft mode is explicitly requested",()=>{
+  const p=plan();
+  const {profile,sources}=buildFixtureProfile();
+  const score=scoreBusinessProfile(profile,{mission:{target_business_types:["driver_training"]},policy});
+  assert.throws(()=>createGeoResearchExportPack({
+    expansion_plan:p,profiles:[profile],scores:[score],verifications:[],sources,created_at:"2026-10-02T09:35:00Z",
+  }),/requires Siti PASS/);
+  const draft=createGeoResearchExportPack({
+    expansion_plan:p,profiles:[profile],scores:[score],verifications:[],sources,created_at:"2026-10-02T09:35:00Z",
+    require_all_verified:false,
+  });
+  assert.equal(draft.completeness_claim,false);
+  assert.match(draft.files["profiles.csv"].data,/NOT_RUN/);
 });
 
 test("export fails closed on mismatched score/profile binding",async()=>{
