@@ -239,6 +239,9 @@ Closure: PASS for CHAT 11 itself. The deterministic bounded mission reached VERI
 
 ### CHAT 12 — v0.6.0 Release Convergence
 
+**Status: IMPLEMENTED — RELEASE BLOCKED, FINAL INTEGRATION VERIFICATION PENDING — 2026-10-02.**
+Implementation/status: `docs/V0.6-RELEASE-CONVERGENCE.md`
+
 Goal: release only what the evidence supports.
 
 Deliverables:
