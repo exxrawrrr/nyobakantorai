@@ -377,6 +377,9 @@ Closure: PASS for repository delivery. Connector Center keeps default state NOT_
 
 ### CHAT 19 — Browser Agent
 
+**Status: COMPLETE — BROWSER ACTION GOVERNANCE / EVIDENCE VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.7-BROWSER-AGENT.md`
+
 Goal: give employees browser hands with observable evidence.
 
 Deliverables:
@@ -389,6 +392,8 @@ Deliverables:
 - disposable browser profile handling.
 
 Exit gate: browser mutations are distinguishable, approval-aware, and independently auditable.
+
+Closure: PASS for repository delivery. Browser Agent separates READ from MUTATION, requires exact-origin Connector Center + Capability Router routes, keeps page content untrusted, records injection signals on READ, blocks mutation on page-origin/injection signals, requires approval + pre/receipt/post evidence for mutations, and uses disposable browser profiles with explicit cleanup. The final targeted suite passes 20/20; implementation-head PR verify #667 passes Ubuntu, Windows, and minimum versions. This is deterministic repository/provider-transport evidence only and does not claim live production browser execution.
 
 ### CHAT 20 — Scheduler + Approval Center 2.0
 

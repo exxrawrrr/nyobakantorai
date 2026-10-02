@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "action_modes": [
+    "READ",
+    "MUTATION"
+  ],
+  "read_actions": [
+    "NAVIGATE",
+    "INSPECT_TEXT",
+    "EXTRACT_STRUCTURED",
+    "SCREENSHOT"
+  ],
+  "mutation_actions": [
+    "CLICK",
+    "TYPE",
+    "SELECT",
+    "UPLOAD",
+    "SUBMIT",
+    "DOWNLOAD",
+    "DRAG_DROP",
+    "DELETE"
+  ],
+  "instruction_sources": [
+    "USER",
+    "MISSION_PLAN",
+    "PAGE_CONTENT"
+  ],
+  "flows": {
+    "PUBLIC_RESEARCH": {
+      "allowed_protocols": [
+        "https:"
+      ],
+      "require_exact_origin_scope": true,
+      "loopback_only": false,
+      "public_network_only": true,
+      "ownership_evidence_required": false,
+      "mutations_allowed": false,
+      "authentication_allowed": false
+    },
+    "USER_OWNED_AUDIT": {
+      "allowed_protocols": [
+        "https:",
+        "http:"
+      ],
+      "require_exact_origin_scope": true,
+      "loopback_only": false,
+      "public_network_only": false,
+      "ownership_evidence_required": true,
+      "mutations_allowed": true,
+      "authentication_allowed": false
+    },
+    "LOCALHOST_QA": {
+      "allowed_protocols": [
+        "http:",
+        "https:"
+      ],
+      "require_exact_origin_scope": true,
+      "loopback_only": true,
+      "public_network_only": false,
+      "ownership_evidence_required": false,
+      "mutations_allowed": true,
+      "authentication_allowed": false
+    }
+  },
+  "injection_policy": {
+    "page_content_is_untrusted": true,
+    "page_content_cannot_expand_scope": true,
+    "page_content_cannot_approve": true,
+    "page_content_cannot_request_mutation": true,
+    "detected_injection_blocks_mutation": true,
+    "detected_injection_is_recorded_on_read": true
+  },
+  "profile_policy": {
+    "disposable_required": true,
+    "existing_user_profile_reuse_forbidden": true,
+    "profile_cleanup_required": true,
+    "profile_persistence_forbidden": true,
+    "inherited_cookies_forbidden": true,
+    "auto_login_forbidden": true
+  },
+  "evidence_policy": {
+    "route_refs_required": true,
+    "read_result_evidence_required": true,
+    "mutation_pre_state_required": true,
+    "mutation_execution_receipt_required": true,
+    "mutation_post_state_required": true,
+    "mutation_approval_ref_required": true,
+    "action_records_content_addressed": true
+  },
+  "claim_limit": "Browser Agent repository verification proves action classification, scope/approval/injection/profile guards, evidence integrity, and deterministic provider-transport behavior. It does not prove a live external browser provider or production website action occurred."
+}

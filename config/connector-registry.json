@@ -31,6 +31,28 @@
         ]
       },
       "verification_method": "Use a reviewed connection evidence reference, exact customer grant, and read-only provider transport; mutation operations are not exposed."
+    },
+    {
+      "schema": 1,
+      "id": "playwright-mcp-browser",
+      "provider": "playwright-mcp",
+      "label": "Playwright MCP Browser",
+      "default_state": "NOT_CONNECTED",
+      "capabilities": [
+        "browser.structured"
+      ],
+      "access_modes": [
+        "READ",
+        "WRITE"
+      ],
+      "resource_types": [
+        "browser_origin"
+      ],
+      "auth": {
+        "mode": "NONE",
+        "allowed_ref_prefixes": []
+      },
+      "verification_method": "Use an explicitly connected Playwright MCP transport with a disposable browser profile; every action still requires exact Connector Center and Capability Router authorization."
     }
   ]
 }
