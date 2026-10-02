@@ -2,6 +2,7 @@ import { runSitiVerification,validateSitiVerificationRecord } from "../evidence-
 import { assert,clean,contentRef,freeze,uniq } from "./common.mjs";
 
 function allProfileSourceRefs(profile){return uniq([profile.cluster_ref,...(profile.source_refs||[])]).sort();}
+function evidenceRef(ref){return "artifact:"+clean(ref,1000);}
 
 export async function verifyBusinessProfileWithSiti({
   profile,score,author_employee_id="alex",now,task_id="workitem-geo-profile-verification",mission_id="mission-geo-intelligence",
@@ -9,8 +10,9 @@ export async function verifyBusinessProfileWithSiti({
   assert(profile?.schema===1,"Profile required for Siti verification.");
   assert(score?.profile_ref===profile.profile_ref,"Score/profile mismatch for Siti verification.");
   assert(author_employee_id!=="siti","Siti may not author the profile she verifies.");
-  const refs=allProfileSourceRefs(profile);
-  assert(refs.length>0,"Profile verification requires source refs.");
+  const rawRefs=allProfileSourceRefs(profile);
+  assert(rawRefs.length>0,"Profile verification requires source refs.");
+  const refs=rawRefs.map(evidenceRef);
   const facts=[
     "profile-ref:"+profile.profile_ref,
     "score:"+String(score.score),
@@ -31,11 +33,11 @@ export async function verifyBusinessProfileWithSiti({
   claims.push({
     claim_id:"profile-identity",
     statement:"Profile identity and provenance were resolved under bounded geo policy.",
-    source_ref:profile.cluster_ref,source_exists:true,source_relevant:true,source_current:true,
+    source_ref:evidenceRef(profile.cluster_ref),source_exists:true,source_relevant:true,source_current:true,
     expected_value:profile.profile_ref,observed_value:profile.profile_ref,
   });
   for(const contribution of score.contributions.filter(x=>x.points>0)){
-    const sourceRef=contribution.evidence_refs[0];
+    const sourceRef=evidenceRef(contribution.evidence_refs[0]);
     claims.push({
       claim_id:"score-"+contribution.criterion_id,
       statement:contribution.rationale,
@@ -46,7 +48,7 @@ export async function verifyBusinessProfileWithSiti({
   if(Object.values(profile.fields||{}).some(x=>x.status==="CONFLICT")){
     claims.push({
       claim_id:"unresolved-profile-conflict",statement:"No unresolved material profile conflicts remain.",
-      source_ref:profile.cluster_ref,source_exists:true,source_relevant:false,source_current:true,
+      source_ref:evidenceRef(profile.cluster_ref),source_exists:true,source_relevant:false,source_current:true,
       expected_value:"none",observed_value:"conflict",
     });
   }
