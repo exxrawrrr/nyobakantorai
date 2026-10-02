@@ -182,3 +182,38 @@ test("stateful governor records actual cost and future admissions use reconciled
   assert.equal(second.action,"REROUTE");
   assert.equal(governor.snapshot().ledger.totals.known_amount,0.8);
 });
+
+
+test("post-execution actual overrun is explicit in budget state and blocks the next admission",()=>{
+  const governor=createCostGovernor({policy,clock:()=>"2026-10-02T03:00:00.000Z"});
+  const admission=governor.admit({
+    context,
+    estimate:{status:"KNOWN",amount:0.2,currency:"USD"},
+  });
+  assert.equal(admission.action,"ALLOW");
+
+  governor.record({
+    cost_id:"actual-overrun",
+    project_id:"alpha",
+    mission_id:"mission-1",
+    task_id:"task-overrun",
+    employee_id:"alex",
+    cost_type:"MODEL",
+    provider_id:"p1",
+    model_id:"m1",
+    cost:{status:"KNOWN",amount:1.2,currency:"USD"},
+    evidence_refs:["receipt:overrun"],
+  });
+
+  const snapshot=governor.snapshot();
+  const employeeBudget=snapshot.budget_state.find((item)=>item.kind==="EMPLOYEE"&&item.id==="alex");
+  assert.equal(employeeBudget.hard_limit_breached,true);
+  assert.equal(employeeBudget.spent_amount,1.2);
+
+  const next=governor.admit({
+    context:{...context,mission_id:"mission-2",mission_budget:{hard_limit_amount:3,currency:"USD"}},
+    estimate:{status:"KNOWN",amount:0.01,currency:"USD"},
+  });
+  assert.equal(next.action,"STOP");
+  assert.ok(next.reason_codes.includes("HARD_BUDGET_LIMIT_REACHED"));
+});
