@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "candidate": "v0.8.0",
+  "evidence_state": "NOT_OBSERVED_LIVE",
+  "prospecting": {
+    "live_observed": false,
+    "cycle_ref": null,
+    "verified_candidate_count": 0,
+    "learn_evidence_count": 0,
+    "adaptive_change_reviewed": false,
+    "provider_execution_automatic": false,
+    "completeness_claim": false
+  },
+  "monitoring": {
+    "live_observed": false,
+    "monitor_ref": null,
+    "kind": null,
+    "change_ref_count": 0,
+    "normal_scheduler_used": false,
+    "cost_governor_used": false,
+    "raw_provider_content_persisted": false,
+    "completeness_claim": false
+  },
+  "crm": {
+    "live_observed": false,
+    "record_ref": null,
+    "verification_bound": false,
+    "attributable_sources": false,
+    "external_write_performed": false
+  },
+  "outreach": {
+    "live_observed": false,
+    "package_ref": null,
+    "draft_only": true,
+    "approval_request_created": false,
+    "external_send_performed": false,
+    "automatic_send_allowed": false
+  },
+  "notes": [
+    "CHAT 27 deterministic acceptance contracts are not promoted to live production evidence.",
+    "No external CRM write or outreach send is performed by this evidence ledger.",
+    "v0.8.0 remains fail-closed until qualifying live evidence and prerequisite readiness exist."
+  ]
+}

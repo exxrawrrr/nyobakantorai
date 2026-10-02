@@ -542,6 +542,9 @@ Closure: PASS for release-gate implementation, BLOCKED for publication. Geo poli
 
 ### CHAT 27 — Prospecting Loop + Monitoring + CRM Workflow
 
+**Status: COMPLETE — LEAD INTELLIGENCE CONTRACTS VERIFIED / LIVE EVIDENCE + v0.8.0 RELEASE BLOCKED — 2026-10-02.**
+Implementation/status: `docs/V0.8.0-LEAD-INTELLIGENCE.md`
+
 Goal: complete the Lead Intelligence loop on user-owned workflows.
 
 Deliverables:
@@ -556,6 +559,8 @@ Deliverables:
 - v0.8.0 release gate.
 
 Exit gate: adaptive behavior is bounded/auditable, CRM data is attributable, and outreach remains approval-gated.
+
+Closure: PASS for deterministic repository delivery and BLOCKED for publication. Verified candidates flow through the five-stage prospecting cycle; LEARN evidence may produce only bounded query proposals, and exact owner review is required before a revised Geo Intelligence plan is materialized. CRM lifecycle transitions are allowlisted, evidence-backed, attributable, and internal-only. Competitor and territory monitoring reuse bounded CHAT 25 watchlists through normal Scheduler + Cost Governor contracts. Outreach stays DRAFT_ONLY; exact Approval Center authorization may advance a CONTACT_REVIEW record to CONTACT_APPROVED but the Lead Intelligence package performs no external send. Static v0.8.0 contracts PASS. Live prospecting-cycle, monitoring, CRM-lifecycle, and outreach-approval evidence are not yet observed, and v0.7.1 remains a blocked prerequisite, so v0.8.0 publication remains BLOCKED. Targeted CHAT 27 + readiness suite passed 15/15 and release manifest reports `v0.8_readiness=BLOCKED(5)`. Package stays 0.5.1; no v0.8.0 tag/release is authorized.
 
 ---
 

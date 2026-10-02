@@ -1,3 +1,12 @@
+## [0.8.0] - Unreleased — Lead Intelligence contracts verified, release blocked
+
+- Added the governed DISCOVER -> ENRICH -> SCORE -> VERIFY -> LEARN prospecting loop with evidence-bound, owner-reviewed adaptive query proposals.
+- Added attributable CRM lifecycle state transitions, bounded competitor/territory monitoring through Scheduler + Cost Governor, and monitoring-to-LEARN signals.
+- Added draft-only qualified outreach packaging with exact Approval Center binding; owner approval may advance CRM lifecycle but the package never sends externally.
+- Added a fail-closed v0.8.0 readiness evaluator, adversarial tests, CLI, release-manifest snapshot, and tagged-release guard.
+- Static Lead Intelligence contracts PASS; live prospecting, monitoring, CRM-lifecycle, and approval evidence remain unobserved, and v0.7.1 remains a blocked prerequisite.
+- Package/stable release remains v0.5.1; no v0.8.0 tag or GitHub Release is authorized.
+
 ## [0.7.1] - Unreleased — Geo contracts verified, release blocked
 
 - Added a fail-closed v0.7.1 Geo release-readiness evaluator, adversarial tests, CLI, release-manifest snapshot, and tagged-release guard.

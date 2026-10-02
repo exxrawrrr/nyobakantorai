@@ -10,6 +10,7 @@ import { buildMaturitySnapshot, validateMaturityModel } from "../packages/maturi
 import { buildV05ReadinessSnapshot, readAndAssessV05ReleaseReadiness, buildV06ReadinessSnapshot, readAndAssessV06ReleaseReadiness, buildV061ReadinessSnapshot, readAndAssessV061ReleaseReadiness } from "../packages/release-readiness/index.mjs";
 import { buildV07ReadinessSnapshot, readAndAssessV07ReleaseReadiness } from "../packages/v0.7-release-readiness/index.mjs";
 import { buildV071ReadinessSnapshot, readAndAssessV071ReleaseReadiness } from "../packages/v0.7.1-release-readiness/index.mjs";
+import { buildV08ReadinessSnapshot, readAndAssessV08ReleaseReadiness } from "../packages/v0.8-release-readiness/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const outPath = resolve(root, "release", "manifest.json");
@@ -75,6 +76,9 @@ const v07Readiness=buildV07ReadinessSnapshot({config:v07ReadinessConfig,assessme
 const {config:v071ReadinessConfig,assessment:v071ReadinessAssessment}=await readAndAssessV071ReleaseReadiness({root});
 if(!v071ReadinessAssessment.ok) throw new Error("v0.7.1 readiness invalid: "+v071ReadinessAssessment.errors.join("; "));
 const v071Readiness=buildV071ReadinessSnapshot({config:v071ReadinessConfig,assessment:v071ReadinessAssessment});
+const {config:v08ReadinessConfig,assessment:v08ReadinessAssessment}=await readAndAssessV08ReleaseReadiness({root});
+if(!v08ReadinessAssessment.ok) throw new Error("v0.8 readiness invalid: "+v08ReadinessAssessment.errors.join("; "));
+const v08Readiness=buildV08ReadinessSnapshot({config:v08ReadinessConfig,assessment:v08ReadinessAssessment});
 const manifest = {
   schema: 1,
   project: pkg.name,
@@ -86,12 +90,13 @@ const manifest = {
   v0_6_1_readiness:v061Readiness,
   v0_7_readiness:v07Readiness,
   v0_7_1_readiness:v071Readiness,
+  v0_8_readiness:v08Readiness,
   tracked_files: files.length,
   files,
 };
 
 if (check) {
-  console.log(`Release manifest check passed: ${files.length} files @ ${commit.slice(0, 12)} · live_evaluation_complete=${claims.live_evaluation_complete} · deferred=${claims.deferred_evidence?.open_blockers ?? "n/a"} · behavior=${claims.maturity?.dimensions?.behavioral_evidence ?? "n/a"} · portability=${claims.evidence_inventory?.claims?.["reference-case-portability"]?.status ?? "n/a"} · v0.5_readiness=${v05Readiness.decision}(${v05Readiness.blocker_count}) · v0.6_readiness=${v06Readiness.decision}(${v06Readiness.blocker_count}) · v0.6.1_reliability=${v061Readiness.reliability_decision} · v0.6.1_readiness=${v061Readiness.decision}(${v061Readiness.blocker_count}) · v0.7_connected=${v07Readiness.connected_office_decision} · v0.7_readiness=${v07Readiness.decision}(${v07Readiness.blocker_count}) · v0.7.1_geo=${v071Readiness.geo_decision} · v0.7.1_readiness=${v071Readiness.decision}(${v071Readiness.blocker_count})`);
+  console.log(`Release manifest check passed: ${files.length} files @ ${commit.slice(0, 12)} · live_evaluation_complete=${claims.live_evaluation_complete} · deferred=${claims.deferred_evidence?.open_blockers ?? "n/a"} · behavior=${claims.maturity?.dimensions?.behavioral_evidence ?? "n/a"} · portability=${claims.evidence_inventory?.claims?.["reference-case-portability"]?.status ?? "n/a"} · v0.5_readiness=${v05Readiness.decision}(${v05Readiness.blocker_count}) · v0.6_readiness=${v06Readiness.decision}(${v06Readiness.blocker_count}) · v0.6.1_reliability=${v061Readiness.reliability_decision} · v0.6.1_readiness=${v061Readiness.decision}(${v061Readiness.blocker_count}) · v0.7_connected=${v07Readiness.connected_office_decision} · v0.7_readiness=${v07Readiness.decision}(${v07Readiness.blocker_count}) · v0.7.1_geo=${v071Readiness.geo_decision} · v0.7.1_readiness=${v071Readiness.decision}(${v071Readiness.blocker_count}) · v0.8_readiness=${v08Readiness.decision}(${v08Readiness.blocker_count})`);
 } else {
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, JSON.stringify(manifest, null, 2) + "\n");

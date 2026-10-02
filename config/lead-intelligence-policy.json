@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "policy_id": "lead-intelligence-policy-v1",
+  "version": "1.0.0",
+  "prospecting_loop": {
+    "stages": ["DISCOVER", "ENRICH", "SCORE", "VERIFY", "LEARN"],
+    "max_verified_candidates_per_cycle": 250,
+    "max_learning_evidence_refs": 100,
+    "verified_learning_only": true,
+    "adaptive_change_mode": "PROPOSAL_ONLY",
+    "completeness_claim_allowed": false
+  },
+  "adaptive_queries": {
+    "max_keywords_per_proposal": 6,
+    "max_learning_keywords": 6,
+    "max_evidence_refs": 24,
+    "reviewer_actor": "owner",
+    "allowed_decisions": ["APPROVED", "REJECTED"],
+    "execution_without_review_allowed": false,
+    "provider_execution_authorized_by_review": false,
+    "require_evidence_refs": true
+  },
+  "crm_lifecycle": {
+    "initial_state_by_qualification_tier": {
+      "A": "QUALIFIED",
+      "B": "QUALIFIED",
+      "C": "NURTURE",
+      "D": "DISQUALIFIED"
+    },
+    "states": [
+      "QUALIFIED",
+      "NURTURE",
+      "CONTACT_REVIEW",
+      "CONTACT_APPROVED",
+      "CONTACTED",
+      "CONVERTED",
+      "DISQUALIFIED"
+    ],
+    "transitions": {
+      "QUALIFIED": {
+        "REQUEST_CONTACT": "CONTACT_REVIEW",
+        "MARK_NURTURE": "NURTURE",
+        "DISQUALIFY": "DISQUALIFIED"
+      },
+      "NURTURE": {
+        "QUALIFY": "QUALIFIED",
+        "DISQUALIFY": "DISQUALIFIED"
+      },
+      "CONTACT_REVIEW": {
+        "APPROVE_CONTACT": "CONTACT_APPROVED",
+        "RETURN_TO_QUALIFIED": "QUALIFIED",
+        "DISQUALIFY": "DISQUALIFIED"
+      },
+      "CONTACT_APPROVED": {
+        "RECORD_CONTACT": "CONTACTED",
+        "REVOKE_CONTACT": "CONTACT_REVIEW"
+      },
+      "CONTACTED": {
+        "CONVERT": "CONVERTED",
+        "MARK_NURTURE": "NURTURE",
+        "DISQUALIFY": "DISQUALIFIED"
+      },
+      "CONVERTED": {},
+      "DISQUALIFIED": {
+        "QUALIFY": "QUALIFIED"
+      }
+    },
+    "evidence_required_for_every_transition": true,
+    "max_history_entries": 100,
+    "external_write_default": "BLOCKED"
+  },
+  "monitoring": {
+    "max_subjects": 250,
+    "min_interval_days": 1,
+    "max_interval_days": 30,
+    "default_hard_limit_per_run": 1,
+    "raw_provider_content_persistence_allowed": false,
+    "completeness_claim_allowed": false,
+    "normal_scheduler_required": true,
+    "cost_governor_required": true
+  },
+  "outreach": {
+    "draft_only": true,
+    "automatic_send_allowed": false,
+    "approval_required": true,
+    "eligible_states": ["QUALIFIED", "CONTACT_REVIEW"],
+    "external_send_performed_by_package": false
+  },
+  "claim_boundary": "Lead Intelligence describes verified observed prospects and bounded monitoring evidence only. Adaptive queries remain proposal-and-review gated, CRM state is attributable and internal until separately approved external write, outreach remains draft-only until exact human approval, and no workflow may claim exhaustive market coverage."
+}
