@@ -33,7 +33,7 @@ function plan(){
       {id:"surabaya-west",label:"Surabaya West",area:{kind:"RECTANGLE",low:{latitude:-7.35,longitude:112.60},high:{latitude:-7.15,longitude:112.78}}},
       {id:"surabaya-east",label:"Surabaya East",area:{kind:"RECTANGLE",low:{latitude:-7.35,longitude:112.78},high:{latitude:-7.15,longitude:112.95}}},
     ],
-  },{policy});
+  },{policy,geo_policy:geoPolicy});
 }
 
 function discoveryRecords(){
@@ -117,7 +117,7 @@ function buildFixtureProfile(){
 
 test("bounded search expansion deduplicates keywords and never claims completeness",()=>{
   const p=plan();
-  assert.equal(validateExpansionPlan(p,{policy}),true);
+  assert.equal(validateExpansionPlan(p,{policy,geo_policy:geoPolicy}),true);
   assert.equal(p.completeness_claim,false);
   assert.equal(p.queries.length,4);
   assert.deepEqual([...new Set(p.queries.map(x=>x.normalized_keyword))].sort(),["driver training","driving school"]);
@@ -136,13 +136,13 @@ test("adaptive search expansion is proposal-only and evidence-backed",()=>{
     proposedKeywords:["fleet safety training","commercial driver course"],
     reason:"Observed public sites use alternate category language.",
     evidence_refs:["public-source:alpha"],
-  },{policy});
+  },{policy,geo_policy:geoPolicy});
   assert.equal(proposal.review_required,true);
   assert.equal(proposal.approved,false);
   assert.match(proposal.proposal_ref,/^geo-expansion-proposal:sha256:[a-f0-9]{64}$/);
   assert.throws(()=>proposeAdaptiveExpansion({
     currentPlan:plan(),proposedKeywords:["x"],reason:"because",evidence_refs:[],
-  },{policy}),/evidence required/);
+  },{policy,geo_policy:geoPolicy}),/evidence required/);
 });
 
 test("identity resolution merges strong duplicate evidence but never merges fuzzy-name-only records",()=>{
