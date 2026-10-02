@@ -88,6 +88,7 @@ export function updateTask(registry, taskId, patch, clock = now) {
   if (!STATUSES.includes(status)) throw new Error("Unknown status.");
   if (status !== task.lifecycle_status && !transitions[task.lifecycle_status]?.has(status)) throw new Error(`Invalid transition ${task.lifecycle_status} → ${status}.`);
   if (task.approval_required && ["IN_PROGRESS", "COMPLETED", "VERIFIED"].includes(status) && task.approval_status !== "APPROVED") throw new Error("Owner approval required before this task may execute.");
+  if (task.approval_required && task.approval_status === "APPROVED" && task.approval_expires_at && ["IN_PROGRESS","COMPLETED","VERIFIED"].includes(status) && Date.parse(clock()) >= Date.parse(task.approval_expires_at)) throw new Error("Approval expired before execution.");
   const actor = clean(patch.actor || "owner", 40).toLowerCase();
   const evidence = clean(patch.evidence_ref, 1000);
   if (status === "VERIFIED") {
@@ -151,6 +152,7 @@ export function recordApproval(registry, taskId, decision, clock = now) {
   const status = clean(decision.status, 20).toUpperCase();
   if (!["APPROVED", "REJECTED"].includes(status)) throw new Error("Approval decision must be APPROVED or REJECTED.");
   const at = clock();
+  if(status === "APPROVED" && task.approval_expires_at && Date.parse(at) >= Date.parse(task.approval_expires_at)) throw new Error("Cannot approve an expired approval request.");
   task.approval_status = status;
   task.approval_actor = "owner";
   task.approval_at = at;
@@ -160,6 +162,14 @@ export function recordApproval(registry, taskId, decision, clock = now) {
     decision: status,
     evidence_ref: task.approval_evidence_ref,
     risk_class: task.risk_class,
+    target: task.approval_target,
+    scope_actions: task.approval_scope_actions,
+    scope_resources: task.approval_scope_resources,
+    expires_at: task.approval_expires_at,
+    preview: task.approval_preview,
+    reason: task.approval_reason,
+    budget_amount: task.approval_budget_amount,
+    budget_currency: task.approval_budget_currency,
   }));
   next.updated_at = at;
   validateRegistry(next);
