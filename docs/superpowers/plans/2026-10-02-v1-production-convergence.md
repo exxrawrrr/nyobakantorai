@@ -20,8 +20,8 @@
 - [x] Review connector, sandbox, credential, memory/replay/artifact, recovery, and team security boundaries.
 - [x] Add operator release/post-release runbook.
 - [x] Run clean workstation baseline verification in an isolated Python environment.
-- [ ] Record live one-worker/subset/full/lifecycle install matrix evidence.
-- [ ] Reconcile final blocker ledger after live matrix.
+- [x] Record one-worker/subset/full/lifecycle install matrix evidence across Linux, Windows, and minimum-version CI.
+- [x] Reconcile blocker ledger after install convergence: four production blockers remain.
 - [ ] Require final PR Linux/Windows/minimum-version verification.
 - [ ] Merge with exact-head guard and require exact-main three-lane verification.
 - [ ] Record final manual release verdict.
