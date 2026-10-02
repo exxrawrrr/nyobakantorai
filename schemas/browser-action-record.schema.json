@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/browser-action-record.schema.json",
+  "title": "nyobakantorai Browser Action Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "employee_id",
+    "flow",
+    "plan_ref",
+    "profile_ref",
+    "connector_route_ref",
+    "capability_route_ref",
+    "action",
+    "approval_ref",
+    "injection_signals",
+    "content_trust",
+    "started_at",
+    "completed_at",
+    "status",
+    "before_url",
+    "after_url",
+    "provider_evidence_ref",
+    "screenshot_ref",
+    "artifact_refs",
+    "observed_text_sha256",
+    "external_mutation_observed",
+    "pre_action_state_ref",
+    "execution_receipt_ref",
+    "post_action_state_ref",
+    "action_record_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "employee_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "flow": {
+      "enum": [
+        "PUBLIC_RESEARCH",
+        "USER_OWNED_AUDIT",
+        "LOCALHOST_QA"
+      ]
+    },
+    "plan_ref": {
+      "type": "string",
+      "pattern": "^browser-action-plan:sha256:[a-f0-9]{64}$"
+    },
+    "profile_ref": {
+      "type": "string",
+      "pattern": "^browser-profile:sha256:[a-f0-9]{64}$"
+    },
+    "connector_route_ref": {
+      "type": "string",
+      "pattern": "^connector-route:sha256:[a-f0-9]{64}$"
+    },
+    "capability_route_ref": {
+      "type": "string",
+      "pattern": "^capability-route:sha256:[a-f0-9]{64}$"
+    },
+    "action": {
+      "type": "object"
+    },
+    "approval_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "injection_signals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "content_trust": {
+      "enum": [
+        "NO_INJECTION_SIGNAL",
+        "UNTRUSTED_PAGE_DATA"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "EXECUTED",
+        "FAILED",
+        "PARTIAL"
+      ]
+    },
+    "before_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "after_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "provider_evidence_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "screenshot_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "artifact_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "observed_text_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "external_mutation_observed": {
+      "type": "boolean"
+    },
+    "pre_action_state_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "execution_receipt_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "post_action_state_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "action_record_ref": {
+      "type": "string",
+      "pattern": "^browser-action:sha256:[a-f0-9]{64}$"
+    }
+  }
+}
