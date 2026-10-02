@@ -299,6 +299,9 @@ Closure: PASS for repository delivery. Artifact versions are immutable and check
 
 ### CHAT 15 — Checkpoint + Failure Recovery
 
+**Status: COMPLETE — CHECKPOINT + FAILURE RECOVERY VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.6.1-CHECKPOINT-RECOVERY.md`
+
 Goal: resume useful work after bounded failures.
 
 Deliverables:
@@ -311,6 +314,8 @@ Deliverables:
 - failure-injection tests.
 
 Exit gate: a mid-mission failure resumes without duplicating already-completed work.
+
+Closure: PASS for repository delivery. Recovery checkpoints are checksumed and durable; only safe terminal failure boundaries may resume; attempts and recovery cycles are bounded; provider fallback is allowlisted and enforced; browser recovery requires a new isolated session; Mission/Task RETRYING -> RECOVERED semantics are exercised; retry Attempts preserve previous_attempt_id + recovery_checkpoint_ref lineage; failure-injection tests prove completed TaskNodes are not rerun while failed and downstream work resumes exactly once. Targeted suite passed 53/53 and PR verify #635 passed Ubuntu, Windows, and minimum-version jobs.
 
 ### CHAT 16 — Project Brain / Memory 2.0
 

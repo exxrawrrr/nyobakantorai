@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "max_attempts_per_task": 3,
+  "max_recovery_cycles": 2,
+  "retryable_error_categories": [
+    "TIMEOUT",
+    "ADAPTER_ERROR",
+    "CLEANUP_FAILED",
+    "RUNTIME_REPORTED_FAILURE",
+    "RUNTIME_REPORTED_PARTIAL"
+  ],
+  "provider_fallbacks": {},
+  "browser": {
+    "strategy": "NEW_ISOLATED_SESSION",
+    "reuse_user_profile_forbidden": true,
+    "max_session_restarts": 1
+  }
+}
