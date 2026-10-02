@@ -18,6 +18,14 @@ test("public office exposes risk selection and owner approval controls", async (
   assert.match(app, /function renderApprovals/);
   assert.match(app, /data-queue-decision/);
   assert.match(app, /approval-pending-count/);
+  assert.match(app, /data-approval-v2/);
+  assert.match(app, /Edit scope \/ preview/);
+  for (const field of ["Target","Risk","Budget","Reason","Evidence","Preview","Scope","Expiry"]) {
+    assert.match(app, new RegExp(field));
+  }
+  for (const field of ["approval_reason","approval_preview","approval_scope_actions","approval_scope_resources","approval_expires_at","approval_budget_amount","approval_budget_currency"]) {
+    assert.match(app, new RegExp(field));
+  }
 });
 
 test("capability endpoint declares the human approval boundary", async () => {
