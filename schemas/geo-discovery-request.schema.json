@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/exxrawrrr/nyobakantorai/schemas/geo-discovery-request.schema.json",
+  "title": "nyobakantorai Geo Discovery Request v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "operation",
+    "environment",
+    "field_profile",
+    "mission_request_index"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "operation": {
+      "enum": [
+        "TEXT_SEARCH",
+        "NEARBY_SEARCH",
+        "PLACE_DETAILS"
+      ]
+    },
+    "environment": {
+      "enum": [
+        "production",
+        "development",
+        "test"
+      ]
+    },
+    "field_profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "query": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "place_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "area": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "page_size": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "page_number": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "max_result_count": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "mission_request_index": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}
