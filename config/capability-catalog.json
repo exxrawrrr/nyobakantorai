@@ -514,6 +514,52 @@
       "artifact_ref": "config/capabilities.json"
     },
     {
+      "id": "geo.places.details",
+      "kind": "adapter",
+      "description": "Bounded place-detail or Place ID refresh lookup using explicit field-mask, retention, attribution, and cost policy.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
+      "id": "geo.places.search",
+      "kind": "adapter",
+      "description": "Bounded provider-aware place discovery using explicit field-mask, geography, cost, retention, and attribution policy.",
+      "source_refs": [
+        {
+          "source_id": "project:nyobakantorai",
+          "source_commit": null,
+          "license": "MIT"
+        }
+      ],
+      "usage_mode": "provider-neutral-contract",
+      "default_state": "NOT_CONNECTED",
+      "risk_class": "READ_ONLY",
+      "required_by": [],
+      "optional_for": [],
+      "platforms": [
+        "unspecified"
+      ],
+      "install_method": "provider-specific; see linked optional integrations",
+      "verification_method": "provider evidence_ref + employee scope + autonomy/approval router",
+      "artifact_ref": "config/capabilities.json"
+    },
+    {
       "id": "integration.browser-use-evaluation",
       "kind": "tool",
       "description": "Higher-level browser agent candidate only. Evaluate observability, auth handling, write safety, recovery, and cost before adoption.",
