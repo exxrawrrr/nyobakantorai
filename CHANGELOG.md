@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0] - Unreleased — release blocked
+
+### Added
+- Live Workforce Mission/TaskNode/Attempt contracts, deterministic mission planning, typed handoffs, bounded orchestration, model/capability routing, Live Sandbox guards, public demo surfaces, canonical execution telemetry, and Siti independent verification.
+- End-to-end v0.6 acceptance harness with machine-readable release convergence evidence and fail-closed readiness checks.
+
+### Release status
+- **BLOCKED — 9/11 acceptance criteria PASS.**
+- `REAL_MODEL_EXECUTION` and `COST_QUOTA_ENFORCEMENT` remain blocked because fresh current-commit Codex and Hermes attempts did not produce qualifying `LIVE_RUNTIME_EVIDENCE`.
+- `v0.5.1` remains the published stable release; package metadata intentionally remains `0.5.1`.
+- No `v0.6.0` tag or GitHub Release is authorized while readiness is blocked.
+
+
 ## [0.5.1] - 2026-10-01
 
 ### Fixed

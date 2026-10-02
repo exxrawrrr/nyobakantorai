@@ -239,6 +239,9 @@ Closure: PASS for CHAT 11 itself. The deterministic bounded mission reached VERI
 
 ### CHAT 12 — v0.6.0 Release Convergence
 
+**Status: COMPLETE — RELEASE BLOCKED; CONVERGENCE VERIFIED — 2026-10-02.**
+Implementation/status: `docs/V0.6-RELEASE-CONVERGENCE.md`
+
 Goal: release only what the evidence supports.
 
 Deliverables:
@@ -250,6 +253,8 @@ Deliverables:
 - tag/release only after mandatory gates.
 
 Stop condition: insufficient evidence keeps the release blocked.
+
+Closure: PASS for CHAT 12 itself. Machine-readable readiness computes BLOCKED from the two unresolved CHAT 11 live criteria; PR cross-platform verification and all four isolated fresh-install matrices pass; public deployment is NOT_CONFIGURED; package metadata remains 0.5.1; release workflow fails closed on mismatched tags and requires v0.6 readiness READY for tag v0.6.0. No v0.6.0 tag or GitHub Release was created.
 
 ---
 

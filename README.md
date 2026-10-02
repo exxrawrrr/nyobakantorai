@@ -28,6 +28,20 @@ This **does not** mean the project is broadly production-proven, that every prov
 
 The earlier `v0.5.0` tag is intentionally preserved as a failed publication attempt. It was not rewritten or presented as a successful release.
 
+## v0.6.0 candidate status — release blocked
+
+The v0.6.0 Live Workforce implementation has converged through CHAT 12, but it is **not a published release**.
+
+The end-to-end acceptance mission passed **9 of 11** criteria. Two mandatory live criteria remain blocked:
+
+- `REAL_MODEL_EXECUTION`
+- `COST_QUOTA_ENFORCEMENT`
+
+Fresh current-commit Codex and Hermes observations both ran inside the canonical Live Sandbox and verified teardown, but neither produced qualifying `LIVE_RUNTIME_EVIDENCE`. The repository therefore keeps `v0.5.1` as the stable release, keeps package metadata at `0.5.1`, and fails closed if someone attempts to publish tag `v0.6.0` before readiness becomes `READY`.
+
+See [v0.6.0 Release Convergence](docs/V0.6-RELEASE-CONVERGENCE.md).
+
+
 ## What the project currently provides
 
 - a local visual office for seeing workers, tasks, state, and evidence;

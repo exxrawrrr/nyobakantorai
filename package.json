@@ -121,7 +121,7 @@
     "maturity:check": "node scripts/maturity-model.mjs --check",
     "test:complexity-budget": "node --test packages/complexity-budget/index.test.mjs",
     "complexity:check": "node scripts/complexity-budget.mjs --check",
-    "test:release-readiness": "node --test packages/release-readiness/index.test.mjs",
+    "test:release-readiness": "node --test packages/release-readiness/index.test.mjs packages/release-readiness/v0.6.test.mjs",
     "v0.5:readiness:check": "node scripts/v0.5-release-readiness.mjs",
     "v0.5:readiness:require-ready": "node scripts/v0.5-release-readiness.mjs --require-ready",
     "test:portability-run-verifier": "python reference-verifier/python/test_portability_run_verifier.py",
@@ -134,6 +134,8 @@
     "test:execution-telemetry": "node --test packages/mission-engine/telemetry.test.mjs",
     "test:v0.6-acceptance": "node --test packages/v0.6-acceptance/index.test.mjs",
     "v0.6:acceptance:check": "node scripts/v0.6-acceptance.mjs check",
-    "v0.6:acceptance:live": "node scripts/v0.6-acceptance.mjs live"
+    "v0.6:acceptance:live": "node scripts/v0.6-acceptance.mjs live",
+    "v0.6:readiness:check": "node scripts/v0.6-release-readiness.mjs",
+    "v0.6:readiness:require-ready": "node scripts/v0.6-release-readiness.mjs --require-ready"
   }
 }

@@ -1,3 +1,4 @@
+import { V06_ACCEPTANCE_CRITERIA } from "../v0.6-acceptance/index.mjs";
 import { access,readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
@@ -92,4 +93,136 @@ export function buildV05ReadinessSnapshot({config,assessment}){
 export async function readAndAssessV05ReleaseReadiness({root=resolve(import.meta.dirname,"../..")}={}){
   const config=JSON.parse(await readFile(resolve(root,"config/v0.5-release-readiness.json"),"utf8"));
   return {config,assessment:await assessV05ReleaseReadiness(config,{root})};
+}
+
+
+export async function assessV06ReleaseReadiness(config,{root=resolve(import.meta.dirname,"../..")}={}){
+  const errors=[];
+  if(config?.schema!==1)errors.push("v0.6 release readiness schema must be 1");
+  if(config?.candidate!=="v0.6.0")errors.push("v0.6 candidate must be v0.6.0");
+  if(!["BLOCKED","READY"].includes(config?.decision))errors.push("v0.6 decision must be BLOCKED or READY");
+
+  const readJson=async(path)=>JSON.parse(await readFile(resolve(root,path),"utf8"));
+  const [acceptance,pkg]=await Promise.all([
+    readJson("config/v0.6-acceptance-evidence.json"),
+    readJson("package.json"),
+  ]);
+
+  for(const path of config?.durable_requirement_surfaces||[]){
+    if(!await exists(resolve(root,path)))errors.push("v0.6 durable requirement surface missing: "+path);
+  }
+
+  if(acceptance?.schema!==1)errors.push("v0.6 acceptance evidence schema must be 1");
+  if(acceptance?.chat!=="CHAT 11")errors.push("v0.6 acceptance evidence must come from CHAT 11");
+  if(acceptance?.canonical_doc&&!await exists(resolve(root,acceptance.canonical_doc)))errors.push("v0.6 acceptance canonical doc missing: "+acceptance.canonical_doc);
+
+  const criteria=Array.isArray(acceptance?.criteria)?acceptance.criteria:[];
+  const expectedIds=[...V06_ACCEPTANCE_CRITERIA];
+  const actualIds=criteria.map((item)=>item?.id);
+  if(JSON.stringify(actualIds)!==JSON.stringify(expectedIds)){
+    errors.push("v0.6 acceptance criteria drift: expected="+JSON.stringify(expectedIds)+" actual="+JSON.stringify(actualIds));
+  }
+  for(const item of criteria){
+    if(!["PASS","BLOCKED","FAILED"].includes(item?.status))errors.push("v0.6 acceptance criterion status invalid: "+String(item?.id));
+  }
+
+  const passCount=criteria.filter((item)=>item.status==="PASS").length;
+  const computed=[];
+  if(acceptance?.mission_state!=="VERIFIED")computed.push("MISSION_VERIFICATION");
+  for(const item of criteria){
+    if(item?.status!=="PASS"&&nonEmpty(item?.id))computed.push(item.id);
+  }
+
+  const expectedVerdict=computed.length?"BLOCKED":"ACCEPTED";
+  if(acceptance?.verdict!==expectedVerdict)errors.push("v0.6 acceptance verdict drift: declared="+String(acceptance?.verdict)+" computed="+expectedVerdict);
+  if(acceptance?.passed!==passCount||acceptance?.total!==criteria.length)errors.push("v0.6 acceptance count drift");
+  if(config?.acceptance?.observed_pass_count!==passCount||config?.acceptance?.total!==criteria.length)errors.push("v0.6 readiness acceptance count drift");
+  if(config?.acceptance?.mission_state!==acceptance?.mission_state||config?.acceptance?.verdict!==acceptance?.verdict)errors.push("v0.6 readiness acceptance state drift");
+
+  const deployment=config?.public_demo_deployment||{};
+  if(deployment.configured===true&&deployment.state!=="VERIFIED")computed.push("PUBLIC_DEMO_DEPLOYMENT");
+  if(deployment.configured!==true&&deployment.state!=="NOT_CONFIGURED")errors.push("unconfigured public demo deployment must be NOT_CONFIGURED");
+
+  const declared=(config?.release_blockers||[]).map((item)=>item.id);
+  if(JSON.stringify(declared)!==JSON.stringify(computed)){
+    errors.push("v0.6 release blocker drift: declared="+JSON.stringify(declared)+" computed="+JSON.stringify(computed));
+  }
+  for(const item of config?.release_blockers||[]){
+    for(const field of ["id","category","status","required_state","current_state","canonical_source","reason","safe_next_action"]){
+      if(!nonEmpty(item?.[field]))errors.push((item?.id||"unknown")+": "+field+" required");
+    }
+    if(item?.canonical_source&&!await exists(resolve(root,item.canonical_source)))errors.push(item.id+": canonical source missing: "+item.canonical_source);
+  }
+
+  const computedDecision=computed.length?"BLOCKED":"READY";
+  if(config?.decision!==computedDecision)errors.push("v0.6 decision drift: declared="+String(config?.decision)+" computed="+computedDecision);
+
+  const hold=config?.package_version_hold||{};
+  const candidateVersion=String(config?.candidate||"").replace(/^v/,"");
+  if(hold.current!==pkg?.version)errors.push("v0.6 package version hold drift");
+  if(hold.candidate!==candidateVersion)errors.push("v0.6 package version candidate drift");
+  if(computedDecision==="BLOCKED"){
+    if(hold.bump_authorized===true)errors.push("v0.6 package bump cannot be authorized while readiness is blocked");
+    if(pkg?.version===candidateVersion)errors.push("blocked v0.6 candidate must not replace stable package version metadata");
+  }else{
+    if(pkg?.version!==candidateVersion)errors.push("READY v0.6 candidate requires package version "+candidateVersion);
+    if(hold.bump_authorized!==true)errors.push("READY v0.6 candidate requires package bump authorization");
+  }
+
+  const promotion=config?.promotion||{};
+  if(computedDecision==="BLOCKED"){
+    if(promotion.stable_tag_authorized===true)errors.push("stable tag cannot be authorized while v0.6 is blocked");
+    if(promotion.publication_authorized===true)errors.push("publication cannot be authorized while v0.6 is blocked");
+  }
+
+  const observations=Array.isArray(acceptance?.live_observations)?acceptance.live_observations:[];
+  const runtimes=new Set(observations.map((item)=>item?.runtime));
+  for(const runtime of ["codex","hermes"]){
+    if(!runtimes.has(runtime))errors.push("v0.6 acceptance live observation missing runtime: "+runtime);
+  }
+  for(const item of observations){
+    if(item?.sandbox_executed!==true)errors.push("v0.6 live observation sandbox must have executed: "+String(item?.runtime));
+    if(item?.teardown_verified!==true)errors.push("v0.6 live observation teardown must be verified: "+String(item?.runtime));
+    if(item?.external_write_observed!==false)errors.push("v0.6 live observation external write safety drift: "+String(item?.runtime));
+  }
+
+  if(!nonEmpty(config?.claim_language?.allowed)||!Array.isArray(config?.claim_language?.forbidden)||config.claim_language.forbidden.length<4)errors.push("v0.6 claim language boundaries required");
+
+  return Object.freeze({
+    ok:errors.length===0,
+    errors:Object.freeze(errors),
+    decision:computedDecision,
+    blockers:Object.freeze(computed),
+    blocker_count:computed.length,
+    canonical:Object.freeze({
+      mission_state:acceptance?.mission_state||"UNKNOWN",
+      acceptance_verdict:acceptance?.verdict||"UNKNOWN",
+      acceptance_passed:passCount,
+      acceptance_total:criteria.length,
+      package_version:pkg?.version||"UNKNOWN",
+      public_demo_deployment:deployment.state||"UNKNOWN",
+      live_observation_runtimes:Object.freeze([...runtimes].sort()),
+    }),
+  });
+}
+
+export function buildV06ReadinessSnapshot({config,assessment}){
+  if(!assessment?.ok)throw new Error("cannot snapshot invalid v0.6 release readiness");
+  return Object.freeze({
+    schema:1,
+    candidate:config.candidate,
+    decision:assessment.decision,
+    blocker_count:assessment.blocker_count,
+    blockers:assessment.blockers,
+    canonical:assessment.canonical,
+    package_bump_authorized:config.package_version_hold.bump_authorized===true,
+    stable_tag_authorized:config.promotion.stable_tag_authorized===true,
+    publication_authorized:config.promotion.publication_authorized===true,
+    truth_boundary:"green CI can validate a BLOCKED release state; it does not convert missing live acceptance evidence into release authorization",
+  });
+}
+
+export async function readAndAssessV06ReleaseReadiness({root=resolve(import.meta.dirname,"../..")}={}){
+  const config=JSON.parse(await readFile(resolve(root,"config/v0.6-release-readiness.json"),"utf8"));
+  return {config,assessment:await assessV06ReleaseReadiness(config,{root})};
 }
