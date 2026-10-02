@@ -1,6 +1,7 @@
 import { assert,clean,contentRef,freeze,normalizedText,uniq,iso } from "./common.mjs";
+import { normalizeGeoDiscoveryRequest } from "../geo-core/index.mjs";
 
-export function createSearchExpansionPlan(input,{policy}={}){
+export function createSearchExpansionPlan(input,{policy,geo_policy}={}){
   assert(policy?.schema===1,"Geo intelligence policy required.");
   const cfg=policy.search_expansion||{};
   const missionId=clean(input?.mission_id,160);
@@ -25,7 +26,12 @@ export function createSearchExpansionPlan(input,{policy}={}){
     seenGeo.add(id);
     const area=structuredClone(raw.area);
     assert(area&&typeof area==="object","Expansion geography area required.");
-    geographies.push({id,label,area});
+    assert(geo_policy,"Expansion requires Geo Core provider policy for area validation.");
+    const areaProbe=normalizeGeoDiscoveryRequest({
+      schema:1,operation:"TEXT_SEARCH",environment:"production",field_profile:"TEXT_SEARCH_IDENTITY",
+      query:"bounded-area-validation",area,page_size:1,page_number:1,mission_request_index:1,
+    },{policy:geo_policy});
+    geographies.push({id,label,area:areaProbe.area});
   }
   assert(geographies.length>0,"At least one bounded geography required.");
   assert(geographies.length<=Number(cfg.max_geographies),"Search geography bound exceeded.");
@@ -36,13 +42,20 @@ export function createSearchExpansionPlan(input,{policy}={}){
     for(const keyword of keywords){
       if(requested.length>=Number(cfg.max_queries)) break;
       if(count>=Number(cfg.max_queries_per_geography)) break;
+      const missionIndex=requested.length+1;
+      const geoRequest=normalizeGeoDiscoveryRequest({
+        schema:1,operation:"TEXT_SEARCH",environment:"production",field_profile:"TEXT_SEARCH_IDENTITY",
+        query:keyword,area:geo.area,page_size:20,page_number:1,mission_request_index:missionIndex,
+      },{policy:geo_policy});
       const query={
         geography_id:geo.id,
         geography_label:geo.label,
         area:structuredClone(geo.area),
         keyword,
         normalized_keyword:normalizedText(keyword),
-        ordinal:requested.length+1,
+        ordinal:missionIndex,
+        geo_request_ref:geoRequest.request_ref,
+        field_profile:geoRequest.field_profile,
       };
       requested.push({...query,query_ref:contentRef("geo-expansion-query",query)});
       count++;
@@ -61,7 +74,7 @@ export function createSearchExpansionPlan(input,{policy}={}){
   return freeze({...core,plan_ref:contentRef("geo-expansion-plan",core)});
 }
 
-export function validateExpansionPlan(plan,{policy}={}){
+export function validateExpansionPlan(plan,{policy,geo_policy}={}){
   assert(plan?.schema===1,"Expansion plan schema invalid.");
   assert(plan.completeness_claim===false,"Expansion plan may not claim completeness.");
   assert(Array.isArray(plan.queries)&&plan.queries.length>0,"Expansion queries required.");
@@ -69,9 +82,15 @@ export function validateExpansionPlan(plan,{policy}={}){
   const perGeo=new Map();
   const refs=new Set();
   for(const q of plan.queries){
+    const geoRequest=normalizeGeoDiscoveryRequest({
+      schema:1,operation:"TEXT_SEARCH",environment:"production",field_profile:q.field_profile,
+      query:q.keyword,area:q.area,page_size:20,page_number:1,mission_request_index:q.ordinal,
+    },{policy:geo_policy});
+    assert(geoRequest.request_ref===q.geo_request_ref,"Expansion Geo Core request ref mismatch.");
     assert(q.query_ref===contentRef("geo-expansion-query",{
       geography_id:q.geography_id,geography_label:q.geography_label,area:q.area,
       keyword:q.keyword,normalized_keyword:q.normalized_keyword,ordinal:q.ordinal,
+      geo_request_ref:q.geo_request_ref,field_profile:q.field_profile,
     }),"Expansion query checksum mismatch.");
     assert(!refs.has(q.query_ref),"Duplicate expansion query ref.");
     refs.add(q.query_ref);
@@ -85,8 +104,8 @@ export function validateExpansionPlan(plan,{policy}={}){
   return true;
 }
 
-export function proposeAdaptiveExpansion({currentPlan,proposedKeywords=[],reason,evidence_refs=[]}={}, {policy}={}){
-  validateExpansionPlan(currentPlan,{policy});
+export function proposeAdaptiveExpansion({currentPlan,proposedKeywords=[],reason,evidence_refs=[]}={}, {policy,geo_policy}={}){
+  validateExpansionPlan(currentPlan,{policy,geo_policy});
   assert(policy.search_expansion.adaptive_expansion_requires_review===true,"Adaptive expansion must require review.");
   const words=uniq(proposedKeywords.map(x=>clean(x,300)).filter(Boolean));
   assert(words.length>0,"Adaptive expansion proposal requires keywords.");
