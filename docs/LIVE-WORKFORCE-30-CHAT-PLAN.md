@@ -280,6 +280,9 @@ Closure: PASS for repository delivery. Cost admission is enforced before RUNNING
 
 ### CHAT 14 — Artifact Workspace + Execution Replay
 
+**Status: IMPLEMENTED — FINAL REPOSITORY VERIFICATION PENDING — 2026-10-02.**
+Implementation/status: `docs/V0.6.1-ARTIFACT-WORKSPACE-REPLAY.md`
+
 Goal: turn outputs and history into durable production records.
 
 Deliverables:
