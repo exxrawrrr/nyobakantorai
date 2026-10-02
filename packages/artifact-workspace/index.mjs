@@ -137,15 +137,36 @@ const INDEX_KEY="artifact-workspace:index:v1";
 const recordKey=(id,version)=>"artifact-workspace:record:"+id+":v"+version;
 const blobKey=(sha)=>"artifact-workspace:blob:sha256:"+sha;
 
-function emptyIndex(){ return {schema:1,records:[],events:[],updated_at:null}; }
+function indexBody(index){
+  return Object.freeze({
+    schema:1,
+    records:Array.isArray(index?.records)?index.records:[],
+    events:Array.isArray(index?.events)?index.events:[],
+    updated_at:index?.updated_at??null,
+  });
+}
+function emptyIndex(){ return {...indexBody({records:[],events:[],updated_at:null}),index_sha256:null}; }
+function validateIndex(index){
+  assert(index?.schema===1 && Array.isArray(index.records) && Array.isArray(index.events),"Artifact workspace index is invalid.");
+  if(index.index_sha256!=null){
+    assert(/^[a-f0-9]{64}$/.test(index.index_sha256),"Artifact workspace index checksum is invalid.");
+    assert(sha256Hex(canonicalArtifactJson(indexBody(index)))===index.index_sha256,"Artifact workspace index checksum mismatch.");
+  }
+  return true;
+}
 function readIndex(storage){
   const raw=storage.get(INDEX_KEY);
   if(raw==null||raw==="") return emptyIndex();
   const parsed=JSON.parse(raw);
-  assert(parsed?.schema===1 && Array.isArray(parsed.records) && Array.isArray(parsed.events),"Artifact workspace index is invalid.");
+  validateIndex(parsed);
   return parsed;
 }
-function writeIndex(storage,index){ storage.set(INDEX_KEY,JSON.stringify(index)); }
+function writeIndex(storage,index){
+  const body=indexBody(index);
+  const finalized={...body,index_sha256:sha256Hex(canonicalArtifactJson(body))};
+  storage.set(INDEX_KEY,JSON.stringify(finalized));
+  return finalized;
+}
 
 function workspaceEventBody(input={}){
   assert(validTimestamp(input.at),"Artifact workspace event timestamp is invalid.");
@@ -309,6 +330,7 @@ export function importArtifactWorkspaceBundle(text,{storage}={}){
   };
   assert(/^[a-f0-9]{64}$/.test(bundle.bundle_sha256||""),"Artifact workspace bundle checksum is invalid.");
   assert(sha256Hex(canonicalArtifactJson(payload))===bundle.bundle_sha256,"Artifact workspace bundle integrity check failed.");
+  validateIndex(bundle.index);
   validateWorkspaceEvents(bundle.index.events);
   assert(bundle.index.records.length===bundle.records.length,"Artifact workspace bundle record count mismatch.");
 
@@ -415,6 +437,7 @@ export function buildReplayStream({
   const taskIds=new Set(tasks.map((x)=>x.task_id));
   for(const attempt of attempts) assert(taskIds.has(attempt.task_id),"Replay Attempt references missing TaskNode.");
 
+  if(artifact_events.length) validateWorkspaceEvents(artifact_events);
   const sources=[
     ...orchestrator_events.map((event,index)=>replaySourceEvent("MISSION_ORCHESTRATOR",event,index)),
     ...artifact_events.filter((event)=>event.mission_id===missionId).map((event,index)=>replaySourceEvent("ARTIFACT_WORKSPACE",event,index)),
@@ -532,7 +555,7 @@ export function archiveMissionRun({workspace,result,artifacts=[],created_at=null
     tasks:result.tasks,
     attempts:result.attempts,
     orchestrator_events:result.events,
-    artifact_events:workspace.events({mission_id:result.mission.mission_id}),
+    artifact_events:workspace.events(),
     created_at:created_at||result.mission.updated_at,
   });
   return Object.freeze({
