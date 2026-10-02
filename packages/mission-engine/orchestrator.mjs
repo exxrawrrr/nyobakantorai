@@ -5,6 +5,7 @@ import { normalizeTaskNode, transitionTaskNode } from "../task-registry/task-nod
 import { buildHandoffEnvelope, normalizeHandoffResult, resultFromAttempt } from "./handoff.mjs";
 import { buildMissionTelemetry } from "./telemetry.mjs";
 import { runSitiVerification } from "../evidence-verifier/siti.mjs";
+import { normalizeCostAmount } from "../cost-governor/index.mjs";
 
 export const MISSION_ORCHESTRATOR_API = 1;
 
@@ -38,6 +39,26 @@ function dependencyMaps(plan) {
   return { dependencies, dependents };
 }
 
+function normalizeCostGovernance(value, adapter) {
+  if (value == null) return null;
+  assert(value && typeof value === "object" && !Array.isArray(value), "Runtime cost_governance must be an object or null.");
+  const estimate = normalizeCostAmount(value.estimate || { status:"UNKNOWN", amount:null, currency:null }, "runtime cost estimate");
+  const alternatives = Object.freeze((Array.isArray(value.alternatives) ? value.alternatives : []).map((item,index) => {
+    assert(item && typeof item === "object" && !Array.isArray(item), "Runtime cost alternative must be an object.");
+    const id = clean(item.id || ("alternative-"+(index+1)), 160);
+    assert(id, "Runtime cost alternative id is required.");
+    return Object.freeze({ id, cost:normalizeCostAmount(item.cost || { status:"UNKNOWN", amount:null, currency:null }, "runtime cost alternative") });
+  }));
+  return Object.freeze({
+    project_id:value.project_id == null ? null : clean(value.project_id,160) || null,
+    estimate,
+    alternatives,
+    provider_id:clean(value.provider_id || adapter.runtime?.provider,120).toLowerCase() || null,
+    model_id:value.model_id == null ? null : clean(value.model_id,160) || null,
+    tool_ids:unique(value.tool_ids,160),
+  });
+}
+
 function normalizeResolution(value = {}, task) {
   assert(value && typeof value === "object" && !Array.isArray(value), `Runtime resolution missing for ${task.task_id}`);
   assert(value.adapter && typeof value.adapter === "object", `Runtime adapter missing for ${task.task_id}`);
@@ -61,6 +82,7 @@ function normalizeResolution(value = {}, task) {
     capability_route_refs:unique(value.capability_route_refs),
     unknowns:unique(value.unknowns),
     residual_risks:unique(value.residual_risks),
+    cost_governance:normalizeCostGovernance(value.cost_governance, value.adapter),
   });
 }
 
@@ -154,6 +176,9 @@ export async function executeMissionPlan(planInput, {
   idFactory = (kind, taskId, ordinal = 1) => `${kind}:${taskId}:${ordinal}`,
   receiptRefFactory = null,
   buildVerificationRequest = null,
+  costGovernor = null,
+  resolveCostReroute = null,
+  reportActualCost = null,
   shouldCancel = () => false,
 } = {}) {
   const plan = normalizeMissionPlan(planInput);
@@ -162,6 +187,13 @@ export async function executeMissionPlan(planInput, {
   assert(typeof shouldCancel === "function", "Mission orchestrator shouldCancel must be a function.");
   if (receiptRefFactory != null) assert(typeof receiptRefFactory === "function", "receiptRefFactory must be a function or null.");
   if (buildVerificationRequest != null) assert(typeof buildVerificationRequest === "function", "buildVerificationRequest must be a function or null.");
+  if (costGovernor != null) {
+    assert(typeof costGovernor.admit === "function", "costGovernor.admit must be a function.");
+    assert(typeof costGovernor.record === "function", "costGovernor.record must be a function.");
+    assert(typeof costGovernor.snapshot === "function", "costGovernor.snapshot must be a function.");
+  }
+  if (resolveCostReroute != null) assert(typeof resolveCostReroute === "function", "resolveCostReroute must be a function or null.");
+  if (reportActualCost != null) assert(typeof reportActualCost === "function", "reportActualCost must be a function or null.");
 
   const taskById = new Map(plan.task_nodes.map((task) => [task.task_id, task]));
   const metaById = new Map(plan.node_meta.map((meta) => [meta.task_id, meta]));
@@ -170,6 +202,8 @@ export async function executeMissionPlan(planInput, {
   const handoffs = [];
   const returns = [];
   const verifications = [];
+  const costDecisions = [];
+  const costEntries = [];
   const events = [];
   const artifactsByTask = new Map(plan.graph.task_ids.map((id) => [id, []]));
 
@@ -203,6 +237,9 @@ export async function executeMissionPlan(planInput, {
       handoffs:Object.freeze([]),
       returns:Object.freeze([]),
       verifications:Object.freeze([]),
+      cost_decisions:Object.freeze([]),
+      cost_entries:Object.freeze([]),
+      cost_snapshot:costGovernor == null ? null : costGovernor.snapshot(),
       events:Object.freeze(events),
       cancelled:false,
       max_concurrency:maxConcurrency,
@@ -218,7 +255,7 @@ export async function executeMissionPlan(planInput, {
     const meta = metaById.get(taskId);
     assert(current.state === "READY", `Task must be READY before dispatch: ${taskId}`);
 
-    const resolution = normalizeResolution(
+    let resolution = normalizeResolution(
       await resolveRuntime(Object.freeze({
         mission,
         task:current,
@@ -226,6 +263,111 @@ export async function executeMissionPlan(planInput, {
       })),
       current,
     );
+
+    if (costGovernor != null && resolution.cost_governance == null) {
+      const blocked = transitionTaskNode(current, "BLOCKED", {
+        clock,
+        blocking:{ kind:"POLICY", reason:"Cost Governor is enabled but runtime cost governance metadata is missing." },
+      });
+      taskById.set(taskId,blocked);
+      events.push(event("TASK_BLOCKED_BY_COST",clock,{
+        mission_id:mission.mission_id,
+        task_id:taskId,
+        reason_codes:Object.freeze(["COST_GOVERNANCE_MISSING"]),
+      }));
+      return;
+    }
+
+    const admitCost = (resolved) => {
+      if (costGovernor == null) return null;
+      const cg=resolved.cost_governance;
+      const decision=costGovernor.admit({
+        context:{
+          at:clock(),
+          project_id:cg.project_id,
+          mission_id:mission.mission_id,
+          employee_id:current.employee_id,
+          mission_budget:mission.budget,
+        },
+        estimate:cg.estimate,
+        alternatives:cg.alternatives,
+        approval_ref:current.approval.status==="APPROVED" ? current.approval.approval_ref : null,
+      });
+      costDecisions.push(decision);
+      events.push(event("COST_ADMISSION_RECORDED",clock,{
+        mission_id:mission.mission_id,
+        task_id:taskId,
+        action:decision.action,
+        decision_ref:decision.decision_ref,
+        reason_codes:decision.reason_codes,
+      }));
+      return decision;
+    };
+
+    let costDecision=admitCost(resolution);
+    if (costDecision?.action === "REROUTE") {
+      if (resolveCostReroute != null && costDecision.recommended_alternative != null) {
+        const rerouted = await resolveCostReroute(Object.freeze({
+          mission,
+          task:current,
+          node_meta:meta,
+          resolution,
+          cost_decision:costDecision,
+          recommended_alternative:costDecision.recommended_alternative,
+        }));
+        resolution=normalizeResolution(rerouted,current);
+        assert(resolution.cost_governance != null,"Cost reroute resolution must preserve cost_governance metadata.");
+        events.push(event("TASK_COST_REROUTED",clock,{
+          mission_id:mission.mission_id,
+          task_id:taskId,
+          alternative_id:costDecision.recommended_alternative.id,
+        }));
+        costDecision=admitCost(resolution);
+      }
+      if (costDecision?.action === "REROUTE") {
+        const blocked=transitionTaskNode(current,"BLOCKED",{
+          clock,
+          blocking:{kind:"POLICY",reason:"Cost reroute threshold reached and no admissible reroute was resolved."},
+        });
+        taskById.set(taskId,blocked);
+        events.push(event("TASK_BLOCKED_BY_COST",clock,{
+          mission_id:mission.mission_id,
+          task_id:taskId,
+          reason_codes:Object.freeze(["COST_REROUTE_REQUIRED"]),
+        }));
+        return;
+      }
+    }
+
+    if (costDecision?.action === "APPROVAL_REQUIRED") {
+      const waiting=transitionTaskNode(current,"WAITING_APPROVAL",{
+        clock,
+        approval:{required:true,status:"PENDING",approval_ref:null},
+      });
+      taskById.set(taskId,waiting);
+      events.push(event("TASK_WAITING_COST_APPROVAL",clock,{
+        mission_id:mission.mission_id,
+        task_id:taskId,
+        decision_ref:costDecision.decision_ref,
+        reason_codes:costDecision.reason_codes,
+      }));
+      return;
+    }
+
+    if (costDecision?.action === "STOP") {
+      const blocked=transitionTaskNode(current,"BLOCKED",{
+        clock,
+        blocking:{kind:"POLICY",reason:"Cost Governor hard stop: "+costDecision.reason_codes.join(", ")},
+      });
+      taskById.set(taskId,blocked);
+      events.push(event("TASK_BLOCKED_BY_COST",clock,{
+        mission_id:mission.mission_id,
+        task_id:taskId,
+        decision_ref:costDecision.decision_ref,
+        reason_codes:costDecision.reason_codes,
+      }));
+      return;
+    }
 
     const upstreamTaskIds = dependencies.get(taskId);
     const upstreamEmployees = unique(upstreamTaskIds.map((id) => taskById.get(id).employee_id), 40);
@@ -321,6 +463,69 @@ export async function executeMissionPlan(planInput, {
       });
     }
     attempts.push(attempt);
+
+    if (costGovernor != null) {
+      const cg=resolution.cost_governance;
+      let reports=reportActualCost == null ? null : await reportActualCost(Object.freeze({
+        mission,
+        task:running,
+        resolution,
+        outcome,
+        attempt,
+      }));
+      if (reports == null || (Array.isArray(reports) && reports.length===0)) {
+        reports=[{
+          cost_type:cg.model_id ? "MODEL" : "PROVIDER",
+          provider_id:cg.provider_id,
+          model_id:cg.model_id,
+          tool_id:null,
+          cost:{status:"UNKNOWN",amount:null,currency:null},
+          evidence_refs:attempt.evidence_refs,
+        }];
+      } else if (!Array.isArray(reports)) {
+        reports=[reports];
+      }
+
+      for (const report of reports) {
+        assert(report && typeof report === "object" && !Array.isArray(report),"reportActualCost must return an object, array, or null.");
+        const recorded=costGovernor.record({
+          ...report,
+          cost_id:report.cost_id || ("cost:"+attempt.attempt_id+":"+(costEntries.length+1)),
+          project_id:report.project_id ?? cg.project_id,
+          mission_id:report.mission_id ?? mission.mission_id,
+          task_id:report.task_id ?? taskId,
+          employee_id:report.employee_id ?? running.employee_id,
+          provider_id:report.provider_id ?? cg.provider_id,
+          model_id:report.model_id ?? cg.model_id,
+          evidence_refs:Array.isArray(report.evidence_refs) ? report.evidence_refs : attempt.evidence_refs,
+          occurred_at:report.occurred_at || attempt.finished_at || clock(),
+        });
+        costEntries.push(recorded);
+        events.push(event("COST_LEDGER_RECORDED",clock,{
+          mission_id:mission.mission_id,
+          task_id:taskId,
+          cost_id:recorded.cost_id,
+          cost_status:recorded.cost.status,
+          cost_amount:recorded.cost.amount,
+          currency:recorded.cost.currency,
+        }));
+      }
+
+      const snapshot=costGovernor.snapshot();
+      const breaches=snapshot.budget_state.filter((item)=>item.hard_limit_breached||item.reconciliation_required);
+      if (breaches.length) {
+        events.push(event("COST_RECONCILIATION_REQUIRED",clock,{
+          mission_id:mission.mission_id,
+          task_id:taskId,
+          scopes:Object.freeze(breaches.map((item)=>Object.freeze({
+            kind:item.kind,
+            id:item.id,
+            hard_limit_breached:item.hard_limit_breached,
+            reconciliation_required:item.reconciliation_required,
+          }))),
+        }));
+      }
+    }
 
     let terminalTask = transitionFromAttempt(running, attempt, clock);
     terminalTask = withAttempt(terminalTask, attempt, clock);
@@ -501,6 +706,9 @@ export async function executeMissionPlan(planInput, {
     handoffs:Object.freeze(handoffs),
     returns:Object.freeze(returns),
     verifications:Object.freeze(verifications),
+    cost_decisions:Object.freeze(costDecisions),
+    cost_entries:Object.freeze(costEntries),
+    cost_snapshot:costGovernor == null ? null : costGovernor.snapshot(),
     events:Object.freeze(events),
     cancelled:cancelRequested,
     max_concurrency:maxConcurrency,
