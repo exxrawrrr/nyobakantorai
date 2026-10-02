@@ -4,6 +4,7 @@ import { resolve, relative } from "node:path";
 import { tmpdir } from "node:os";
 import { pathToFileURL } from "node:url";
 import { findEmployeeSelectionArg, resolveEmployeeSelection } from "./employee-selection.mjs";
+import { materializeConfiguredUpgrades } from "../packages/skills-store/index.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -39,6 +40,10 @@ export async function buildEmployeePack({ employeeId, outRoot = resolve(root, "d
   const upstream = await readJson(resolve(root, "config/upstream-sources.json"));
   const employee = registry.employees.find((item) => item.id === employeeId);
   if (!employee) throw new Error(`Unknown employee: ${employeeId}`);
+  const skillStore = await materializeConfiguredUpgrades({ root });
+  const effectiveEmployee = skillStore.upgraded.find((item) => item.id === employeeId);
+  const skillAttachments = skillStore.attachments.filter((item) => item.employee_id === employeeId);
+  if (!effectiveEmployee) throw new Error(`Skills Store effective employee missing: ${employeeId}`);
 
   const source = resolve(root, "hermes-profiles", employee.id);
   const target = resolve(outRoot, employee.id);
@@ -47,6 +52,15 @@ export async function buildEmployeePack({ employeeId, outRoot = resolve(root, "d
   await rm(target, { recursive: true, force: true });
   await mkdir(target, { recursive: true });
   await cp(source, target, { recursive: true });
+
+  // Skills Store is an overlay: keep the canonical employee profile/authority unchanged,
+  // then attach only owner-reviewed procedural skills into the distributable pack.
+  for (const attachment of skillAttachments) {
+    const sourceSkill = resolve(root, "skills", "canonical", attachment.skill_id);
+    const targetSkill = resolve(target, "skills", "nyobakantorai", attachment.skill_id);
+    await mkdir(resolve(target, "skills", "nyobakantorai"), { recursive: true });
+    await cp(sourceSkill, targetSkill, { recursive: true });
+  }
 
   const optionalIds = new Set(employee.optional_integrations || []);
   const optionalIntegrations = integrations.integrations.filter((item) => optionalIds.has(item.id));
@@ -90,7 +104,16 @@ export async function buildEmployeePack({ employeeId, outRoot = resolve(root, "d
       dialogue_profile: employee.personality.dialogue_profile,
     },
     operational_contract: employee.operational_contract,
-    skills: employee.skills,
+    baseline_skills: employee.skills,
+    skills: effectiveEmployee.skills,
+    skill_store_attachments: skillAttachments.map((item) => ({
+      skill_id: item.skill_id,
+      version: item.version,
+      install_ref: item.install_ref,
+      attachment_ref: item.attachment_ref,
+      evidence_ref: item.evidence_ref,
+      authority_effect: item.authority_effect,
+    })),
     preferred_toolsets: employee.preferred_toolsets,
     optional_integrations: employee.optional_integrations,
     memory_boundary: employee.memory_boundary,
@@ -116,7 +139,9 @@ From this directory:
 hermes profile install . -y
 \`\`\`
 
-This pack includes the employee's generated SOUL/profile, canonical role skills, optional-integration metadata, provenance metadata, and checksums.
+This pack includes the employee's generated SOUL/profile, baseline canonical role skills, owner-reviewed Skills Store attachments, optional-integration metadata, provenance metadata, and checksums.
+
+Skills Store attachments are **procedural only**. They do not modify connector grants, capability scope, toolsets, approval policy, or external-account authority.
 
 Optional integration metadata is **not permission and is not automatically installed or connected**.
 
@@ -138,7 +163,7 @@ Truth boundary: \`configured != connected != executed != succeeded != verified\`
     employee_id: employee.id,
     path: target,
     files: Object.keys(hashes).length + 1,
-    skills: employee.skills.length,
+    skills: effectiveEmployee.skills.length,
     optional_integrations: optionalIntegrations.length,
   };
 }
