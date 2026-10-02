@@ -242,20 +242,12 @@ test("replay detects payload tamper, missing middle event, missing tail event, a
 
 test("replay ordering is deterministic and timeline facts equal canonical source payloads",()=>{
   const result=missionResult();
-  const artifactEvents=[
-    {
-      schema:1,
-      sequence:1,
-      at:"2026-10-02T03:20:03.000Z",
-      kind:"ARTIFACT_VERSION_STORED",
-      artifact_ref:"artifact:fixture:v1:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      mission_id:fixtures.mission_id,
-      task_id:fixtures.task_id,
-      attempt_id:fixtures.attempt_id,
-      previous_event_sha256:null,
-      event_sha256:"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    },
-  ];
+  const workspace=createArtifactWorkspace({
+    storage:createMemoryArtifactStorage(),
+    clock:()=>"2026-10-02T03:20:03.000Z",
+  });
+  workspace.put({...fixtures.artifacts[0],ownership:owner()});
+  const artifactEvents=workspace.events();
   const first=buildReplayStream({
     mission:result.mission,tasks:result.tasks,attempts:result.attempts,
     orchestrator_events:result.events,artifact_events:artifactEvents,
@@ -274,6 +266,19 @@ test("replay ordering is deterministic and timeline facts equal canonical source
   for(let i=0;i<timeline.length;i++){
     assert.deepEqual(timeline[i].facts,first.events[i].payload);
   }
+});
+
+test("artifact workspace index checksum detects metadata deletion or edit",()=>{
+  const storage=createMemoryArtifactStorage();
+  const workspace=createArtifactWorkspace({storage,clock:clock()});
+  putFixture(workspace,fixtures.artifacts[0]);
+  const snapshot={...storage.snapshot()};
+  const indexKey=Object.keys(snapshot).find((key)=>key==="artifact-workspace:index:v1");
+  const index=JSON.parse(snapshot[indexKey]);
+  index.records=[];
+  snapshot[indexKey]=JSON.stringify(index);
+  const tampered=createArtifactWorkspace({storage:createMemoryArtifactStorage(snapshot)});
+  assert.throws(()=>tampered.verify(),/index checksum mismatch/i);
 });
 
 test("bundle checksum prevents edited exported records from being imported",()=>{
