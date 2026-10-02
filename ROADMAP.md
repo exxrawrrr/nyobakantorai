@@ -147,6 +147,7 @@ Execution progress:
 - [x] CHAT 24 — Search Expansion + Dedupe + Web Enrichment + Siti Verification implemented and verified: bounded Geo Core-backed query expansion, conservative identity resolution with hard Place-ID conflicts, public/no-auth enrichment with provenance/conflict preservation, explainable versioned scoring, canonical independent Siti research verification, exact profile-score-verification bindings, and CSV/XLSX/Markdown/JSON evidence exports. Final exports require Siti PASS by default and no exhaustive-coverage/CRM-write/outreach claim is made. See [v0.7.1 Geo Intelligence](docs/V0.7.1-GEO-INTELLIGENCE.md).
 - [x] CHAT 25 — Map Missions + CRM-Ready Lead Intelligence implemented and verified: verified-only CRM candidates, qualification/map visualization with provider-retention and attribution boundaries, CSV/XLSX/JSON CRM-ready export, hash/ref watchlists through Scheduler + Cost Governor, evidence-backed competitor radar, bounded Geo Core territory planning, and draft-only outreach with exact Approval Center scopes before any send/write. No automatic outreach or live CRM write is enabled. See [v0.7.1 Map Missions + CRM](docs/V0.7.1-MAP-MISSIONS-CRM.md).
 - [x] CHAT 26 — v0.7.1 Geo Release Gate implemented truthfully: Geo policy/pipeline/coverage contracts PASS, but the Google Maps toolkit had no active connection so the four required live Geo evidence components remain BLOCKED; v0.7.0 is also still a blocked prerequisite. The fail-closed evaluator, adversarial tests, release-manifest snapshot, and v0.7.1 tagged-release guard are verified. Package remains 0.5.1 and no v0.7.1 tag/release is authorized. See [v0.7.1 Geo Release Gate](docs/V0.7.1-GEO-RELEASE-GATE.md).
+- [x] CHAT 27 — Prospecting Loop + Monitoring + CRM Workflow implemented and verified: verified-only DISCOVER -> ENRICH -> SCORE -> VERIFY -> LEARN cycles, evidence-bound owner-reviewed adaptive query proposals, attributable CRM lifecycle, bounded competitor/territory monitors through Scheduler + Cost Governor, and draft-only outreach with exact Approval Center-to-lifecycle binding. Static v0.8.0 contracts PASS; four required live Lead Intelligence evidence classes plus the blocked v0.7.1 prerequisite keep publication BLOCKED. Package remains 0.5.1 and no v0.8.0 tag/release is authorized. See [v0.8.0 Lead Intelligence](docs/V0.8.0-LEAD-INTELLIGENCE.md).
 
 Planned release sequence:
 
@@ -154,7 +155,8 @@ Planned release sequence:
 - `v0.6.1` — Reliability: cost governor, artifact workspace, replay, checkpoint/recovery, Project Brain;
 - `v0.7.0` — Connected Office: connector grants, browser, scheduler, Approval Center 2.0, skills store, connected-workflow evidence;
 - `v0.7.1` — Geo Intelligence: policy-aware Places discovery, dedupe, enrichment, verification, map missions;
-- `v0.8+` — Lead Intelligence and Mission Control;
+- `v0.8.0` — Lead Intelligence: governed prospecting loop, CRM lifecycle, monitoring, approval-gated outreach;
+- `v0.8.1` — Mission Control: long-running bounded missions and stronger sandboxing;
 - `v0.9.0` — Team / multi-user office;
 - `v1.0.0` — evidence-gated Production Workforce.
 
