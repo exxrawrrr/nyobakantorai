@@ -4,7 +4,7 @@ import { assert,clean,contentRef,freeze,uniq } from "./common.mjs";
 function allProfileSourceRefs(profile){return uniq([profile.cluster_ref,...(profile.source_refs||[])]).sort();}
 
 export async function verifyBusinessProfileWithSiti({
-  profile,score,author_employee_id="alex",now,task_id="task-geo-profile-verification",mission_id="mission-geo-intelligence",
+  profile,score,author_employee_id="alex",now,task_id="workitem-geo-profile-verification",mission_id="mission-geo-intelligence",
 }={}){
   assert(profile?.schema===1,"Profile required for Siti verification.");
   assert(score?.profile_ref===profile.profile_ref,"Score/profile mismatch for Siti verification.");
