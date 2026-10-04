@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "updated_on": "2026-10-04",
+  "claim_boundary": "OPTIONAL_SPECIALIST_POOL_NOT_PRODUCTION_DEFAULT",
+  "production_default": {
+    "runtime": "hermes",
+    "provider": "nous",
+    "model": "nous/welcome",
+    "unchanged": true
+  },
+  "rules": {
+    "provider_is_resource_not_identity": true,
+    "explicit_specialist_invocation": true,
+    "provider_output_is_not_evidence_by_itself": true,
+    "external_writes_remain_approval_gated": true,
+    "paid_provider_default_requires_explicit_approval": true,
+    "credentials_must_not_be_committed": true,
+    "truth_boundary": "configured != connected != executed != succeeded != verified"
+  },
+  "local_runtime_policy": {
+    "runtime": "ollama",
+    "endpoint": "http://127.0.0.1:11434/v1",
+    "locality": "LOCAL",
+    "min_free_ram_gb": 2,
+    "max_loaded_models": 1,
+    "num_parallel": 1,
+    "keep_alive_seconds": 30,
+    "fail_closed_below_memory_guard": true
+  },
+  "providers": [
+    {
+      "id": "qwen-local",
+      "provider_id": "ollama-local",
+      "runtime_id": "loopback-openai",
+      "model_id": "qwen3:0.6b",
+      "locality": "LOCAL",
+      "task_classes": [
+        "FAST",
+        "LOCAL_SENSITIVE"
+      ],
+      "modalities": [
+        "TEXT"
+      ],
+      "configured": true,
+      "credential_required": false,
+      "install_state": "INSTALLED",
+      "execution_state": "NOT_RUN_MEMORY_GUARD",
+      "enabled_for_production_default": false
+    },
+    {
+      "id": "deepseek-local",
+      "provider_id": "ollama-local",
+      "runtime_id": "loopback-openai",
+      "model_id": "deepseek-r1:1.5b",
+      "locality": "LOCAL",
+      "task_classes": [
+        "REASONING",
+        "LOCAL_SENSITIVE"
+      ],
+      "modalities": [
+        "TEXT"
+      ],
+      "configured": true,
+      "credential_required": false,
+      "install_state": "INSTALLED",
+      "execution_state": "NOT_RUN_MEMORY_GUARD",
+      "enabled_for_production_default": false
+    },
+    {
+      "id": "gemini-specialist",
+      "provider_id": "gemini",
+      "runtime_id": "hermes",
+      "model_id": "gemini-3.7-flash",
+      "locality": "CLOUD",
+      "task_classes": [
+        "FAST",
+        "REASONING",
+        "VISION"
+      ],
+      "modalities": [
+        "TEXT",
+        "IMAGE",
+        "VIDEO",
+        "AUDIO",
+        "PDF"
+      ],
+      "configured": true,
+      "credential_required": true,
+      "credential_state": "NOT_CONFIGURED",
+      "execution_state": "NOT_RUN_CREDENTIAL_REQUIRED",
+      "enabled_for_production_default": false
+    },
+    {
+      "id": "codex-specialist",
+      "provider_id": "openai-codex",
+      "runtime_id": "hermes",
+      "model_id": "gpt-5.6-sol",
+      "locality": "CLOUD",
+      "task_classes": [
+        "CODING",
+        "REASONING"
+      ],
+      "modalities": [
+        "TEXT"
+      ],
+      "configured_elsewhere": true,
+      "pool_role": "EXPLICIT_ENGINEERING_SPECIALIST",
+      "enabled_for_production_default": false
+    }
+  ],
+  "evidence_ref": "benchmarks/provider-evaluations/provider-pool-local-2026-10-04.json"
+}

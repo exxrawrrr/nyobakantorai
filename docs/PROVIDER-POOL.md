@@ -4,6 +4,13 @@
 
 This document records an **optional specialist-provider pool** for KANTORAI. It does not change the canonical employee identities, production default provider, approval gates, or Telegram routing.
 
+Machine-readable source of truth:
+
+- `config/provider-pool.json` — locked routing and safety policy;
+- `benchmarks/provider-evaluations/provider-pool-local-2026-10-04.json` — installation/configuration evidence for the operator lab.
+
+The evidence file deliberately distinguishes installation/configuration from live inference. A downloaded model is not promoted to an executed or verified provider merely because its manifest exists.
+
 ## Locked routing policy
 
 Production employee profiles stay on the existing Hermes/Nous path by default:
