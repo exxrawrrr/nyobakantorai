@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "evidence_id": "real-20261004-initial10-07-maya",
+  "authority": {
+    "kind": "real_task_recorder_snapshot",
+    "snapshot_ref": "benchmarks/real-tasks/recorder-snapshot-2026-10-04-initial10.json",
+    "snapshot_sha256": "20350ebbee2cc5bf9d4b904d58ed0d8463427263a7bf424437db1402efda0998",
+    "note": "Recorder ledger/snapshot is authoritative for lifecycle and verification fields if a mutable local review cache differs."
+  },
+  "source": {
+    "source_type": "owner_real_task",
+    "source_ref": "owner-task://chat/2026-10-04/kantorai-initial-10/07-meta-readonly-mission-design",
+    "source_generated": false,
+    "source_attestation": "OWNER_DIRECT",
+    "redaction_reviewed": true
+  },
+  "execution": {
+    "employee_id": "maya",
+    "tested_repo_head": "67f7686def33af38d412ab07218dfb1b1440a442",
+    "started_at": "2026-10-04T11:09:38+07:00",
+    "finished_at": "2026-10-04T11:42:12+07:00",
+    "source_paths": [
+      ".nyobakantorai/real-task-recorder/inputs/task-07-compact.json"
+    ],
+    "provider": null,
+    "model": null
+  },
+  "task": {
+    "summary": "Design a bounded read-only Meta Ads acceptance mission from Maya declared capabilities and governance rules."
+  },
+  "metrics": {
+    "success": false,
+    "evidence_complete": true,
+    "false_success": false,
+    "human_intervention": 0,
+    "retries": 4,
+    "duration_ms": 250041,
+    "cost_known": false,
+    "verification_passed": true,
+    "recovered_after_failure": false
+  },
+  "verification": {
+    "reviewer_employee_id": "fikri",
+    "verified_at": "2026-10-04T11:53:52+07:00",
+    "verification_passed": true,
+    "evidence_complete": true,
+    "false_success": false
+  },
+  "outcome_note": "Task ended blocked or incomplete; failure preserved truthfully. Verification: Recorded outcome adalah timeout/failure, bukan success. Worker metadata konsisten mendukung klaim itu: success_claim=false, returncode=null, parsed_status=null, retries=4, duration_ms=250041, dan kedua attempt (1,2) masing-masing ~120s dengan stderr TIMEOUT. Evidence pack hanya berisi snapshot input (task-07-compact.json dengan derived_from sha256, kapabilitas Maya, governance lines) tanpa artefak desain acceptance mission apa pun â€” absennya deliverable justru konsisten dengan timeout, bukan bukti keberhasilan. Tidak ada klaim sukses yang harus ditolak, jadi fail-closed tidak terpicu. Catatan: sha256 tercatat di evidence pack tapi tidak dihitung ulang (sesuai instruksi tanpa tools); verifikasi berbasis konsistensi metadata + isi evidence."
+}

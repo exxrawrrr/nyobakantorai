@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "evidence_id": "real-20261004-initial10-05-praroro",
+  "authority": {
+    "kind": "real_task_recorder_snapshot",
+    "snapshot_ref": "benchmarks/real-tasks/recorder-snapshot-2026-10-04-initial10.json",
+    "snapshot_sha256": "20350ebbee2cc5bf9d4b904d58ed0d8463427263a7bf424437db1402efda0998",
+    "note": "Recorder ledger/snapshot is authoritative for lifecycle and verification fields if a mutable local review cache differs."
+  },
+  "source": {
+    "source_type": "owner_real_task",
+    "source_ref": "owner-task://chat/2026-10-04/kantorai-initial-10/05-next-operations-priority",
+    "source_generated": false,
+    "source_attestation": "OWNER_DIRECT",
+    "redaction_reviewed": true
+  },
+  "execution": {
+    "employee_id": "praroro",
+    "tested_repo_head": "67f7686def33af38d412ab07218dfb1b1440a442",
+    "started_at": "2026-10-04T11:09:38+07:00",
+    "finished_at": "2026-10-04T11:42:11+07:00",
+    "source_paths": [
+      ".nyobakantorai/real-task-recorder/inputs/task-05-pack.json"
+    ],
+    "provider": "custom",
+    "model": "nous/welcome"
+  },
+  "task": {
+    "summary": "Produce a bounded next-operations priority brief from current v0.6 live evidence and real-task collection state."
+  },
+  "metrics": {
+    "success": false,
+    "evidence_complete": true,
+    "false_success": false,
+    "human_intervention": 0,
+    "retries": 0,
+    "duration_ms": 98542,
+    "cost_known": false,
+    "verification_passed": true,
+    "recovered_after_failure": false
+  },
+  "verification": {
+    "reviewer_employee_id": "fikri",
+    "verified_at": "2026-10-04T11:51:50+07:00",
+    "verification_passed": true,
+    "evidence_complete": true,
+    "false_success": false
+  },
+  "outcome_note": "Task ended blocked or incomplete; failure preserved truthfully. Verification: Klarim worker (ACTION_REQUIRED, bukan sukses) konsisten dengan evidence pack. Semua angka tercocokkan: live ACCEPTED 11/11 dengan sandbox_status PARTIAL, quota_status PARTIAL, dan 4 quota metric UNKNOWN (INPUT/OUTPUT_TOKENS, TOOL_CALLS, TOTAL_TOKENS) â€” klaim 'accepted tapi belum fully verified' valid. Baseline 1/20, remaining 19, minimum 20, false_successes_max 0, allowed/forbidden source types, require_evidence_refs/redaction_review, dan owner_constraints (initial 10, github_source_of_truth, synthetic dikecualikan) semuanya terefleksi akurat di findings 1-3. Ketiga sha256 di evidence_refs cocok dengan derived_from pack. Worker jujur mengungkap keterbatasan (tidak membaca ROADMAP.md/git state, kuota belum lengkap, autentisitas 1 kasus baseline tak terkonfirmasi) â€” keterbatasan ini justru memperkuat veredik ACTION_REQUIRED alih-alih menyembunyikan gap. Tidak ada klaim yang melebihi du"
+}

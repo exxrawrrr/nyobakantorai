@@ -13,11 +13,30 @@ publication gate:    NOT PASSED
 
 The one currently eligible historical case is intentionally preserved as a failure: an owner task produced a draft, independent review returned `NEEDS_EVIDENCE`, and the task was not falsely upgraded to verified success.
 
-Machine-readable checkpoint:
+Machine-readable checkpoints:
 
 ```text
-benchmarks/real-tasks/collection-status-2026-09-29.json
+benchmarks/real-tasks/collection-status-2026-10-04.json   # current
+benchmarks/real-tasks/collection-status-2026-09-29.json   # historical
 ```
+
+### 2026-10-04 initial-ten evidence campaign
+
+The owner-requested initial batch of ten direct real tasks completed its recorder lifecycle against repository head `67f7686def33af38d412ab07218dfb1b1440a442`. The hash-chained ledger validated with 30 events / 10 closed cases and no integrity errors.
+
+```text
+worker successes:        5
+worker failures:         5
+verification passes:     6
+verification failures:   4
+false-successes:         2
+canonical promoted:      NO
+canonical state:         1 / 20
+```
+
+The false-success cases are `real-20261004-initial10-03-nara` and `real-20261004-initial10-10-tari`. They are preserved as evidence rather than rerolled or hidden. The campaign snapshot audits successfully, but it is intentionally **not merged into the canonical dataset**, because doing so would violate the zero-false-success publication boundary. GitHub `main` advanced to `862733cd817e366bffad348f4a1b05d25e7d7777` during collection only through the Telegram-office documentation update; the test provenance remains bound to the earlier tested head.
+
+Repository-facing evidence is stored under `benchmarks/real-tasks/evidence/2026-10-04/` with the complete recorder snapshot at `benchmarks/real-tasks/recorder-snapshot-2026-10-04-initial10.json`.
 
 ## Collection pipeline
 
