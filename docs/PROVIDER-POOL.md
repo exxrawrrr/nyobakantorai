@@ -115,6 +115,14 @@ Current state:
 - For sustained use, inspect Google AI Studio **Dashboard > Usage/Billing**; consumer Gemini Pro is not treated as API-tier evidence
 - Independent production verification: **not yet claimed**
 
+
+
+### Telegram specialist route
+
+A portable Hermes plugin at `ops/provider-pool/hermes-plugins/kantorai-gemini/` now provides an explicit `/gemini <prompt>` command. Live operator evidence on 2026-10-04 passed for both Alex and Siti through Telegram using `gemini-3.6-flash`, while their normal `custom` / `nous/welcome` routing remained unchanged.
+
+This is an explicit specialist invocation, not a production-default provider switch. Gemini failures are surfaced rather than silently substituted with Nous output. API credentials remain local and are not committed.
+
 ## Provider broker
 
 An operator-local broker was prepared for explicit specialist calls:

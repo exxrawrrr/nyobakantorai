@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "observed_at": "2026-10-04T07:13:16Z",
+  "feature": "telegram-explicit-gemini-specialist-command",
+  "command": "/gemini <prompt>",
+  "enabled_profiles": ["alex", "siti"],
+  "normal_route": {
+    "provider": "custom",
+    "model": "nous/welcome",
+    "unchanged": true
+  },
+  "specialist_route": {
+    "provider": "gemini",
+    "verified_model": "gemini-3.6-flash",
+    "credential_scope": "operator-local shared Hermes home",
+    "credential_committed": false
+  },
+  "direct_canaries": [
+    {
+      "profile": "alex",
+      "status": "PASS",
+      "marker": "ALEX_GEMINI_CANARY_OK"
+    },
+    {
+      "profile": "siti",
+      "status": "PASS",
+      "marker": "SITI_GEMINI_CANARY_OK"
+    }
+  ],
+  "telegram_canaries": [
+    {
+      "profile": "alex",
+      "status": "PASS",
+      "model": "gemini-3.6-flash",
+      "elapsed_ms": 8875,
+      "prompt_sha256": "6755354c138ea17a2b52df117d3256eedbc2aedecfbb9b6f2788137c7d07c011"
+    },
+    {
+      "profile": "siti",
+      "status": "PASS",
+      "model": "gemini-3.6-flash",
+      "elapsed_ms": 9703,
+      "prompt_sha256": "182f411073c6804beda25f6fae284b30acc2fa9667327635093185bb6881ed4d"
+    }
+  ],
+  "gateway_after_reload": {
+    "active_platforms": 5,
+    "profiles_observed_connected": ["alex", "maya", "paijo", "siti", "subagjo"]
+  },
+  "unaffected_runtime_surfaces": [
+    {
+      "surface": "employee-nous-proxy",
+      "port": 8645,
+      "state": "LISTENING"
+    },
+    {
+      "surface": "office",
+      "port": 4322,
+      "state": "LISTENING"
+    },
+    {
+      "surface": "hermes-dashboard",
+      "port": 9119,
+      "state": "LISTENING"
+    }
+  ],
+  "failure_policy": {
+    "silent_fallback_to_nous": false,
+    "reported_classes": ["RATE_LIMITED", "HIGH_DEMAND", "PERMISSION_DENIED", "TIMEOUT", "ERROR"]
+  },
+  "limitations": [
+    "Only Alex and Siti are enabled for this command in the observed installation.",
+    "Plain text such as LEWAT GEMINI is not a deterministic routing trigger; use /gemini.",
+    "Gemini API billing/rate-limit tier is not inferred from the consumer Gemini subscription.",
+    "This is operator-installation evidence, not universal production availability."
+  ]
+}

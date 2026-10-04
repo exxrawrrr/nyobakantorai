@@ -1,0 +1,5 @@
+name: kantorai-gemini
+version: 0.1.0
+description: "KANTORAI explicit /gemini specialist command. Keeps employee profiles on their normal provider and invokes an isolated Gemini API home only when the user asks."
+author: "exxrawrrr / nyobakantorai contributors"
+kind: integration

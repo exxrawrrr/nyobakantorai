@@ -105,6 +105,33 @@ and employee profiles reported `custom` / `nous/welcome`.
 
 This is **operator-local evidence**, not a repository default or billing guarantee. In this observed configuration, normal Telegram employee turns route to the Nous/Hermes provider path rather than the separate `openai-codex` reference runtime.
 
+
+
+### Explicit Gemini specialist command
+
+The observed operator installation now exposes an explicit Gemini specialist route for **Alex** and **Siti**:
+
+```text
+/gemini <prompt>
+```
+
+Normal Telegram messages remain on the employee's configured `custom` / `nous/welcome` route. The `/gemini` command is registered by the portable `kantorai-gemini` Hermes plugin and is handled before the normal agent loop, so only that command invokes the isolated Gemini specialist.
+
+Observed live canaries on 2026-10-04:
+
+| Profile | Telegram → Gemini result | Model |
+| --- | --- | --- |
+| Alex | PASS | `gemini-3.6-flash` |
+| Siti | PASS | `gemini-3.6-flash` |
+
+After the controlled gateway reload, Alex, Maya, Paijo, Siti, and Subagjo were all observed connected in the same multiplex gateway. The Nous proxy, localhost office, and Hermes dashboard listeners remained available.
+
+The command intentionally fails transparently on Gemini rate-limit, high-demand, permission, timeout, or provider errors. It does **not** silently answer through Nous while claiming the answer came from Gemini. The plugin stores no API key or Telegram token; operator-local receipts contain only status metadata plus a SHA-256 of the prompt.
+
+Plain phrases such as `LEWAT GEMINI` are not a deterministic routing control in this implementation. Use `/gemini` when Gemini is explicitly required.
+
+Machine-readable evidence: `benchmarks/provider-evaluations/telegram-gemini-routing-2026-10-04.json`.
+
 ### Duplicate-token recovery
 
 A live setup mistake demonstrated an important failure mode: the same Telegram bot token was accidentally entered for two employee profiles. That caused one bot identity to be shared across profiles.
