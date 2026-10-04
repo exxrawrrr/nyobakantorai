@@ -104,10 +104,12 @@ Important distinction:
 
 Current state:
 
-- Gemini lab config: **prepared**
+- Gemini lab config: **PASS / isolated**
 - Gemini credential: **configured, user-owned**
-- Native AI Studio smoke: **PASS** — `GEMINI_KANTORAI_OK`
-- Provider broker smoke: **PASS** — `GEMINI_BROKER_OK`
+- `gemini-3.8-flash`: **authenticated, transient 503 high-demand**
+- `gemini-3.7-flash`: **authenticated, transient 503 high-demand**
+- `gemini-3.6-flash`: **PASS** — `GEMINI_36_KANTORAI_OK` / `GEMINI_DEFAULT_OK`
+- Provider broker smoke: **PASS** — `GEMINI_BROKER_CHILD_OK`, exit code 0, usage receipt written
 - Vertex / Agent Platform API enablement: **not required for this AI Studio route**
 - Post-smoke Hermes auth-pool state: **429 cooldown observed**; the API project's billing/rate-limit tier remains **unknown from runtime**
 - For sustained use, inspect Google AI Studio **Dashboard > Usage/Billing**; consumer Gemini Pro is not treated as API-tier evidence
@@ -145,3 +147,7 @@ These are design recommendations, not enabled routing:
 Do not roll this out as "every employee gets every provider."
 
 Keep provider credentials profile-scoped, connector permissions role-scoped, external writes approval-gated, and specialist invocation explicit until evidence supports broader automation.
+
+## Reproducible operator kit
+
+The non-secret scripts and Windows launchers used on GROWTH are versioned under `ops/provider-pool/growth/`. Runtime credentials, model blobs, caches, and session/request dumps remain local-only.

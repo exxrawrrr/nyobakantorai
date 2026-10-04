@@ -1,0 +1,19 @@
+KANTORAI PROVIDER BROKER CONTRACT
+
+Purpose:
+- Get a second opinion / specialist inference from a different model/provider.
+- Never silently replace an employee's primary identity or provider.
+- Return text only; the caller decides what to do with it.
+
+Providers:
+- qwen: local Qwen3 0.6B via Ollama
+- deepseek: local DeepSeek-R1 1.5B via Ollama
+- gemini: isolated Gemini AI Studio lab; current verified default gemini-3.6-flash
+
+Rules:
+1. Provider output is advisory, not evidence by itself.
+2. No provider result may directly trigger an external write/spend.
+3. Human/approval gates remain in force.
+4. Siti may independently verify a provider output.
+5. Usage receipts are written under provider-pool\usage.
+6. Existing employee SOUL/config stays unchanged until explicit routing rollout.

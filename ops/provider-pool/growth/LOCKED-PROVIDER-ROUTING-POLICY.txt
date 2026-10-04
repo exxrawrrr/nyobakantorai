@@ -1,0 +1,35 @@
+KANTORAI PROVIDER ROUTING POLICY — LOCKED 2026-10-04
+
+Production default:
+  ALL EMPLOYEES -> Nous/Hermes (nous/welcome)
+
+Specialist/on-demand pool:
+  Qwen3 0.6B local:
+    - cheap/local routine transforms, summaries, classifications
+    - no external provider billing
+  DeepSeek-R1 1.5B local:
+    - local second-pass reasoning
+    - no DeepSeek API billing
+  Gemini:
+    - current verified lab default: gemini-3.6-flash
+    - preferred probes: gemini-3.8-flash -> gemini-3.7-flash -> gemini-3.6-flash
+    - user-owned Google AI Studio API key
+    - API billing/tier is separate from consumer Gemini subscription
+  Codex:
+    - engineering/coding specialist only
+    - never default across the office
+
+Suggested first routing after labs pass:
+  Alex     -> Gemini optional second opinion
+  Maya     -> Gemini optional creative/ad-analysis reasoning; Meta connector remains separate
+  Paijo    -> DeepSeek/Qwen optional low-cost analysis
+  Subagjo  -> Codex specialist for hard engineering; local Qwen for trivial transforms
+  Bimo     -> Codex/local model depending task
+  Siti     -> verification remains independent; may compare provider outputs but does not blindly trust them
+
+Hard rules:
+  - No provider switch changes an employee identity/SOUL.
+  - No credential is shared automatically across profiles.
+  - No paid provider becomes default without explicit approval.
+  - External writes/spend remain approval-gated.
+  - configured != connected != executed != succeeded != verified.

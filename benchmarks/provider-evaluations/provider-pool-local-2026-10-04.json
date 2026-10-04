@@ -2,7 +2,7 @@
   "schema": 1,
   "observed_on": "2026-10-04",
   "scope": "AUTHORIZED_WINDOWS_OPERATOR_LAB",
-  "tested_repo_head": "1e7a9b26c53c871b51decac31e21589ec93587c1",
+  "tested_repo_head": "b4edb6bc8c9e7eaabb6f5b19327af12fc9a795df",
   "claim_boundary": "LOCAL_INSTALL_PLUS_GEMINI_BOUNDED_LIVE_SMOKE_NO_PRODUCTION_ROUTE_CLAIM",
   "production_default_unchanged": {
     "provider": "nous",
@@ -61,26 +61,44 @@
     },
     "gemini": {
       "provider": "gemini",
-      "model": "gemini-3.7-flash",
+      "model": "gemini-3.6-flash",
       "base_url": "https://generativelanguage.googleapis.com/v1beta",
       "config_state": "PREPARED",
       "credential_state": "CONFIGURED_USER_OWNED",
-      "live_inference": "PASS_BOUNDED_SMOKE",
+      "live_inference": "PASS_GEMINI_3_6_AND_PROVIDER_BROKER",
       "endpoint_mode": "AI_STUDIO_NATIVE",
       "auth_key_compatibility": "AQ_STUDIO_SINGLE_PROCESS",
       "vertex_agent_platform_required": false,
       "smoke_markers": [
-        "GEMINI_KANTORAI_OK",
-        "GEMINI_BROKER_OK"
+        "GEMINI_36_KANTORAI_OK",
+        "GEMINI_DEFAULT_OK",
+        "GEMINI_USAGE_OK",
+        "GEMINI_BROKER_CHILD_OK"
       ],
       "exit_codes": [
+        0,
+        0,
         0,
         0
       ],
       "independent_verification": "NOT_RUN",
       "api_billing_tier": "UNKNOWN_FROM_RUNTIME",
-      "post_smoke_auth_pool_state": "RATE_LIMITED_429_COOLDOWN_OBSERVED",
-      "post_smoke_note": "Two bounded live smoke calls succeeded before Hermes later reported a provider cooldown. Consumer Gemini subscription status is not used as proof of Gemini API billing tier."
+      "post_smoke_auth_pool_state": "VALID_CREDENTIAL_3_7_AND_3_8_TRANSIENT_503_HIGH_DEMAND_3_6_PASS",
+      "post_smoke_note": "AQ-prefix AI Studio key authenticated on Generative Language API with process-scoped compatibility flag. Gemini 3.7/3.8 returned transient 503 high-demand during the observed window; Gemini 3.6 and broker path succeeded. API billing tier remains unknown from runtime.",
+      "attempted_models": [
+        {
+          "model": "gemini-3.8-flash",
+          "result": "503_HIGH_DEMAND_TRANSIENT"
+        },
+        {
+          "model": "gemini-3.7-flash",
+          "result": "503_HIGH_DEMAND_TRANSIENT"
+        },
+        {
+          "model": "gemini-3.6-flash",
+          "result": "PASS"
+        }
+      ]
     }
   },
   "operator_scripts": {
@@ -90,6 +108,14 @@
     "secret_values_committed": false
   },
   "external_model_references": [
+    {
+      "model": "gemini-3.8-flash",
+      "reference": "https://ai.google.dev/gemini-api/docs/models"
+    },
+    {
+      "model": "gemini-3.6-flash",
+      "reference": "https://ai.google.dev/gemini-api/docs/models"
+    },
     {
       "model": "gemini-3.7-flash",
       "reference": "https://ai.google.dev/gemini-api/docs/models/gemini-3.7-flash"

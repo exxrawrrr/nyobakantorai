@@ -70,7 +70,7 @@
       "id": "gemini-specialist",
       "provider_id": "gemini",
       "runtime_id": "hermes",
-      "model_id": "gemini-3.7-flash",
+      "model_id": "gemini-3.6-flash",
       "locality": "CLOUD",
       "task_classes": [
         "FAST",
@@ -87,11 +87,16 @@
       "configured": true,
       "credential_required": true,
       "credential_state": "CONFIGURED_USER_OWNED",
-      "execution_state": "LIVE_SMOKE_SUCCEEDED",
+      "execution_state": "LIVE_SMOKE_SUCCEEDED_GEMINI_3_6",
       "enabled_for_production_default": false,
       "endpoint_mode": "AI_STUDIO_NATIVE",
       "auth_key_compatibility": "AQ_STUDIO_SINGLE_PROCESS",
-      "verification_state": "MARKER_MATCHED_NOT_INDEPENDENTLY_REVIEWED"
+      "verification_state": "DIRECT_AND_BROKER_MARKER_MATCHED_NOT_INDEPENDENTLY_REVIEWED",
+      "preferred_probe_order": [
+        "gemini-3.8-flash",
+        "gemini-3.7-flash",
+        "gemini-3.6-flash"
+      ]
     },
     {
       "id": "codex-specialist",
