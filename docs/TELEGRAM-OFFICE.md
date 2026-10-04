@@ -1,6 +1,6 @@
 # Telegram office path
 
-**Status: IMPLEMENTED AS AN UPSTREAM HERMES PATH / NOT LIVE-ACCOUNT VERIFIED**
+**Status: LIVE-ACCOUNT VERIFIED ON ONE OPERATOR INSTALLATION (2026-10-04) / OPTIONAL HERMES PATH**
 
 Telegram is optional. nyobakantorai does not bundle a bot token and never enables public bot access by default.
 
@@ -27,6 +27,14 @@ hermes gateway install
 hermes gateway start
 hermes gateway status
 ```
+
+On Windows, once the host gateway login item is installed, adding another employee bot should **not** reinstall the gateway or request UAC again. The safe pattern is:
+
+1. configure the employee profile token + allowlist;
+2. enable `platforms.telegram.enabled` for that profile;
+3. keep `gateway.multiplex_profiles=true`;
+4. reload the existing gateway once;
+5. send a canary message and verify a real inbound reply.
 
 ## Multiplex the workforce
 
@@ -65,5 +73,52 @@ Hermes cron can deliver through a configured home channel. Scheduled prompts sho
 hermes cron list
 hermes cron status
 ```
+
+A verified operator installation also set the tested employee chats as their Telegram home channels with `/sethome`.
+
+## Live operator evidence — 2026-10-04
+
+One Windows operator installation completed live Telegram/Hermes validation using a single multiplex gateway.
+
+End-to-end role replies were observed for:
+
+| Employee | Canonical role | Live Telegram result |
+| --- | --- | --- |
+| Siti | QA / Compliance / Knowledge | PASS — inbound prompt produced a role-correct reply |
+| Alex | Strategy / Research | PASS — inbound prompt produced a role-correct reply |
+| Paijo | Quant / Growth / Finance | PASS — inbound prompt produced a role-correct reply |
+| Maya | Meta Ads Operator | PASS — inbound prompt produced a role-correct reply |
+| Subagjo | Engineering / Operations | PASS — inbound prompt produced a role-correct reply |
+| Sumiati | Creative / Communications | PENDING — Telegram profile intentionally disabled until a distinct bot token is available |
+
+The same installation verified outbound Telegram delivery through Hermes and a running Windows login item for the host gateway.
+
+### Provider-routing observation
+
+The tested employee profiles were routed through a local Hermes proxy using a custom provider/model surface. The observed proxy listener was started with:
+
+```text
+hermes -p kantorai-proxy proxy start --provider nous --host 127.0.0.1 --port 8645
+```
+
+and employee profiles reported `custom` / `nous/welcome`.
+
+This is **operator-local evidence**, not a repository default or billing guarantee. In this observed configuration, normal Telegram employee turns route to the Nous/Hermes provider path rather than the separate `openai-codex` reference runtime.
+
+### Duplicate-token recovery
+
+A live setup mistake demonstrated an important failure mode: the same Telegram bot token was accidentally entered for two employee profiles. That caused one bot identity to be shared across profiles.
+
+Recovery was:
+
+1. remove the accidental Telegram token + allowed-user binding from the wrong profile;
+2. disable Telegram for that profile;
+3. restart the single multiplex gateway once;
+4. verify the intended owner profile can send successfully;
+5. wait for a distinct BotFather token before re-enabling the second profile.
+
+Operator tooling was then hardened to reject duplicate bot tokens and duplicate bot usernames within the same batch before configuration is saved.
+
+This evidence proves that the Telegram path can work on one real operator installation. It does **not** prove universal provider lifecycle, unrestricted public access, or production reliability across arbitrary machines/accounts.
 
 Telegram is not required for normal installation or the localhost office.
