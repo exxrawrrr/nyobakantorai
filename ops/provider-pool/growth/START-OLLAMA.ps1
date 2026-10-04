@@ -1,11 +1,12 @@
-﻿$ErrorActionPreference='Stop'
-$base='D:\RAFDI_DATA\03_AI_OFFICE\AI-OFFICE-OPERATIONS\provider-pool\ollama'
+$ErrorActionPreference='Stop'
+$poolRoot=if($env:KANTORAI_PROVIDER_POOL_HOME){$env:KANTORAI_PROVIDER_POOL_HOME}else{Join-Path $env:LOCALAPPDATA 'KANTORAI\provider-pool'}
+$base=Join-Path $poolRoot 'ollama'
 $exe=Join-Path $base 'runtime\ollama.exe'
 $log=Join-Path $base 'logs\ollama-serve.log'
-if(-not (Test-Path $exe)){throw 'Ollama runtime belum tersedia. Tunggu download/extract selesai.'}
+if(-not (Test-Path $exe)){throw 'Ollama runtime is not available. Set KANTORAI_PROVIDER_POOL_HOME or install the runtime first.'}
 
 try{
-  $r=Invoke-RestMethod 'http://127.0.0.1:11434/api/tags' -TimeoutSec 2
+  $null=Invoke-RestMethod 'http://127.0.0.1:11434/api/tags' -TimeoutSec 2
   Write-Host 'OLLAMA ALREADY READY' -ForegroundColor Green
   exit 0
 }catch{}
@@ -16,6 +17,7 @@ if($freeGB -lt 2.0){
   throw ('RAM guard: free memory '+$freeGB+' GB < 2.0 GB. Refusing to start local AI.')
 }
 
+New-Item -ItemType Directory -Force -Path (Join-Path $base 'logs') | Out-Null
 $env:OLLAMA_HOST='127.0.0.1:11434'
 $env:OLLAMA_MODELS=Join-Path $base 'models'
 $env:OLLAMA_MAX_LOADED_MODELS='1'
@@ -25,7 +27,7 @@ $p=Start-Process -FilePath $exe -ArgumentList 'serve' -WindowStyle Hidden -Redir
 for($i=0;$i -lt 30;$i++){
   Start-Sleep -Milliseconds 500
   try{
-    $r=Invoke-RestMethod 'http://127.0.0.1:11434/api/tags' -TimeoutSec 2
+    $null=Invoke-RestMethod 'http://127.0.0.1:11434/api/tags' -TimeoutSec 2
     Write-Host ('OLLAMA READY | PID='+$p.Id+' | freeRAM='+$freeGB+' GB') -ForegroundColor Green
     exit 0
   }catch{}

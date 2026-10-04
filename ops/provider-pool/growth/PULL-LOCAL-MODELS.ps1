@@ -1,8 +1,10 @@
-﻿$ErrorActionPreference='Stop'
-& 'D:\RAFDI_DATA\03_AI_OFFICE\AI-OFFICE-OPERATIONS\provider-pool\START-OLLAMA.ps1'
-$exe='D:\RAFDI_DATA\03_AI_OFFICE\AI-OFFICE-OPERATIONS\provider-pool\ollama\runtime\ollama.exe'
+$ErrorActionPreference='Stop'
+$poolRoot=if($env:KANTORAI_PROVIDER_POOL_HOME){$env:KANTORAI_PROVIDER_POOL_HOME}else{Join-Path $env:LOCALAPPDATA 'KANTORAI\provider-pool'}
+& (Join-Path $PSScriptRoot 'START-OLLAMA.ps1')
+if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}
+$exe=Join-Path $poolRoot 'ollama\runtime\ollama.exe'
 $env:OLLAMA_HOST='127.0.0.1:11434'
-$env:OLLAMA_MODELS='D:\RAFDI_DATA\03_AI_OFFICE\AI-OFFICE-OPERATIONS\provider-pool\ollama\models'
+$env:OLLAMA_MODELS=Join-Path $poolRoot 'ollama\models'
 Write-Host ''
 Write-Host 'Pulling Qwen3 0.6B (primary low-memory local utility)...' -ForegroundColor Cyan
 & $exe pull qwen3:0.6b

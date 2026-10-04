@@ -1,10 +1,25 @@
 # GROWTH provider-pool operator kit
 
-This directory mirrors the non-secret operator scripts used during the authorized 2026-10-04 provider-pool lab on the Windows workstation **GROWTH**.
+This directory versions the non-secret Windows operator scripts used by the KANTORAI specialist-provider lab.
 
-It is intentionally workstation-specific. Paths point to the authorized GROWTH layout under `D:\RAFDI_DATA\03_AI_OFFICE`.
+The scripts are portable and do **not** embed private workstation paths.
+
+## Runtime configuration
+
+Set these only on the workstation that runs the lab:
+
+- `KANTORAI_PROVIDER_POOL_HOME` — optional. Defaults to `%LOCALAPPDATA%\KANTORAI\provider-pool`.
+- `KANTORAI_HERMES_EXE` — optional when `hermes` is already on `PATH`; otherwise set it to the local Hermes executable.
+
+Example for the current PowerShell session:
+
+```powershell
+$env:KANTORAI_PROVIDER_POOL_HOME = Join-Path $env:LOCALAPPDATA 'KANTORAI\provider-pool'
+$env:KANTORAI_HERMES_EXE = (Get-Command hermes).Source
+```
 
 Included:
+
 - fail-closed Ollama start/stop and SHA-256 finalizer;
 - Qwen3 0.6B + DeepSeek-R1 1.5B pull/test tooling;
 - explicit specialist provider broker;
@@ -13,6 +28,7 @@ Included:
 - locked routing policy and broker contract.
 
 Excluded on purpose:
+
 - API keys and credential stores;
 - `auth.json`, `.env`, Telegram tokens;
 - Ollama binaries/model blobs;

@@ -1,7 +1,14 @@
 $ErrorActionPreference='Stop'
-$env:HERMES_HOME='D:\RAFDI_DATA\03_AI_OFFICE\AI-OFFICE-OPERATIONS\provider-pool\hermes-lab-gemini'
+$poolRoot=if($env:KANTORAI_PROVIDER_POOL_HOME){$env:KANTORAI_PROVIDER_POOL_HOME}else{Join-Path $env:LOCALAPPDATA 'KANTORAI\provider-pool'}
+$env:HERMES_HOME=Join-Path $poolRoot 'hermes-lab-gemini'
 $env:HERMES_GEMINI_AQ_STUDIO_PILOT='1'
-$h='D:\RAFDI_DATA\03_AI_OFFICE\Hermes\hermes-agent\venv\Scripts\hermes.exe'
+$h=$env:KANTORAI_HERMES_EXE
+if(-not $h){
+  $cmd=Get-Command hermes.exe -ErrorAction SilentlyContinue
+  if(-not $cmd){$cmd=Get-Command hermes -ErrorAction SilentlyContinue}
+  if($cmd){$h=$cmd.Source}
+}
+if(-not $h -or -not (Test-Path $h)){throw 'Hermes CLI not found. Set KANTORAI_HERMES_EXE to the Hermes executable.'}
 
 Write-Host ''
 Write-Host 'KANTORAI - GEMINI AI STUDIO SETUP' -ForegroundColor Cyan
@@ -9,6 +16,7 @@ Write-Host 'Consumer Gemini subscription and Gemini API billing/quota are separa
 Write-Host 'No secret is printed by this script.' -ForegroundColor DarkGray
 Write-Host ''
 
+New-Item -ItemType Directory -Force -Path $env:HERMES_HOME | Out-Null
 $auth=(& $h auth list 2>$null | Out-String)
 if($auth -notmatch '(?im)^gemini\b'){
   Write-Host 'No Gemini credential found in this isolated lab.' -ForegroundColor Yellow
