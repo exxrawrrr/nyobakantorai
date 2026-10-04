@@ -97,15 +97,21 @@ The isolated lab is configured for a Gemini Flash model and the native Gemini AP
 
 Important distinction:
 
-- A consumer Gemini subscription does not automatically prove API quota for Hermes.
-- The lab requires a Google AI Studio API key (free-tier project when eligible, otherwise its configured API billing/quota).
-- The key must be entered locally and never committed or pasted into chat/logs.
+- A consumer Gemini subscription and Gemini API billing/quota are separate products.
+- The lab uses a user-owned Google AI Studio API key; the key is entered locally and is never committed or pasted into chat/logs.
+- Current AI Studio authorization keys may use an `AQ.` prefix. On this Hermes build, an `AQ.` key would normally be interpreted as a Vertex Express key and routed to `aiplatform.googleapis.com`.
+- The isolated operator scripts therefore set `HERMES_GEMINI_AQ_STUDIO_PILOT=1` **for that process only**, keeping the verified AI Studio key on the native `generativelanguage.googleapis.com` endpoint. The flag is not set globally and must not be used for an actual Vertex Express key.
 
 Current state:
 
 - Gemini lab config: **prepared**
-- Gemini credential: **pending operator authorization**
-- Gemini live inference: **pending**
+- Gemini credential: **configured, user-owned**
+- Native AI Studio smoke: **PASS** — `GEMINI_KANTORAI_OK`
+- Provider broker smoke: **PASS** — `GEMINI_BROKER_OK`
+- Vertex / Agent Platform API enablement: **not required for this AI Studio route**
+- Post-smoke Hermes auth-pool state: **429 cooldown observed**; the API project's billing/rate-limit tier remains **unknown from runtime**
+- For sustained use, inspect Google AI Studio **Dashboard > Usage/Billing**; consumer Gemini Pro is not treated as API-tier evidence
+- Independent production verification: **not yet claimed**
 
 ## Provider broker
 
