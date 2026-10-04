@@ -26,6 +26,23 @@ Therefore the published stable package remains **v0.5.1**. There is no authorize
 
 See [v1.0 Production Evidence Convergence](docs/V1.0-PRODUCTION-CONVERGENCE.md) and [v1.0 Operator Runbook](docs/V1.0-OPERATOR-RUNBOOK.md).
 
+## Operator evidence update — 4 October 2026
+
+The repository is materially ahead of the published `v0.5.1` package, but the release boundary has **not** been relaxed.
+
+Recent operator evidence on the authorized Windows GROWTH installation:
+
+- **Telegram office path is live for five employees** through one Hermes multiplex gateway: Siti, Alex, Paijo, Maya, and Subagjo. Sumiati remains intentionally pending until a distinct bot token is available.
+- An owner-requested **10-case real-task recorder campaign** completed 30 lifecycle events / 10 closed cases. It produced 5 worker successes, 5 worker failures, 6 verification passes, and 2 preserved false-success findings (`Nara` and `Tari`). The canonical real-task dataset is intentionally still **1/20** because this campaign was recorded as evidence, not promoted through a weakened gate.
+- The optional specialist-provider pool is now machine-readable and operator-reproducible. **Qwen3 0.6B** and **DeepSeek-R1 1.5B** are installed with verified Ollama manifests; real local inference remains fail-closed while free RAM is below the 2 GB guard.
+- The isolated Google AI Studio route has a user-owned credential and bounded live evidence. **`gemini-3.6-flash` passed native and broker smoke tests**; newer Flash routes observed transient provider-side 503/high-demand responses, and Hermes later observed a 429 cooldown. API billing/rate-limit tier remains unknown from runtime.
+- The public-safe GROWTH operator kit is versioned under [`ops/provider-pool/growth/`](ops/provider-pool/growth/).
+- The production/default employee path remains **Hermes + Nous**. The verified Telegram turns in the current operator installation still use `custom / nous-welcome`. A phrase such as **"LEWAT GEMINI" is not yet a proven Telegram routing command** and must not be presented as active until that separate route is independently validated.
+
+This is **operator-local evidence**, not a stable-release promotion. Published stable remains `v0.5.1`; v1 remains evidence-blocked.
+
+See [Telegram Office](docs/TELEGRAM-OFFICE.md), [Provider Pool](docs/PROVIDER-POOL.md), and [Real-Task Baseline](docs/REAL-TASK-BASELINE.md).
+
 ## Current release — v0.5.1
 
 `v0.5.1` is the current published stable release.
@@ -85,7 +102,9 @@ See [v0.6.1 Reliability Release Gate](docs/V0.6.1-RELIABILITY-RELEASE-GATE.md).
 - a Hermes-first reference runtime plus provider-neutral runtime-adapter contracts;
 - explicit states for configured / connected / executed / succeeded / verified;
 - local diagnostics, release checks, public-safety scans, and immutable stable-install verification;
-- machine-readable capability, maturity, evidence, and release-readiness surfaces.
+- machine-readable capability, maturity, evidence, and release-readiness surfaces;
+- an operator-verified optional Telegram office path using one Hermes multiplex gateway;
+- an optional specialist-provider pool with machine-readable policy/evidence plus a public-safe GROWTH operator kit.
 
 ## What it does not claim
 
@@ -277,6 +296,7 @@ No secret is required by the repository itself.
 | `config/employees.json` | Canonical workforce registry — source of truth for employee identity/policy/routing |
 | `config/capabilities.json` | Provider-neutral capability states, ads/tool contracts, and autonomy modes |
 | `config/memory-policy.json` | M0–M4 profile/shared learning and canonical-skill promotion policy |
+| `config/provider-pool.json` | Optional specialist-provider routing/safety policy; does not replace the default Nous employee path |
 | `office/` | Visual local office, task UI, runtime cache, and read-only adapter |
 | `agents/` | Registry-derived public SOUL/profile definitions |
 | `hermes-profiles/` | Native Hermes profile distributions generated for the workforce |
@@ -288,6 +308,8 @@ No secret is required by the repository itself.
 | `packages/task-registry/` | Standalone evented task-registry prototype |
 | `packages/runtime-adapter/` | Dependency-free read-only runtime adapter SDK |
 | `docs/` | Architecture, approval model, threat model, privacy, demos, release docs, and adapter contracts |
+| `benchmarks/provider-evaluations/` | Provider installation/live-smoke evidence with explicit claim boundaries |
+| `ops/provider-pool/growth/` | Public-safe, non-secret Windows operator kit for the tested GROWTH provider lab |
 | `scripts/` | Security, public-release, employee-pack, selection, and test automation |
 
 ## Capability endpoint
@@ -656,7 +678,7 @@ itu belum kemenangan.
 
 ---
 
-## Posisi sekarang — 1 Oktober 2026
+## Posisi sekarang — 4 Oktober 2026
 
 v0.5.1 akhirnya benar-benar publish.
 
@@ -671,10 +693,13 @@ Gue nggak mau repo ini menang karena README-nya terdengar besar. Gue juga nggak 
 - release artifact, contract/API, dan runtime-adapter layer sudah berada di state `stable`;
 - bounded Hermes + Codex reference case sudah punya portability evidence yang lolos verifier;
 - 16 employee profiles, pack pipeline, approval model, receipts, evidence model, dan installer sudah benar-benar ada di repo;
-- real-world workflow evidence masih **1/20** dan statusnya tetap `collecting`;
-- provider lifecycle masih `partial`;
+- lima employee Telegram sudah membalas live lewat satu multiplex gateway di instalasi operator GROWTH;
+- initial-ten real-task campaign sudah direkam lengkap, termasuk dua false-success yang sengaja **tidak** disembunyikan atau di-reroll;
+- canonical real-world workflow evidence masih **1/20** dan statusnya tetap `collecting`, karena raw campaign tidak otomatis menjadi baseline;
+- Qwen + DeepSeek local sudah terpasang di operator lab, Gemini AI Studio sudah punya bounded live smoke, tetapi provider lifecycle keseluruhan masih `partial`;
+- Telegram normal yang terverifikasi masih memakai jalur Nous; specialist Gemini via chat belum gue anggap aktif hanya karena modelnya bisa dipanggil terpisah;
 - sebagian visual worker masih nunggu original art;
-- beberapa integrasi nyata tetap bergantung pada setup dan akun milik user sendiri.
+- beberapa integrasi nyata tetap bergantung pada setup, quota, billing, credential, dan akun milik user sendiri.
 
 Jadi iya, proyeknya sudah jauh lebih nyata dibanding waktu awal gue cuma pengen lihat “kantor AI” di layar.
 
