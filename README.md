@@ -37,7 +37,7 @@ Recent operator evidence on the authorized Windows GROWTH installation:
 - The optional specialist-provider pool is now machine-readable and operator-reproducible. **Qwen3 0.6B** and **DeepSeek-R1 1.5B** are installed with verified Ollama manifests; real local inference remains fail-closed while free RAM is below the 2 GB guard.
 - The isolated Google AI Studio route has a user-owned credential and bounded live evidence. **`gemini-3.6-flash` passed native and broker smoke tests**; newer Flash routes observed transient provider-side 503/high-demand responses, and Hermes later observed a 429 cooldown. API billing/rate-limit tier remains unknown from runtime.
 - The public-safe GROWTH operator kit is versioned under [`ops/provider-pool/growth/`](ops/provider-pool/growth/).
-- The production/default employee path remains **Hermes + Nous**. The verified Telegram turns in the current operator installation still use `custom / nous-welcome`. A phrase such as **"LEWAT GEMINI" is not yet a proven Telegram routing command** and must not be presented as active until that separate route is independently validated.
+- The production/default employee path remains **Hermes + Nous** for normal Telegram turns (`custom / nous-welcome`). **Alex and Siti now have a separately verified explicit `/gemini <prompt>` specialist route** using `gemini-3.6-flash`; the command passed live Telegram canaries while the five-profile multiplex gateway remained connected. Plain text such as **"LEWAT GEMINI" is still not a routing trigger**.
 
 This is **operator-local evidence**, not a stable-release promotion. Published stable remains `v0.5.1`; v1 remains evidence-blocked.
 
@@ -697,7 +697,7 @@ Gue nggak mau repo ini menang karena README-nya terdengar besar. Gue juga nggak 
 - initial-ten real-task campaign sudah direkam lengkap, termasuk dua false-success yang sengaja **tidak** disembunyikan atau di-reroll;
 - canonical real-world workflow evidence masih **1/20** dan statusnya tetap `collecting`, karena raw campaign tidak otomatis menjadi baseline;
 - Qwen + DeepSeek local sudah terpasang di operator lab, Gemini AI Studio sudah punya bounded live smoke, tetapi provider lifecycle keseluruhan masih `partial`;
-- Telegram normal yang terverifikasi masih memakai jalur Nous; specialist Gemini via chat belum gue anggap aktif hanya karena modelnya bisa dipanggil terpisah;
+- Telegram normal yang terverifikasi tetap memakai jalur Nous, tetapi Alex + Siti sekarang punya command eksplisit `/gemini <prompt>` yang sudah lolos live Telegram canary via `gemini-3.6-flash`; teks biasa seperti `LEWAT GEMINI` tetap bukan trigger;
 - sebagian visual worker masih nunggu original art;
 - beberapa integrasi nyata tetap bergantung pada setup, quota, billing, credential, dan akun milik user sendiri.
 
