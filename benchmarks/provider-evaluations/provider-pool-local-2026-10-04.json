@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "observed_on": "2026-10-04",
+  "scope": "AUTHORIZED_WINDOWS_OPERATOR_LAB",
+  "tested_repo_head": "e91915e69066dfee14c5c0d14b1f886ecf6e466d",
+  "claim_boundary": "INSTALL_AND_CONFIGURATION_EVIDENCE_ONLY_NO_LOCAL_LIVE_INFERENCE_CLAIM",
+  "production_default_unchanged": {
+    "provider": "nous",
+    "model": "nous/welcome",
+    "value": true
+  },
+  "ollama": {
+    "version": "0.35.1",
+    "binary_sha256_verified": true,
+    "package_sha256": "dc50b9ca7f9023c86525012632cd1615b093d0407987444a7f62ecab617e8e93",
+    "endpoint": "127.0.0.1:11434",
+    "final_state": "STOPPED_IDLE",
+    "models": [
+      {
+        "model": "qwen3:0.6b",
+        "digest": "7df6b6e09427a769808717c0a93cadc4ae99ed4eb8bf5ca557c90846becea435",
+        "size_bytes": 522653767,
+        "parameter_size": "751.63M",
+        "quantization": "Q4_K_M",
+        "registry_context_length": 40960,
+        "lab_context_length": 4096,
+        "manifest_present": true,
+        "live_inference": "NOT_RUN_MEMORY_GUARD"
+      },
+      {
+        "model": "deepseek-r1:1.5b",
+        "digest": "e0979632db5a88d1a53884cb2a941772d10ff5d055aabaa6801c4e36f3a6c2d7",
+        "size_bytes": 1117322768,
+        "parameter_size": "1.8B",
+        "quantization": "Q4_K_M",
+        "registry_context_length": 131072,
+        "lab_context_length": 8192,
+        "manifest_present": true,
+        "live_inference": "NOT_RUN_MEMORY_GUARD"
+      }
+    ]
+  },
+  "memory_guard": {
+    "min_free_ram_gb": 2,
+    "observed_free_ram_gb_after_idle_stop": 1.05,
+    "decision": "BLOCK_LOCAL_INFERENCE",
+    "fail_closed": true
+  },
+  "labs": {
+    "qwen": {
+      "provider": "custom",
+      "model": "qwen3:0.6b",
+      "base_url": "http://127.0.0.1:11434/v1",
+      "config_state": "PREPARED"
+    },
+    "deepseek": {
+      "provider": "custom",
+      "model": "deepseek-r1:1.5b",
+      "base_url": "http://127.0.0.1:11434/v1",
+      "config_state": "PREPARED"
+    },
+    "gemini": {
+      "provider": "gemini",
+      "model": "gemini-3.7-flash",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta",
+      "config_state": "PREPARED",
+      "credential_state": "NOT_CONFIGURED",
+      "live_inference": "NOT_RUN_CREDENTIAL_REQUIRED"
+    }
+  },
+  "operator_scripts": {
+    "powershell_files_checked": 8,
+    "parse_failures": 0,
+    "memory_guard_present": true,
+    "secret_values_committed": false
+  },
+  "external_model_references": [
+    {
+      "model": "gemini-3.7-flash",
+      "reference": "https://ai.google.dev/gemini-api/docs/models/gemini-3.7-flash"
+    },
+    {
+      "model": "qwen3:0.6b",
+      "reference": "https://ollama.com/library/qwen3"
+    },
+    {
+      "model": "deepseek-r1:1.5b",
+      "reference": "https://ollama.com/library/deepseek-r1:1.5b"
+    }
+  ],
+  "blockers": [
+    "LOCAL_LIVE_INFERENCE_BLOCKED_BY_MEMORY_GUARD",
+    "GEMINI_LIVE_INFERENCE_BLOCKED_BY_MISSING_OPERATOR_CREDENTIAL"
+  ],
+  "next": [
+    "Run bounded local model smoke tests only when free RAM is at least 2 GB.",
+    "Enter a user-owned Gemini API key locally, never in Git or chat, then run the isolated Gemini smoke test.",
+    "Keep production employee routing on Nous until each specialist route has qualifying live evidence."
+  ]
+}
