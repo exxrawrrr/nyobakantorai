@@ -86,9 +86,12 @@
       ],
       "configured": true,
       "credential_required": true,
-      "credential_state": "NOT_CONFIGURED",
-      "execution_state": "NOT_RUN_CREDENTIAL_REQUIRED",
-      "enabled_for_production_default": false
+      "credential_state": "CONFIGURED_USER_OWNED",
+      "execution_state": "LIVE_SMOKE_SUCCEEDED",
+      "enabled_for_production_default": false,
+      "endpoint_mode": "AI_STUDIO_NATIVE",
+      "auth_key_compatibility": "AQ_STUDIO_SINGLE_PROCESS",
+      "verification_state": "MARKER_MATCHED_NOT_INDEPENDENTLY_REVIEWED"
     },
     {
       "id": "codex-specialist",
