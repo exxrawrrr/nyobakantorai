@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "evidence_id": "real-20261004-initial10-01-alex",
+  "authority": {
+    "kind": "real_task_recorder_snapshot",
+    "snapshot_ref": "benchmarks/real-tasks/recorder-snapshot-2026-10-04-initial10.json",
+    "snapshot_sha256": "20350ebbee2cc5bf9d4b904d58ed0d8463427263a7bf424437db1402efda0998",
+    "note": "Recorder ledger/snapshot is authoritative for lifecycle and verification fields if a mutable local review cache differs."
+  },
+  "source": {
+    "source_type": "owner_real_task",
+    "source_ref": "owner-task://chat/2026-10-04/kantorai-initial-10/01-v06-live-evidence-audit",
+    "source_generated": false,
+    "source_attestation": "OWNER_DIRECT",
+    "redaction_reviewed": true
+  },
+  "execution": {
+    "employee_id": "alex",
+    "tested_repo_head": "67f7686def33af38d412ab07218dfb1b1440a442",
+    "started_at": "2026-10-04T10:53:12+07:00",
+    "finished_at": "2026-10-04T11:42:11+07:00",
+    "source_paths": [
+      ".nyobakantorai/real-task-recorder/inputs/task-01-pack.json"
+    ],
+    "provider": "custom",
+    "model": "nous/welcome"
+  },
+  "task": {
+    "summary": "Audit current v0.6 live acceptance evidence against older canonical readiness blockers and state remaining claim limitations."
+  },
+  "metrics": {
+    "success": false,
+    "evidence_complete": true,
+    "false_success": false,
+    "human_intervention": 0,
+    "retries": 5,
+    "duration_ms": 118102,
+    "cost_known": false,
+    "verification_passed": true,
+    "recovered_after_failure": false
+  },
+  "verification": {
+    "reviewer_employee_id": "siti",
+    "verified_at": "2026-10-04T11:43:33+07:00",
+    "verification_passed": true,
+    "evidence_complete": true,
+    "false_success": false
+  },
+  "outcome_note": "Task ended blocked or incomplete; failure preserved truthfully. Verification: PASS. Recorded BLOCKED outcome is truthful and fully supported by the pack. All five findings cross-check against pack content: live.status=ACCEPTED, passed 11/11, runtime=hermes, evidence_class=LIVE_RUNTIME_EVIDENCE (F1/F3); quota_status=PARTIAL with all four LIVE_QUOTA_UNKNOWN dimensions listed (F2/F5); canonical readiness_decision=BLOCKED, release_blockers=[REAL_MODEL_EXECUTION, COST_QUOTA_ENFORCEMENT], canonical_acceptance 9/11, package_version=0.5.1, claim_boundary no-release-until-converged (F4). The three evidence_refs sha256 values match the pack's derived_from entries exactly; task-01-pack.json itself is flagged as hash-not-provided, which the worker disclosed. Limitation statements are honest: read-only, hashes asserted not independently re-verified, sandbox PARTIAL, quota dimensions unmeasured, canonical read as snapshot only. No overclaiming: success_claim=false and parsed_st"
+}

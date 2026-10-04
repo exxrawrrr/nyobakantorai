@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "observed_on": "2026-10-04",
+  "canonical_dataset": "benchmarks/real-tasks/dataset.json",
+  "status": "COLLECTING",
+  "claim_state": "COLLECTING",
+  "eligible_cases": 1,
+  "minimum_cases_required": 20,
+  "remaining_cases": 19,
+  "successes": 0,
+  "failures": 1,
+  "verification_passes": 0,
+  "verification_failures": 1,
+  "false_successes": 0,
+  "recovered_after_failure": 0,
+  "cost_known": 0,
+  "distinct_employees": 1,
+  "employees": [
+    "praroro"
+  ],
+  "source_types": [
+    "owner_real_task"
+  ],
+  "publication_gate_passed": false,
+  "source_audit": "benchmarks/real-tasks/source-audit-2026-09-29.json",
+  "latest_recorder_campaign": {
+    "campaign_id": "initial10-2026-10-04",
+    "tested_repo_heads": [
+      "67f7686def33af38d412ab07218dfb1b1440a442"
+    ],
+    "sync_base_main": "862733cd817e366bffad348f4a1b05d25e7d7777",
+    "recorder_snapshot": "benchmarks/real-tasks/recorder-snapshot-2026-10-04-initial10.json",
+    "recorder_snapshot_file_sha256": "20350ebbee2cc5bf9d4b904d58ed0d8463427263a7bf424437db1402efda0998",
+    "recorder_snapshot_audit_sha256": "d66b41ccc31223c48b6f838d1d0ae427d5858ccd2272b736101a8a0a2c37fdde",
+    "recorder_snapshot_audit": "PASS",
+    "recorder_cases": 10,
+    "worker_successes": 5,
+    "worker_failures": 5,
+    "verification_passes": 6,
+    "verification_failures": 4,
+    "evidence_complete": 6,
+    "evidence_incomplete": 4,
+    "false_successes": 2,
+    "false_success_case_ids": [
+      "real-20261004-initial10-03-nara",
+      "real-20261004-initial10-10-tari"
+    ],
+    "distinct_employees": 10,
+    "employees": [
+      "alex",
+      "bimo",
+      "fikri",
+      "gugun",
+      "maya",
+      "nara",
+      "praroro",
+      "siti",
+      "subagjo",
+      "tari"
+    ],
+    "recorder_integrity": "PASS",
+    "ledger_head_hash": "cd930ace94dd6d7d892d466cc7a6cd776db3f02da23bba21e914c586de3c2377",
+    "recorder_events": 30,
+    "recorder_acceptance_passed": false,
+    "canonical_promoted": false,
+    "candidate_preview": {
+      "cases_if_merged_with_canonical": 11,
+      "remaining_to_minimum_if_merged": 9,
+      "false_successes_if_merged": 2,
+      "publication_gate_passed": false
+    },
+    "reason_not_promoted": "Valid recorder evidence includes two false-success cases. The canonical dataset is intentionally left unchanged so the zero-false-success publication boundary is not polluted."
+  },
+  "preserved_truth": "Canonical remains 1/20. The 2026-10-04 initial-ten campaign is preserved verbatim at recorder-snapshot level, including failures and two false-success findings, but is not promoted into the canonical dataset.",
+  "next": "Fix the evidence-capture/task-truth failure modes exposed by Nara and Tari, then record new direct owner tasks under new case IDs. Preserve this campaign unchanged as historical evidence."
+}
